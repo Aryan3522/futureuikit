@@ -64,7 +64,7 @@ The CLI downloads component files from the registry endpoint configured in `pack
 ```json
 {
   "config": {
-    "registryUrl": "https://future-ui.vercel.app/api/registry"
+    "registryUrl": "https://futureuikit.vercel.app/api/registry"
   }
 }
 ```
@@ -80,7 +80,7 @@ npx future-ui add boxy-bounce --registry https://your-site.vercel.app/api/regist
 1. Deploy the Next.js app.
 2. Verify the registry response:
    ```bash
-   curl https://future-ui.vercel.app/api/registry/boxy-bounce
+   curl https://futureuikit.vercel.app/api/registry/boxy-bounce
    ```
 3. Verify the npm package exposes the CLI:
    ```bash

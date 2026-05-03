@@ -10,7 +10,7 @@ const packageJson = JSON.parse(
 );
 
 const DEFAULT_REGISTRY_URL =
-  packageJson.config?.registryUrl || "https://future-ui.vercel.app/api/registry";
+  packageJson.config?.registryUrl || "https://futureuikit.vercel.app/api/registry";
 
 const args = process.argv.slice(2);
 const command = args[0];

@@ -1,10 +1,10 @@
 {
   "name": "future-ui",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Future UI component registry and installer CLI for Next.js projects.",
   "private": false,
   "license": "MIT",
-  "homepage": "https://future-ui.vercel.app",
+  "homepage": "https://futureuikit.vercel.app",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Aryan3522/future-ui.git"
@@ -20,7 +20,7 @@
     "README.md"
   ],
   "config": {
-    "registryUrl": "https://future-ui.vercel.app/api/registry"
+    "registryUrl": "https://futureuikit.vercel.app/api/registry"
   },
   "engines": {
     "node": ">=18.18.0"
