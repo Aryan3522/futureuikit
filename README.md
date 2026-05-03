@@ -56,7 +56,7 @@ Future UI is an open-source library of high-performance, visually stunning, and 
 After the package is published to npm, users can install a component with:
 
 ```bash
-npx future-ui add boxy-bounce
+npx futureuikit add boxy-bounce
 ```
 
 The CLI downloads component files from the registry endpoint configured in `package.json`:
@@ -72,7 +72,7 @@ The CLI downloads component files from the registry endpoint configured in `pack
 If your production deployment uses a different domain, update `config.registryUrl` before publishing to npm. You can also override the registry during testing:
 
 ```bash
-npx future-ui add boxy-bounce --registry https://your-site.vercel.app/api/registry
+npx futureuikit add boxy-bounce --registry https://your-site.vercel.app/api/registry
 ```
 
 ## Release Checklist
@@ -85,7 +85,7 @@ npx future-ui add boxy-bounce --registry https://your-site.vercel.app/api/regist
 3. Verify the npm package exposes the CLI:
    ```bash
    npm pack --dry-run
-   npm view future-ui bin
+   npm view futureuikit bin
    ```
 4. Publish the new version:
    ```bash
@@ -93,7 +93,7 @@ npx future-ui add boxy-bounce --registry https://your-site.vercel.app/api/regist
    ```
 5. Validate from npm:
    ```bash
-   npx future-ui@latest add boxy-bounce
+   npx futureuikit@latest add boxy-bounce
    ```
 
 ## ⚙️ Configuration

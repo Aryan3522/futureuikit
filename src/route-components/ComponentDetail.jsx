@@ -948,7 +948,7 @@ const ComponentLivePreview = ({ id, slug }) => {
             <Label className="text-xs uppercase tracking-widest text-blue-500">Inline Elements</Label>
             <div className="flex items-center gap-4">
               <Label>A standard label</Label>
-              <Code>npm install future-ui</Code>
+              <Code>npm install futureuikit</Code>
             </div>
           </div>
         </div>
@@ -1078,7 +1078,7 @@ const ComponentDetail = ({ type, slug, id }) => {
 
   const registryComponent = registry[slug];
   const reusableCode = registryComponent?.files[0]?.content || "";
-  const cliCommand = `npx future-ui add ${slug}`;
+  const cliCommand = `npx futureuikit add ${slug}`;
   const htmlCode = component?.codes?.html || "";
   const cssCode = component?.codes?.css || "";
   const nextUsage = component?.codes?.next || component?.codes?.react || "";

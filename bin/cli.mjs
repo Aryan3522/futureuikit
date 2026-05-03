@@ -28,11 +28,11 @@ function printHelp() {
   console.log(`Future UI CLI
 
 Usage:
-  npx future-ui add <component-slug> [--force] [--registry <url>]
+  npx futureuikit add <component-slug> [--force] [--registry <url>]
 
 Examples:
-  npx future-ui add boxy-bounce
-  npx future-ui add boxy-bounce --registry https://your-site.vercel.app/api/registry
+  npx futureuikit add boxy-bounce
+  npx futureuikit add boxy-bounce --registry https://your-site.vercel.app/api/registry
 
 Environment:
   FUTURE_UI_REGISTRY_URL  Override the registry base URL.
