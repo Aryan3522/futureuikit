@@ -51,6 +51,51 @@ Future UI is an open-source library of high-performance, visually stunning, and 
 4. **Access the library**:
    Open [http://localhost:3000](http://localhost:3000) in your browser to explore the components.
 
+## CLI Usage
+
+After the package is published to npm, users can install a component with:
+
+```bash
+npx future-ui add boxy-bounce
+```
+
+The CLI downloads component files from the registry endpoint configured in `package.json`:
+
+```json
+{
+  "config": {
+    "registryUrl": "https://future-ui.vercel.app/api/registry"
+  }
+}
+```
+
+If your production deployment uses a different domain, update `config.registryUrl` before publishing to npm. You can also override the registry during testing:
+
+```bash
+npx future-ui add boxy-bounce --registry https://your-site.vercel.app/api/registry
+```
+
+## Release Checklist
+
+1. Deploy the Next.js app.
+2. Verify the registry response:
+   ```bash
+   curl https://future-ui.vercel.app/api/registry/boxy-bounce
+   ```
+3. Verify the npm package exposes the CLI:
+   ```bash
+   npm pack --dry-run
+   npm view future-ui bin
+   ```
+4. Publish the new version:
+   ```bash
+   npm publish
+   ```
+5. Validate from npm:
+   ```bash
+   npx future-ui@latest add boxy-bounce
+   ```
+
 ## ⚙️ Configuration
 
 Create a `.env` file in the root directory and add the following variables:
@@ -58,7 +103,7 @@ Create a `.env` file in the root directory and add the following variables:
 ```env
 # Project Configuration
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-FUTURE_UI_API_URL=http://localhost:3000/components
+FUTURE_UI_REGISTRY_URL=http://localhost:3000/api/registry
 NEXT_PUBLIC_GITHUB_REPO=https://github.com/Aryan3522/future-ui
 NEXT_PUBLIC_GITHUB_PROFILE=https://github.com/Aryan3522
 NEXT_PUBLIC_LINKEDIN_PROFILE=https://www.linkedin.com/in/aryan-hooda-code/

@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { registry } from "@/data/component-library-data";
 
-export async function GET(req, { params }) {
+export const dynamic = "force-static";
+
+export async function GET(_req, { params }) {
   const { slug } = await params;
-  
   const component = registry[slug];
 
   if (!component) {
