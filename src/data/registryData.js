@@ -6,22 +6,82 @@ export const registry = {
       {
         name: "primary-button.jsx",
         content: `"use client";
+
 import React from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export const PrimaryButton = React.forwardRef(
-  ({ className, children, ...props }, ref) => {
+  ({ className, children, variant = "modern", color = "#2563eb", ...props }, ref) => {
+    
+    const getVariantStyles = () => {
+      switch (variant) {
+        case "modern":
+          return {
+            background: color,
+            color: "#ffffff",
+            border: "none",
+          };
+        case "clean":
+          return {
+            background: color,
+            color: "#ffffff",
+            border: "none",
+            borderRadius: "8px",
+          };
+        case "minimal":
+          return {
+            background: "transparent",
+            color: color,
+            border: \`1px solid \${color}\`,
+            borderRadius: "6px",
+          };
+        default:
+          return {
+            background: color,
+            color: "#ffffff",
+            border: "none",
+          };
+      }
+    };
+
+    const variantClasses = {
+      modern: "relative overflow-hidden px-6 py-2.5 rounded-xl font-semibold tracking-wide",
+      clean: "px-5 py-2 rounded-lg font-medium",
+      minimal: "px-5 py-2 font-medium",
+    };
+
+    const buttonStyles = getVariantStyles();
+
     return (
-      <button
+      <motion.button
         ref={ref}
+        whileHover={{ 
+          scale: 1.02,
+          filter: variant === "minimal" ? "brightness(0.95)" : "brightness(1.1)",
+        }}
+        whileTap={{ scale: 0.98 }}
         className={cn(
-          "px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-medium transition shadow-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed",
+          "inline-flex items-center justify-center cursor-pointer select-none transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
+          variantClasses[variant] || variantClasses.modern,
           className
         )}
+        style={{
+          ...buttonStyles,
+          ...props.style
+        }}
         {...props}
       >
-        {children}
-      </button>
+        <span className="relative z-10">{children}</span>
+        {variant === "modern" && (
+          <motion.div
+            className="absolute inset-0 z-0 bg-white/10"
+            initial={{ x: "-100%" }}
+            whileHover={{ x: "100%" }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          />
+        )}
+      </motion.button>
     );
   }
 );
@@ -138,11 +198,15 @@ GlowyButton.displayName = "GlowyButton";`,
       {
         name: "basic-card.jsx",
         content: `"use client";
+
 import React from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export const BasicCard = ({
   className,
+  variant = "modern",
+  color = "#6366f1",
   avatarText = "AH",
   name = "Aryan Hooda",
   title = "Full Stack Developer",
@@ -156,55 +220,87 @@ export const BasicCard = ({
   secondaryCtaText = "Profile",
   onPrimaryClick,
   onSecondaryClick,
+  ...props
 }) => {
+  
+  const getVariantStyles = () => {
+    switch (variant) {
+      case "modern":
+        return "bg-card/40 backdrop-blur-xl border-white/10";
+      case "clean":
+        return "bg-card border-border";
+      case "minimal":
+        return "bg-transparent border-border/50";
+      default:
+        return "bg-card/60 backdrop-blur-md border-border/40";
+    }
+  };
+
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
       className={cn(
-        "max-w-sm w-full rounded-xl border border-border/40 bg-card/60 backdrop-blur-md p-6 shadow-lg hover:scale-[1.01] hover:-translate-y-0.5 transition-all duration-300 text-foreground",
+        "max-w-sm w-full rounded-2xl border p-6 transition-all duration-300 text-foreground",
+        getVariantStyles(),
         className
       )}
+      {...props}
     >
-      <div className="flex items-center gap-4 mb-4">
-        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center font-bold text-white text-lg flex-shrink-0">
+      <div className="flex items-center gap-4 mb-5">
+        <motion.div 
+          whileHover={{ scale: 1.1, rotate: 5 }}
+          className="w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-white text-xl flex-shrink-0"
+          style={{ background: \`linear-gradient(135deg, \${color}, \${color}dd)\` }}
+        >
           {avatarText}
-        </div>
-        <div className="overflow-hidden text-ellipsis">
-          <h3 className="text-lg font-bold whitespace-nowrap">{name}</h3>
-          <p className="text-xs text-muted-foreground whitespace-nowrap">{title}</p>
+        </motion.div>
+        <div className="overflow-hidden">
+          <h3 className="text-xl font-bold tracking-tight">{name}</h3>
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{title}</p>
         </div>
       </div>
-      <p className="text-sm text-muted-foreground mb-4 leading-relaxed line-clamp-3">
+
+      <p className="text-sm leading-relaxed text-muted-foreground mb-6 line-clamp-3">
         {description}
       </p>
+
       {stats && stats.length > 0 && (
-        <div className="flex justify-between mb-4 border-t border-border/20 pt-3 text-center">
+        <div className="flex justify-between mb-6 pt-4 border-t border-border/10">
           {stats.map((stat, idx) => (
-            <div key={idx}>
-              <h4 className="text-sm font-bold">{stat.value}</h4>
-              <span className="text-xs text-muted-foreground">{stat.label}</span>
+            <div key={idx} className="text-center">
+              <h4 className="text-lg font-bold">{stat.value}</h4>
+              <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-tighter">{stat.label}</span>
             </div>
           ))}
         </div>
       )}
-      <div className="flex gap-2">
+
+      <div className="flex gap-3 mt-auto">
         {primaryCtaText && (
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={onPrimaryClick}
-            className="flex-1 bg-gradient-to-r from-indigo-500 to-cyan-400 text-white rounded-md py-2 text-sm font-medium hover:opacity-90 transition active:scale-95"
+            className="flex-1 rounded-xl py-2.5 text-sm font-bold text-white transition-colors"
+            style={{ background: color }}
           >
             {primaryCtaText}
-          </button>
+          </motion.button>
         )}
         {secondaryCtaText && (
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05, backgroundColor: "rgba(var(--foreground), 0.05)" }}
+            whileTap={{ scale: 0.95 }}
             onClick={onSecondaryClick}
-            className="flex-1 bg-muted/50 border border-border/40 hover:bg-muted text-foreground rounded-md py-2 text-sm font-medium transition active:scale-95"
+            className="flex-1 border border-border/40 rounded-xl py-2.5 text-sm font-bold text-foreground transition-colors"
           >
             {secondaryCtaText}
-          </button>
+          </motion.button>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };`,
       },
@@ -577,7 +673,9 @@ export const Code = ({ className, ...props }) => {
       {
         name: "carousel-slider.jsx",
         content: `"use client";
+
 import React, { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 
@@ -591,12 +689,15 @@ export const CarouselSlider = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [direction, setDirection] = useState(0);
 
   const nextSlide = useCallback(() => {
+    setDirection(1);
     setCurrentIndex((prev) => (prev + 1) % slides.length);
   }, [slides.length]);
 
   const prevSlide = useCallback(() => {
+    setDirection(-1);
     setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
   }, [slides.length]);
 
@@ -608,106 +709,146 @@ export const CarouselSlider = ({
 
   if (!slides.length) return null;
 
+  const variants = {
+    enter: (direction) => ({
+      x: direction > 0 ? 1000 : -1000,
+      opacity: 0,
+      scale: 1.1,
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+      scale: 1,
+    },
+    exit: (direction) => ({
+      zIndex: 0,
+      x: direction < 0 ? 1000 : -1000,
+      opacity: 0,
+      scale: 0.9,
+    }),
+  };
+
   return (
     <div 
       className={cn(
-        "group relative w-full max-w-4xl mx-auto h-[450px] overflow-hidden rounded-2xl bg-black shadow-2xl", 
+        "group relative w-full max-w-5xl mx-auto h-[500px] overflow-hidden rounded-[2rem] bg-black shadow-2xl", 
         className
       )}
       onMouseEnter={() => pauseOnHover && setIsPaused(true)}
       onMouseLeave={() => pauseOnHover && setIsPaused(false)}
     >
-      {/* Slides */}
-      {slides.map((slide, idx) => (
-        <div
-          key={slide.id || idx}
-          className={cn(
-            "absolute inset-0 transition-opacity duration-1000 ease-in-out bg-cover bg-center",
-            currentIndex === idx ? "opacity-100 z-10" : "opacity-0 z-0"
-          )}
-          style={{ backgroundImage: \\\`linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, transparent 100%), url("\\\${slide.image}")\\\` }}
+      <AnimatePresence initial={false} custom={direction}>
+        <motion.div
+          key={currentIndex}
+          custom={direction}
+          variants={variants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{
+            x: { type: "spring", stiffness: 300, damping: 30 },
+            opacity: { duration: 0.4 },
+            scale: { duration: 0.6 },
+          }}
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ 
+            backgroundImage: \` linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 50%, transparent 100%), url("\${slides[currentIndex].image}")\` 
+          }}
         >
           {/* Content Overlay */}
-          <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 text-white">
-            <div className={cn(
-              "flex flex-col gap-3 transition-all duration-700 delay-300",
-              currentIndex === idx ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-            )}>
-              <span className={cn(
-                "inline-block self-start px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
-                slide.tagBg || "bg-blue-600"
-              )}>
-                {slide.tag}
-              </span>
-              <h2 className="text-3xl md:text-5xl font-black leading-tight max-w-2xl italic">
-                {slide.title}
+          <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-16 text-white">
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="flex flex-col gap-4 max-w-3xl"
+            >
+              <motion.span 
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className={cn(
+                  "inline-block self-start px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em]",
+                  slides[currentIndex].tagBg || "bg-primary"
+                )}
+              >
+                {slides[currentIndex].tag}
+              </motion.span>
+              
+              <h2 className="text-4xl md:text-7xl font-black leading-[0.95] italic tracking-tighter uppercase">
+                {slides[currentIndex].title}
               </h2>
-              <div className="flex items-center gap-2 text-sm text-white/70 font-medium">
-                <MapPin size={16} className="text-white/50" />
-                {slide.location}
+              
+              <div className="flex items-center gap-3 text-sm md:text-base text-white/70 font-bold italic tracking-wide uppercase">
+                <MapPin size={18} className="text-primary" />
+                {slides[currentIndex].location}
               </div>
-            </div>
+            </motion.div>
           </div>
-        </div>
-      ))}
+        </motion.div>
+      </AnimatePresence>
 
       {/* Navigation Arrows */}
       {showArrows && (
-        <>
-          <button
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 z-20 flex justify-between px-6 pointer-events-none">
+          <motion.button
+            whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.2)" }}
+            whileTap={{ scale: 0.9 }}
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white/20"
+            className="pointer-events-auto p-4 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white transition-colors"
           >
-            <ChevronLeft size={24} />
-          </button>
-          <button
+            <ChevronLeft size={28} />
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.2)" }}
+            whileTap={{ scale: 0.9 }}
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white/20"
+            className="pointer-events-auto p-4 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white transition-colors"
           >
-            <ChevronRight size={24} />
-          </button>
-        </>
+            <ChevronRight size={28} />
+          </motion.button>
+        </div>
       )}
 
       {/* Dots Pagination */}
       {showDots && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-2">
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex gap-3">
           {slides.map((_, idx) => (
             <button
               key={idx}
-              onClick={() => setCurrentIndex(idx)}
-              className={cn(
-                "h-1.5 transition-all duration-300 rounded-full",
-                currentIndex === idx ? "w-8 bg-white" : "w-1.5 bg-white/40 hover:bg-white/60"
+              onClick={() => {
+                setDirection(idx > currentIndex ? 1 : -1);
+                setCurrentIndex(idx);
+              }}
+              className="relative h-2 rounded-full transition-all duration-300 overflow-hidden bg-white/20"
+              style={{ width: currentIndex === idx ? "40px" : "8px" }}
+            >
+              {currentIndex === idx && (
+                <motion.div
+                  layoutId="activeDot"
+                  className="absolute inset-0 bg-primary"
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                />
               )}
-            />
+            </button>
           ))}
         </div>
       )}
 
-      {/* Progress Bar (optional visual flair) */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-30 overflow-hidden">
-         <div 
+      {/* Progress Bar */}
+      <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-white/5 z-20 overflow-hidden">
+         <motion.div 
            key={currentIndex}
-           className="h-full bg-white/50 animate-progress"
-           style={{ animationDuration: \\\`\\\${autoPlayInterval}ms\\\` }}
+           initial={{ width: "0%" }}
+           animate={{ width: "100%" }}
+           transition={{ duration: autoPlayInterval / 1000, ease: "linear" }}
+           className="h-full bg-primary/50"
          />
       </div>
-
-      <style>{\`
-        @keyframes progress {
-          from { width: 0%; }
-          to { width: 100%; }
-        }
-        .animate-progress {
-          animation-name: progress;
-          animation-timing-function: linear;
-          animation-fill-mode: forwards;
-        }
-      \`}</style>
     </div>
   );
-};"`,
+};`,
       },
     ],
   },
@@ -1023,7 +1164,7 @@ export const ExpandingFlexCard = ({ options = [], className }) => {
             "expanding-card",
             activeOption === opt.id ? "open" : "closed"
           )}
-          style={{ backgroundImage: \\\`linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url("\\\${opt.img}")\\\` }}
+          style={{ backgroundImage: \` linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url("\${opt.img}")\` }}
         >
           <div className="closed-icon">{opt.icon}</div>
           
@@ -1047,30 +1188,84 @@ export const ExpandingFlexCard = ({ options = [], className }) => {
   basic: {
     name: "Basic Loader",
     type: "components:ui",
-    requiresCSS: true,
-    css: `
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 6px solid #ccc;
-  border-top-color: #3498db;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-`,
     files: [
       {
         name: "basic-loader.jsx",
         content: `"use client";
+
 import React from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-export const BasicLoader = ({ className, text = "Loading, please wait...", ...props }) => {
+export const BasicLoader = ({ 
+  className, 
+  variant = "modern", 
+  color = "#3b82f6", 
+  text = "Loading, please wait...", 
+  ...props 
+}) => {
+  
+  const getLoader = () => {
+    switch (variant) {
+      case "modern":
+        return (
+          <div className="relative w-16 h-16">
+            <motion.div
+              className="absolute inset-0 rounded-full border-4 border-t-transparent"
+              style={{ borderColor: \`\${color} transparent transparent transparent\` }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            />
+            <motion.div
+              className="absolute inset-2 rounded-full border-4 border-b-transparent opacity-50"
+              style={{ borderColor: \`transparent transparent \${color} transparent\` }}
+              animate={{ rotate: -360 }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+            />
+          </div>
+        );
+      case "clean":
+        return (
+          <div className="flex gap-2">
+            {[0, 1, 2].map((i) => (
+              <motion.div
+                key={i}
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: color }}
+                animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+              />
+            ))}
+          </div>
+        );
+      case "minimal":
+        return (
+          <motion.div
+            className="w-8 h-8 rounded-full border-2 border-t-transparent"
+            style={{ borderColor: \`\${color} transparent transparent transparent\` }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+          />
+        );
+      default:
+        return (
+          <div className="w-10 h-10 border-4 border-muted rounded-full border-t-primary animate-spin" />
+        );
+    }
+  };
+
   return (
-    <div className={cn("flex flex-col justify-center items-center gap-4", className)} {...props}>
-      <div className="loading-spinner"></div>
-      {text && <p className="text-base text-muted-foreground animate-pulse">{text}</p>}
+    <div className={cn("flex flex-col justify-center items-center gap-6 p-8", className)} {...props}>
+      {getLoader()}
+      {text && (
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-sm font-medium text-muted-foreground tracking-wide"
+        >
+          {text}
+        </motion.p>
+      )}
     </div>
   );
 };`,

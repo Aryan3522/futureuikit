@@ -10,18 +10,17 @@ export const componentsList = [
     "heroImage": "/Images/primary-button.webp",
     "previewImage": "/Images/primary-button.webp",
     "previewVideo": "/Videos/Primary-button.webm",
-    "description": "A basic primary button built using HTML and CSS, designed to highlight the main action on a page. It features a solid background color, clear text, and subtle hover effects for better user interaction. The button is fully responsive, lightweight, and easy to customize, making it ideal for forms, call-to-action sections, and general UI use, similar in style to Bootstrap’s primary button.",
+    "description": "A fully modern and customizable primary button designed for high-end UI. It features multiple variants (modern, clean, minimal), smooth framer-motion animations, and full color profile support. No shadows are used, keeping it clean and professional for any project.",
     "details": [
-      "Built using pure HTML and CSS with no external libraries. ",
-      "Styled to resemble Bootstrap’s primary button for a familiar look and feel. ",
-      "Uses a solid primary color to draw attention to the main action. ",
-      "Includes hover and focus states for better user feedback. ",
-      "Fully responsive and works across all modern browsers. ",
-      "Easy to customize — change colors, size, or border radius with simple CSS. ",
-      "Suitable for forms, CTAs, and navigation actions in any web project. "
+      "Built with React and Framer Motion for smooth, organic interactions.",
+      "Supports multiple visual variants: Modern, Clean, and Minimal.",
+      "Fully customizable color profile via props.",
+      "Zero-shadow design for a clean, professional aesthetic.",
+      "Smooth scale and filter animations on hover and tap.",
+      "Highly reusable and easy to integrate into any Next.js project."
     ],
     "codes": {
-      "next": "import { PrimaryButton } from \"@/components/ui/primary-button\";\n\nexport default function Example() {\n  return (\n    <PrimaryButton onClick={() => console.log(\"Clicked!\")}>\n      Click Me\n    </PrimaryButton>\n  );\n}"
+      "next": "import { PrimaryButton } from \"@/components/ui/primary-button\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex gap-4\">\n      <PrimaryButton variant=\"modern\" color=\"#6366f1\">Modern</PrimaryButton>\n      <PrimaryButton variant=\"clean\" color=\"#10b981\">Clean</PrimaryButton>\n      <PrimaryButton variant=\"minimal\" color=\"#f59e0b\">Minimal</PrimaryButton>\n    </div>\n  );\n}"
     },
     "usage": [
       "Add the button HTML markup to your page or component.",
@@ -70,25 +69,24 @@ export const componentsList = [
     "heroImage": "/Images/basic-card.webp",
     "previewImage": "/Images/basic-card.webp",
     "previewVideo": "/Videos/Basic-card.webm",
-    "description": "A modern card component built using HTML and CSS to display content in a clean and organized layout. It features a soft background, rounded corners, and subtle shadows to separate content from the page. Ideal for showcasing profiles, summaries, stats, or any grouped information in dashboards, portfolios, and web interfaces.",
+    "description": "A modern, highly flexible card component with multiple variants and built-in animations. Designed to be clean and minimal, it avoids heavy shadows in favor of subtle borders and glassmorphism. Perfect for profiles, feature blocks, and data display.",
     "details": [
-      "Built using pure HTML and CSS with no external libraries. ",
-      "Uses a clean layout with padding, rounded corners, and subtle shadows. ",
-      "Designed with a modern glass-style look for a premium feel. ",
-      "Supports flexible content such as text, images, stats, and actions. ",
-      "Fully responsive and adapts well to different screen sizes. ",
-      "Easy to customize — update colors, spacing, or border radius in CSS. ",
-      "Suitable for profiles, dashboards, feature blocks, and portfolio sections. "
+      "Built with Framer Motion for smooth entry and hover animations.",
+      "Supports Modern (Glass), Clean (Solid), and Minimal (Outline) variants.",
+      "Fully customizable color scheme for icons and primary actions.",
+      "Minimalist design without heavy shadows for a clean look.",
+      "Responsive layout that adapts to any container.",
+      "Easily configurable stats and call-to-action buttons."
     ],
     "codes": {
-      "next": "import { BasicCard } from \"@/components/ui/basic-card\";\n\nexport default function Example() {\n  return (\n    <BasicCard \n      name=\"Aryan Hooda\"\n      title=\"Full Stack Developer\"\n      onConnect={() => console.log(\"Connecting...\")}\n    />\n  );\n}"
+      "next": "import { BasicCard } from \"@/components/ui/basic-card\";\n\nexport default function Example() {\n  return (\n    <BasicCard \n      variant=\"modern\"\n      color=\"#6366f1\"\n      name=\"Aryan Hooda\"\n      title=\"Full Stack Developer\"\n    />\n  );\n}"
     },
     "usage": [
-      "Add the card HTML markup to your page or component.",
-      "Wrap your content such as titles, text, or stats inside the card container.",
-      "Place the card in layouts like grids, sections, or dashboards.",
-      "Update the content to match your use case, such as profiles or summaries.",
-      "Customize styles like background, padding, or shadow in CSS if needed."
+      "Import BasicCard into your React component.",
+      "Choose a variant: 'modern', 'clean', or 'minimal'.",
+      "Pass a custom color for the avatar and primary button.",
+      "Provide stats and descriptions as needed to fit your use case.",
+      "Add onClick handlers for primary and secondary actions."
     ]
   },
   {
@@ -224,26 +222,24 @@ export const componentsList = [
     "heroImage": "/Images/infinite-carousel-swiper.webp",
     "previewImage": "/Images/infinite-carousel-swiper.webp",
     "previewVideo": "/Videos/infinite-carousel-1.webm",
-    "description": "Infinite Carousel is a seamless content slider built with HTML, CSS, and JavaScript that creates an endless scrolling experience. As users navigate through items, the carousel dynamically loops by rendering the first elements at the end, ensuring there is no visible start or finish. With smooth transitions and responsive behavior, it’s ideal for showcasing images, cards, or testimonials in a continuous flow while maintaining performance and visual consistency.",
+    "description": "A premium, cinematic carousel slider powered by Framer Motion. It features smooth physics-based transitions, staggered content entry, and interactive navigation elements. Designed for high-impact visual storytelling with full responsiveness.",
     "details": [
-      "Continuously loops items to create a seamless, never-ending carousel.",
-      "Re-renders initial elements at the end when the item list finishes.",
-      "Provides smooth transitions for a fluid sliding experience.",
-      "Keeps users engaged by removing hard stops in navigation.",
-      "Ideal for showcasing images, cards, testimonials, or logos.",
-      "Built with HTML, CSS, and JavaScript for full control and easy customization."
+      "Advanced animations using Framer Motion's AnimatePresence.",
+      "Cinematic slide transitions with staggered content reveals.",
+      "Interactive navigation arrows and smart pagination dots.",
+      "Automatic progress indicator synchronized with the auto-play timer.",
+      "Supports high-resolution images with sophisticated gradient overlays.",
+      "Fully responsive and optimized for both touch and mouse interactions."
     ],
     "codes": {
-      "next": "import { CarouselSlider } from \"@/components/ui/carousel-slider\";\n\nconst slides = [\n  { id: 1, title: \"Slide 1\", image: \"...\" },\n  { id: 2, title: \"Slide 2\", image: \"...\" },\n];\n\nexport default function Example() {\n  return <CarouselSlider slides={slides} autoPlayInterval={5000} />;\n}"
+      "next": "import { CarouselSlider } from \"@/components/ui/carousel-slider\";\n\nconst slides = [\n  { id: 1, title: \"EXOTIC ADVENTURE\", tag: \"EXPLORE\", location: \"Bali, Indonesia\", image: \"...\" },\n  { id: 2, title: \"URBAN EXPLORER\", tag: \"CITY\", location: \"Tokyo, Japan\", image: \"...\" },\n];\n\nexport default function Example() {\n  return <CarouselSlider slides={slides} autoPlayInterval={5000} />;\n}"
     },
     "usage": [
-      "Add the carousel markup to the section where you want items to slide continuously.",
-      "Wrap your carousel items inside the main track or container element.",
-      "Initialize the JavaScript logic after the DOM loads to enable looping behavior.",
-      "Use it to display images, cards, testimonials, or brand logos.",
-      "Control slide speed and direction through JavaScript or CSS settings.",
-      "Keep it inside a responsive wrapper to adapt across screen sizes.",
-      "Customize spacing, colors, and animations in CSS to fit your design system."
+      "Import CarouselSlider into your page or section.",
+      "Provide an array of slide objects with title, tag, location, and image.",
+      "Adjust autoPlayInterval to control the slide duration.",
+      "Use high-quality images for the best visual impact.",
+      "Position the slider within a full-width or large-container layout."
     ]
   },
   {
@@ -352,26 +348,24 @@ export const componentsList = [
     "heroImage": "/Images/Loading-spinner.webp",
     "previewImage": "/Images/Loading-spinner.webp",
     "previewVideo": "/Videos/Loading-spinner.webm",
-    "description": "A basic loading screen with a spinner and a “Loading, please wait…” message to let users know something is in progress.",
+    "description": "A modern, animated loading indicator with multiple visual styles. Built with Framer Motion, it provides smooth and engaging feedback while users wait for content or data to load.",
     "details": [
-      "Shows a smooth spinner animation with a static loading message. ",
-      "Lets users know that content is being loaded. ",
-      "Useful for page loads, API requests, and data fetching. ",
-      "Keeps the interface clear while users wait. ",
-      "Lightweight design that fits any UI. ",
-      "Easy to customize size, color, and text using CSS. "
+      "Built with Framer Motion for high-quality, smooth animations.",
+      "Supports Modern (Rings), Clean (Dots), and Minimal (Circle) variants.",
+      "Fully customizable color for the loading indicator.",
+      "Lightweight and highly responsive design.",
+      "Optional animated loading text with a pulse effect.",
+      "Perfect for page transitions, API calls, and data fetching states."
     ],
     "codes": {
-      "next": "import { BasicLoader } from \"@/components/ui/basic-loader\";\n\nexport default function Example() {\n  return <BasicLoader text=\"Custom Loading...\" />;\n}"
+      "next": "import { BasicLoader } from \"@/components/ui/basic-loader\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-col gap-8\">\n      <BasicLoader variant=\"modern\" color=\"#3b82f6\" text=\"Modern Rings...\" />\n      <BasicLoader variant=\"clean\" color=\"#10b981\" text=\"Clean Dots...\" />\n      <BasicLoader variant=\"minimal\" color=\"#f59e0b\" text=\"Minimalist...\" />\n    </div>\n  );\n}"
     },
     "usage": [
-      "Add the basic loading screen markup where content may take time to load.",
-      "Place it inside the container that will show your main content.",
-      "Show the loader while data is loading or a task is running.",
-      "Hide the loader once the content is ready to display.",
-      "Use it for full pages or small sections that need feedback.",
-      "Center the spinner and text using flex or grid for a clean look.",
-      "Customize the text or colors in CSS to match your app theme if needed."
+      "Import BasicLoader into your React component.",
+      "Choose a variant: 'modern', 'clean', or 'minimal'.",
+      "Pass a custom color to match your brand's theme.",
+      "Optionally provide a custom loading text or disable it.",
+      "Use it to indicate progress during asynchronous operations."
     ]
   }
 ];

@@ -8,6 +8,7 @@ import ComponentPageSidebar from "@/components/ui/ComponentPageSidebar";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Check, Code as CodeIcon, Copy, GalleryHorizontalEnd, ListCollapse, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { PillHeader } from "@/components/ui/PillHeader";
 import { Button } from "@/components/ui/button";
 import { cva } from "class-variance-authority";
@@ -59,120 +60,93 @@ const Code = ({ className, ...props }) => (
 
 const CarouselSlider = () => {
   const slides = [
-    {
-      id: 1,
-      tag: "Exploration",
-      title: "The exotic islands of Hawaii",
-      location: "Maui, Hawaii",
-      image: "https://images.unsplash.com/photo-1556206079-747a7a424d3d?ixlib=rb-4.0.3&q=80",
-      tagBg: "bg-indigo-600"
-    },
-    {
-      id: 2,
-      tag: "Adventure",
-      title: "Island of Eternal Spring",
-      location: "Lanzarote, Spain",
-      image: "https://images.unsplash.com/photo-1571900670723-a317a66e3fb7?ixlib=rb-4.0.3&q=80",
-      tagBg: "bg-emerald-600"
-    },
-    {
-      id: 3,
-      tag: "History",
-      title: "The Majestic Eiffel Tower",
-      location: "Paris, France",
-      image: "https://images.unsplash.com/photo-1549144511-f099e773c147?ixlib=rb-4.0.3&q=80",
-      tagBg: "bg-amber-600"
-    }
+    { id: 1, tag: "EXPLORE", title: "EXOTIC ADVENTURE", location: "Bali, Indonesia", image: "https://images.unsplash.com/photo-1556206079-747a7a424d3d?ixlib=rb-4.0.3&q=80", tagBg: "bg-indigo-600" },
+    { id: 2, tag: "CITY", title: "URBAN EXPLORER", location: "Tokyo, Japan", image: "https://images.unsplash.com/photo-1571900670723-a317a66e3fb7?ixlib=rb-4.0.3&q=80", tagBg: "bg-emerald-600" },
+    { id: 3, tag: "HISTORY", title: "MAJESTIC PARIS", location: "Paris, France", image: "https://images.unsplash.com/photo-1549144511-f099e773c147?ixlib=rb-4.0.3&q=80", tagBg: "bg-amber-600" }
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     if (isPaused) return;
     const interval = setInterval(() => {
+      setDirection(1);
       setCurrentIndex((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(interval);
   }, [isPaused, slides.length]);
 
-  const nextSlide = () => setCurrentIndex((prev) => (prev + 1) % slides.length);
-  const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
+  const nextSlide = () => {
+    setDirection(1);
+    setCurrentIndex((prev) => (prev + 1) % slides.length);
+  };
+  
+  const prevSlide = () => {
+    setDirection(-1);
+    setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
+  const variants = {
+    enter: (direction) => ({ x: direction > 0 ? 500 : -500, opacity: 0, scale: 1.1 }),
+    center: { zIndex: 1, x: 0, opacity: 1, scale: 1 },
+    exit: (direction) => ({ zIndex: 0, x: direction < 0 ? 500 : -500, opacity: 0, scale: 0.9 }),
+  };
 
   return (
     <div 
-      className="group relative w-full max-w-4xl mx-auto h-[450px] overflow-hidden rounded-2xl bg-black shadow-2xl select-none"
+      className="group relative w-full max-w-4xl mx-auto h-[400px] overflow-hidden rounded-3xl bg-black shadow-2xl select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Slides */}
-      {slides.map((slide, idx) => (
-        <div
-          key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out bg-cover bg-center ${
-            currentIndex === idx ? "opacity-100 z-10" : "opacity-0 z-0"
-          }`}
-          style={{ backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, transparent 100%), url("${slide.image}")` }}
+      <AnimatePresence initial={false} custom={direction}>
+        <motion.div
+          key={currentIndex}
+          custom={direction}
+          variants={variants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{
+            x: { type: "spring", stiffness: 300, damping: 30 },
+            opacity: { duration: 0.4 },
+          }}
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 60%, transparent 100%), url("${slides[currentIndex].image}")` }}
         >
-          <div className={`absolute bottom-0 left-0 right-0 p-8 md:p-12 text-white transition-all duration-700 delay-300 ${
-            currentIndex === idx ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-          }`}>
-            <div className="flex flex-col gap-3">
-              <span className={`inline-block self-start px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${slide.tagBg}`}>
-                {slide.tag}
+          <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
+            <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="flex flex-col gap-2">
+              <span className={cn("inline-block self-start px-3 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest", slides[currentIndex].tagBg)}>
+                {slides[currentIndex].tag}
               </span>
-              <h2 className="text-3xl md:text-5xl font-black leading-tight max-w-2xl italic">
-                {slide.title}
+              <h2 className="text-3xl md:text-5xl font-black italic uppercase leading-none tracking-tighter">
+                {slides[currentIndex].title}
               </h2>
-              <div className="flex items-center gap-2 text-sm text-white/70 font-medium">
-                <MapPin size={16} className="text-white/50" />
-                {slide.location}
+              <div className="flex items-center gap-2 text-xs text-white/70 font-bold italic uppercase">
+                <MapPin size={14} className="text-primary" /> {slides[currentIndex].location}
               </div>
-            </div>
+            </motion.div>
           </div>
-        </div>
-      ))}
+        </motion.div>
+      </AnimatePresence>
 
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white/20"
-      >
-        <ChevronLeft size={24} />
-      </button>
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white/20"
-      >
-        <ChevronRight size={24} />
-      </button>
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 z-20 flex justify-between px-4 pointer-events-none">
+        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={prevSlide} className="pointer-events-auto p-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white">
+          <ChevronLeft size={20} />
+        </motion.button>
+        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={nextSlide} className="pointer-events-auto p-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white">
+          <ChevronRight size={20} />
+        </motion.button>
+      </div>
 
-      {/* Dots */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-2">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
         {slides.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => setCurrentIndex(idx)}
-            className={`h-1.5 transition-all duration-300 rounded-full ${
-              currentIndex === idx ? "w-8 bg-white" : "w-1.5 bg-white/40 hover:bg-white/60"
-            }`}
-          />
+          <button key={idx} onClick={() => { setDirection(idx > currentIndex ? 1 : -1); setCurrentIndex(idx); }} className="relative h-1 rounded-full bg-white/20 overflow-hidden" style={{ width: currentIndex === idx ? "24px" : "6px" }}>
+            {currentIndex === idx && <motion.div layoutId="activeDot" className="absolute inset-0 bg-white" />}
+          </button>
         ))}
       </div>
-
-      {/* Progress Bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-30 overflow-hidden">
-         <div 
-           key={currentIndex}
-           className="h-full bg-white/50 animate-progress"
-           style={{ animationDuration: '5000ms' }}
-         />
-      </div>
-
-      <style>{`
-        @keyframes progress { from { width: 0%; } to { width: 100%; } }
-        .animate-progress { animation: progress 5s linear forwards; }
-      `}</style>
     </div>
   );
 };
@@ -423,13 +397,127 @@ const ExpandingFlexCards = () => {
   );
 };
 
+const PreviewButton = ({ variant, color, children }) => {
+  const getVariantStyles = () => {
+    switch (variant) {
+      case "modern":
+        return { background: color, color: "#ffffff", border: "none" };
+      case "clean":
+        return { background: color, color: "#ffffff", border: "none", borderRadius: "8px" };
+      case "minimal":
+        return { background: "transparent", color: color, border: `1px solid ${color}`, borderRadius: "6px" };
+      default:
+        return { background: color, color: "#ffffff", border: "none" };
+    }
+  };
+
+  const variantClasses = {
+    modern: "relative overflow-hidden px-6 py-2.5 rounded-xl font-semibold tracking-wide",
+    clean: "px-5 py-2 rounded-lg font-medium",
+    minimal: "px-5 py-2 font-medium hover:bg-opacity-10",
+  };
+
+  return (
+    <motion.button
+      whileHover={{ 
+        scale: 1.05,
+        filter: variant === "minimal" ? "brightness(0.95)" : "brightness(1.1)",
+      }}
+      whileTap={{ scale: 0.95 }}
+      className={cn(
+        "inline-flex items-center justify-center cursor-pointer select-none transition-all duration-200",
+        variantClasses[variant] || variantClasses.modern
+      )}
+      style={getVariantStyles()}
+    >
+      <span className="relative z-10">{children}</span>
+      {variant === "modern" && (
+        <motion.div
+          className="absolute inset-0 z-0 bg-white/10"
+          initial={{ x: "-100%" }}
+          whileHover={{ x: "100%" }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+        />
+      )}
+    </motion.button>
+  );
+};
+
+const PreviewCard = ({ variant, color, name, title }) => {
+  const getVariantStyles = () => {
+    switch (variant) {
+      case "modern": return "bg-card/40 backdrop-blur-xl border-white/10";
+      case "clean": return "bg-card border-border";
+      case "minimal": return "bg-transparent border-border/50";
+      default: return "bg-card/60 backdrop-blur-md border-border/40";
+    }
+  };
+
+  return (
+    <motion.div
+      whileHover={{ y: -5 }}
+      className={cn("max-w-[280px] w-full rounded-2xl border p-5 transition-all duration-300 text-foreground cursor-pointer", getVariantStyles())}
+    >
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white text-sm flex-shrink-0" style={{ background: `linear-gradient(135deg, ${color}, ${color}dd)` }}>AH</div>
+        <div className="overflow-hidden">
+          <h3 className="text-sm font-bold tracking-tight truncate">{name}</h3>
+          <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider truncate">{title}</p>
+        </div>
+      </div>
+      <p className="text-[11px] leading-relaxed text-muted-foreground mb-4 line-clamp-2">Building scalable web apps with modern technologies.</p>
+      <div className="flex gap-2">
+        <button className="flex-1 rounded-lg py-1.5 text-[10px] font-bold text-white cursor-pointer" style={{ background: color }}>Connect</button>
+        <button className="flex-1 border border-border/40 rounded-lg py-1.5 text-[10px] font-bold text-foreground cursor-pointer">Profile</button>
+      </div>
+    </motion.div>
+  );
+};
+
+const PreviewLoader = ({ variant, color, text }) => {
+  const getLoader = () => {
+    switch (variant) {
+      case "modern":
+        return (
+          <div className="relative w-10 h-10">
+            <motion.div className="absolute inset-0 rounded-full border-2 border-t-transparent" style={{ borderColor: `${color} transparent transparent transparent` }} animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
+            <motion.div className="absolute inset-1 rounded-full border-2 border-b-transparent opacity-50" style={{ borderColor: `transparent transparent ${color} transparent` }} animate={{ rotate: -360 }} transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }} />
+          </div>
+        );
+      case "clean":
+        return (
+          <div className="flex gap-1.5">
+            {[0, 1, 2].map((i) => (
+              <motion.div key={i} className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }} transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }} />
+            ))}
+          </div>
+        );
+      case "minimal":
+        return (
+          <motion.div className="w-6 h-6 rounded-full border-2 border-t-transparent" style={{ borderColor: `${color} transparent transparent transparent` }} animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} />
+        );
+      default: return null;
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-3">
+      {getLoader()}
+      {text && <p className="text-[10px] font-medium text-muted-foreground tracking-wide animate-pulse">{text}</p>}
+    </div>
+  );
+};
+
 const ComponentLivePreview = ({ id, slug }) => {
   switch (Number(id)) {
     case 1: // Primary Button
       return (
-        <button className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-medium transition cursor-pointer select-text shadow-md">
-          Primary Button
-        </button>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 p-4 w-full max-w-4xl items-center justify-items-center">
+          <PreviewButton color="#2563eb">Default</PreviewButton>
+          <PreviewButton variant="modern" color="#6366f1">Modern</PreviewButton>
+          <PreviewButton variant="clean" color="#10b981">Clean</PreviewButton>
+          <PreviewButton variant="minimal" color="#f59e0b">Minimal</PreviewButton>
+        </div>
       );
 
     case 2: // Glowy Button
@@ -517,35 +605,10 @@ const ComponentLivePreview = ({ id, slug }) => {
 
     case 3: // Basic Card
       return (
-        <div className="max-w-sm rounded-xl border border-border/40 bg-card/60 backdrop-blur-md p-6 select-text shadow-lg hover:scale-[1.01] hover:-translate-y-0.5 transition-all duration-300 text-foreground">
-          <div className="flex items-center gap-4 mb-4 select-text">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center font-bold text-white text-lg">AH</div>
-            <div>
-              <h3 className="text-lg font-bold text-foreground select-text">Aryan Hooda</h3>
-              <p className="text-xs text-muted-foreground select-text">Full Stack Developer</p>
-            </div>
-          </div>
-          <p className="text-sm text-muted-foreground mb-4 select-text leading-relaxed">
-            Building scalable web apps with React, Node.js & MongoDB. Passionate about clean UI and high-performance backend systems.
-          </p>
-          <div className="flex justify-between mb-4 border-t border-border/20 pt-3 text-center select-text">
-            <div>
-              <h4 className="text-sm font-bold text-foreground select-text">24</h4>
-              <span className="text-xs text-muted-foreground select-text">Projects</span>
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-foreground select-text">3+</h4>
-              <span className="text-xs text-muted-foreground select-text">Years</span>
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-foreground select-text">1.2k</h4>
-              <span className="text-xs text-muted-foreground select-text">Followers</span>
-            </div>
-          </div>
-          <div className="flex gap-2 select-text">
-            <button className="flex-1 bg-gradient-to-r from-indigo-500 to-cyan-400 text-white rounded-md py-2 text-sm font-medium hover:opacity-90 select-text">Connect</button>
-            <button className="flex-1 bg-muted/50 border border-border/40 hover:bg-muted text-foreground rounded-md py-2 text-sm font-medium transition select-text">Profile</button>
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4 w-full justify-items-center">
+          <PreviewCard variant="modern" color="#6366f1" name="Aryan Hooda" title="Full Stack Developer" />
+          <PreviewCard variant="clean" color="#10b981" name="John Doe" title="Product Designer" />
+          <PreviewCard variant="minimal" color="#f59e0b" name="Sarah Smith" title="UI Engineer" />
         </div>
       );
 
@@ -1031,24 +1094,10 @@ const ComponentLivePreview = ({ id, slug }) => {
 
     case 12: // Basic Loader
       return (
-        <div className="flex flex-col justify-center items-center gap-4 select-text select-none">
-          <style>{`
-            .loading-spinner {
-              width: 50px;
-              height: 50px;
-              border: 6px solid #ccc;
-              border-top-color: #3498db;
-              border-radius: 50%;
-              animation: spin 1s linear infinite;
-            }
-            @keyframes spin {
-              to {
-                transform: rotate(360deg);
-              }
-            }
-          `}</style>
-          <div className="loading-spinner"></div>
-          <p className="text-base text-muted-foreground select-text animate-pulse">Loading, please wait...</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 p-8 w-full max-w-2xl items-center justify-items-center">
+          <PreviewLoader variant="modern" color="#3b82f6" text="Modern..." />
+          <PreviewLoader variant="clean" color="#10b981" text="Clean..." />
+          <PreviewLoader variant="minimal" color="#f59e0b" text="Minimal..." />
         </div>
       );
 
