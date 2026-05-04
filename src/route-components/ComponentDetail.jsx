@@ -397,7 +397,7 @@ const ExpandingFlexCards = () => {
   );
 };
 
-const PreviewButton = ({ variant = "primary", mode = "modern", color, children, disabled, ...props }) => {
+const PreviewButton = ({ variant = "primary", mode = "modern", color, children, disabled, icon: Icon, ...props }) => {
   const intentColors = {
     primary: "#2563eb",
     success: "#10b981",
@@ -438,7 +438,7 @@ const PreviewButton = ({ variant = "primary", mode = "modern", color, children, 
       whileTap={!disabled ? { scale: 0.95 } : {}}
       disabled={disabled}
       className={cn(
-        "inline-flex items-center justify-center cursor-pointer select-none transition-all duration-200",
+        "inline-flex items-center justify-center gap-2 cursor-pointer select-none transition-all duration-200",
         "disabled:opacity-50 disabled:cursor-not-allowed",
         modeClasses[mode] || modeClasses.modern
       )}
@@ -446,6 +446,11 @@ const PreviewButton = ({ variant = "primary", mode = "modern", color, children, 
       {...props}
     >
       <span className="relative z-10">{children}</span>
+      {Icon && (
+        <motion.div animate={disabled ? {} : { x: [0, 2, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>
+          <Icon size={14} />
+        </motion.div>
+      )}
       {mode === "modern" && !disabled && (
         <motion.div
           className="absolute inset-0 z-0 bg-white/10"
@@ -455,6 +460,65 @@ const PreviewButton = ({ variant = "primary", mode = "modern", color, children, 
         />
       )}
     </motion.button>
+  );
+};
+
+const PreviewGlowyButton = ({ variant = "primary", mode = "modern", children, disabled, icon: Icon = ArrowRight }) => {
+  const intentColors = {
+    primary: { base: "#00afaf", glow: "rgba(0, 175, 175, 0.5)" },
+    success: { base: "#10b981", glow: "rgba(16, 185, 129, 0.5)" },
+    warning: { base: "#f59e0b", glow: "rgba(245, 158, 11, 0.5)" },
+    danger: { base: "#ef4444", glow: "rgba(239, 68, 68, 0.5)" },
+    info: { base: "#06b6d4", glow: "rgba(6, 182, 212, 0.5)" },
+    secondary: { base: "#64748b", glow: "rgba(100, 116, 139, 0.5)" },
+  };
+
+  const theme = intentColors[variant] || intentColors.primary;
+  
+  return (
+    <div className="relative select-none inline-block">
+      <style>{`
+        .p-glowy-${variant} {
+          --color: ${theme.base};
+          --glow: ${theme.glow};
+          position: relative;
+          min-width: 100px;
+          height: 36px;
+          padding: 0 1rem;
+          border-radius: 6px;
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+          border: none;
+          font-weight: 600;
+          font-size: 11px;
+          color: white;
+          background: rgb(15 23 42 / 0.9);
+          box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+          cursor: pointer;
+          transition: all 400ms ease;
+        }
+        .p-glowy-${variant}:hover {
+          background: rgb(15 23 42 / 1);
+          box-shadow: 0 0 15px var(--glow), inset 0 0 8px -5px var(--color);
+          transform: translateY(-1px);
+        }
+        .p-glowy-${variant}.m-minimal {
+          background: transparent;
+          box-shadow: 0 0 0 1px var(--color);
+          color: var(--color);
+        }
+        .p-glowy-${variant}.m-clean {
+          background: var(--color);
+          box-shadow: none;
+        }
+      `}</style>
+      <button className={cn(`p-glowy-${variant}`, mode !== "modern" && `m-${mode}`)}>
+        {children}
+        {Icon && <Icon size={12} />}
+      </button>
+    </div>
   );
 };
 
@@ -569,84 +633,21 @@ const ComponentLivePreview = ({ id, slug }) => {
 
     case 2: // Glowy Button
       return (
-        <div className="relative select-text select-none inline-block">
-          <style>{`
-            .glowy-btn-custom {
-              --h: 60px;
-              --color: #00afaf;
-              --text-color: rgb(210 210 240);
-              position: relative;
-              min-width: 180px;
-              height: var(--h);
-              padding: 0 4.25rem 0 2.5rem;
-              border-radius: var(--h);
-              display: inline-flex;
-              justify-content: center;
-              align-items: center;
-              border: none;
-              font-family: "Montserrat", sans-serif;
-              color: var(--text-color);
-              background: rgb(4 8 20 / 0.8);
-              box-shadow: 0 0 0 1px rgb(200 200 220 / 0.22);
-              overflow: hidden;
-              cursor: pointer;
-              transition: all 500ms ease;
-              z-index: 2;
-            }
-            .glowy-btn-custom::before {
-              content: "";
-              position: absolute;
-              inset: 0;
-              background: rgb(200 200 220 / 0.1);
-              box-shadow: inset 0 0px 24px 0 rgb(170 230 250 / 0.12);
-              border-radius: var(--h);
-              z-index: 1;
-              transition: transform 500ms ease, box-shadow 500ms ease;
-            }
-            .glowy-btn-custom .btn-text {
-              transition: transform 500ms ease;
-              z-index: 2;
-              white-space: nowrap;
-            }
-            .glowy-btn-custom .btn-icon {
-              position: absolute;
-              right: 1.25rem;
-              width: 20px;
-              height: 20px;
-              opacity: 0;
-              transform: translateX(15px);
-              transition: all 500ms ease;
-              z-index: 2;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            }
-            .glowy-btn-custom:hover {
-              box-shadow: 0 0 20px var(--color),
-                inset 0 0 26px -10px var(--color),
-                0 0 0 1px rgb(200 200 220 / 0.22);
-            }
-            .glowy-btn-custom:hover::before {
-              transform: translateX(calc(100% - var(--h)));
-              box-shadow: inset 0 0px 0px 0 transparent;
-            }
-            .glowy-btn-custom:hover .btn-text {
-              transform: translateX(-15px);
-            }
-            .glowy-btn-custom:hover .btn-icon {
-              opacity: 1;
-              transform: translateX(0);
-              color: var(--color);
-            }
-          `}</style>
-          <button className="glowy-btn-custom select-text">
-            <span className="btn-text">GlowyButton</span>
-            <div className="btn-icon">
-              <svg viewBox="0 0 20 10" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
-                <path d="M14.84 0l-1.08 1.06 3.3 3.2H0v1.49h17.05l-3.3 3.2L14.84 10 20 5l-5.16-5z" fill="currentColor"/>
-              </svg>
-            </div>
-          </button>
+        <div className="flex flex-col gap-8 w-full max-w-4xl p-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 items-center justify-items-center">
+            <PreviewGlowyButton variant="primary">Primary</PreviewGlowyButton>
+            <PreviewGlowyButton variant="success">Success</PreviewGlowyButton>
+            <PreviewGlowyButton variant="warning">Warning</PreviewGlowyButton>
+            <PreviewGlowyButton variant="danger">Danger</PreviewGlowyButton>
+            <PreviewGlowyButton variant="info">Info</PreviewGlowyButton>
+            <PreviewGlowyButton variant="secondary">Secondary</PreviewGlowyButton>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-center justify-items-center border-t border-border/20 pt-8">
+            <PreviewGlowyButton variant="primary" mode="modern">Modern Glow</PreviewGlowyButton>
+            <PreviewGlowyButton variant="success" mode="clean">Clean Glow</PreviewGlowyButton>
+            <PreviewGlowyButton variant="danger" mode="minimal">Minimal Glow</PreviewGlowyButton>
+            <PreviewGlowyButton variant="primary" disabled>Disabled</PreviewGlowyButton>
+          </div>
         </div>
       );
 

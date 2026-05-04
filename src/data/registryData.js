@@ -2,6 +2,7 @@ export const registry = {
   primary: {
     name: "Primary Button",
     type: "components:ui",
+    dependencies: ["framer-motion"],
     files: [
       {
         name: "primary-button.jsx",
@@ -129,101 +130,161 @@ PrimaryButton.displayName = "PrimaryButton";`,
   glowy: {
     name: "Glowy Button",
     type: "components:ui",
-    requiresCSS: true,
-    css: `
-.glowy-btn-custom {
-  --h: 60px;
-  --color: #00afaf;
-  --text-color: rgb(210 210 240);
-  position: relative;
-  min-width: 180px;
-  height: var(--h);
-  padding: 0 4.25rem 0 2.5rem;
-  border-radius: var(--h);
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  font-family: inherit;
-  color: var(--text-color);
-  background: rgb(4 8 20 / 0.8);
-  box-shadow: 0 0 0 1px rgb(200 200 220 / 0.22);
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 500ms ease;
-  z-index: 2;
-}
-.glowy-btn-custom::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgb(200 200 220 / 0.1);
-  box-shadow: inset 0 0px 24px 0 rgb(170 230 250 / 0.12);
-  border-radius: var(--h);
-  z-index: 1;
-  transition: transform 500ms ease, box-shadow 500ms ease;
-}
-.glowy-btn-custom .btn-text {
-  transition: transform 500ms ease;
-  z-index: 2;
-  white-space: nowrap;
-}
-.glowy-btn-custom .btn-icon {
-  position: absolute;
-  right: 1.25rem;
-  width: 20px;
-  height: 20px;
-  opacity: 0;
-  transform: translateX(15px);
-  transition: all 500ms ease;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.glowy-btn-custom:hover {
-  box-shadow: 0 0 20px var(--color),
-    inset 0 0 26px -10px var(--color),
-    0 0 0 1px rgb(200 200 220 / 0.22);
-}
-.glowy-btn-custom:hover::before {
-  transform: translateX(calc(100% - var(--h)));
-  box-shadow: inset 0 0px 0px 0 transparent;
-}
-.glowy-btn-custom:hover .btn-text {
-  transform: translateX(-15px);
-}
-.glowy-btn-custom:hover .btn-icon {
-  opacity: 1;
-  transform: translateX(0);
-  color: var(--color);
-}
-`,
+    dependencies: ["framer-motion", "lucide-react"],
     files: [
       {
         name: "glowy-button.jsx",
         content: `"use client";
+
 import React from "react";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const GlowyButton = React.forwardRef(
-  ({ className, children, icon, ...props }, ref) => {
+  ({ 
+    className, 
+    children, 
+    variant = "primary", 
+    mode = "modern", 
+    icon: Icon = ArrowRight,
+    showIcon = true,
+    color,
+    glowColor,
+    disabled,
+    ...props 
+  }, ref) => {
+    
+    const intentColors = {
+      primary: { base: "#00afaf", glow: "rgba(0, 175, 175, 0.5)" },
+      success: { base: "#10b981", glow: "rgba(16, 185, 129, 0.5)" },
+      warning: { base: "#f59e0b", glow: "rgba(245, 158, 11, 0.5)" },
+      danger: { base: "#ef4444", glow: "rgba(239, 68, 68, 0.5)" },
+      info: { base: "#06b6d4", glow: "rgba(6, 182, 212, 0.5)" },
+      secondary: { base: "#64748b", glow: "rgba(100, 116, 139, 0.5)" },
+    };
+
+    const styleOptions = ["modern", "clean", "minimal"];
+    const intents = Object.keys(intentColors);
+    
+    let finalIntent = variant;
+    let finalMode = mode;
+
+    if (styleOptions.includes(variant)) {
+      finalMode = variant;
+      finalIntent = intents.includes(mode) ? mode : "primary";
+    }
+
+    const theme = intentColors[finalIntent] || intentColors.primary;
+    const finalColor = color || theme.base;
+    const finalGlow = glowColor || theme.glow;
+
     return (
-      <div className={cn("relative select-none inline-block", className)}>
-        <button ref={ref} className="glowy-btn-custom" {...props}>
-          <span className="btn-text">{children}</span>
-          <div className="btn-icon">
-            {icon || (
-              <svg viewBox="0 0 20 10" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
-                <path d="M14.84 0l-1.08 1.06 3.3 3.2H0v1.49h17.05l-3.3 3.2L14.84 10 20 5l-5.16-5z" fill="currentColor"/>
-              </svg>
-            )}
-          </div>
+      <div className={cn("relative select-none inline-block group", className)}>
+        <style>{\`
+          .glowy-btn-\${finalIntent} {
+            --h: 48px;
+            --color: \${finalColor};
+            --glow: \${finalGlow};
+            position: relative;
+            min-width: 140px;
+            height: var(--h);
+            padding: 0 1.5rem;
+            border-radius: 8px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            border: none;
+            font-family: inherit;
+            font-weight: 600;
+            color: white;
+            background: rgb(15 23 42 / 0.9);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 400ms cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 2;
+          }
+
+          .glowy-btn-\${finalIntent}::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transform: translateX(-100%);
+            transition: transform 600ms ease;
+            z-index: 1;
+          }
+
+          .glowy-btn-\${finalIntent}:hover {
+            background: rgb(15 23 42 / 1);
+            box-shadow: 0 0 20px var(--glow),
+                        inset 0 0 12px -5px var(--color),
+                        0 0 0 1px rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+          }
+
+          .glowy-btn-\${finalIntent}:hover::before {
+            transform: translateX(100%);
+          }
+
+          .glowy-btn-\${finalIntent}:active {
+            transform: translateY(0);
+            box-shadow: 0 0 10px var(--glow),
+                        inset 0 0 8px -5px var(--color);
+          }
+
+          .glowy-btn-\${finalIntent}:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+            box-shadow: none;
+          }
+
+          /* Mode overrides */
+          .glowy-btn-\${finalIntent}.mode-minimal {
+            background: transparent;
+            box-shadow: 0 0 0 1px var(--color);
+            color: var(--color);
+          }
+          .glowy-btn-\${finalIntent}.mode-minimal:hover {
+            background: var(--color);
+            color: white;
+          }
+
+          .glowy-btn-\${finalIntent}.mode-clean {
+            background: var(--color);
+            box-shadow: none;
+          }
+          .glowy-btn-\${finalIntent}.mode-clean:hover {
+            filter: brightness(1.1);
+          }
+        \`}</style>
+        <button 
+          disabled={disabled}
+          className={cn(
+            \`glowy-btn-\${finalIntent}\`,
+            finalMode !== "modern" && \`mode-\${finalMode}\`
+          )} 
+          {...props}
+        >
+          <span className="relative z-10 whitespace-nowrap">{children}</span>
+          {showIcon && Icon && (
+            <motion.div 
+              className="relative z-10 flex items-center justify-center"
+              animate={disabled ? {} : { x: [0, 4, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Icon size={18} />
+            </motion.div>
+          )}
         </button>
       </div>
     );
   }
 );
+
 GlowyButton.displayName = "GlowyButton";`,
       },
     ],
@@ -1225,6 +1286,7 @@ export const ExpandingFlexCard = ({ options = [], className }) => {
   basic: {
     name: "Basic Loader",
     type: "components:ui",
+    dependencies: ["framer-motion"],
     files: [
       {
         name: "basic-loader.jsx",
@@ -1313,5 +1375,8 @@ export const BasicLoader = ({
 };`,
       },
     ],
+  },
+};
+  ],
   },
 };
