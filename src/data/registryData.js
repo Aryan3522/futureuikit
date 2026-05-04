@@ -145,10 +145,8 @@ export const GlowyButton = React.forwardRef(
   ({ 
     className, 
     children, 
-    variant = "primary", 
-    mode = "modern", 
+    variant = "primary", // primary, success, warning, danger, info, secondary
     icon: Icon = ArrowRight,
-    showIcon = true,
     color,
     glowColor,
     disabled,
@@ -156,131 +154,97 @@ export const GlowyButton = React.forwardRef(
   }, ref) => {
     
     const intentColors = {
-      primary: { base: "#00afaf", glow: "rgba(0, 175, 175, 0.5)" },
-      success: { base: "#10b981", glow: "rgba(16, 185, 129, 0.5)" },
-      warning: { base: "#f59e0b", glow: "rgba(245, 158, 11, 0.5)" },
-      danger: { base: "#ef4444", glow: "rgba(239, 68, 68, 0.5)" },
-      info: { base: "#06b6d4", glow: "rgba(6, 182, 212, 0.5)" },
-      secondary: { base: "#64748b", glow: "rgba(100, 116, 139, 0.5)" },
+      primary: { base: "#00afaf", glow: "rgba(0, 175, 175, 0.5)", glass: "rgba(0, 175, 175, 0.35)" },
+      success: { base: "#10b981", glow: "rgba(16, 185, 129, 0.5)", glass: "rgba(16, 185, 129, 0.35)" },
+      warning: { base: "#f59e0b", glow: "rgba(245, 158, 11, 0.5)", glass: "rgba(245, 158, 11, 0.35)" },
+      danger: { base: "#ef4444", glow: "rgba(239, 68, 68, 0.5)", glass: "rgba(239, 68, 68, 0.35)" },
+      info: { base: "#06b6d4", glow: "rgba(6, 182, 212, 0.5)", glass: "rgba(6, 182, 212, 0.35)" },
+      secondary: { base: "#64748b", glow: "rgba(100, 116, 139, 0.5)", glass: "rgba(100, 116, 139, 0.35)" },
     };
 
-    const styleOptions = ["modern", "clean", "minimal"];
-    const intents = Object.keys(intentColors);
-    
-    let finalIntent = variant;
-    let finalMode = mode;
-
-    if (styleOptions.includes(variant)) {
-      finalMode = variant;
-      finalIntent = intents.includes(mode) ? mode : "primary";
-    }
-
-    const theme = intentColors[finalIntent] || intentColors.primary;
+    const theme = intentColors[variant] || intentColors.primary;
     const finalColor = color || theme.base;
     const finalGlow = glowColor || theme.glow;
+    const finalGlass = theme.glass;
 
     return (
-      <div className={cn("relative select-none inline-block group", className)}>
-        <style>{\`
-          .glowy-btn-\${finalIntent} {
-            --h: 48px;
-            --color: \${finalColor};
-            --glow: \${finalGlow};
-            position: relative;
-            min-width: 140px;
-            height: var(--h);
-            padding: 0 1.5rem;
-            border-radius: 8px;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            border: none;
-            font-family: inherit;
-            font-weight: 600;
-            color: white;
-            background: rgb(15 23 42 / 0.9);
-            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 400ms cubic-bezier(0.23, 1, 0.32, 1);
-            z-index: 2;
-          }
-
-          .glowy-btn-\${finalIntent}::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.05), transparent);
-            transform: translateX(-100%);
-            transition: transform 600ms ease;
-            z-index: 1;
-          }
-
-          .glowy-btn-\${finalIntent}:hover {
-            background: rgb(15 23 42 / 1);
-            box-shadow: 0 0 20px var(--glow),
-                        inset 0 0 12px -5px var(--color),
-                        0 0 0 1px rgba(255, 255, 255, 0.2);
-            transform: translateY(-1px);
-          }
-
-          .glowy-btn-\${finalIntent}:hover::before {
-            transform: translateX(100%);
-          }
-
-          .glowy-btn-\${finalIntent}:active {
-            transform: translateY(0);
-            box-shadow: 0 0 10px var(--glow),
-                        inset 0 0 8px -5px var(--color);
-          }
-
-          .glowy-btn-\${finalIntent}:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-            box-shadow: none;
-          }
-
-          /* Mode overrides */
-          .glowy-btn-\${finalIntent}.mode-minimal {
-            background: transparent;
-            box-shadow: 0 0 0 1px var(--color);
-            color: var(--color);
-          }
-          .glowy-btn-\${finalIntent}.mode-minimal:hover {
-            background: var(--color);
-            color: white;
-          }
-
-          .glowy-btn-\${finalIntent}.mode-clean {
-            background: var(--color);
-            box-shadow: none;
-          }
-          .glowy-btn-\${finalIntent}.mode-clean:hover {
-            filter: brightness(1.1);
-          }
-        \`}</style>
-        <button 
-          disabled={disabled}
-          className={cn(
-            \`glowy-btn-\${finalIntent}\`,
-            finalMode !== "modern" && \`mode-\${finalMode}\`
-          )} 
-          {...props}
+      <motion.button
+        ref={ref}
+        disabled={disabled}
+        initial="initial"
+        whileHover={!disabled ? "hover" : "initial"}
+        whileTap={!disabled ? "hover" : "initial"}
+        className={cn(
+          "relative inline-flex items-center justify-center min-w-[170px] h-12 rounded-full font-bold text-white overflow-hidden",
+          "bg-slate-950 border-2",
+          disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
+          className
+        )}
+        style={{
+          borderColor: finalColor,
+          boxShadow: \`0 0 20px \${finalGlow}\`,
+        }}
+        {...props}
+      >
+        {/* Content (Text) */}
+        <motion.div
+          variants={{
+            initial: { x: 0 },
+            hover: { x: -18 }
+          }}
+          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          className="relative z-30 flex items-center justify-center pointer-events-none"
         >
-          <span className="relative z-10 whitespace-nowrap">{children}</span>
-          {showIcon && Icon && (
-            <motion.div 
-              className="relative z-10 flex items-center justify-center"
-              animate={disabled ? {} : { x: [0, 4, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <Icon size={18} />
-            </motion.div>
-          )}
-        </button>
-      </div>
+          {children}
+        </motion.div>
+
+        {/* Shrinking Glass Sheet */}
+        <motion.div
+          variants={{
+            initial: { 
+              width: "100%", 
+              height: "100%", 
+              right: 0, 
+              top: 0,
+              borderRadius: "999px",
+            },
+            hover: { 
+              width: "40px", 
+              height: "40px", 
+              right: "2px", 
+              top: "2px", // Centered: (48px height - 4px border - 40px circle) / 2 = 2px
+              borderRadius: "999px",
+            }
+          }}
+          transition={{ type: "spring", stiffness: 250, damping: 25 }}
+          className="absolute z-20 flex items-center justify-center backdrop-blur-xl border border-white/30 shadow-2xl pointer-events-none m-0 p-0"
+          style={{
+            backgroundColor: finalGlass,
+          }}
+        >
+          {/* Icon - appears when shrinking */}
+          <motion.div
+            variants={{
+              initial: { opacity: 0, scale: 0, x: 0, rotate: -45 },
+              hover: { opacity: 1, scale: 1, x: 0, rotate: 0 }
+            }}
+            transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 }}
+            className="flex items-center justify-center"
+          >
+            <Icon size={20} />
+          </motion.div>
+        </motion.div>
+
+        {/* Shimmer Effect */}
+        <motion.div
+          className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+          variants={{
+            initial: { x: "-100%" },
+            hover: { x: "100%" }
+          }}
+          transition={{ duration: 1.2, ease: "easeInOut", repeat: Infinity, repeatDelay: 0.5 }}
+        />
+      </motion.button>
     );
   }
 );
@@ -292,6 +256,7 @@ GlowyButton.displayName = "GlowyButton";`,
   "basic-card": {
     name: "Basic Card",
     type: "components:ui",
+    dependencies: ["framer-motion"],
     files: [
       {
         name: "basic-card.jsx",
@@ -349,7 +314,7 @@ export const BasicCard = ({
       <div className="flex items-center gap-4 mb-5">
         <motion.div 
           whileHover={{ scale: 1.1, rotate: 5 }}
-          className="w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-white text-xl flex-shrink-0"
+          className="w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-white text-xl shrink-0"
           style={{ background: \`linear-gradient(135deg, \${color}, \${color}dd)\` }}
         >
           {avatarText}
@@ -658,6 +623,7 @@ export const BoxyShiftLoader = ({ className, ...props }) => {
   "text-system": {
     name: "Typography System",
     type: "components:ui",
+    dependencies: ["class-variance-authority"],
     files: [
       {
         name: "typography.jsx",
@@ -666,10 +632,6 @@ import React from "react";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-/**
- * Heading Component
- * Best practices: Semantic level (h1-h6) should match visual weight by default but can be decoupled.
- */
 const headingVariants = cva(
   "font-bold tracking-tight text-foreground",
   {
@@ -698,10 +660,6 @@ export const Heading = ({ className, variant, as: Tag = "h1", ...props }) => {
   );
 };
 
-/**
- * Text Component
- * Best practices: Use for body text, leads, and muted descriptions.
- */
 const textVariants = cva(
   "text-foreground",
   {
@@ -730,10 +688,6 @@ export const Text = ({ className, variant, as: Tag = "p", ...props }) => {
   );
 };
 
-/**
- * Label Component
- * Best practices: For form labels, tags, or small UI indicators.
- */
 export const Label = ({ className, as: Tag = "label", ...props }) => {
   return (
     <Tag
@@ -746,10 +700,6 @@ export const Label = ({ className, as: Tag = "label", ...props }) => {
   );
 };
 
-/**
- * Code Component
- * Best practices: For inline code snippets or technical references.
- */
 export const Code = ({ className, ...props }) => {
   return (
     <code
@@ -760,13 +710,14 @@ export const Code = ({ className, ...props }) => {
       {...props}
     />
   );
-};"`,
+};`,
       },
     ],
   },
   "infinite-slider": {
     name: "Infinite Carousel Slider",
     type: "components:ui",
+    dependencies: ["framer-motion", "lucide-react"],
     files: [
       {
         name: "carousel-slider.jsx",
@@ -830,7 +781,7 @@ export const CarouselSlider = ({
   return (
     <div 
       className={cn(
-        "group relative w-full max-w-5xl mx-auto h-[500px] overflow-hidden rounded-[2rem] bg-black shadow-2xl", 
+        "group relative w-full max-w-5xl mx-auto h-125 overflow-hidden rounded-4xl bg-black shadow-2xl", 
         className
       )}
       onMouseEnter={() => pauseOnHover && setIsPaused(true)}
@@ -975,7 +926,7 @@ export const NavMenu = ({ items = [], className }) => {
   const displayItems = items.length > 0 ? items : defaultItems;
 
   return (
-    <div className={cn("relative flex flex-col items-center justify-center min-h-[300px] w-full", className)}>
+    <div className={cn("relative flex flex-col items-center justify-center min-h-75 w-full", className)}>
       <style>{\`
         .circular-nav {
           position: relative;
@@ -1145,7 +1096,7 @@ export const ErrorPage = ({ className, errorCode = "404", errorText = "ERROR" })
       </div>
     </div>
   );
-};`,
+};\`,`
       },
     ],
   },
@@ -1164,11 +1115,10 @@ export const ExpandingFlexCard = ({ options = [], className }) => {
 
   if (!options.length) return null;
 
-  // Limit to 8 cards
   const displayOptions = options.slice(0, 8);
 
   return (
-    <div className={cn("flex gap-3 w-full max-w-4xl h-[400px] overflow-hidden px-4 py-8 items-center justify-center", className)}>
+    <div className={cn("flex gap-3 w-full max-w-4xl h-100 overflow-hidden px-4 py-8 items-center justify-center", className)}>
       <style>{\`
         .expanding-card {
           position: relative;
@@ -1220,12 +1170,12 @@ export const ExpandingFlexCard = ({ options = [], className }) => {
           display: flex;
           align-items: center;
           justify-content: center;
-          flex-shrink: 0;
+          shrink-0;
           font-size: 20px;
         }
         .card-info {
           display: flex;
-          flex-col;
+          flex-direction: column;
           overflow: hidden;
         }
         .card-title {
@@ -1240,7 +1190,6 @@ export const ExpandingFlexCard = ({ options = [], className }) => {
           white-space: nowrap;
         }
         
-        /* Icon visibility for closed state */
         .closed-icon {
           position: absolute;
           top: 50%;
@@ -1279,7 +1228,7 @@ export const ExpandingFlexCard = ({ options = [], className }) => {
       ))}
     </div>
   );
-};`,
+};\`,`
       },
     ],
   },
@@ -1375,8 +1324,5 @@ export const BasicLoader = ({
 };`,
       },
     ],
-  },
-};
-  ],
   },
 };

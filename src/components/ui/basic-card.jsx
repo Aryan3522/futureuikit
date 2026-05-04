@@ -60,7 +60,7 @@ export const BasicCard = ({
       <div className="flex items-center gap-4 mb-5">
         <motion.div 
           whileHover={{ scale: 1.1, rotate: 5 }}
-          className="w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-white text-xl flex-shrink-0"
+          className="w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-white text-xl shrink-0"
           style={{ background: `linear-gradient(135deg, ${color}, ${color}dd)` }}
         >
           {avatarText}

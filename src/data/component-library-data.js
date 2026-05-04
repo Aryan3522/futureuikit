@@ -40,25 +40,25 @@ export const componentsList = [
     "heroImage": "/Images/glowy-button.webp",
     "previewImage": "/Images/glowy-button.webp",
     "previewVideo": "/Videos/hover-glow-button.webm",
-    "description": "An ultra-modern button featuring an interactive glow effect that responds to hover and tap. Now upgraded with semantic intents (success, danger, etc.), visual modes (modern, clean, minimal), and configurable Lucide icons. Built-in dependency management ensures framer-motion and lucide-react are installed automatically via CLI.",
+    "description": "A signature pill-shaped button featuring a premium glass-morph interaction. Initially covered by a full-width colored glass sheet, the layer smoothly shrinks into a compact circle on hover/tap, revealing a hidden icon while emitting a vibrant outer glow.",
     "details": [
-      "Dynamic glow effect that adapts to the button's semantic variant or custom color.",
-      "Supports semantic intents: Primary (Teal), Success, Warning, Danger, Info, and Secondary.",
-      "Three visual modes: Modern (Dark/Glass), Clean (Solid), and Minimal (Outline).",
-      "Integrated with Lucide React for high-quality, configurable icons with built-in animations.",
-      "Automatically handles required dependencies (framer-motion, lucide-react) during CLI installation.",
-      "Optimized padding and spacing for a professional, balanced look.",
-      "Forwards all standard HTML button attributes for full accessibility and functionality."
+      "Premium pill-shaped UI with edge-to-edge glass sheet coverage.",
+      "Interactive shrinking glass: the full-width layer collapses into a sleek circle on the right side upon interaction.",
+      "Dynamic icon reveal: the icon scales into view as the glass sheet shrinks.",
+      "Smooth physics-based spring animations for a responsive, modern feel.",
+      "Semantic variant support: Primary, Success, Warning, Danger, Info, and Secondary.",
+      "Integrated with Lucide React for high-quality iconography.",
+      "Full mobile support: animations are optimized for both hover and touch interactions."
     ],
     "codes": {
-      "next": "import { GlowyButton } from \"@/components/ui/glowy-button\";\nimport { Rocket, Zap } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-4\">\n      {/* Semantic Variants */}\n      <GlowyButton variant=\"primary\">Launch</GlowyButton>\n      <GlowyButton variant=\"success\" icon={Rocket}>Success</GlowyButton>\n      <GlowyButton variant=\"danger\">Delete</GlowyButton>\n\n      {/* Visual Modes */}\n      <GlowyButton variant=\"info\" mode=\"clean\">Clean Info</GlowyButton>\n      <GlowyButton variant=\"warning\" mode=\"minimal\" icon={Zap}>Minimal Warning</GlowyButton>\n      \n      {/* Customization */}\n      <GlowyButton \n        color=\"#8b5cf6\" \n        glowColor=\"rgba(139, 92, 246, 0.5)\"\n        onClick={() => alert('Custom Glow!')}\n      >\n        Purple Glow\n      </GlowyButton>\n    </div>\n  );\n}"
+      "next": "import { GlowyButton } from \"@/components/ui/glowy-button\";\nimport { Rocket, Zap } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-4\">\n      {/* Semantic Variants */}\n      <GlowyButton variant=\"primary\">Launch</GlowyButton>\n      <GlowyButton variant=\"success\" icon={Rocket}>Success</GlowyButton>\n      <GlowyButton variant=\"danger\">Delete</GlowyButton>\n      <GlowyButton variant=\"info\">Info Action</GlowyButton>\n      <GlowyButton variant=\"warning\" icon={Zap}>Warning Action</GlowyButton>\n      \n      {/* Customization */}\n      <GlowyButton \n        color=\"#8b5cf6\" \n        glowColor=\"rgba(139, 92, 246, 0.5)\"\n        onClick={() => alert('Custom Glow!')}\n      >\n        Purple Glow\n      </GlowyButton>\n    </div>\n  );\n}"
     },
     "usage": [
-      "Add the glowy button HTML markup to your page or component.",
-      "Apply the glowy button CSS class to enable the glow effect.",
-      "Use the button to highlight important or special actions.",
-      "Update the button text to reflect the intended action.",
-      "Adjust glow color, intensity, or size in CSS to match your design."
+      "Import the GlowyButton component from your UI directory.",
+      "Choose a semantic variant (primary, success, etc.) or provide custom colors.",
+      "Optionally pass a Lucide icon component via the 'icon' prop.",
+      "Add your button text as children of the component.",
+      "Use it for high-impact call-to-action buttons that need extra visual emphasis."
     ]
   },
   {
