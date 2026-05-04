@@ -6,10 +6,20 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-export const PrimaryButton = React.forwardRef<HTMLButtonElement, any>(
+export type PrimaryButtonVariant = "primary" | "success" | "warning" | "danger" | "info" | "secondary";
+export type PrimaryButtonMode = "modern" | "clean" | "minimal";
+
+export interface PrimaryButtonProps extends Omit<HTMLMotionProps<"button">, "variant" | "children"> {
+  variant?: PrimaryButtonVariant | PrimaryButtonMode;
+  mode?: PrimaryButtonVariant | PrimaryButtonMode;
+  color?: string;
+  children?: React.ReactNode;
+}
+
+export const PrimaryButton = React.forwardRef<HTMLButtonElement, PrimaryButtonProps>(
   ({ 
     className, 
     children, 
@@ -103,11 +113,11 @@ export const PrimaryButton = React.forwardRef<HTMLButtonElement, any>(
         )}
         style={{
           ...getModeStyles(),
-          ...style
-        } as any}
+          ...(style as any)
+        }}
         {...props}
       >
-        <span className="relative z-10">{children as React.ReactNode}</span>
+        <span className="relative z-10">{children}</span>
         {finalMode === "modern" && !disabled && (
           <motion.div
             className="absolute inset-0 z-0 bg-white/10"

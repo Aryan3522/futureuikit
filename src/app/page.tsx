@@ -139,7 +139,7 @@ export default function Home() {
 
       {/* Call to Action */}
       <section className="w-full px-4 py-20 md:py-32 text-center">
-        <div className="max-w-5xl mx-auto p-8 md:p-24 rounded-3xl md:rounded-[3rem] bg-gradient-to-br from-primary to-primary/80 text-primary-foreground relative overflow-hidden shadow-2xl">
+        <div className="max-w-5xl mx-auto p-8 md:p-24 rounded-3xl md:rounded-[3rem] bg-linear-to-br from-primary to-primary/80 text-primary-foreground relative overflow-hidden shadow-2xl">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
           <div className="relative z-10">
             <h2 className="text-3xl md:text-7xl font-black mb-6 md:mb-8 italic tracking-tighter uppercase">READY TO BUILD?</h2>

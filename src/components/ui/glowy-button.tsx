@@ -54,7 +54,7 @@ export const GlowyButton = React.forwardRef<HTMLButtonElement, GlowyButtonProps>
         whileHover={!disabled ? "hover" : "initial"}
         whileTap={!disabled ? "hover" : "initial"}
         className={cn(
-          "relative inline-flex items-center justify-center min-w-[170px] h-12 rounded-full font-bold text-white overflow-hidden",
+          "relative inline-flex items-center justify-center min-w-42.5 h-12 rounded-full font-bold text-white overflow-hidden",
           "bg-slate-950 border-2",
           disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
           className
@@ -116,7 +116,7 @@ export const GlowyButton = React.forwardRef<HTMLButtonElement, GlowyButtonProps>
 
         {/* Shimmer Effect */}
         <motion.div
-          className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+          className="absolute inset-0 z-0 bg-linear-to-r from-transparent via-white/10 to-transparent"
           variants={{
             initial: { x: "-100%" },
             hover: { x: "100%" }
@@ -128,4 +128,4 @@ export const GlowyButton = React.forwardRef<HTMLButtonElement, GlowyButtonProps>
   }
 );
 
-GlowyButton.displayName = "GlowyButton";
+GlowyButton.displayName = "GlowyButton";;
