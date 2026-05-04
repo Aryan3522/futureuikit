@@ -480,21 +480,43 @@ const PreviewLoader = ({ variant, color, text }) => {
       case "modern":
         return (
           <div className="relative w-10 h-10">
-            <motion.div className="absolute inset-0 rounded-full border-2 border-t-transparent" style={{ borderColor: `${color} transparent transparent transparent` }} animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
-            <motion.div className="absolute inset-1 rounded-full border-2 border-b-transparent opacity-50" style={{ borderColor: `transparent transparent ${color} transparent` }} animate={{ rotate: -360 }} transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }} />
+            <motion.div 
+              className="absolute inset-0 rounded-full border-2 border-solid border-transparent" 
+              style={{ borderTopColor: color }} 
+              animate={{ rotate: 360 }} 
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }} 
+            />
+            <motion.div 
+              className="absolute inset-1 rounded-full border-2 border-solid border-transparent opacity-50" 
+              style={{ borderBottomColor: color }} 
+              animate={{ rotate: -360 }} 
+              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }} 
+            />
           </div>
         );
       case "clean":
         return (
           <div className="flex gap-1.5">
             {[0, 1, 2].map((i) => (
-              <motion.div key={i} className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }} transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }} />
+              <motion.div 
+                key={i} 
+                className="w-2 h-2 rounded-full" 
+                style={{ backgroundColor: color }} 
+                initial={{ scale: 1, opacity: 0.5 }}
+                animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }} 
+                transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }} 
+              />
             ))}
           </div>
         );
       case "minimal":
         return (
-          <motion.div className="w-6 h-6 rounded-full border-2 border-t-transparent" style={{ borderColor: `${color} transparent transparent transparent` }} animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} />
+          <motion.div 
+            className="w-6 h-6 rounded-full border-2 border-solid border-transparent" 
+            style={{ borderTopColor: color }} 
+            animate={{ rotate: 360 }} 
+            transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} 
+          />
         );
       default: return null;
     }

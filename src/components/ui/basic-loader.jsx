@@ -26,14 +26,14 @@ export const BasicLoader = ({
         return (
           <div className="relative w-16 h-16">
             <motion.div
-              className="absolute inset-0 rounded-full border-4 border-t-transparent"
-              style={{ borderColor: `${color} transparent transparent transparent` }}
+              className="absolute inset-0 rounded-full border-4 border-solid border-transparent"
+              style={{ borderTopColor: color }}
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
             />
             <motion.div
-              className="absolute inset-2 rounded-full border-4 border-b-transparent opacity-50"
-              style={{ borderColor: `transparent transparent ${color} transparent` }}
+              className="absolute inset-2 rounded-full border-4 border-solid border-transparent opacity-50"
+              style={{ borderBottomColor: color }}
               animate={{ rotate: -360 }}
               transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
             />
@@ -47,6 +47,7 @@ export const BasicLoader = ({
                 key={i}
                 className="w-3 h-3 rounded-full"
                 style={{ backgroundColor: color }}
+                initial={{ scale: 1, opacity: 0.5 }}
                 animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
                 transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
               />
@@ -56,14 +57,19 @@ export const BasicLoader = ({
       case "minimal":
         return (
           <motion.div
-            className="w-8 h-8 rounded-full border-2 border-t-transparent"
-            style={{ borderColor: `${color} transparent transparent transparent` }}
+            className="w-8 h-8 rounded-full border-2 border-solid border-transparent"
+            style={{ borderTopColor: color }}
             animate={{ rotate: 360 }}
             transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
           />
         );
       default:
-        return <div className="loading-spinner" />;
+        return (
+          <div 
+            className="w-10 h-10 border-4 border-solid border-muted-foreground/20 rounded-full border-t-current animate-spin" 
+            style={{ color }}
+          />
+        );
     }
   };
 
