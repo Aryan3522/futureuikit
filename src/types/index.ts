@@ -23,6 +23,7 @@ export interface ComponentItem {
 export interface RegistryFile {
   name: string;
   content: string;
+  targetPath?: string;
 }
 
 export interface RegistryItem {

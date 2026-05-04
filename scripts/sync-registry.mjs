@@ -27,7 +27,8 @@ async function parseComponent(filePath) {
   const files = [
     {
       name: fileName,
-      content: content.replace(/\/\*\*[\s\S]*?@registry-slug[\s\S]*?\*\//, "").trim()
+      content: content.replace(/\/\*\*[\s\S]*?@registry-slug[\s\S]*?\*\//, "").trim(),
+      targetPath: `components/ui/${fileName}`
     }
   ];
 
@@ -36,7 +37,8 @@ async function parseComponent(filePath) {
     const extraContent = await fs.readFile(fullPath, "utf-8");
     files.push({
       name: path.basename(extraPath),
-      content: extraContent.replace(/\/\*\*[\s\S]*?@registry-slug[\s\S]*?\*\//, "").trim()
+      content: extraContent.replace(/\/\*\*[\s\S]*?@registry-slug[\s\S]*?\*\//, "").trim(),
+      targetPath: extraPath.replace(/^src\//, "")
     });
   }
 
