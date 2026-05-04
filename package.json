@@ -1,6 +1,6 @@
 {
   "name": "futureuikit",
-  "version": "0.1.9",
+  "version": "0.2.2",
   "description": "Future UI component registry and installer CLI for Next.js projects.",
   "private": false,
   "license": "MIT",

@@ -175,6 +175,58 @@ export default function DocsPage() {
           />
         </DocSection>
 
+        {/* Feedback & Toasts */}
+        <DocSection title="Feedback & Toasts" icon={Zap}>
+          <p>
+            Future UI includes a powerful, flexible toast notification system built with Radix UI and Framer Motion. 
+            It supports multiple positions, auto-dismissal, and custom actions.
+          </p>
+          
+          <h3 className="text-lg font-bold text-foreground mt-8 mb-2">1. Add the Toaster to your Layout</h3>
+          <p className="text-sm mb-4">To use toasts, you must first add the <code>Toaster</code> component to your root layout (or app entry point):</p>
+          <CodeBlock 
+            language="javascript"
+            code={`// app/layout.tsx
+import { Toaster } from "@/components/ui/toaster";
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        {children}
+        <Toaster />
+      </body>
+    </html>
+  );
+}`} 
+          />
+
+          <h3 className="text-lg font-bold text-foreground mt-8 mb-2">2. Use the hook</h3>
+          <p className="text-sm mb-4">Trigger toasts from any component using the <code>useToast</code> hook:</p>
+          <CodeBlock 
+            language="javascript"
+            code={`import { useToast } from "@/hooks/use-toast";
+
+export default function MyComponent() {
+  const { toast } = useToast();
+
+  return (
+    <button
+      onClick={() => {
+        toast({
+          title: "Success!",
+          description: "Your changes have been saved.",
+          position: "bottom-right",
+        });
+      }}
+    >
+      Show Toast
+    </button>
+  );
+}`} 
+          />
+        </DocSection>
+
         {/* License & Privacy */}
         <DocSection title="License & Privacy" icon={ShieldCheck}>
           <div className="space-y-6">

@@ -136,9 +136,19 @@ export const PreviewRegistry: Record<string, React.FC> = {
     </div>
   ),
   "basic-card": () => (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4 w-full justify-items-center">
-      <BasicCard variant="modern" color="#6366f1" name="Aryan Hooda" title="Full Stack Developer" />
-      <BasicCard variant="clean" color="#10b981" name="John Doe" title="Product Designer" />
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4 w-full justify-items-center">
+      <div className="flex flex-col gap-2 items-center w-full">
+        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Modern</span>
+        <BasicCard variant="modern" color="#6366f1" name="Aryan Hooda" title="Full Stack Developer" />
+      </div>
+      <div className="flex flex-col gap-2 items-center w-full">
+        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Clean</span>
+        <BasicCard variant="clean" color="#10b981" name="John Doe" title="Product Designer" />
+      </div>
+      <div className="flex flex-col gap-2 items-center w-full">
+        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Minimal</span>
+        <BasicCard variant="minimal" color="#f59e0b" name="Jane Smith" title="UX Researcher" />
+      </div>
     </div>
   ),
   "boxy-rotate": () => <BoxyRotateLoader />,
@@ -150,10 +160,24 @@ export const PreviewRegistry: Record<string, React.FC> = {
         <Label className="text-xs uppercase tracking-widest text-blue-500">Semantic Headings</Label>
         <Heading variant="h1">Heading 1</Heading>
         <Heading variant="h2">Heading 2</Heading>
+        <Heading variant="h3">Heading 3</Heading>
       </div>
       <div className="space-y-4">
-        <Text variant="lead">This is a lead paragraph.</Text>
-        <Text>This is the default body text.</Text>
+        <Label className="text-xs uppercase tracking-widest text-emerald-500">Text Variants</Label>
+        <Text variant="lead">This is a lead paragraph with larger font and muted color.</Text>
+        <Text>This is the default body text that users will read most of the time.</Text>
+        <Text variant="large">This is large text for emphasis.</Text>
+        <Text variant="muted">This is muted text for secondary information.</Text>
+        <Text variant="blockquote">&quot;This is a blockquote variant for citing sources or highlighting quotes.&quot;</Text>
+      </div>
+      <div className="space-y-2">
+        <Label className="text-xs uppercase tracking-widest text-orange-500">Form Elements</Label>
+        <div className="flex flex-col gap-2">
+          <Label>Input Label</Label>
+          <div className="flex items-center gap-2">
+            <Code>npm install futureuikit</Code>
+          </div>
+        </div>
       </div>
     </div>
   ),
@@ -162,6 +186,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
       slides={[
         { id: 1, tag: "EXPLORE", title: "EXOTIC ADVENTURE", location: "Bali, Indonesia", image: "https://images.unsplash.com/photo-1556206079-747a7a424d3d?ixlib=rb-4.0.3&q=80", tagBg: "bg-indigo-600" },
         { id: 2, tag: "CITY", title: "URBAN EXPLORER", location: "Tokyo, Japan", image: "https://images.unsplash.com/photo-1571900670723-a317a66e3fb7?ixlib=rb-4.0.3&q=80", tagBg: "bg-emerald-600" },
+        { id: 3, tag: "NATURE", title: "MOUNTAIN RETREAT", location: "Swiss Alps", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&q=80", tagBg: "bg-amber-600" },
       ]} 
     />
   ),
@@ -172,13 +197,25 @@ export const PreviewRegistry: Record<string, React.FC> = {
       options={[
         { id: 1, main: "Forest", sub: "Majestic trees", img: "https://66.media.tumblr.com/6fb397d822f4f9f4596dff2085b18f2e/tumblr_nzsvb4p6xS1qho82wo1_1280.jpg", icon: "🚶" },
         { id: 2, main: "Winter", sub: "Delicate fall", img: "https://66.media.tumblr.com/8b69cdde47aa952e4176b4200052abf4/tumblr_o51p7mFFF21qho82wo1_1280.jpg", icon: "❄️" },
+        { id: 3, main: "Ocean", sub: "Deep blue", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80", icon: "🌊" },
+        { id: 4, main: "Desert", sub: "Golden sands", img: "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?ixlib=rb-4.0.3&q=80", icon: "☀️" },
       ]}
     />
   ),
   basic: () => (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 p-8 w-full max-w-2xl items-center justify-items-center">
-      <BasicLoader variant="modern" color="#3b82f6" text="Modern..." />
-      <BasicLoader variant="clean" color="#10b981" text="Clean..." />
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 p-8 w-full max-w-3xl items-center justify-items-center">
+      <div className="flex flex-col gap-4 items-center">
+        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Modern</span>
+        <BasicLoader variant="modern" color="#3b82f6" text="Modern Rings..." />
+      </div>
+      <div className="flex flex-col gap-4 items-center">
+        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Clean</span>
+        <BasicLoader variant="clean" color="#10b981" text="Clean Dots..." />
+      </div>
+      <div className="flex flex-col gap-4 items-center">
+        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Minimal</span>
+        <BasicLoader variant="minimal" color="#f59e0b" text="Minimalist..." />
+      </div>
     </div>
   ),
   toast: ToastPreview
