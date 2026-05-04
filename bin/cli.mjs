@@ -225,7 +225,7 @@ async function injectCSS(baseDir, cssContent) {
   }
 }
 
-async function ensureDependencies(cwd) {
+async function ensureDependencies(cwd, required = []) {
   const packageJsonPath = path.join(cwd, "package.json");
   try {
     const content = await fs.readFile(packageJsonPath, "utf-8");
@@ -234,8 +234,10 @@ async function ensureDependencies(cwd) {
     const deps = pkg.dependencies || {};
     const devDeps = pkg.devDependencies || {};
 
-    const required = ["clsx", "tailwind-merge"];
-    const missing = required.filter((d) => !deps[d] && !devDeps[d]);
+    const baseRequired = ["clsx", "tailwind-merge"];
+    const allRequired = [...new Set([...baseRequired, ...required])];
+    
+    const missing = allRequired.filter((d) => !deps[d] && !devDeps[d]);
 
     if (missing.length > 0) {
       console.log(`Missing dependencies: ${missing.join(", ")}`);
@@ -287,7 +289,7 @@ async function addComponent(componentSlug) {
     // --- Dependency Resolution ---
     await ensureUtils(baseDir);
     await ensureConfig(cwd, isSrc);
-    await ensureDependencies(cwd);
+    await ensureDependencies(cwd, componentData.dependencies || []);
 
     // --- CSS Injection ---
     if (componentData.requiresCSS && componentData.css) {

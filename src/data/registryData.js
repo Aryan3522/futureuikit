@@ -2,6 +2,7 @@ export const registry = {
   primary: {
     name: "Primary Button",
     type: "components:ui",
+    dependencies: ["framer-motion"],
     files: [
       {
         name: "primary-button.jsx",
@@ -12,68 +13,105 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export const PrimaryButton = React.forwardRef(
-  ({ className, children, variant = "modern", color = "#2563eb", ...props }, ref) => {
+  ({ 
+    className, 
+    children, 
+    variant = "primary", 
+    mode = "modern", 
+    color, 
+    disabled,
+    style,
+    ...props 
+  }, ref) => {
     
-    const getVariantStyles = () => {
-      switch (variant) {
+    const intentColors = {
+      primary: "#2563eb",
+      success: "#10b981",
+      warning: "#f59e0b",
+      danger: "#ef4444",
+      info: "#06b6d4",
+      secondary: "#64748b",
+    };
+
+    const styleOptions = ["modern", "clean", "minimal"];
+    const intents = Object.keys(intentColors);
+    
+    let finalIntent = variant;
+    let finalMode = mode;
+
+    if (styleOptions.includes(variant)) {
+      finalMode = variant;
+      finalIntent = intents.includes(mode) ? mode : "primary";
+    }
+
+    const finalColor = color || intentColors[finalIntent] || intentColors.primary;
+
+    const getModeStyles = () => {
+      const baseStyles = {
+        borderRadius: "6px",
+      };
+
+      switch (finalMode) {
         case "modern":
           return {
-            background: color,
+            ...baseStyles,
+            background: finalColor,
             color: "#ffffff",
             border: "none",
           };
         case "clean":
           return {
-            background: color,
+            ...baseStyles,
+            background: finalColor,
             color: "#ffffff",
             border: "none",
-            borderRadius: "8px",
           };
         case "minimal":
           return {
+            ...baseStyles,
             background: "transparent",
-            color: color,
-            border: \`1px solid \${color}\`,
-            borderRadius: "6px",
+            color: finalColor,
+            border: \`1px solid \${finalColor}\`,
           };
         default:
           return {
-            background: color,
+            ...baseStyles,
+            background: finalColor,
             color: "#ffffff",
             border: "none",
           };
       }
     };
 
-    const variantClasses = {
-      modern: "relative overflow-hidden px-6 py-2.5 rounded-xl font-semibold tracking-wide",
-      clean: "px-5 py-2 rounded-lg font-medium",
-      minimal: "px-5 py-2 font-medium",
+    const modeClasses = {
+      modern: "relative overflow-hidden px-6 py-2 rounded-md font-semibold tracking-wide",
+      clean: "px-5 py-2 rounded-md font-medium",
+      minimal: "px-5 py-2 rounded-md font-medium hover:bg-opacity-10",
     };
-
-    const buttonStyles = getVariantStyles();
 
     return (
       <motion.button
         ref={ref}
-        whileHover={{ 
+        whileHover={!disabled ? { 
           scale: 1.02,
-          filter: variant === "minimal" ? "brightness(0.95)" : "brightness(1.1)",
-        }}
-        whileTap={{ scale: 0.98 }}
+          filter: finalMode === "minimal" ? "brightness(0.95)" : "brightness(1.1)",
+        } : {}}
+        whileTap={!disabled ? { scale: 0.98 } : {}}
+        disabled={disabled}
         className={cn(
-          "inline-flex items-center justify-center cursor-pointer select-none transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
-          variantClasses[variant] || variantClasses.modern,
+          "inline-flex items-center justify-center cursor-pointer select-none transition-all duration-200",
+          "disabled:opacity-50 disabled:cursor-not-allowed disabled:filter-none",
+          modeClasses[finalMode] || modeClasses.modern,
           className
         )}
         style={{
-          ...buttonStyles,
-          ...props.style
+          ...getModeStyles(),
+          ...style
         }}
         {...props}
       >
         <span className="relative z-10">{children}</span>
-        {variant === "modern" && (
+        {finalMode === "modern" && !disabled && (
           <motion.div
             className="absolute inset-0 z-0 bg-white/10"
             initial={{ x: "-100%" }}
@@ -92,101 +130,125 @@ PrimaryButton.displayName = "PrimaryButton";`,
   glowy: {
     name: "Glowy Button",
     type: "components:ui",
-    requiresCSS: true,
-    css: `
-.glowy-btn-custom {
-  --h: 60px;
-  --color: #00afaf;
-  --text-color: rgb(210 210 240);
-  position: relative;
-  min-width: 180px;
-  height: var(--h);
-  padding: 0 4.25rem 0 2.5rem;
-  border-radius: var(--h);
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  font-family: inherit;
-  color: var(--text-color);
-  background: rgb(4 8 20 / 0.8);
-  box-shadow: 0 0 0 1px rgb(200 200 220 / 0.22);
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 500ms ease;
-  z-index: 2;
-}
-.glowy-btn-custom::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgb(200 200 220 / 0.1);
-  box-shadow: inset 0 0px 24px 0 rgb(170 230 250 / 0.12);
-  border-radius: var(--h);
-  z-index: 1;
-  transition: transform 500ms ease, box-shadow 500ms ease;
-}
-.glowy-btn-custom .btn-text {
-  transition: transform 500ms ease;
-  z-index: 2;
-  white-space: nowrap;
-}
-.glowy-btn-custom .btn-icon {
-  position: absolute;
-  right: 1.25rem;
-  width: 20px;
-  height: 20px;
-  opacity: 0;
-  transform: translateX(15px);
-  transition: all 500ms ease;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.glowy-btn-custom:hover {
-  box-shadow: 0 0 20px var(--color),
-    inset 0 0 26px -10px var(--color),
-    0 0 0 1px rgb(200 200 220 / 0.22);
-}
-.glowy-btn-custom:hover::before {
-  transform: translateX(calc(100% - var(--h)));
-  box-shadow: inset 0 0px 0px 0 transparent;
-}
-.glowy-btn-custom:hover .btn-text {
-  transform: translateX(-15px);
-}
-.glowy-btn-custom:hover .btn-icon {
-  opacity: 1;
-  transform: translateX(0);
-  color: var(--color);
-}
-`,
+    dependencies: ["framer-motion", "lucide-react"],
     files: [
       {
         name: "glowy-button.jsx",
         content: `"use client";
+
 import React from "react";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const GlowyButton = React.forwardRef(
-  ({ className, children, icon, ...props }, ref) => {
+  ({ 
+    className, 
+    children, 
+    variant = "primary", // primary, success, warning, danger, info, secondary
+    icon: Icon = ArrowRight,
+    color,
+    glowColor,
+    disabled,
+    ...props 
+  }, ref) => {
+    
+    const intentColors = {
+      primary: { base: "#00afaf", glow: "rgba(0, 175, 175, 0.5)", glass: "rgba(0, 175, 175, 0.35)" },
+      success: { base: "#10b981", glow: "rgba(16, 185, 129, 0.5)", glass: "rgba(16, 185, 129, 0.35)" },
+      warning: { base: "#f59e0b", glow: "rgba(245, 158, 11, 0.5)", glass: "rgba(245, 158, 11, 0.35)" },
+      danger: { base: "#ef4444", glow: "rgba(239, 68, 68, 0.5)", glass: "rgba(239, 68, 68, 0.35)" },
+      info: { base: "#06b6d4", glow: "rgba(6, 182, 212, 0.5)", glass: "rgba(6, 182, 212, 0.35)" },
+      secondary: { base: "#64748b", glow: "rgba(100, 116, 139, 0.5)", glass: "rgba(100, 116, 139, 0.35)" },
+    };
+
+    const theme = intentColors[variant] || intentColors.primary;
+    const finalColor = color || theme.base;
+    const finalGlow = glowColor || theme.glow;
+    const finalGlass = theme.glass;
+
     return (
-      <div className={cn("relative select-none inline-block", className)}>
-        <button ref={ref} className="glowy-btn-custom" {...props}>
-          <span className="btn-text">{children}</span>
-          <div className="btn-icon">
-            {icon || (
-              <svg viewBox="0 0 20 10" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
-                <path d="M14.84 0l-1.08 1.06 3.3 3.2H0v1.49h17.05l-3.3 3.2L14.84 10 20 5l-5.16-5z" fill="currentColor"/>
-              </svg>
-            )}
-          </div>
-        </button>
-      </div>
+      <motion.button
+        ref={ref}
+        disabled={disabled}
+        initial="initial"
+        whileHover={!disabled ? "hover" : "initial"}
+        whileTap={!disabled ? "hover" : "initial"}
+        className={cn(
+          "relative inline-flex items-center justify-center min-w-[170px] h-12 rounded-full font-bold text-white overflow-hidden",
+          "bg-slate-950 border-2",
+          disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
+          className
+        )}
+        style={{
+          borderColor: finalColor,
+          boxShadow: \`0 0 20px \${finalGlow}\`,
+        }}
+        {...props}
+      >
+        {/* Content (Text) */}
+        <motion.div
+          variants={{
+            initial: { x: 0 },
+            hover: { x: -18 }
+          }}
+          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          className="relative z-30 flex items-center justify-center pointer-events-none"
+        >
+          {children}
+        </motion.div>
+
+        {/* Shrinking Glass Sheet */}
+        <motion.div
+          variants={{
+            initial: { 
+              width: "100%", 
+              height: "100%", 
+              right: 0, 
+              top: 0,
+              borderRadius: "999px",
+            },
+            hover: { 
+              width: "40px", 
+              height: "40px", 
+              right: "2px", 
+              top: "2px", // Centered: (48px height - 4px border - 40px circle) / 2 = 2px
+              borderRadius: "999px",
+            }
+          }}
+          transition={{ type: "spring", stiffness: 250, damping: 25 }}
+          className="absolute z-20 flex items-center justify-center backdrop-blur-xl border border-white/30 shadow-2xl pointer-events-none m-0 p-0"
+          style={{
+            backgroundColor: finalGlass,
+          }}
+        >
+          {/* Icon - appears when shrinking */}
+          <motion.div
+            variants={{
+              initial: { opacity: 0, scale: 0, x: 0, rotate: -45 },
+              hover: { opacity: 1, scale: 1, x: 0, rotate: 0 }
+            }}
+            transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 }}
+            className="flex items-center justify-center"
+          >
+            <Icon size={20} />
+          </motion.div>
+        </motion.div>
+
+        {/* Shimmer Effect */}
+        <motion.div
+          className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+          variants={{
+            initial: { x: "-100%" },
+            hover: { x: "100%" }
+          }}
+          transition={{ duration: 1.2, ease: "easeInOut", repeat: Infinity, repeatDelay: 0.5 }}
+        />
+      </motion.button>
     );
   }
 );
+
 GlowyButton.displayName = "GlowyButton";`,
       },
     ],
@@ -194,6 +256,7 @@ GlowyButton.displayName = "GlowyButton";`,
   "basic-card": {
     name: "Basic Card",
     type: "components:ui",
+    dependencies: ["framer-motion"],
     files: [
       {
         name: "basic-card.jsx",
@@ -251,7 +314,7 @@ export const BasicCard = ({
       <div className="flex items-center gap-4 mb-5">
         <motion.div 
           whileHover={{ scale: 1.1, rotate: 5 }}
-          className="w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-white text-xl flex-shrink-0"
+          className="w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-white text-xl shrink-0"
           style={{ background: \`linear-gradient(135deg, \${color}, \${color}dd)\` }}
         >
           {avatarText}
@@ -318,7 +381,7 @@ import { cn } from "@/lib/utils";
 
 export const BoxyRotateLoader = ({ className, ...props }) => {
   return (
-    <div className={cn("flex flex-col items-center justify-center", className)} {...props}>
+    <div className={cn("flex flex-col items-center justify-center w-full h-full min-h-[inherit]", className)} {...props}>
       <style>{\`
         .pl1-container {
           --hue: 223;
@@ -418,7 +481,7 @@ import { cn } from "@/lib/utils";
 
 export const BoxyBounceLoader = ({ className, ...props }) => {
   return (
-    <div className={cn("flex flex-col items-center justify-center", className)} {...props}>
+    <div className={cn("flex flex-col items-center justify-center w-full h-full min-h-[inherit]", className)} {...props}>
       <style>{\`
         .pl2-container {
           --hue: 223;
@@ -495,7 +558,7 @@ import { cn } from "@/lib/utils";
 
 export const BoxyShiftLoader = ({ className, ...props }) => {
   return (
-    <div className={cn("flex flex-col items-center justify-center", className)} {...props}>
+    <div className={cn("flex flex-col items-center justify-center w-full h-full min-h-[inherit]", className)} {...props}>
       <style>{\`
         .pl3-container {
           --hue: 223;
@@ -560,6 +623,7 @@ export const BoxyShiftLoader = ({ className, ...props }) => {
   "text-system": {
     name: "Typography System",
     type: "components:ui",
+    dependencies: ["class-variance-authority"],
     files: [
       {
         name: "typography.jsx",
@@ -568,10 +632,6 @@ import React from "react";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-/**
- * Heading Component
- * Best practices: Semantic level (h1-h6) should match visual weight by default but can be decoupled.
- */
 const headingVariants = cva(
   "font-bold tracking-tight text-foreground",
   {
@@ -600,10 +660,6 @@ export const Heading = ({ className, variant, as: Tag = "h1", ...props }) => {
   );
 };
 
-/**
- * Text Component
- * Best practices: Use for body text, leads, and muted descriptions.
- */
 const textVariants = cva(
   "text-foreground",
   {
@@ -632,10 +688,6 @@ export const Text = ({ className, variant, as: Tag = "p", ...props }) => {
   );
 };
 
-/**
- * Label Component
- * Best practices: For form labels, tags, or small UI indicators.
- */
 export const Label = ({ className, as: Tag = "label", ...props }) => {
   return (
     <Tag
@@ -648,10 +700,6 @@ export const Label = ({ className, as: Tag = "label", ...props }) => {
   );
 };
 
-/**
- * Code Component
- * Best practices: For inline code snippets or technical references.
- */
 export const Code = ({ className, ...props }) => {
   return (
     <code
@@ -662,13 +710,14 @@ export const Code = ({ className, ...props }) => {
       {...props}
     />
   );
-};"`,
+};`,
       },
     ],
   },
   "infinite-slider": {
     name: "Infinite Carousel Slider",
     type: "components:ui",
+    dependencies: ["framer-motion", "lucide-react"],
     files: [
       {
         name: "carousel-slider.jsx",
@@ -732,7 +781,7 @@ export const CarouselSlider = ({
   return (
     <div 
       className={cn(
-        "group relative w-full max-w-5xl mx-auto h-[500px] overflow-hidden rounded-[2rem] bg-black shadow-2xl", 
+        "group relative w-full max-w-5xl mx-auto h-125 overflow-hidden rounded-4xl bg-black shadow-2xl", 
         className
       )}
       onMouseEnter={() => pauseOnHover && setIsPaused(true)}
@@ -877,7 +926,7 @@ export const NavMenu = ({ items = [], className }) => {
   const displayItems = items.length > 0 ? items : defaultItems;
 
   return (
-    <div className={cn("relative flex flex-col items-center justify-center min-h-[300px] w-full", className)}>
+    <div className={cn("relative flex flex-col items-center justify-center min-h-75 w-full", className)}>
       <style>{\`
         .circular-nav {
           position: relative;
@@ -1047,7 +1096,7 @@ export const ErrorPage = ({ className, errorCode = "404", errorText = "ERROR" })
       </div>
     </div>
   );
-};`,
+};\`,`
       },
     ],
   },
@@ -1066,11 +1115,10 @@ export const ExpandingFlexCard = ({ options = [], className }) => {
 
   if (!options.length) return null;
 
-  // Limit to 8 cards
   const displayOptions = options.slice(0, 8);
 
   return (
-    <div className={cn("flex gap-3 w-full max-w-4xl h-[400px] overflow-hidden px-4 py-8 items-center justify-center", className)}>
+    <div className={cn("flex gap-3 w-full max-w-4xl h-100 overflow-hidden px-4 py-8 items-center justify-center", className)}>
       <style>{\`
         .expanding-card {
           position: relative;
@@ -1122,12 +1170,12 @@ export const ExpandingFlexCard = ({ options = [], className }) => {
           display: flex;
           align-items: center;
           justify-content: center;
-          flex-shrink: 0;
+          shrink-0;
           font-size: 20px;
         }
         .card-info {
           display: flex;
-          flex-col;
+          flex-direction: column;
           overflow: hidden;
         }
         .card-title {
@@ -1142,7 +1190,6 @@ export const ExpandingFlexCard = ({ options = [], className }) => {
           white-space: nowrap;
         }
         
-        /* Icon visibility for closed state */
         .closed-icon {
           position: absolute;
           top: 50%;
@@ -1181,13 +1228,14 @@ export const ExpandingFlexCard = ({ options = [], className }) => {
       ))}
     </div>
   );
-};`,
+};\`,`
       },
     ],
   },
   basic: {
     name: "Basic Loader",
     type: "components:ui",
+    dependencies: ["framer-motion"],
     files: [
       {
         name: "basic-loader.jsx",
@@ -1259,14 +1307,14 @@ export const BasicLoader = ({
   };
 
   return (
-    <div className={cn("flex flex-col justify-center items-center gap-6 p-8", className)} {...props}>
+    <div className={cn("flex flex-col justify-center items-center w-full h-full min-h-[inherit]", className)} {...props}>
       {getLoader()}
       {text && (
         <motion.p 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="text-sm font-medium text-muted-foreground tracking-wide animate-pulse"
+          className="mt-6 text-sm font-medium text-muted-foreground tracking-wide animate-pulse text-center"
         >
           {text}
         </motion.p>

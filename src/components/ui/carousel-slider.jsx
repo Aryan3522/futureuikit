@@ -64,7 +64,7 @@ export const CarouselSlider = ({
   return (
     <div 
       className={cn(
-        "group relative w-full max-w-5xl mx-auto h-[500px] overflow-hidden rounded-[2rem] bg-black", 
+        "group relative w-full max-w-5xl mx-auto h-125 overflow-hidden rounded-4xl bg-black shadow-2xl", 
         className
       )}
       onMouseEnter={() => pauseOnHover && setIsPaused(true)}

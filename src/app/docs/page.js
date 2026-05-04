@@ -178,7 +178,7 @@ export default function DocsPage() {
             <div>
               <h4 className="text-foreground font-bold mb-2">Privacy Policy</h4>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                We believe in a "Privacy by Design" philosophy. Future UI does not track you, collect your data, 
+                We believe in a &quot;Privacy by Design&quot; philosophy. Future UI does not track you, collect your data, 
                 or use cookies. When you use the CLI, we only fetch the necessary component code from our public 
                 registry. Your code stays yours, and your project remains private.
               </p>

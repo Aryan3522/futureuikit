@@ -10,17 +10,18 @@ export const componentsList = [
     "heroImage": "/Images/primary-button.webp",
     "previewImage": "/Images/primary-button.webp",
     "previewVideo": "/Videos/Primary-button.webm",
-    "description": "A fully modern and customizable primary button designed for high-end UI. It features multiple variants (modern, clean, minimal), smooth framer-motion animations, and full color profile support. No shadows are used, keeping it clean and professional for any project.",
+    "description": "A fully modern and customizable primary button designed for high-end UI. It features semantic intents (primary, success, warning, danger, info, secondary) and multiple visual styles (modern, clean, minimal). Built with Framer Motion for organic interactions, it supports disabled states and full color customization.",
     "details": [
       "Built with React and Framer Motion for smooth, organic interactions.",
-      "Supports multiple visual variants: Modern, Clean, and Minimal.",
-      "Fully customizable color profile via props.",
+      "Supports semantic intents: Primary, Success, Warning, Danger, Info, and Secondary.",
+      "Supports multiple visual modes: Modern (Glass), Clean (Solid), and Minimal (Outline).",
+      "Built-in support for disabled states with appropriate styling and interaction prevention.",
+      "Fully customizable color profile via props (overrides semantic defaults).",
       "Zero-shadow design for a clean, professional aesthetic.",
-      "Smooth scale and filter animations on hover and tap.",
       "Highly reusable and easy to integrate into any Next.js project."
     ],
     "codes": {
-      "next": "import { PrimaryButton } from \"@/components/ui/primary-button\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex gap-4\">\n      <PrimaryButton variant=\"modern\" color=\"#6366f1\">Modern</PrimaryButton>\n      <PrimaryButton variant=\"clean\" color=\"#10b981\">Clean</PrimaryButton>\n      <PrimaryButton variant=\"minimal\" color=\"#f59e0b\">Minimal</PrimaryButton>\n    </div>\n  );\n}"
+      "next": "import { PrimaryButton } from \"@/components/ui/primary-button\";\n\nexport default function Example() {\n  return (\n    <form onSubmit={(e) => e.preventDefault()} className=\"grid grid-cols-2 gap-4\">\n      {/* Simple Variant usage */}\n      <PrimaryButton variant=\"primary\" type=\"submit\">Submit Form</PrimaryButton>\n      <PrimaryButton variant=\"success\">Success Action</PrimaryButton>\n      \n      {/* Full accessibility & standard attributes support */}\n      <PrimaryButton \n        variant=\"danger\" \n        onFocus={() => console.log('Focused!')}\n        aria-label=\"Delete item\"\n      >\n        Delete\n      </PrimaryButton>\n\n      {/* Styling modes */}\n      <PrimaryButton variant=\"info\" mode=\"minimal\">Minimal Info</PrimaryButton>\n      \n      {/* Native disabled state */}\n      <PrimaryButton disabled>Cannot Click</PrimaryButton>\n    </form>\n  );\n}"
     },
     "usage": [
       "Add the button HTML markup to your page or component.",
@@ -39,25 +40,25 @@ export const componentsList = [
     "heroImage": "/Images/glowy-button.webp",
     "previewImage": "/Images/glowy-button.webp",
     "previewVideo": "/Videos/hover-glow-button.webm",
-    "description": "A glowy button built using HTML and CSS that features a subtle glowing effect to grab user attention. It highlights important actions with a modern, visually appealing style while remaining lightweight and easy to integrate into any web interface. Ideal for call-to-action buttons where you want extra emphasis without sacrificing usability.",
+    "description": "A signature pill-shaped button featuring a premium glass-morph interaction. Initially covered by a full-width colored glass sheet, the layer smoothly shrinks into a compact circle on hover/tap, revealing a hidden icon while emitting a vibrant outer glow.",
     "details": [
-      "Built using pure HTML and CSS with no external libraries. ",
-      "Features a glowing effect that enhances visibility and visual appeal. ",
-      "Uses box-shadow or gradient styles to create a soft neon-like glow. ",
-      "Includes hover and focus states for interactive feedback. ",
-      "Fully responsive and compatible with all modern browsers. ",
-      "Easy to customize — change glow color, intensity, or size in CSS. ",
-      "Ideal for call-to-action buttons that need extra emphasis. "
+      "Premium pill-shaped UI with edge-to-edge glass sheet coverage.",
+      "Interactive shrinking glass: the full-width layer collapses into a sleek circle on the right side upon interaction.",
+      "Dynamic icon reveal: the icon scales into view as the glass sheet shrinks.",
+      "Smooth physics-based spring animations for a responsive, modern feel.",
+      "Semantic variant support: Primary, Success, Warning, Danger, Info, and Secondary.",
+      "Integrated with Lucide React for high-quality iconography.",
+      "Full mobile support: animations are optimized for both hover and touch interactions."
     ],
     "codes": {
-      "next": "import { GlowyButton } from \"@/components/ui/glowy-button\";\n\nexport default function Example() {\n  return (\n    <GlowyButton onClick={() => console.log(\"Glow!\")}>\n      Hover Me\n    </GlowyButton>\n  );\n}"
+      "next": "import { GlowyButton } from \"@/components/ui/glowy-button\";\nimport { Rocket, Zap } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-4\">\n      {/* Semantic Variants */}\n      <GlowyButton variant=\"primary\">Launch</GlowyButton>\n      <GlowyButton variant=\"success\" icon={Rocket}>Success</GlowyButton>\n      <GlowyButton variant=\"danger\">Delete</GlowyButton>\n      <GlowyButton variant=\"info\">Info Action</GlowyButton>\n      <GlowyButton variant=\"warning\" icon={Zap}>Warning Action</GlowyButton>\n      \n      {/* Customization */}\n      <GlowyButton \n        color=\"#8b5cf6\" \n        glowColor=\"rgba(139, 92, 246, 0.5)\"\n        onClick={() => alert('Custom Glow!')}\n      >\n        Purple Glow\n      </GlowyButton>\n    </div>\n  );\n}"
     },
     "usage": [
-      "Add the glowy button HTML markup to your page or component.",
-      "Apply the glowy button CSS class to enable the glow effect.",
-      "Use the button to highlight important or special actions.",
-      "Update the button text to reflect the intended action.",
-      "Adjust glow color, intensity, or size in CSS to match your design."
+      "Import the GlowyButton component from your UI directory.",
+      "Choose a semantic variant (primary, success, etc.) or provide custom colors.",
+      "Optionally pass a Lucide icon component via the 'icon' prop.",
+      "Add your button text as children of the component.",
+      "Use it for high-impact call-to-action buttons that need extra visual emphasis."
     ]
   },
   {
@@ -100,12 +101,12 @@ export const componentsList = [
     "previewVideo": "/Videos/boxy-preloader-1.webm",
     "description": "A modern box-style loading screen with four rotating blocks that creates a smooth and engaging visual while content is loading. Ideal for pages, sections, or actions where users need clear feedback that a process is in progress.",
     "details": [
-      "Shows four boxes rotating to indicate an active loading state. ",
-      "Gives users clear visual feedback that something is in progress. ",
-      "Works well for page loads, API calls, and background tasks. ",
-      "Lightweight and smooth animation for a modern UI feel. ",
-      "Easy to customize colors and size using CSS. ",
-      "Can be used as a full-screen loader or inside small sections. "
+      "Shows four boxes rotating to indicate an active loading state.",
+      "Gives users clear visual feedback that something is in progress.",
+      "Works well for page loads, API calls, and background tasks.",
+      "Lightweight and smooth animation for a modern UI feel.",
+      "Easy to customize colors and size using CSS.",
+      "Can be used as a full-screen loader or inside small sections."
     ],
     "codes": {
       "next": "import { BoxyRotateLoader } from \"@/components/ui/boxy-rotate-loader\";\n\nexport default function Example() {\n  return <BoxyRotateLoader />;\n}"
@@ -131,12 +132,12 @@ export const componentsList = [
     "previewVideo": "/Videos/boxy-preloader-2.webm",
     "description": "A clean loading screen with stacked boxes that rise and fall in sequence, giving a clear sense of ongoing activity while content or data is being loaded.",
     "details": [
-      "Uses multiple boxes moving up and down to show loading progress. ",
-      "Helps users understand that a process is currently running. ",
-      "Suitable for page loads, API requests, and async actions. ",
-      "Smooth animation keeps the interface feeling responsive. ",
-      "Lightweight and easy to integrate into any layout. ",
-      "Colors and size can be customized through CSS variables. "
+      "Uses multiple boxes moving up and down to show loading progress.",
+      "Helps users understand that a process is currently running.",
+      "Suitable for page loads, API requests, and async actions.",
+      "Smooth animation keeps the interface feeling responsive.",
+      "Lightweight and easy to integrate into any layout.",
+      "Colors and size can be customized through CSS variables."
     ],
     "codes": {
       "next": "import { BoxyBounceLoader } from \"@/components/ui/boxy-bounce-loader\";\n\nexport default function Example() {\n  return <BoxyBounceLoader />;\n}"
@@ -162,12 +163,12 @@ export const componentsList = [
     "previewVideo": "/Videos/boxy-preloader-3.webm",
     "description": "A dynamic box-style loading screen where blocks stretch and shift positions, creating a smooth visual cue that content is being prepared in the background.",
     "details": [
-      "Shows boxes stretching and changing positions to indicate loading. ",
-      "Gives clear feedback that work is happening in the background. ",
-      "Well suited for page loads, data processing, and transitions. ",
-      "Smooth animation keeps users engaged during wait times. ",
-      "Lightweight design that doesn’t impact performance. ",
-      "Easy to customize size and colors using CSS. "
+      "Shows boxes stretching and changing positions to indicate loading.",
+      "Gives clear feedback that work is happening in the background.",
+      "Well suited for page loads, data processing, and transitions.",
+      "Smooth animation keeps users engaged during wait times.",
+      "Lightweight design that doesn’t impact performance.",
+      "Easy to customize size and colors using CSS."
     ],
     "codes": {
       "next": "import { BoxyShiftLoader } from \"@/components/ui/boxy-shift-loader\";\n\nexport default function Example() {\n  return <BoxyShiftLoader />;\n}"
@@ -201,7 +202,7 @@ export const componentsList = [
       "Helps maintain a uniform text system across the entire UI."
     ],
     "codes": {
-      "next": "import { HeadingOne, BodyText } from \"@/components/ui/typography\";\n\nexport default function Example() {\n  return (\n    <div>\n      <HeadingOne>Hello World</HeadingOne>\n      <BodyText>This is a reusable typography system.</BodyText>\n    </div>\n  );\n}"
+      "next": "import { Heading, Text, Label, Code } from \"@/components/ui/typography\";\n\nexport default function Example() {\n  return (\n    <div className=\"space-y-4\">\n      <Heading variant=\"h1\">Hello World</Heading>\n      <Text variant=\"lead\">This is a reusable typography system.</Text>\n      <div className=\"flex items-center gap-2\">\n         <Label>Version:</Label>\n         <Code>v1.0.0</Code>\n      </div>\n    </div>\n  );\n}"
     },
     "usage": [
       "Use the heading styles to structure titles and section headers in your layouts.",
@@ -292,7 +293,7 @@ export const componentsList = [
       "Designed to be lightweight and easy to customize with CSS."
     ],
     "codes": {
-      "next": "import { FeedbackPage } from \"@/components/ui/feedback-page\";\n\nexport default function Example() {\n  return <FeedbackPage errorCode=\"404\" errorText=\"NOT FOUND\" />;\n}"
+      "next": "import { ErrorPage } from \"@/components/ui/error-page\";\n\nexport default function Example() {\n  return <ErrorPage errorCode=\"404\" errorText=\"NOT FOUND\" />;\n}"
     },
     "usage": [
       "Add the error page markup to handle missing routes or unexpected errors.",
