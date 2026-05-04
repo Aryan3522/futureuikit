@@ -1259,14 +1259,14 @@ export const BasicLoader = ({
   };
 
   return (
-    <div className={cn("flex flex-col justify-center items-center gap-6 p-8", className)} {...props}>
+    <div className={cn("flex flex-col justify-center items-center w-full h-full min-h-[inherit]", className)} {...props}>
       {getLoader()}
       {text && (
         <motion.p 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="text-sm font-medium text-muted-foreground tracking-wide animate-pulse"
+          className="mt-6 text-sm font-medium text-muted-foreground tracking-wide animate-pulse text-center"
         >
           {text}
         </motion.p>
