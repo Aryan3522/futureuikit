@@ -318,19 +318,36 @@ async function addComponent(componentSlug) {
 
     const targetDir = path.join(baseDir, "components", "ui");
 
-    try {
-      await fs.access(targetDir);
-    } catch {
-      console.log(`Creating directory: ${targetDir}`);
-      await fs.mkdir(targetDir, { recursive: true });
-    }
-
     for (const file of componentData.files) {
       if (typeof file.name !== "string" || typeof file.content !== "string") {
         throw new Error("Registry returned an invalid file payload.");
       }
 
-      const filePath = resolveSafeTarget(targetDir, file.name);
+      // Determine the target directory for this specific file
+      let fileTargetDir = targetDir; // Default: components/ui
+      
+      if (file.targetPath) {
+        // If the file specifies a targetPath (e.g., "hooks/use-toast.ts"),
+        // we resolve it relative to baseDir (e.g., "src/").
+        const absoluteTargetDir = path.resolve(baseDir, "..", file.targetPath);
+        const normalizedBase = path.resolve(baseDir, "..");
+
+        if (!absoluteTargetDir.startsWith(normalizedBase)) {
+          // Fallback to relative to baseDir if outside
+          fileTargetDir = path.resolve(baseDir, path.dirname(file.targetPath));
+        } else {
+          fileTargetDir = path.dirname(absoluteTargetDir);
+        }
+      }
+
+      try {
+        await fs.access(fileTargetDir);
+      } catch {
+        console.log(`Creating directory: ${fileTargetDir}`);
+        await fs.mkdir(fileTargetDir, { recursive: true });
+      }
+
+      const filePath = resolveSafeTarget(fileTargetDir, path.basename(file.name));
 
       try {
         const existing = await fs.readFile(filePath, "utf-8");
@@ -351,7 +368,7 @@ async function addComponent(componentSlug) {
       }
 
       await fs.writeFile(filePath, file.content, "utf-8");
-      console.log(`Added ${file.name} to ${targetDir}`);
+      console.log(`Added ${file.name} to ${fileTargetDir}`);
     }
 
     console.log(`\nComponent '${componentSlug}' added successfully.`);
