@@ -33,7 +33,7 @@ Usage:
 
 Examples:
   npx futureuikit add boxy-bounce
-  npx futureuikit add boxy-bounce --registry https://your-site.vercel.app/api/registry
+  npx futureuikit add boxy-bounce --registry https://futureuikit.vercel.app/api/registry
 
 Environment:
   FUTURE_UI_REGISTRY_URL  Override the registry base URL.
@@ -75,10 +75,11 @@ function resolveSafeTarget(baseDir, fileName) {
   return target;
 }
 
-async function ensureUtils(baseDir) {
+async function ensureUtils(baseDir, cwd) {
   const libDir = path.join(baseDir, "lib");
   const utilsJsPath = path.join(libDir, "utils.js");
   const utilsTsPath = path.join(libDir, "utils.ts");
+  const tsconfigPath = path.join(cwd, "tsconfig.json");
 
   try {
     await fs.mkdir(libDir, { recursive: true });
@@ -89,6 +90,7 @@ async function ensureUtils(baseDir) {
   let exists = false;
   let targetPath = utilsJsPath;
 
+  // Check if either already exists
   try {
     await fs.access(utilsTsPath);
     exists = true;
@@ -98,10 +100,27 @@ async function ensureUtils(baseDir) {
       await fs.access(utilsJsPath);
       exists = true;
       targetPath = utilsJsPath;
-    } catch {}
+    } catch {
+      // Neither exists, decide default extension
+      try {
+        await fs.access(tsconfigPath);
+        targetPath = utilsTsPath;
+      } catch {
+        targetPath = utilsJsPath;
+      }
+    }
   }
 
-  const cnCode = `import { clsx } from "clsx";
+  const isTs = targetPath.endsWith(".ts");
+  const cnCode = isTs 
+    ? `import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+`
+    : `import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs) {
@@ -287,7 +306,7 @@ async function addComponent(componentSlug) {
     }
 
     // --- Dependency Resolution ---
-    await ensureUtils(baseDir);
+    await ensureUtils(baseDir, cwd);
     await ensureConfig(cwd, isSrc);
     await ensureDependencies(cwd, componentData.dependencies || []);
 
