@@ -42,7 +42,7 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = ({
   showArrows = true,
   showDots = true,
   pauseOnHover = true,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   variant = "modern"
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -97,7 +97,7 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = ({
   return (
     <div 
       className={cn(
-        "group relative w-full max-w-5xl mx-auto h-[500px] overflow-hidden rounded-3xl bg-black shadow-2xl", 
+        "group relative w-full max-w-5xl mx-auto h-125 overflow-hidden rounded-3xl bg-black shadow-2xl", 
         className
       )}
       onMouseEnter={() => pauseOnHover && setIsPaused(true)}

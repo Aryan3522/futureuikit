@@ -72,7 +72,7 @@ const ComponentPageSidebar: React.FC<ComponentPageSidebarProps> = ({ open, setOp
                         >
                             <button onClick={scrollToTop} aria-label="Logo">
                                 <Image
-                                    src="/Images/wolf.jpeg"
+                                    src="/Images/FUI.webp"
                                     alt="Logo"
                                     width={32}
                                     height={32}
