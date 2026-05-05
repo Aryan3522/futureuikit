@@ -6,10 +6,11 @@
  */
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import Image from "next/image";
 
 export interface CarouselSlide {
   id: string | number;
@@ -33,7 +34,7 @@ export interface CarouselSliderProps {
 /**
  * CarouselSlider Component
  * 
- * Upgraded with Framer Motion for premium feel.
+ * Optimized for buttery smooth performance and instant image loading.
  */
 export const CarouselSlider: React.FC<CarouselSliderProps> = ({ 
   slides = [], 
@@ -42,7 +43,6 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = ({
   showArrows = true,
   showDots = true,
   pauseOnHover = true,
-   
   variant = "modern"
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -71,38 +71,48 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = ({
     enter: (direction: number) => ({
       x: direction > 0 ? "100%" : "-100%",
       opacity: 0,
-      scale: 1.05,
+      scale: 1.1,
+      filter: "blur(10px)",
     }),
     center: {
       zIndex: 1,
       x: 0,
       opacity: 1,
       scale: 1,
+      filter: "blur(0px)",
     },
     exit: (direction: number) => ({
       zIndex: 0,
-      x: direction < 0 ? "50%" : "-50%",
+      x: direction < 0 ? "30%" : "-30%",
       opacity: 0,
-      scale: 0.95,
+      scale: 0.9,
+      filter: "blur(5px)",
     }),
-  };
-
-  const gpuStyle: React.CSSProperties = {
-    willChange: "transform, opacity",
-    backfaceVisibility: "hidden",
-    WebkitBackfaceVisibility: "hidden",
-    transform: "translateZ(0)",
   };
 
   return (
     <div 
       className={cn(
-        "group relative w-full max-w-5xl mx-auto h-125 overflow-hidden rounded-3xl bg-black shadow-2xl", 
+        "group relative w-full max-w-5xl mx-auto h-[400px] md:h-125 overflow-hidden rounded-3xl bg-black shadow-2xl", 
         className
       )}
       onMouseEnter={() => pauseOnHover && setIsPaused(true)}
       onMouseLeave={() => pauseOnHover && setIsPaused(false)}
     >
+      {/* Background Preloading Layer (Hidden) */}
+      <div className="hidden">
+        {slides.map((slide) => (
+          <Image 
+            key={`preload-${slide.id}`} 
+            src={slide.image} 
+            alt="preload" 
+            width={1200} 
+            height={800} 
+            priority 
+          />
+        ))}
+      </div>
+
       <AnimatePresence initial={false} custom={direction} mode="popLayout">
         <motion.div
           key={currentIndex}
@@ -112,28 +122,39 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = ({
           animate="center"
           exit="exit"
           transition={{
-            x: { type: "tween", duration: 0.5, ease: [0.4, 0, 0.2, 1] },
-            opacity: { duration: 0.3 },
-            scale: { duration: 0.5, ease: "easeOut" },
+            x: { type: "spring", stiffness: 300, damping: 30 },
+            opacity: { duration: 0.4 },
+            scale: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+            filter: { duration: 0.4 }
           }}
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ 
-            ...gpuStyle,
-            backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, transparent 100%), url("${slides[currentIndex].image}")` 
-          }}
+          className="absolute inset-0"
         >
+          {/* Main Slide Image */}
+          <div className="relative w-full h-full">
+            <Image
+              src={slides[currentIndex].image}
+              alt={slides[currentIndex].title}
+              fill
+              priority
+              className="object-cover"
+              sizes="(max-width: 1280px) 100vw, 1200px"
+            />
+            {/* Optimized Gradient Overlay */}
+            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent z-10" />
+          </div>
+
           {/* Content Overlay */}
-          <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 text-white pointer-events-none">
+          <div className="absolute inset-0 z-20 flex flex-col justify-end p-8 md:p-12 text-white pointer-events-none">
             <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.4 }}
+              initial={{ y: 30, opacity: 0, filter: "blur(10px)" }}
+              animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+              transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
               className="flex flex-col gap-3 max-w-2xl"
             >
               <motion.span 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5, duration: 0.4 }}
                 className={cn(
                   "inline-block self-start px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
                   slides[currentIndex].tagBg || "bg-primary"
@@ -157,20 +178,20 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = ({
 
       {/* Navigation Arrows */}
       {showArrows && (
-        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 z-20 flex justify-between px-4 pointer-events-none">
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 z-30 flex justify-between px-4 pointer-events-none">
           <motion.button
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ scale: 1.1, backgroundColor: "rgba(0,0,0,0.6)" }}
             whileTap={{ scale: 0.9 }}
             onClick={prevSlide}
-            className="pointer-events-auto p-3 rounded-full bg-black/20 backdrop-blur-md border border-white/10 text-white hover:bg-black/40 transition-colors"
+            className="pointer-events-auto p-3 rounded-full bg-black/20 backdrop-blur-md border border-white/10 text-white transition-all duration-300"
           >
             <ChevronLeft size={24} />
           </motion.button>
           <motion.button
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ scale: 1.1, backgroundColor: "rgba(0,0,0,0.6)" }}
             whileTap={{ scale: 0.9 }}
             onClick={nextSlide}
-            className="pointer-events-auto p-3 rounded-full bg-black/20 backdrop-blur-md border border-white/10 text-white hover:bg-black/40 transition-colors"
+            className="pointer-events-auto p-3 rounded-full bg-black/20 backdrop-blur-md border border-white/10 text-white transition-all duration-300"
           >
             <ChevronRight size={24} />
           </motion.button>
@@ -179,7 +200,7 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = ({
 
       {/* Dots Pagination */}
       {showDots && (
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-2">
           {slides.map((_, idx) => (
             <button
               key={idx}
@@ -195,7 +216,7 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = ({
                 <motion.div
                   layoutId="activeDot"
                   className="absolute inset-0 bg-primary"
-                  transition={{ type: "tween", duration: 0.3 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 />
               )}
             </button>
@@ -204,7 +225,7 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = ({
       )}
 
       {/* Progress Bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-20 overflow-hidden">
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-30 overflow-hidden">
          <motion.div 
            key={currentIndex}
            initial={{ width: "0%" }}

@@ -158,16 +158,26 @@ const ComponentDetail: React.FC<ComponentDetailProps> = ({ type, slug, id }) => 
                 <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Live Interactive Preview</span>
               </div>
 
-              <div className="relative w-full min-h-[350px] mb-8 overflow-hidden rounded-2xl border border-border/40 shadow-inner group bg-muted/20">
-                <DotBackground 
-                  dotColor="var(--primary)" 
-                  maskOpacity={0.05}
-                  className="bg-linear-to-br from-muted/50 to-muted/20 min-h-[350px] flex items-center justify-center p-6"
-                >
-                  <div className="w-full relative z-10 select-text flex items-center justify-center">
+              <div className="relative w-full min-h-[300px] sm:min-h-[450px] flex-1 mb-8 overflow-hidden rounded-2xl border border-border/40 shadow-inner group bg-muted/20 flex">
+                {/* 1. Component Background - Always Full Bleed */}
+                <div className="absolute inset-0 z-0">
+                  {component.type.toLowerCase().includes("background") ? (
+                    <ComponentLivePreview id={id} slug={slug} />
+                  ) : (
+                    <DotBackground 
+                      dotColor="var(--primary)" 
+                      maskOpacity={0.05}
+                      className="bg-linear-to-br from-muted/50 to-muted/20 absolute inset-0"
+                    />
+                  )}
+                </div>
+
+                {/* 2. Component Content (For non-background components) */}
+                {!component.type.toLowerCase().includes("background") && (
+                  <div className="relative z-10 w-full flex items-center justify-center p-8 sm:p-20 select-text">
                     <ComponentLivePreview id={id} slug={slug} />
                   </div>
-                </DotBackground>
+                )}
               </div>
 
               {/* Code Section */}

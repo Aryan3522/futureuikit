@@ -54,8 +54,9 @@ export const GlowyButton = React.forwardRef<HTMLButtonElement, GlowyButtonProps>
         whileHover={!disabled ? "hover" : "initial"}
         whileTap={!disabled ? "hover" : "initial"}
         className={cn(
-          "relative inline-flex items-center justify-center min-w-42.5 h-12 rounded-full font-bold text-white overflow-hidden",
+          "relative inline-flex items-center justify-center sm:min-w-42.5 h-12 rounded-full font-bold text-white overflow-hidden",
           "bg-slate-950 border-2",
+          "w-full sm:w-auto",
           disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
           className
         )}

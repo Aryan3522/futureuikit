@@ -28,33 +28,18 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setMounted(true), 0);
-    return () => {
-      clearTimeout(timer);
-    };
+    // Sync state with what's actually in the DOM (applied by layout script)
+    const handle = requestAnimationFrame(() => {
+      setMounted(true);
+      // Ensure state matches the forced dark mode from layout script on mount
+      setTheme("dark");
+    });
+    return () => cancelAnimationFrame(handle);
   }, []);
 
   useEffect(() => {
     if (mounted) {
-      const savedTheme = localStorage.getItem("theme") as Theme | null;
-      let targetTheme: Theme = "dark";
-      if (savedTheme === "dark" || savedTheme === "light") {
-        targetTheme = savedTheme;
-      } else {
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        targetTheme = prefersDark ? "dark" : "light";
-      }
-      
-      const timer = setTimeout(() => {
-        setTheme(targetTheme);
-      }, 0);
-      return () => clearTimeout(timer);
-    }
-  }, [mounted]);
-
-  useEffect(() => {
-    if (mounted) {
-      localStorage.setItem("theme", theme);
+      // Synchronize DOM with current session state (no localStorage)
       document.documentElement.classList.toggle("dark", theme === "dark");
     }
   }, [theme, mounted]);

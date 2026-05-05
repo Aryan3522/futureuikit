@@ -14,7 +14,7 @@ interface ErrorPageProps {
 
 export const ErrorPage: React.FC<ErrorPageProps> = ({ className, errorCode = "404", errorText = "ERROR" }) => {
   return (
-    <div className={cn("text-center max-w-md", className)}>
+    <div className={cn("w-full h-full flex items-center justify-center text-center", className)}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
         .error-neon-container {

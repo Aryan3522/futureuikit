@@ -33,23 +33,33 @@ const ComponentsGrid: React.FC<ComponentsGridProps> = ({ items }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.05 }}
-            className="group h-full"
+            className="group"
           >
-            <Card className="h-full flex flex-col border border-border/40 shadow-sm hover:shadow-2xl transition-all duration-500 backdrop-blur-xl bg-card/40 dark:bg-card/20 overflow-hidden rounded-4xl">
+            <Card className="flex flex-col border border-border/40 shadow-sm hover:shadow-2xl transition-all duration-500 backdrop-blur-xl bg-card/40 dark:bg-card/20 overflow-hidden rounded-4xl">
               {/* Preview Area (The "Container" to fix) */}
-              <div className="relative w-full min-h-50 overflow-hidden bg-muted/10 flex items-center justify-center">
-                <DotBackground 
-                  dotColor="var(--primary)" 
-                  maskOpacity={0.08}
-                  className="bg-linear-to-br from-primary/5 to-primary/10 group-hover:from-primary/10 group-hover:to-primary/20 transition-all duration-500 min-h-50 flex items-center justify-center"
-                >
-                  <div className="w-full relative z-10 select-none pointer-events-none scale-[0.8] origin-center flex items-center justify-center">
+              <div className="relative w-full min-h-[220px] flex-1 overflow-hidden bg-muted/10 group/preview flex">
+                {/* 1. Component Background - Always Full Bleed */}
+                <div className="absolute inset-0 z-0">
+                  {item.type.toLowerCase().includes("background") && Preview ? (
+                    <Preview />
+                  ) : (
+                    <DotBackground 
+                      dotColor="var(--primary)" 
+                      maskOpacity={0.08}
+                      className="bg-linear-to-br from-primary/5 to-primary/10 group-hover:from-primary/10 group-hover:to-primary/20 transition-all duration-500"
+                    />
+                  )}
+                </div>
+                
+                {/* 2. Component Content (For non-background components) */}
+                {!item.type.toLowerCase().includes("background") && (
+                  <div className="relative z-10 w-full flex items-center justify-center p-8 sm:p-10 select-none pointer-events-none">
                     {Preview ? <Preview /> : <div className="text-[10px] font-bold opacity-20 uppercase italic">Preview Soon</div>}
                   </div>
-                </DotBackground>
+                )}
 
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-background/20 backdrop-blur-[2px]">
+                <div className="absolute inset-0 z-20 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-background/20 backdrop-blur-[2px]">
                   <Link
                     href={`/components/${item.type.toLowerCase()}/${item.slug}/${item.id}`}
                   >
