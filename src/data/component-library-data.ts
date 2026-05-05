@@ -594,6 +594,31 @@ export const componentsList: ComponentItem[] = [
       "Wrap it in a link or button for interactive social elements.",
     ],
   },
+  {
+    id: 23,
+    title: "Linkedin Icon",
+    type: "Icons",
+    slug: "linkedin-icon",
+    category: "ui",
+    description:
+      "A professional LinkedIn icon component built with SVG. Lightweight, reusable, and fully customizable via Tailwind CSS for seamless integration into headers, footers, or contact pages.",
+    details: [
+      "High-fidelity SVG implementation for crisp rendering at any scale.",
+      "Pure React component with zero external dependencies.",
+      "Full support for Tailwind CSS color and sizing utilities.",
+      "Standardized props interface for consistent usage across the project.",
+      "Ideal for professional profiles, social link sections, and portfolios.",
+    ],
+    codes: {
+      next: 'import { LinkedinIcon } from "@/components/ui/linkedin-icon";\n\nexport default function Example() {\n  return (\n    <div className="flex gap-4">\n      <LinkedinIcon className="w-6 h-6 text-foreground" />\n      <LinkedinIcon className="w-8 h-8 text-primary" />\n    </div>\n  );\n}',
+    },
+    usage: [
+      "Import LinkedinIcon from your UI components directory.",
+      "Use standard Tailwind sizing classes like 'w-5 h-5'.",
+      "Apply text colors to match your design system.",
+      "Encapsulate in a Link or Button for interactive professional links.",
+    ],
+  },
 ];
 
 export { registry };
