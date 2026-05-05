@@ -2,8 +2,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/ui/header";
 import ExploreComponents from "@/components/ExploreComponents";
-import { Code2, Zap, Palette, ShieldCheck, Rocket, Layout } from "lucide-react";
+import { Code2, Zap, Palette, ShieldCheck, Rocket, Layout, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import { DotBackground } from "@/components/ui/dot-background";
 
 export default function Home() {
   return (
@@ -116,19 +117,47 @@ export default function Home() {
       </section>
 
       {/* Call to Action */}
-      <section className="w-full px-4 py-20 md:py-32 text-center">
-        <div className="max-w-5xl mx-auto relative overflow-hidden shadow-2xl">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-40" />
-          <div className="relative z-10">
-            <h2 className="text-3xl md:text-7xl font-black mb-6 md:mb-8 italic tracking-tighter uppercase">READY TO BUILD?</h2>
-            <p className="text-base md:text-2xl mb-8 md:mb-12 text-muted-foreground/80 leading-relaxed font-medium">
-              Start your next project with Future UI and experience the difference in speed and quality.
-            </p>
-            <Link href="/components">
-              <Button size="lg" variant="secondary" className="rounded-full px-8 md:px-12 h-14 md:h-16 text-lg md:text-xl font-bold italic shadow-xl hover:scale-105 transition-all">
-                Get Started
-              </Button>
-            </Link>
+      <section className="w-full px-4 py-4 md:py-12 relative overflow-hidden">
+        <div className="max-w-5xl mx-auto relative group">
+          {/* Main Card */}
+          <div className="relative overflow-hidden rounded-[2.5rem] border border-primary/20 bg-card/30 backdrop-blur-md p-8 md:p-20 duration-500 hover:border-primary/40 text-center">
+            {/* Inner background pattern */}
+            <div className="absolute inset-0 opacity-40 mix-blend-overlay pointer-events-none">
+              <DotBackground dotColor="#fff" gap={20} />
+            </div>
+
+            <div className="relative z-10 flex flex-col items-center gap-8 md:gap-12">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] md:text-xs font-black uppercase tracking-[0.2em]">
+                <Rocket size={14} className="animate-bounce" />
+                Boost your workflow
+              </div>
+
+              <div className="space-y-4 md:space-y-6">
+                <h2 className="text-4xl md:text-8xl font-black italic tracking-tighter leading-[0.9] uppercase">
+                  READY TO <br />
+                  <span className="bg-linear-to-r from-primary via-purple-400 to-blue-400 bg-clip-text text-transparent">BUILD?</span>
+                </h2>
+                
+                <p className="text-base md:text-2xl text-muted-foreground/80 max-w-2xl mx-auto leading-relaxed font-medium">
+                  Start your next project with Future UI and experience the difference in speed and quality. 
+                  High-performance components for high-performance teams.
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto items-center justify-center">
+                <Link href="/components" className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full sm:w-auto rounded-full px-12 h-16 text-xl font-bold italic shadow-2xl bg-primary hover:bg-primary/90 transition-all group/btn">
+                    Get Started
+                  </Button>
+                </Link>
+                
+                <Link href="/docs" className="w-full sm:w-auto">
+                  <Button variant="ghost" size="lg" className="w-full sm:w-auto rounded-full px-10 h-16 text-lg font-bold italic hover:bg-primary/5 transition-all">
+                    View Docs
+                  </Button>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -30,6 +30,7 @@ import { Particles } from "@/components/ui/particles";
 import { PerspectiveGrid } from "@/components/ui/perspective-grid";
 import { SearchInput } from "@/components/ui/search-input";
 import { GithubIcon } from "@/components/ui/github-icon";
+import { LinkedinIcon } from "@/components/ui/linkedin-icon";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
@@ -469,6 +470,32 @@ export const PreviewRegistry: Record<string, React.FC> = {
         </Badge>
         <Button size="sm" className="gap-2">
           <GithubIcon className="w-4 h-4" /> View Source
+        </Button>
+      </div>
+    </div>
+  ),
+  "linkedin-icon": () => (
+    <div className="flex flex-col gap-8 items-center justify-center w-full h-full p-8">
+      <div className="flex gap-12 items-center">
+        <div className="flex flex-col items-center gap-2">
+          <LinkedinIcon className="w-6 h-6" />
+          <span className="text-[10px] uppercase font-bold opacity-50">sm</span>
+        </div>
+        <div className="flex flex-col items-center gap-2 text-primary">
+          <LinkedinIcon className="w-10 h-10" />
+          <span className="text-[10px] uppercase font-bold opacity-50">md</span>
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <LinkedinIcon className="w-16 h-16" />
+          <span className="text-[10px] uppercase font-bold opacity-50">lg</span>
+        </div>
+      </div>
+      <div className="flex gap-4">
+        <Badge variant="outline" className="gap-2">
+          <LinkedinIcon className="w-3 h-3" /> LinkedIn Profile
+        </Badge>
+        <Button size="sm" className="gap-2 bg-[#0077b5] hover:bg-[#0077b5]/90 border-none">
+          <LinkedinIcon className="w-4 h-4 fill-white" /> Connect Now
         </Button>
       </div>
     </div>

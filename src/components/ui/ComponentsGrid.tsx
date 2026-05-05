@@ -37,7 +37,7 @@ const ComponentsGrid: React.FC<ComponentsGridProps> = ({ items }) => {
           >
             <Card className="flex flex-col border border-border/40 shadow-sm hover:shadow-2xl transition-all duration-500 backdrop-blur-xl bg-card/40 dark:bg-card/20 overflow-hidden rounded-4xl">
               {/* Preview Area (The "Container" to fix) */}
-              <div className="relative w-full min-h-[220px] flex-1 overflow-hidden bg-muted/10 group/preview flex">
+              <div className="relative w-full min-h-55 flex-1 overflow-hidden bg-muted/10 group/preview flex">
                 {/* 1. Component Background - Always Full Bleed */}
                 <div className="absolute inset-0 z-0">
                   {item.type.toLowerCase().includes("background") && Preview ? (

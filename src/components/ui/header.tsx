@@ -17,6 +17,7 @@ import { Button } from "./button";
 import { cn } from "@/lib/utils";
 import { SearchInput } from "./search-input";
 import { GithubIcon } from "./github-icon";
+import { LinkedinIcon } from "./linkedin-icon";
 
 interface NavItem {
   label: string;
@@ -51,24 +52,24 @@ export const Header: React.FC = () => {
       )}
     >
       <div className="container mx-auto h-full px-4 md:px-6 flex items-center justify-between gap-4">
-        {/* Left: Logo */}
-        <Link href="/" className="flex items-center gap-2 shrink-0 group">
-          <div className="w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center overflow-hidden transition-transform">
-            <Image
-              src="/Logo.webp"
-              alt="Future UI Logo"
-              width={36}
-              height={36}
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <span className="hidden sm:block text-xl font-black italic tracking-tighter uppercase">
-            <span className="text-primary">Future</span> UI
-          </span>
-        </Link>
+        {/* Left: Logo & Search */}
+        <div className="flex items-center gap-3 md:gap-6 lg:w-[30%] shrink-0">
+          <Link href="/" className="flex items-center shrink-0 group">
+            <div className="w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center overflow-hidden transition-transform group-hover:scale-110">
+              <Image
+                src="/Logo.webp"
+                alt="Future UI Logo"
+                width={36}
+                height={36}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </Link>
+          <SearchInput className="w-full max-w-30 sm:max-w-50 lg:max-w-70" />
+        </div>
 
-        {/* Middle: Links (Desktop) */}
-        <nav className="hidden lg:flex items-center gap-2">
+        {/* Center: Links (Desktop) */}
+        <nav className="hidden lg:flex flex-1 justify-center items-center gap-2">
           {navItems.map((item) => {
             const isActive = mounted && pathname === item.href;
             return (
@@ -88,54 +89,64 @@ export const Header: React.FC = () => {
           })}
         </nav>
 
-        {/* Right: Search, Actions, Mobile Toggle */}
-        <div className="flex items-center gap-2 md:gap-3 shrink-0">
-          <SearchInput />
-
-          <div className="flex items-center gap-1 md:gap-2">
-            <Link
-              href="https://github.com/Aryan3522/future-ui"
-              target="_blank"
-              className="hidden sm:block"
-            >
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full w-9 h-9"
-              >
-                <GithubIcon className="w-5 h-5" />
-              </Button>
-            </Link>
-
+        {/* Right: Actions & Mobile Toggle */}
+        <div className="flex items-center gap-3 md:gap-6 lg:w-[30%] justify-end shrink-0">
+          <Link
+            href="https://github.com/Aryan3522/future-ui"
+            target="_blank"
+            className="hidden sm:block shrink-0"
+          >
             <Button
               variant="ghost"
               size="icon"
-              onClick={toggleTheme}
-              className="rounded-full w-9 h-9"
+              className="rounded-full w-10 h-10 shrink-0 hover:bg-primary/10 transition-all duration-300 flex items-center justify-center p-0"
             >
-              {!mounted ? (
-                <div className="w-5 h-5" />
-              ) : theme === "dark" ? (
-                <Sun className="w-5 h-5" />
-              ) : (
-                <Moon className="w-5 h-5" />
-              )}
+              <GithubIcon className="w-5 h-5" />
             </Button>
+          </Link>
 
-            {/* Mobile Menu Toggle */}
+          <Link
+            href="https://www.linkedin.com/in/aryan-hooda-code/"
+            target="_blank"
+            className="hidden sm:block shrink-0"
+          >
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden rounded-full w-9 h-9"
+              className="rounded-full w-10 h-10 shrink-0 hover:bg-primary/10 transition-all duration-300 flex items-center justify-center p-0"
             >
-              {isOpen ? (
-                <X className="w-5 h-5" />
-              ) : (
-                <Menu className="w-5 h-5" />
-              )}
+              <LinkedinIcon className="w-5 h-5" />
             </Button>
-          </div>
+          </Link>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-full w-10 h-10 shrink-0 hover:bg-primary/10 transition-all duration-300 flex items-center justify-center p-0"
+          >
+            {!mounted ? (
+              <div className="w-5 h-5" />
+            ) : theme === "dark" ? (
+              <Sun className="w-5 h-5" />
+            ) : (
+              <Moon className="w-5 h-5" />
+            )}
+          </Button>
+
+          {/* Mobile Menu Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsOpen(!isOpen)}
+            className="lg:hidden rounded-full w-10 h-10 shrink-0 hover:bg-primary/10 transition-all duration-300 flex items-center justify-center p-0"
+          >
+            {isOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </Button>
         </div>
       </div>
 
@@ -183,6 +194,18 @@ export const Header: React.FC = () => {
                     className="rounded-full gap-2 font-bold italic"
                   >
                     <GithubIcon className="w-4 h-4" /> GitHub
+                  </Button>
+                </Link>
+                <Link
+                  href="https://www.linkedin.com/in/aryan-hooda-code/"
+                  target="_blank"
+                >
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full gap-2 font-bold italic"
+                  >
+                    <LinkedinIcon className="w-4 h-4" /> LinkedIn
                   </Button>
                 </Link>
               </div>

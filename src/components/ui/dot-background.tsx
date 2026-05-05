@@ -26,7 +26,7 @@ export const DotBackground: React.FC<DotBackgroundProps> = ({
   dotSize = 1,
   gap = 20,
   dotColor = "currentColor",
-  maskOpacity = 0.2,
+  maskOpacity = 1,
   children,
 }) => {
   return (

@@ -65,10 +65,18 @@ export const SearchInput: React.FC<SearchInputProps> = ({
 }) => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   useEffect(() => {
+    const checkViewport = () => {
+      setIsMobileViewport(window.innerWidth < 768);
+    };
+    
+    checkViewport();
+    window.addEventListener("resize", checkViewport);
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
@@ -79,7 +87,10 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       }
     };
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("resize", checkViewport);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   const results = useMemo(() => {
@@ -96,8 +107,10 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       .slice(0, 5);
   }, [query]);
 
+  const activeMobile = mobile || isMobileViewport;
+
   return (
-    <div className={cn("relative w-full", !mobile && "w-48 lg:w-64", className)}>
+    <div className={cn("relative w-full", !activeMobile && "min-w-40 lg:min-w-60", className)}>
       <div className="relative group">
         <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
         <input
@@ -109,13 +122,13 @@ export const SearchInput: React.FC<SearchInputProps> = ({
             setIsOpen(true);
           }}
           onFocus={() => setIsOpen(true)}
-          placeholder={placeholder || (mobile ? "Search components..." : "Search... (Ctrl+K)")}
+          placeholder={placeholder || (activeMobile ? "Search..." : "Search... (Ctrl+K)")}
           className={cn(
             "w-full pl-10 pr-4 py-2 bg-muted/40 border border-border/50 rounded-full text-sm font-medium focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
-            mobile && "py-3 bg-muted/50 rounded-xl",
+            activeMobile && "py-2 bg-muted/50",
           )}
         />
-        {!mobile && (
+        {!activeMobile && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden lg:flex items-center gap-1 px-1.5 py-0.5 rounded-sm border border-border bg-background text-[10px] text-muted-foreground font-mono pointer-events-none">
             <span className="text-[8px]">⌘</span>K
           </div>
@@ -134,8 +147,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.98 }}
               className={cn(
-                "absolute top-full mt-2 left-0 right-0 z-50 bg-popover border border-border rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl",
-                mobile ? "max-h-75" : "w-75 lg:w-100",
+                "absolute top-full mt-2 left-0 z-50 bg-popover border border-border rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl",
+                activeMobile ? "-right-25 w-70 sm:right-0 sm:w-full" : "w-75 lg:w-100",
               )}
             >
               <div className="p-2 flex flex-col">
