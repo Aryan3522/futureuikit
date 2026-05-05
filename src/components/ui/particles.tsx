@@ -1,3 +1,8 @@
+/**
+ * @registry-slug particles
+ * @registry-name Particles
+ * @registry-type components:ui
+ */
 "use client";
 
 import React, { useEffect, useRef, useMemo } from "react";
@@ -271,13 +276,9 @@ export const Particles: React.FC<ParticlesProps> = ({
       aria-hidden="true"
       {...props}
       className={cn(
-        "pointer-events-none fixed inset-0 w-screen h-screen min-h-screen md:h-screen",
+        "pointer-events-none relative w-full h-full",
         className
       )}
-      style={{
-        height: "100dvh",
-        width: "100vw",
-      }}
     >
       <canvas ref={canvasRef} className="w-full h-full block" />
     </div>

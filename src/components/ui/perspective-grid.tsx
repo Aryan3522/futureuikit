@@ -1,3 +1,8 @@
+/**
+ * @registry-slug perspective-grid
+ * @registry-name Perspective Grid
+ * @registry-type components:ui
+ */
 import React from "react";
 import { cn } from "@/lib/utils";
 
@@ -39,15 +44,15 @@ export function PerspectiveGrid({
           backgroundImage: `
             repeating-linear-gradient(
               to right,
-              rgba(156,163,175,0.35) 0px,
-              rgba(156,163,175,0.35) 1px,
+              rgba(156,163,175,0.6) 0px,
+              rgba(156,163,175,0.6) 1px,
               transparent 1px,
               transparent ${gridLineGap}px
             ),
             repeating-linear-gradient(
               to bottom,
-              rgba(156,163,175,0.35) 0px,
-              rgba(156,163,175,0.35) 1px,
+              rgba(156,163,175,0.6) 0px,
+              rgba(156,163,175,0.6) 1px,
               transparent 1px,
               transparent ${gridLineGap}px
             )

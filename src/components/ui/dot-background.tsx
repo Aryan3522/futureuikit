@@ -1,3 +1,8 @@
+/**
+ * @registry-slug dot-background
+ * @registry-name Dot Background
+ * @registry-type components:ui
+ */
 "use client";
 
 import React from "react";
@@ -27,7 +32,7 @@ export const DotBackground: React.FC<DotBackgroundProps> = ({
   return (
     <div
       className={cn(
-        "relative w-full overflow-hidden bg-background flex items-center justify-center",
+        "relative w-full h-full overflow-hidden bg-background flex items-center justify-center",
         className
       )}
     >

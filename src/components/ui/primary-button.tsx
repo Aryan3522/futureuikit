@@ -108,6 +108,7 @@ export const PrimaryButton = React.forwardRef<HTMLButtonElement, PrimaryButtonPr
         className={cn(
           "inline-flex items-center justify-center cursor-pointer select-none transition-all duration-200",
           "disabled:opacity-50 disabled:cursor-not-allowed disabled:filter-none",
+          "w-full sm:w-auto",
           modeClasses[finalMode] || modeClasses.modern,
           className
         )}

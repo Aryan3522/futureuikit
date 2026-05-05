@@ -28,6 +28,8 @@ import {
 import { SidebarButton } from "@/components/ui/sidebar-button";
 import { Particles } from "@/components/ui/particles";
 import { PerspectiveGrid } from "@/components/ui/perspective-grid";
+import { SearchInput } from "@/components/ui/search-input";
+import { GithubIcon } from "@/components/ui/github-icon";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
@@ -112,8 +114,8 @@ const ToastPreview: React.FC = () => {
   >("bottom-right");
 
   return (
-    <div className="flex flex-col gap-6 items-center justify-center w-full h-full p-4">
-      <div className="flex flex-wrap gap-2 justify-center">
+    <div className="flex flex-col gap-8 items-center justify-center w-full h-full p-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full max-w-md justify-items-stretch">
         {(
           ["top-left", "top-right", "bottom-left", "bottom-right"] as const
         ).map((pos) => (
@@ -122,16 +124,17 @@ const ToastPreview: React.FC = () => {
             variant={position === pos ? "default" : "outline"}
             size="sm"
             onClick={() => setPosition(pos)}
-            className="capitalize"
+            className="capitalize w-full"
           >
             {pos.replace("-", " ")}
           </Button>
         ))}
       </div>
 
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-col sm:flex-row gap-4 w-full justify-center items-center">
         <Button
           variant="outline"
+          className="w-full sm:w-auto"
           onClick={() => {
             toast({
               title: "Success",
@@ -145,6 +148,7 @@ const ToastPreview: React.FC = () => {
 
         <Button
           variant="destructive"
+          className="w-full sm:w-auto"
           onClick={() => {
             toast({
               variant: "destructive",
@@ -302,13 +306,9 @@ export const PreviewRegistry: Record<string, React.FC> = {
       <NavMenu />
     </div>
   ),
-  "error-page": () => (
-    <div className="flex items-center justify-center w-full h-full p-4 overflow-auto">
-      <ErrorPage errorCode="404" errorText="ERROR" />
-    </div>
-  ),
+  "error-page": () => <ErrorPage errorCode="404" errorText="ERROR" />,
   "expanding-card": () => (
-    <div className="w-full h-full p-4 flex items-center justify-center overflow-hidden">
+    <div className="w-full h-full flex items-center justify-center">
       <ExpandingFlexCard
         options={[
           {
@@ -360,18 +360,16 @@ export const PreviewRegistry: Record<string, React.FC> = {
   ),
   toast: ToastPreview,
   "dot-background": () => (
-    <div className="w-full h-full overflow-hidden">
-      <DotBackground dotColor="#6366f1" maskOpacity={0.15}>
-        <div className="flex items-center justify-center h-full">
-          <h3 className="text-xl md:text-3xl font-black italic tracking-tighter uppercase opacity-50">
-            Premium Dotted Grid
-          </h3>
-        </div>
-      </DotBackground>
-    </div>
+    <DotBackground dotColor="#6366f1" maskOpacity={0.15}>
+      <div className="flex items-center justify-center w-full h-full">
+        <h3 className="text-xl md:text-3xl font-black italic tracking-tighter uppercase opacity-50">
+          Premium Dotted Grid
+        </h3>
+      </div>
+    </DotBackground>
   ),
   badge: () => (
-    <div className="flex flex-wrap gap-4 items-center justify-center w-full h-full p-4">
+    <div className="flex flex-wrap gap-8 items-center justify-center w-full h-full">
       <Badge variant="default">Default</Badge>
       <Badge variant="secondary">Secondary</Badge>
       <Badge variant="destructive">Destructive</Badge>
@@ -379,7 +377,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
     </div>
   ),
   button: () => (
-    <div className="flex flex-wrap gap-4 items-center justify-center w-full h-full p-4">
+    <div className="flex flex-wrap gap-8 items-center justify-center w-full h-full">
       <Button variant="default">Default</Button>
       <Button variant="secondary">Secondary</Button>
       <Button variant="outline">Outline</Button>
@@ -389,14 +387,14 @@ export const PreviewRegistry: Record<string, React.FC> = {
     </div>
   ),
   card: () => (
-    <div className="flex items-center justify-center w-full h-full p-4">
-      <Card className="w-full max-w-md">
+    <div className="flex items-center justify-center w-full h-full">
+      <Card className="w-full max-w-md mx-auto">
         <CardHeader>
           <CardTitle>Card Title</CardTitle>
           <CardDescription>Card Description goes here.</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground text-left">
             This is the main content area of the card component. It can hold any
             type of content.
           </p>
@@ -411,8 +409,8 @@ export const PreviewRegistry: Record<string, React.FC> = {
     </div>
   ),
   "sidebar-button": () => (
-    <div className="flex items-center justify-center w-full h-full p-8 bg-muted/30">
-      <div className="w-full max-w-60 flex flex-col gap-1">
+    <div className="flex items-center justify-center w-full h-full">
+      <div className="w-full max-w-60 flex flex-col gap-1 p-4 bg-muted/20 rounded-xl">
         <SidebarButton label="Dashboard" isActive />
         <SidebarButton label="Analytics" />
         <SidebarButton label="Settings" />
@@ -423,22 +421,55 @@ export const PreviewRegistry: Record<string, React.FC> = {
     </div>
   ),
   particles: () => (
-    <div className="w-full h-full bg-slate-950 relative overflow-hidden rounded-xl">
-      <Particles className="absolute inset-0" quantity={150} color="#3b82f6" />
-      <div className="relative z-10 flex items-center justify-center h-full">
-        <h3 className="text-2xl font-bold text-white italic tracking-tighter uppercase">
+    <div className="w-full h-full bg-slate-950">
+      <Particles quantity={150} color="#3b82f6" />
+      <div className="absolute inset-0 z-10 flex items-center justify-center">
+        <h3 className="text-2xl font-bold text-white italic tracking-tighter uppercase pointer-events-none">
           Dynamic Particle System
         </h3>
       </div>
     </div>
   ),
   "perspective-grid": () => (
-    <div className="w-full h-full bg-slate-950 relative overflow-hidden rounded-xl">
-      <PerspectiveGrid className="absolute inset-0" gridLineGap={50} />
-      <div className="relative z-10 flex items-center justify-center h-full">
-        <h3 className="text-2xl font-bold text-white italic tracking-tighter uppercase">
+    <div className="w-full h-full bg-slate-950">
+      <PerspectiveGrid gridLineGap={50} />
+      <div className="absolute inset-0 z-10 flex items-center justify-center">
+        <h3 className="text-2xl font-bold text-white italic tracking-tighter uppercase pointer-events-none">
           Perspective Horizon
         </h3>
+      </div>
+    </div>
+  ),
+  "search-input": () => (
+    <div className="flex items-center justify-center w-full h-full p-8">
+      <div className="w-full max-w-sm">
+        <SearchInput placeholder="Try searching 'button'..." />
+      </div>
+    </div>
+  ),
+  "github-icon": () => (
+    <div className="flex flex-col gap-8 items-center justify-center w-full h-full p-8">
+      <div className="flex gap-12 items-center">
+        <div className="flex flex-col items-center gap-2">
+          <GithubIcon className="w-6 h-6" />
+          <span className="text-[10px] uppercase font-bold opacity-50">sm</span>
+        </div>
+        <div className="flex flex-col items-center gap-2 text-primary">
+          <GithubIcon className="w-10 h-10" />
+          <span className="text-[10px] uppercase font-bold opacity-50">md</span>
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <GithubIcon className="w-16 h-16" />
+          <span className="text-[10px] uppercase font-bold opacity-50">lg</span>
+        </div>
+      </div>
+      <div className="flex gap-4">
+        <Badge variant="outline" className="gap-2">
+          <GithubIcon className="w-3 h-3" /> GitHub Repo
+        </Badge>
+        <Button size="sm" className="gap-2">
+          <GithubIcon className="w-4 h-4" /> View Source
+        </Button>
       </div>
     </div>
   ),
