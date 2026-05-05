@@ -5,13 +5,20 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { execSync } from "child_process";
 
+/**
+ * CLI for Future UI
+ * Handles component installation with tech stack detection and path resolution.
+ */
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const packageJson = JSON.parse(
+
+// Load CLI's own package.json for version and default config
+const cliPackageJson = JSON.parse(
   await fs.readFile(path.join(__dirname, "..", "package.json"), "utf-8")
 );
 
 const DEFAULT_REGISTRY_URL =
-  packageJson.config?.registryUrl || "https://futureuikit.vercel.app/api/registry";
+  cliPackageJson.config?.registryUrl || "https://futureuikit.vercel.app/api/registry";
 
 const args = process.argv.slice(2);
 const command = args[0];
@@ -26,7 +33,7 @@ const registryUrl =
   DEFAULT_REGISTRY_URL;
 
 function printHelp() {
-  console.log(`Future UI CLI
+  console.log(`Future UI CLI v${cliPackageJson.version}
 
 Usage:
   npx futureuikit add <component-slug> [--force] [--registry <url>]
@@ -41,7 +48,7 @@ Environment:
 }
 
 if (command === "--version" || command === "-v") {
-  console.log(packageJson.version);
+  console.log(cliPackageJson.version);
   process.exit(0);
 }
 
@@ -55,63 +62,62 @@ if (command !== "add" || !slug || (registryFlagIndex >= 0 && !args[registryFlagI
   process.exit(1);
 }
 
+/**
+ * Detects the user's project stack and directory structure.
+ */
+async function detectProjectStack(cwd) {
+  let isSrc = false;
+  let isNext = false;
+  let isTs = false;
+  let framework = "React";
+
+  // Check for src directory
+  try {
+    await fs.access(path.join(cwd, "src"));
+    isSrc = true;
+  } catch {}
+
+  // Check package.json for framework details
+  try {
+    const pkgContent = await fs.readFile(path.join(cwd, "package.json"), "utf-8");
+    const pkg = JSON.parse(pkgContent);
+    const allDeps = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
+    
+    if (allDeps.next) {
+      isNext = true;
+      framework = "Next.js";
+    } else if (allDeps.vite) {
+      framework = "Vite/React";
+    }
+  } catch (err) {
+    console.warn("Warning: Could not read package.json in current directory. Using default React settings.");
+  }
+
+  // Check for TypeScript
+  try {
+    await fs.access(path.join(cwd, "tsconfig.json"));
+    isTs = true;
+  } catch {}
+
+  return { isSrc, isNext, isTs, framework };
+}
+
 function buildRegistryUrl(baseUrl, componentSlug) {
   const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
   return new URL(encodeURIComponent(componentSlug), normalizedBase).toString();
 }
 
-function resolveSafeTarget(baseDir, fileName) {
-  if (!fileName || path.basename(fileName) !== fileName) {
-    throw new Error(`Registry returned an unsafe file name: ${fileName}`);
-  }
-
-  const target = path.resolve(baseDir, fileName);
-  const normalizedBase = path.resolve(baseDir);
-
-  if (!target.startsWith(`${normalizedBase}${path.sep}`)) {
-    throw new Error(`Registry returned a file outside the target directory: ${fileName}`);
-  }
-
-  return target;
-}
-
-async function ensureUtils(baseDir, cwd) {
+/**
+ * Ensures 'cn' utility exists in the project.
+ */
+async function ensureUtils(baseDir, isTs) {
   const libDir = path.join(baseDir, "lib");
-  const utilsJsPath = path.join(libDir, "utils.js");
-  const utilsTsPath = path.join(libDir, "utils.ts");
-  const tsconfigPath = path.join(cwd, "tsconfig.json");
+  const utilsPath = path.join(libDir, isTs ? "utils.ts" : "utils.js");
 
   try {
     await fs.mkdir(libDir, { recursive: true });
-  } catch {
-    // Already exists
-  }
+  } catch {}
 
-  let exists = false;
-  let targetPath = utilsJsPath;
-
-  // Check if either already exists
-  try {
-    await fs.access(utilsTsPath);
-    exists = true;
-    targetPath = utilsTsPath;
-  } catch {
-    try {
-      await fs.access(utilsJsPath);
-      exists = true;
-      targetPath = utilsJsPath;
-    } catch {
-      // Neither exists, decide default extension
-      try {
-        await fs.access(tsconfigPath);
-        targetPath = utilsTsPath;
-      } catch {
-        targetPath = utilsJsPath;
-      }
-    }
-  }
-
-  const isTs = targetPath.endsWith(".ts");
   const cnCode = isTs 
     ? `import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -128,256 +134,197 @@ export function cn(...inputs) {
 }
 `;
 
-  if (!exists) {
-    console.log(`Creating ${targetPath}...`);
-    await fs.writeFile(targetPath, cnCode, "utf-8");
-  } else {
-    const content = await fs.readFile(targetPath, "utf-8");
+  try {
+    await fs.access(utilsPath);
+    const content = await fs.readFile(utilsPath, "utf-8");
     if (!content.includes("export function cn") && !content.includes("export const cn")) {
-      console.log(`Adding 'cn' utility to ${targetPath}...`);
-      await fs.appendFile(targetPath, `\n${cnCode}`);
+      console.log(`Appending 'cn' utility to ${utilsPath}...`);
+      await fs.appendFile(utilsPath, `\n${cnCode}`);
     }
+  } catch {
+    console.log(`Creating ${utilsPath}...`);
+    await fs.writeFile(utilsPath, cnCode, "utf-8");
   }
 }
 
-async function ensureConfig(cwd, isSrc) {
-  const tsconfigPath = path.join(cwd, "tsconfig.json");
-  const jsconfigPath = path.join(cwd, "jsconfig.json");
+/**
+ * Ensures path aliases are configured in tsconfig/jsconfig.
+ */
+async function ensureConfig(cwd, isSrc, isTs) {
+  const configName = isTs ? "tsconfig.json" : "jsconfig.json";
+  const configPath = path.join(cwd, configName);
 
-  let configPath = null;
-  try {
-    await fs.access(tsconfigPath);
-    configPath = tsconfigPath;
-  } catch {
-    try {
-      await fs.access(jsconfigPath);
-      configPath = jsconfigPath;
-    } catch {}
-  }
-
-  if (!configPath) {
-    configPath = jsconfigPath;
-    const initialConfig = {
-      compilerOptions: {
-        paths: {
-          "@/*": [isSrc ? "./src/*" : "./*"],
-        },
-      },
-    };
-    console.log(`Creating jsconfig.json with path aliases...`);
-    await fs.writeFile(configPath, JSON.stringify(initialConfig, null, 2), "utf-8");
-    return;
-  }
-
+  let config = { compilerOptions: { paths: {} } };
   try {
     const content = await fs.readFile(configPath, "utf-8");
-    const config = JSON.parse(content);
+    config = JSON.parse(content);
+  } catch {
+    console.log(`Creating ${configName} with path aliases...`);
+  }
 
-    if (!config.compilerOptions) config.compilerOptions = {};
-    if (!config.compilerOptions.paths) config.compilerOptions.paths = {};
+  if (!config.compilerOptions) config.compilerOptions = {};
+  if (!config.compilerOptions.paths) config.compilerOptions.paths = {};
 
-    if (!config.compilerOptions.paths["@/*"]) {
-      console.log(`Adding '@/*' alias to ${path.basename(configPath)}...`);
-      config.compilerOptions.paths["@/*"] = [isSrc ? "./src/*" : "./*"];
-      await fs.writeFile(configPath, JSON.stringify(config, null, 2), "utf-8");
-    }
-  } catch (err) {
-    console.warn(`Warning: Could not update ${path.basename(configPath)}: ${err.message}`);
+  if (!config.compilerOptions.paths["@/*"]) {
+    config.compilerOptions.paths["@/*"] = [isSrc ? "./src/*" : "./*"];
+    await fs.writeFile(configPath, JSON.stringify(config, null, 2), "utf-8");
+    console.log(`Updated ${configName} with '@/*' alias.`);
   }
 }
 
+/**
+ * Injects required CSS into the project's global stylesheet.
+ */
 async function injectCSS(baseDir, cssContent) {
   if (!cssContent) return;
 
   const appGlobals = path.join(baseDir, "app", "globals.css");
+  const srcGlobals = path.join(baseDir, "globals.css");
   const stylesGlobals = path.join(baseDir, "styles", "globals.css");
 
   let targetCSS = null;
-  try {
-    await fs.access(appGlobals);
-    targetCSS = appGlobals;
-  } catch {
+  const pathsToTry = [appGlobals, srcGlobals, stylesGlobals];
+
+  for (const p of pathsToTry) {
     try {
-      await fs.access(stylesGlobals);
-      targetCSS = stylesGlobals;
-    } catch {
+      await fs.access(p);
+      targetCSS = p;
+      break;
+    } catch {}
+  }
+
+  if (!targetCSS) {
+    // If none exist, create one in a sensible place
+    try {
       const appDir = path.join(baseDir, "app");
-      try {
-        await fs.mkdir(appDir, { recursive: true });
-        targetCSS = appGlobals;
-      } catch {
-        // Fallback failed
-      }
+      await fs.mkdir(appDir, { recursive: true });
+      targetCSS = appGlobals;
+    } catch {
+      targetCSS = srcGlobals;
     }
   }
 
-  if (targetCSS) {
+  try {
+    let existing = "";
     try {
-      let existing = "";
-      try {
-        existing = await fs.readFile(targetCSS, "utf-8");
-      } catch {
-        // File doesn't exist yet
-      }
+      existing = await fs.readFile(targetCSS, "utf-8");
+    } catch {}
 
-      if (existing.includes(cssContent)) {
-        return;
-      }
+    if (existing.includes(cssContent)) return;
 
-      const markerStart = "/* future-ui:start */";
-      const markerEnd = "/* future-ui:end */";
+    const markerStart = "/* future-ui:start */";
+    const markerEnd = "/* future-ui:end */";
 
-      if (existing.includes(markerStart)) {
-        // Append inside markers? No, the spec says "Append styles (idempotent check required)"
-        // Let's just append at the end for now, but use markers if it's the first time.
-        await fs.appendFile(targetCSS, `\n${cssContent}\n`);
-      } else {
-        await fs.appendFile(
-          targetCSS,
-          `\n\n${markerStart}\n${cssContent}\n${markerEnd}\n`
-        );
-      }
-      console.log(`Injected styles into ${targetCSS}`);
-    } catch (err) {
-      console.warn(`Warning: Could not inject CSS into ${targetCSS}: ${err.message}`);
+    if (existing.includes(markerStart)) {
+      await fs.appendFile(targetCSS, `\n${cssContent}\n`);
+    } else {
+      await fs.appendFile(targetCSS, `\n\n${markerStart}\n${cssContent}\n${markerEnd}\n`);
     }
+    console.log(`Injected styles into ${targetCSS}`);
+  } catch (err) {
+    console.warn(`Warning: Could not inject CSS: ${err.message}`);
   }
 }
 
+/**
+ * Installs missing dependencies.
+ */
 async function ensureDependencies(cwd, required = []) {
   const packageJsonPath = path.join(cwd, "package.json");
   try {
     const content = await fs.readFile(packageJsonPath, "utf-8");
     const pkg = JSON.parse(content);
-
-    const deps = pkg.dependencies || {};
-    const devDeps = pkg.devDependencies || {};
+    const deps = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
 
     const baseRequired = ["clsx", "tailwind-merge"];
     const allRequired = [...new Set([...baseRequired, ...required])];
-    
-    const missing = allRequired.filter((d) => !deps[d] && !devDeps[d]);
+    const missing = allRequired.filter((d) => !deps[d]);
 
     if (missing.length > 0) {
-      console.log(`Missing dependencies: ${missing.join(", ")}`);
-      console.log(`Installing ${missing.join(" ")}...`);
+      console.log(`Installing missing dependencies: ${missing.join(", ")}...`);
       try {
         execSync(`npm install ${missing.join(" ")}`, { stdio: "inherit", cwd });
       } catch (err) {
-        console.warn(`Warning: Failed to install dependencies automatically: ${err.message}`);
+        console.warn(`Warning: Failed to install dependencies: ${err.message}`);
         console.log(`Please run: npm install ${missing.join(" ")}`);
       }
     }
   } catch (err) {
-    console.warn(`Warning: Could not check package.json: ${err.message}`);
+    // If package.json doesn't exist, we can't reliably install
   }
 }
 
 async function addComponent(componentSlug) {
   try {
+    const cwd = process.cwd();
+    console.log(`\nFuture UI: Detecting project stack in ${cwd}...`);
+    
+    const { isSrc, framework, isTs } = await detectProjectStack(cwd);
+    console.log(`Project detected: ${framework}${isSrc ? " (with src/)" : ""} - ${isTs ? "TypeScript" : "JavaScript"}`);
+
+    const baseDir = isSrc ? path.join(cwd, "src") : cwd;
+
     const url = buildRegistryUrl(registryUrl, componentSlug);
-    console.log(`Fetching component data for '${componentSlug}'...`);
+    console.log(`Fetching '${componentSlug}' from registry...`);
 
     const response = await fetch(url);
     if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error(`Component '${componentSlug}' not found in the registry.`);
-      }
-
-      throw new Error(`Failed to fetch component: ${response.status} ${response.statusText}`);
+      if (response.status === 404) throw new Error(`Component '${componentSlug}' not found.`);
+      throw new Error(`Registry error: ${response.status} ${response.statusText}`);
     }
 
     const componentData = await response.json();
-
     if (!Array.isArray(componentData.files) || componentData.files.length === 0) {
       throw new Error("No files found for this component.");
     }
 
-    const cwd = process.cwd();
-    let baseDir = cwd;
-    let isSrc = false;
-
-    try {
-      await fs.access(path.join(cwd, "src"));
-      baseDir = path.join(cwd, "src");
-      isSrc = true;
-    } catch {
-      // Projects without src/ receive files under components/ui.
-    }
-
-    // --- Dependency Resolution ---
-    await ensureUtils(baseDir, cwd);
-    await ensureConfig(cwd, isSrc);
+    // Prepare project
+    await ensureUtils(baseDir, isTs);
+    await ensureConfig(cwd, isSrc, isTs);
     await ensureDependencies(cwd, componentData.dependencies || []);
 
-    // --- CSS Injection ---
     if (componentData.requiresCSS && componentData.css) {
       await injectCSS(baseDir, componentData.css);
     }
-    // ------------------------------
 
-    const targetDir = path.join(baseDir, "components", "ui");
-
+    // Install files
     for (const file of componentData.files) {
-      if (typeof file.name !== "string" || typeof file.content !== "string") {
-        throw new Error("Registry returned an invalid file payload.");
-      }
+      // Logic: resolve targetPath relative to baseDir (src/ or ROOT/)
+      // targetPath examples: "components/ui/button.tsx", "hooks/use-toast.ts"
+      const relativePath = file.targetPath || path.join("components", "ui", file.name);
+      const absolutePath = path.resolve(baseDir, relativePath);
+      const targetDir = path.dirname(absolutePath);
 
-      // Determine the target directory for this specific file
-      let fileTargetDir = targetDir; // Default: components/ui
-      
-      if (file.targetPath) {
-        // If the file specifies a targetPath (e.g., "hooks/use-toast.ts"),
-        // we resolve it relative to baseDir (e.g., "src/").
-        const absoluteTargetDir = path.resolve(baseDir, "..", file.targetPath);
-        const normalizedBase = path.resolve(baseDir, "..");
-
-        if (!absoluteTargetDir.startsWith(normalizedBase)) {
-          // Fallback to relative to baseDir if outside
-          fileTargetDir = path.resolve(baseDir, path.dirname(file.targetPath));
-        } else {
-          fileTargetDir = path.dirname(absoluteTargetDir);
-        }
+      // Security check: ensure absolutePath is still within cwd
+      if (!absolutePath.startsWith(cwd)) {
+        throw new Error(`Unsafe file path returned by registry: ${relativePath}`);
       }
 
       try {
-        await fs.access(fileTargetDir);
-      } catch {
-        console.log(`Creating directory: ${fileTargetDir}`);
-        await fs.mkdir(fileTargetDir, { recursive: true });
-      }
-
-      const filePath = resolveSafeTarget(fileTargetDir, path.basename(file.name));
+        await fs.mkdir(targetDir, { recursive: true });
+      } catch {}
 
       try {
-        const existing = await fs.readFile(filePath, "utf-8");
+        const existing = await fs.readFile(absolutePath, "utf-8");
         if (existing === file.content) {
-          console.log(`Already up to date: ${file.name}`);
+          console.log(`Already up to date: ${relativePath}`);
           continue;
         }
 
         if (!force) {
-          throw new Error(
-            `${file.name} already exists with different content. Re-run with --force to overwrite it.`
-          );
+          throw new Error(`${relativePath} already exists. Use --force to overwrite.`);
         }
-      } catch (error) {
-        if (error.code !== "ENOENT") {
-          throw error;
-        }
+      } catch (err) {
+        if (err.code !== "ENOENT") throw err;
       }
 
-      await fs.writeFile(filePath, file.content, "utf-8");
-      console.log(`Added ${file.name} to ${fileTargetDir}`);
+      await fs.writeFile(absolutePath, file.content, "utf-8");
+      console.log(`Added ${relativePath}`);
     }
 
-    console.log(`\nComponent '${componentSlug}' added successfully.`);
-    console.log(
-      "Note: Make sure required dependencies such as framer-motion or lucide-react are installed."
-    );
+    console.log(`\nSUCCESS: Component '${componentSlug}' installed successfully.`);
   } catch (error) {
-    console.error(`Error: ${error.message}`);
-    console.error(`Registry URL: ${registryUrl}`);
+    console.error(`\nERROR: ${error.message}`);
     process.exit(1);
   }
 }

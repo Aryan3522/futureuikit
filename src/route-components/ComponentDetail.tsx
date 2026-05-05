@@ -6,7 +6,7 @@ import { componentsList, registry } from "@/data/component-library-data";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Check, Code as CodeIcon, Copy, GalleryHorizontalEnd, ListCollapse, ChevronLeft } from "lucide-react";
-import { PillHeader } from "@/components/ui/PillHeader";
+import { Header } from "@/components/ui/header";
 import { Button } from "@/components/ui/button";
 import { GlowyButton } from "@/components/ui/glowy-button";
 import { PrimaryButton } from "@/components/ui/primary-button";
@@ -69,6 +69,7 @@ const Code: React.FC<{ className?: string; children: React.ReactNode }> = ({ cla
 );
 
 import { PreviewRegistry } from "./PreviewRegistry";
+import { DotBackground } from "@/components/ui/dot-background";
 
 const ComponentLivePreview: React.FC<{ id: string | number; slug: string }> = ({ slug }) => {
   const Preview = PreviewRegistry[slug];
@@ -127,7 +128,7 @@ const ComponentDetail: React.FC<ComponentDetailProps> = ({ type, slug, id }) => 
 
   return (
     <div className="select-none min-h-screen flex justify-center text-foreground pt-16 md:pt-24">
-      <PillHeader />
+      <Header />
       <div className="relative flex-1 w-full max-w-5xl transition-all duration-300">
         <div className="mx-auto max-w-5xl px-4 py-4">
           <div className="mb-4 rounded-xl border border-border bg-card/40 backdrop-blur p-4 md:p-6 shadow-sm">
@@ -144,17 +145,29 @@ const ComponentDetail: React.FC<ComponentDetailProps> = ({ type, slug, id }) => 
                 {component.title}
               </h1>
             </div>
-            <p className="text-muted-foreground text-base md:text-lg">
+            <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
               {component.description}
             </p>
           </div>
 
-          <section className="mb-4">
+          <section className="mb-8">
             <div className="rounded-xl overflow-hidden border border-border bg-card/40 backdrop-blur-md p-2 md:p-6 shadow-sm">
-              <div className="flex justify-center items-center rounded-lg overflow-hidden bg-card/30 backdrop-blur-lg border border-border/40 w-full min-h-[300px] md:min-h-[450px] mb-4 relative select-text shadow-inner">
-                <div className="w-full h-full flex items-center justify-center p-4">
-                  <ComponentLivePreview id={id} slug={slug} />
-                </div>
+              {/* Header Label for Preview */}
+              <div className="flex items-center gap-2 mb-4 px-2">
+                <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Live Interactive Preview</span>
+              </div>
+
+              <div className="relative w-full min-h-[350px] mb-8 overflow-hidden rounded-2xl border border-border/40 shadow-inner group bg-muted/20">
+                <DotBackground 
+                  dotColor="var(--primary)" 
+                  maskOpacity={0.05}
+                  className="bg-linear-to-br from-muted/50 to-muted/20 min-h-[350px] flex items-center justify-center p-6"
+                >
+                  <div className="w-full relative z-10 select-text flex items-center justify-center">
+                    <ComponentLivePreview id={id} slug={slug} />
+                  </div>
+                </DotBackground>
               </div>
 
               {/* Code Section */}

@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { componentsList } from '@/data/component-library-data'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://futureuikit.vercel.app'
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://futureuikit.vercel.app'
 
   const components = componentsList.map((component) => ({
     url: `${baseUrl}/components/${component.type.toLowerCase()}/${component.slug}/${component.id}`,

@@ -1,6 +1,6 @@
 "use client";
 
-import { PillHeader } from "@/components/ui/PillHeader";
+import { Header } from "@/components/ui/header";
 import React from "react";
 
 // Note: These components were missing in the workspace.
@@ -17,7 +17,7 @@ const HeroWithScales = ({ children }: { children: React.ReactNode }) => <div>{ch
 export function HomePage() {
   return (
     <div className="min-h-screen bg-transparent text-foreground pt-24">
-      <PillHeader />
+      <Header />
       <main>
         <Hero />
         <HeroWithScales>
@@ -33,7 +33,7 @@ export function HomePage() {
 export function ComponentPage() {
   return (
     <div className="min-h-screen bg-transparent text-foreground pt-24">
-      <PillHeader />
+      <Header />
       <main>
         <Comps />
       </main>
@@ -44,7 +44,7 @@ export function ComponentPage() {
 export function BlogsPage() {
   return (
     <div className="flex flex-col min-h-screen bg-transparent text-foreground pt-24">
-      <PillHeader />
+      <Header />
       <HeroWithScales>
         <Blogs />
         <GlassPortfolioCard />
@@ -57,7 +57,7 @@ export function BlogsPage() {
 export function CreditsPage() {
   return (
     <div className="flex flex-col min-h-screen bg-transparent text-foreground pt-24">
-      <PillHeader />
+      <Header />
       <main className="flex-1">
         <Credits />
       </main>

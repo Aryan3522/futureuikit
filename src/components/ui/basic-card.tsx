@@ -1,8 +1,3 @@
-/**
- * @registry-slug basic-card
- * @registry-name Basic Card
- * @registry-dependency framer-motion
- */
 "use client";
 
 import React from "react";

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { PillHeader } from "@/components/ui/PillHeader";
+import { Header } from "@/components/ui/header";
 import { motion } from "framer-motion";
 import { 
   BookOpen, 
@@ -80,7 +80,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = "bash" }) => {
 export default function DocsPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <PillHeader />
+      <Header />
       
       <main className="max-w-4xl mx-auto px-6 pt-32 pb-24">
         {/* Header */}

@@ -8,9 +8,6 @@ export const componentsList: ComponentItem[] = [
     type: "Button",
     slug: "primary",
     category: "form",
-    heroImage: "/Images/primary-button.webp",
-    previewImage: "/Images/primary-button.webp",
-    previewVideo: "/Videos/Primary-button.webm",
     description:
       "A fully modern and customizable primary button designed for high-end UI. It features semantic intents (primary, success, warning, danger, info, secondary) and multiple visual styles (modern, clean, minimal). Built with Framer Motion for organic interactions, it supports disabled states and full color customization.",
     details: [
@@ -39,9 +36,6 @@ export const componentsList: ComponentItem[] = [
     type: "Button",
     slug: "glowy",
     category: "form",
-    heroImage: "/Images/glowy-button.webp",
-    previewImage: "/Images/glowy-button.webp",
-    previewVideo: "/Videos/hover-glow-button.webm",
     description:
       "A signature pill-shaped button featuring a premium glass-morph interaction. Initially covered by a full-width colored glass sheet, the layer smoothly shrinks into a compact circle on hover/tap, revealing a hidden icon while emitting a vibrant outer glow.",
     details: [
@@ -70,9 +64,6 @@ export const componentsList: ComponentItem[] = [
     type: "Cards",
     slug: "basic-card",
     category: "layout",
-    heroImage: "/Images/basic-card.webp",
-    previewImage: "/Images/basic-card.webp",
-    previewVideo: "/Videos/Basic-card.webm",
     description:
       "A modern, highly flexible card component with multiple variants and built-in animations. Designed to be clean and minimal, it avoids heavy shadows in favor of subtle borders and glassmorphism. Perfect for profiles, feature blocks, and data display.",
     details: [
@@ -100,9 +91,6 @@ export const componentsList: ComponentItem[] = [
     type: "Loader",
     slug: "boxy-rotate",
     category: "ui",
-    heroImage: "/Images/Loading-screen1.webp",
-    previewImage: "/Images/Loading-screen1.webp",
-    previewVideo: "/Videos/boxy-preloader-1.webm",
     description:
       "A modern box-style loading screen with four rotating blocks that creates a smooth and engaging visual while content is loading. Ideal for pages, sections, or actions where users need clear feedback that a process is in progress.",
     details: [
@@ -132,9 +120,6 @@ export const componentsList: ComponentItem[] = [
     type: "Loader",
     slug: "boxy-bounce",
     category: "ui",
-    heroImage: "/Images/Loading-screen2.webp",
-    previewImage: "/Images/Loading-screen2.webp",
-    previewVideo: "/Videos/boxy-preloader-2.webm",
     description:
       "A clean loading screen with stacked boxes that rise and fall in sequence, giving a clear sense of ongoing activity while content or data is being loaded.",
     details: [
@@ -164,9 +149,6 @@ export const componentsList: ComponentItem[] = [
     type: "Loader",
     slug: "boxy-shift",
     category: "ui",
-    heroImage: "/Images/Loading-screen3.webp",
-    previewImage: "/Images/Loading-screen3.webp",
-    previewVideo: "/Videos/boxy-preloader-3.webm",
     description:
       "A dynamic box-style loading screen where blocks stretch and shift positions, creating a smooth visual cue that content is being prepared in the background.",
     details: [
@@ -196,9 +178,6 @@ export const componentsList: ComponentItem[] = [
     type: "Typography",
     slug: "text-system",
     category: "ui",
-    heroImage: "/Images/Typography.webp",
-    previewImage: "/Images/Typography.webp",
-    previewVideo: "/Videos/Typography-1.webm",
     description:
       "Typography showcases a set of foundational text styles built with simple, reusable CSS to ensure consistency and readability across the interface. It demonstrates examples of heading levels, body text, muted text, and caption text, providing a clear visual hierarchy for content. Designed as a baseline typographic system, it helps maintain a cohesive look and makes it easy to apply uniform text styles throughout your application.",
     details: [
@@ -228,9 +207,6 @@ export const componentsList: ComponentItem[] = [
     type: "Carousel",
     slug: "infinite-slider",
     category: "ui",
-    heroImage: "/Images/infinite-carousel-swiper.webp",
-    previewImage: "/Images/infinite-carousel-swiper.webp",
-    previewVideo: "/Videos/infinite-carousel-1.webm",
     description:
       "A premium, cinematic carousel slider powered by Framer Motion. It features smooth physics-based transitions, staggered content entry, and interactive navigation elements. Designed for high-impact visual storytelling with full responsiveness.",
     details: [
@@ -258,9 +234,6 @@ export const componentsList: ComponentItem[] = [
     type: "Navigation",
     slug: "menu",
     category: "ui",
-    heroImage: "/Images/circle-navbar.webp",
-    previewImage: "/Images/circle-navbar.webp",
-    previewVideo: "/Videos/circle-menu.webm",
     description:
       "Circle Navigation Menu is a modern, interactive navigation component built using pure HTML and CSS. It features a compact trigger button that expands into a circular menu, revealing navigation links arranged around the center. With smooth transitions and a clean radial layout, it delivers an engaging user experience while saving screen space. Ideal for portfolios and creative interfaces, this menu adds a premium, futuristic touch without relying on JavaScript.",
     details: [
@@ -290,9 +263,6 @@ export const componentsList: ComponentItem[] = [
     type: "Feedback",
     slug: "error-page",
     category: "ui",
-    heroImage: "/Images/Error-page.webp",
-    previewImage: "/Images/Error-page.webp",
-    previewVideo: "/Videos/Error-page.webm",
     description:
       "Error Page is a simple, user-friendly fallback screen designed to handle broken routes, missing content, or unexpected issues gracefully. It informs users that something went wrong while guiding them back to a safe path with clear messaging and navigation options. Built with a clean layout and responsive design, this page helps maintain a polished experience even when errors occur.",
     details: [
@@ -322,9 +292,6 @@ export const componentsList: ComponentItem[] = [
     type: "Cards",
     slug: "expanding-card",
     category: "layout",
-    heroImage: "/Images/Expanding-flex-cards.webp",
-    previewImage: "/Images/Expanding-flex-cards.webp",
-    previewVideo: "/Videos/Expanding-flex-cards.webm",
     description:
       "Interactive Expanding Cards is a set of image-based cards where one card stays open by default and the others remain closed. When a user clicks on any card, it smoothly expands to show its content while all other cards collapse. This creates a clean and engaging way to highlight one item at a time, making it perfect for galleries, feature sections, or category showcases.",
     details: [
@@ -358,9 +325,6 @@ export const componentsList: ComponentItem[] = [
     type: "Loader",
     slug: "basic",
     category: "loader",
-    heroImage: "/Images/Loading-spinner.webp",
-    previewImage: "/Images/Loading-spinner.webp",
-    previewVideo: "/Videos/Loading-spinner.webm",
     description:
       "A modern, animated loading indicator with multiple visual styles. Built with Framer Motion, it provides smooth and engaging feedback while users wait for content or data to load.",
     details: [
@@ -388,9 +352,6 @@ export const componentsList: ComponentItem[] = [
     type: "Feedback",
     slug: "toast",
     category: "ui",
-    heroImage: "/Images/primary-button.webp",
-    previewImage: "/Images/primary-button.webp",
-    previewVideo: "/Videos/Primary-button.webm",
     description:
       "A succinct message that is displayed temporarily in a corner of the screen. Built with Radix UI primitives and Framer Motion for high-quality interactions, it supports default and destructive variants, titles, and descriptions.",
     details: [
@@ -411,6 +372,182 @@ export const componentsList: ComponentItem[] = [
       "Pass title and description strings to the toast function.",
       "Customize the variant to 'destructive' for error messages."
     ]
+  },
+  {
+    id: 14,
+    title: "Dot Background",
+    type: "Background",
+    slug: "dot-background",
+    category: "ui",
+    description:
+      "A highly customizable dotted background component with a built-in radial mask. Perfect for creating depth and modern aesthetics in sections, hero areas, or cards without using heavy image assets.",
+    details: [
+      "Pure CSS-based dotted grid using radial gradients.",
+      "Built-in radial mask for smooth blending with the page background.",
+      "Fully customizable dot size, gap (spacing), and color.",
+      "Adjustable mask opacity to control the intensity of the effect.",
+      "Works as a wrapper or a standalone background layer.",
+      "Lightweight and performant with zero image dependencies.",
+    ],
+    codes: {
+      next: 'import { DotBackground } from "@/components/ui/dot-background";\n\nexport default function Example() {\n  return (\n    <div className="w-full h-[400px] border rounded-3xl overflow-hidden">\n      <DotBackground \n        dotColor="#6366f1" \n        dotSize={1.5} \n        gap={24} \n        maskOpacity={0.1}\n      >\n        <h2 className="text-2xl font-bold">Content Over Background</h2>\n      </DotBackground>\n    </div>\n  );\n}',
+    },
+    usage: [
+      "Import DotBackground into your React component.",
+      "Use it as a wrapper around your content or as a separate layer.",
+      "Adjust the dotSize and gap to fit your design's scale.",
+      "Change the dotColor to match your brand (defaults to 'currentColor').",
+      "Tweak the maskOpacity to control how much the grid fades towards the edges.",
+    ],
+  },
+  {
+    id: 15,
+    title: "Badge",
+    type: "UI",
+    slug: "badge",
+    category: "ui",
+    description:
+      "A clean, customizable badge component for labels, tags, and status indicators. Built with class-variance-authority for easy variant management and featuring a modern, minimalist aesthetic with glassmorphism support.",
+    details: [
+      "Built with React and class-variance-authority for scalable styling.",
+      "Supports multiple variants: Default (Glass), Secondary, Destructive, and Outline.",
+      "Modern, minimalist design with uppercase tracking for a premium feel.",
+      "Fully customizable via standard HTML attributes and Tailwind classes.",
+      "Lightweight and optimized for high-density information displays.",
+    ],
+    codes: {
+      next: 'import { Badge } from "@/components/ui/badge";\n\nexport default function Example() {\n  return (\n    <div className="flex gap-2">\n      <Badge variant="default">New</Badge>\n      <Badge variant="secondary">Feature</Badge>\n      <Badge variant="destructive">Error</Badge>\n      <Badge variant="outline">Draft</Badge>\n    </div>\n  );\n}',
+    },
+    usage: [
+      "Import the Badge component from your UI directory.",
+      "Choose a variant: 'default', 'secondary', 'destructive', or 'outline'.",
+      "Add your label text as children of the component.",
+      "Use it for tags, status indicators, or small labels across your UI.",
+    ],
+  },
+  {
+    id: 16,
+    title: "Button",
+    type: "Button",
+    slug: "button",
+    category: "form",
+    description:
+      "The foundational button component with multiple variants, sizes, and full Radix UI Slot support for polymorphic usage. Designed to be the workhorse of your UI with consistent styling and accessible interactions.",
+    details: [
+      "Supports standard variants: Default, Destructive, Outline, Secondary, Ghost, and Link.",
+      "Four size options: Default, Small (sm), Large (lg), and Icon.",
+      "Full asChild support via Radix UI Slot for flexible component composition.",
+      "Highly accessible with built-in focus states and disabled handling.",
+      "Consistent, professional aesthetic that fits any design system.",
+    ],
+    codes: {
+      next: 'import { Button } from "@/components/ui/button";\nimport { Mail } from "lucide-react";\n\nexport default function Example() {\n  return (\n    <div className="flex flex-wrap gap-4 items-center">\n      <Button variant="default">Button</Button>\n      <Button variant="secondary">Secondary</Button>\n      <Button variant="outline" size="sm">Small Outline</Button>\n      <Button variant="ghost" size="icon"><Mail /></Button>\n      <Button asChild>\n        <a href="/login">Login with Link</a>\n      </Button>\n    </div>\n  );\n}',
+    },
+    usage: [
+      "Import the Button component from your UI directory.",
+      "Select the desired variant and size via props.",
+      "Use the 'asChild' prop if you need to render the button as a different element (like a Next.js Link).",
+      "Add icons or text as children.",
+    ],
+  },
+  {
+    id: 17,
+    title: "Card",
+    type: "Cards",
+    slug: "card",
+    category: "layout",
+    description:
+      "A set of modular card components including Header, Title, Description, Content, and Footer. Designed for maximum flexibility, allowing you to compose complex layouts with a clean, consistent aesthetic.",
+    details: [
+      "Modular design: Card, CardHeader, CardTitle, CardDescription, CardContent, and CardFooter.",
+      "Clean, minimalist aesthetic with subtle borders and shadows.",
+      "Highly flexible composition for diverse content types.",
+      "Fully responsive and easy to style with Tailwind CSS.",
+      "Standardizes information containers across your application.",
+    ],
+    codes: {
+      next: 'import {\n  Card,\n  CardContent,\n  CardDescription,\n  CardFooter,\n  CardHeader,\n  CardTitle,\n} from "@/components/ui/card";\n\nexport default function Example() {\n  return (\n    <Card className="w-[350px]">\n      <CardHeader>\n        <CardTitle>Create project</CardTitle>\n        <CardDescription>Deploy your new project in one-click.</CardDescription>\n      </CardHeader>\n      <CardContent>\n        <p>Card Content goes here.</p>\n      </CardContent>\n      <CardFooter className="flex justify-between">\n        <button>Cancel</button>\n        <button>Deploy</button>\n      </CardFooter>\n    </Card>\n  );\n}',
+    },
+    usage: [
+      "Import the required card sub-components from your UI directory.",
+      "Compose your card by wrapping content in the Card and its sub-components.",
+      "Use Tailwind classes to customize the width, padding, or other styles.",
+    ],
+  },
+  {
+    id: 18,
+    title: "Sidebar Button",
+    type: "Navigation",
+    slug: "sidebar-button",
+    category: "ui",
+    description:
+      "A minimalist button optimized for sidebar navigation. Features an active state indicator, category indentation, and smooth transition effects for a premium navigation experience.",
+    details: [
+      "Minimalist design focused on text and active state clarity.",
+      "Built-in 'isActive' prop with a visual dot indicator and typography change.",
+      "Supports 'isCategory' for hierarchical indentation in navigation lists.",
+      "Hover effects and smooth transitions for interactive feedback.",
+      "Perfect for dashboard sidebars and complex navigation systems.",
+    ],
+    codes: {
+      next: 'import { SidebarButton } from "@/components/ui/sidebar-button";\n\nexport default function Example() {\n  return (\n    <div className="w-64 space-y-1">\n      <SidebarButton label="Dashboard" isActive />\n      <SidebarButton label="Settings" />\n      <SidebarButton label="User Profile" isCategory />\n    </div>\n  );\n}',
+    },
+    usage: [
+      "Import SidebarButton from your UI components.",
+      "Use it within your sidebar layout for navigation links.",
+      "Control the active state via the 'isActive' boolean prop.",
+      "Use 'isCategory={true}' for nested navigation items.",
+    ],
+  },
+  {
+    id: 19,
+    title: "Particles",
+    type: "Background",
+    slug: "particles",
+    category: "ui",
+    description:
+      "A high-performance interactive particle system background. Particles respond to mouse movement and feature smooth alpha transitions, creating a dynamic and immersive environment for futuristic UIs.",
+    details: [
+      "Canvas-based rendering for high performance even with many particles.",
+      "Interactive magnetism: particles subtly react to mouse position.",
+      "Fully customizable: quantity, staticity, ease, size, and color.",
+      "Responsive design: automatically adjusts to window resizing.",
+      "Smooth fading and movement for a premium ambient effect.",
+    ],
+    codes: {
+      next: 'import { Particles } from "@/components/ui/particles";\n\nexport default function Example() {\n  return (\n    <div className="relative w-full h-screen bg-black">\n      <Particles \n        className="absolute inset-0" \n        quantity={150} \n        color="#ffffff" \n      />\n      <div className="relative z-10 flex items-center justify-center h-full">\n        <h1 className="text-white text-4xl">Interactive Particles</h1>\n      </div>\n    </div>\n  );\n}',
+    },
+    usage: [
+      "Import the Particles component.",
+      "Place it as a background layer (usually with absolute or fixed positioning).",
+      "Adjust the 'quantity' and 'color' to match your application's tone.",
+      "Ensure the parent container has 'overflow-hidden' if using absolute positioning.",
+    ],
+  },
+  {
+    id: 20,
+    title: "Perspective Grid",
+    type: "Background",
+    slug: "perspective-grid",
+    category: "ui",
+    description:
+      "A 3D-transformed grid background that provides a sense of depth and scale. Perfect for creating 'digital horizon' or 'cyberpunk' aesthetics with smooth radial fading.",
+    details: [
+      "CSS-based 3D transformation for a futuristic perspective effect.",
+      "Customizable grid line gap and fading radius.",
+      "Built-in radial overlay for smooth blending with the background color.",
+      "Lightweight and performant with zero JavaScript animation overhead.",
+      "React.memo optimized to prevent unnecessary re-renders.",
+    ],
+    codes: {
+      next: 'import { PerspectiveGrid } from "@/components/ui/perspective-grid";\n\nexport default function Example() {\n  return (\n    <div className="w-full h-[600px] bg-background relative overflow-hidden">\n      <PerspectiveGrid \n        gridLineGap={50} \n        fadeRadius={70} \n      />\n      <div className="absolute inset-0 flex items-center justify-center">\n        <h2 className="text-3xl font-bold italic">Cyber Horizon</h2>\n      </div>\n    </div>\n  );\n}',
+    },
+    usage: [
+      "Import PerspectiveGrid into your component.",
+      "Use it as a background element in a container with 'relative' and 'overflow-hidden'.",
+      "Adjust 'gridLineGap' to change the density of the grid.",
+      "Tweak 'fadeRadius' to control how much of the grid is visible before fading into the background.",
+    ],
   },
 ];
 

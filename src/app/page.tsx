@@ -1,23 +1,24 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PillHeader } from "@/components/ui/PillHeader";
+import { Header } from "@/components/ui/header";
 import ExploreComponents from "@/components/ExploreComponents";
 import { Code2, Zap, Palette, ShieldCheck, Rocket, Layout } from "lucide-react";
+import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen flex flex-col font-sans pt-16 md:pt-20 overflow-x-hidden">
-      <PillHeader />
+    <div className="relative min-h-screen flex flex-col font-sans overflow-x-hidden">
+      <Header />
 
       {/* Hero Section */}
-      <header className="w-full px-4 pt-16 pb-12 md:pt-40 md:pb-32 text-center relative overflow-hidden">
+      <header className="w-full h-screen flex flex-col justify-center items-center px-4 text-center relative overflow-hidden">
         
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 md:mb-8 border border-primary/20 backdrop-blur-md">
           <Zap size={12} className="fill-primary md:w-3.5 md:h-3.5" />
           The Evolution of UI Design
         </div>
         
-        <h1 className="text-4xl sm:text-5xl md:text-8xl font-black mb-6 md:mb-8 tracking-tighter bg-gradient-to-b from-foreground to-foreground/50 bg-clip-text text-transparent italic leading-[1.1] md:leading-[0.9]">
+        <h1 className="text-4xl sm:text-5xl md:text-8xl font-black mb-6 md:mb-8 tracking-tighter bg-linear-to-b from-foreground via-foreground to-primary bg-clip-text text-transparent italic leading-[1.1] md:leading-[0.9]">
           NEXT-GEN <br className="hidden sm:block" /> COMPONENTS.
         </h1>
         
@@ -25,14 +26,14 @@ export default function Home() {
           A premium collection of high-performance, accessible, and stunningly modern UI components designed to accelerate your Next.js workflow.
         </p>
         
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-3 md:gap-6 max-w-sm sm:max-w-none mx-auto">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-3 md:gap-6 w-full max-w-sm sm:max-w-none mx-auto">
           <Link href="/components" className="w-full sm:w-auto">
-            <Button size="lg" className="w-full rounded-full px-8 h-12 md:h-14 text-base md:text-lg font-bold italic shadow-[0_0_20px_rgba(var(--primary),0.3)] hover:shadow-[0_0_30px_rgba(var(--primary),0.5)] transition-all">
+            <Button size="lg" className="w-full sm:w-auto rounded-full px-8 h-12 md:h-14 text-base md:text-lg font-bold italic shadow-[0_0_20px_rgba(var(--primary),0.3)] hover:shadow-[0_0_30px_rgba(var(--primary),0.5)] transition-all">
               Launch Components
             </Button>
           </Link>
           <Link href={process.env.NEXT_PUBLIC_GITHUB_REPO || "https://github.com/Aryan3522/future-ui"} target="_blank" className="w-full sm:w-auto">
-            <Button size="lg" variant="outline" className="w-full rounded-full px-8 h-12 md:h-14 text-base md:text-lg font-bold italic border-primary/20 hover:bg-primary/5">
+            <Button size="lg" variant="outline" className="w-full sm:w-auto rounded-full px-8 h-12 md:h-14 text-base md:text-lg font-bold italic border-primary/20 hover:bg-primary/5">
               Source Code
             </Button>
           </Link>
@@ -114,36 +115,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Showcase */}
-      <section className="py-16 md:py-24 bg-card/10 backdrop-blur-md overflow-hidden">
-        <div className="w-full px-4">
-          <div className="container mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-16 gap-6">
-              <div className="max-w-2xl">
-                <h2 className="text-3xl md:text-6xl font-black italic tracking-tighter mb-4 uppercase">EXPLORE THE LIBRARY.</h2>
-                <p className="text-base md:text-xl text-muted-foreground leading-relaxed">
-                  Browse our collection of interactive components. Everything you need to build faster is right here.
-                </p>
-              </div>
-              <Link href="/components" className="w-full md:w-auto">
-                <Button variant="outline" className="w-full md:w-auto rounded-full px-8 h-12 font-bold italic border-primary/20">View All</Button>
-              </Link>
-            </div>
-            
-            <div className="-mx-4 md:mx-0">
-              <ExploreComponents />
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Call to Action */}
       <section className="w-full px-4 py-20 md:py-32 text-center">
-        <div className="max-w-5xl mx-auto p-8 md:p-24 rounded-3xl md:rounded-[3rem] bg-linear-to-br from-primary to-primary/80 text-primary-foreground relative overflow-hidden shadow-2xl">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
+        <div className="max-w-5xl mx-auto relative overflow-hidden shadow-2xl">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-40" />
           <div className="relative z-10">
             <h2 className="text-3xl md:text-7xl font-black mb-6 md:mb-8 italic tracking-tighter uppercase">READY TO BUILD?</h2>
-            <p className="text-base md:text-2xl mb-8 md:mb-12 text-primary-foreground/80 leading-relaxed font-medium">
+            <p className="text-base md:text-2xl mb-8 md:mb-12 text-muted-foreground/80 leading-relaxed font-medium">
               Start your next project with Future UI and experience the difference in speed and quality.
             </p>
             <Link href="/components">
@@ -159,7 +137,15 @@ export default function Home() {
       <footer className="w-full mt-auto py-12 md:py-16 border-t border-border/40 px-4">
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-8 md:gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-black italic">F</div>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">
+              <Image
+                src="/Logo.webp" 
+                alt="Future UI Logo" 
+                width={32} 
+                height={32} 
+                className="w-full h-full object-cover"
+              />
+            </div>
             <span className="text-xl md:text-2xl font-black italic tracking-tighter">FUTURE UI</span>
           </div>
           

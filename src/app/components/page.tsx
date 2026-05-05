@@ -1,12 +1,12 @@
 "use client"
 import Comps from "@/components/Comps";
-import { PillHeader } from "@/components/ui/PillHeader";
+import { Header } from "@/components/ui/header";
 import React from "react";
 
 export default function Page() {
   return (
-    <div className="min-h-screen bg-transparent text-foreground pt-24">
-      <PillHeader />
+    <div className="min-h-screen bg-transparent text-foreground">
+      <Header />
       <main>
         <Comps />
       </main>

@@ -5,16 +5,40 @@ import { motion, useReducedMotion, MotionProps, Transition } from "framer-motion
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
+import { Eye, MousePointerClick, Square, Type, Loader2, GalleryHorizontal, Navigation, MessageSquare, Compass, Rocket, Zap, Palette, ShieldCheck, Code2, Layout } from "lucide-react";
 import { componentsList } from "@/data/component-library-data";
+import { DotBackground } from "@/components/ui/dot-background";
 import Link from "next/link";
-import Image from "next/image";
 import { ComponentItem } from "@/types";
 
 const gpuStyle: React.CSSProperties = {
   willChange: "transform, opacity",
   backfaceVisibility: "hidden",
   transform: "translateZ(0)",
+};
+
+const getComponentIcon = (type: string, slug: string) => {
+  const t = type.toLowerCase();
+  const s = slug.toLowerCase();
+  
+  if (s.includes('button')) return <MousePointerClick className="w-12 h-12" />;
+  if (s.includes('card')) return <Square className="w-12 h-12" />;
+  if (s.includes('text') || s.includes('typography')) return <Type className="w-12 h-12" />;
+  if (s.includes('loader') || s.includes('spinner')) return <Loader2 className="w-12 h-12" />;
+  if (s.includes('carousel') || s.includes('slider')) return <GalleryHorizontal className="w-12 h-12" />;
+  if (s.includes('menu') || s.includes('nav')) return <Navigation className="w-12 h-12" />;
+  if (s.includes('error') || s.includes('feedback') || s.includes('toast')) return <MessageSquare className="w-12 h-12" />;
+  
+  switch(t) {
+    case 'button': return <MousePointerClick className="w-12 h-12" />;
+    case 'cards': return <Square className="w-12 h-12" />;
+    case 'typography': return <Type className="w-12 h-12" />;
+    case 'loader': return <Loader2 className="w-12 h-12" />;
+    case 'carousel': return <GalleryHorizontal className="w-12 h-12" />;
+    case 'navigation': return <Navigation className="w-12 h-12" />;
+    case 'feedback': return <MessageSquare className="w-12 h-12" />;
+    default: return <Compass className="w-12 h-12" />;
+  }
 };
 
 const ExploreComponents: React.FC = () => {
@@ -114,7 +138,7 @@ const ExploreComponents: React.FC = () => {
         <motion.div className="text-center mb-10 md:mb-16" style={gpuStyle}>
           <Badge className="mb-4 px-3 py-1.5 rounded-full uppercase tracking-widest text-[10px]">Library</Badge>
 
-          <h2 className="text-3xl md:text-5xl font-black mb-4 uppercase italic tracking-tight">
+          <h2 className="text-3xl md:text-5xl font-black mb-4 uppercase italic tracking-tight text-foreground">
             The Collection
           </h2>
 
@@ -148,54 +172,56 @@ const ExploreComponents: React.FC = () => {
               {...hoverProps}
               transition={{ ...makeMotionProps(0.0, { once: true }).transition, delay: index * 0.05 } as any}
             >
-              <Card className="h-full border border-border/40 shadow-sm hover:shadow-2xl transition-all duration-500 backdrop-blur-xl bg-card/40 dark:bg-card/20 overflow-hidden rounded-[2rem]">
-                {/* Image */}
-                <div className="relative w-full aspect-[16/10] overflow-hidden bg-muted/20">
-                  <Image
-                    src={item.previewImage}
-                    alt={item.title}
-                    width={400}
-                    height={250}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                  />
+              <Card className="h-full border border-border/40 shadow-sm hover:shadow-2xl transition-all duration-500 backdrop-blur-xl bg-card/40 dark:bg-card/20 overflow-hidden rounded-[2.5rem]">
+                {/* Visual Placeholder (Replacing Image) */}
+                <div className="relative w-full aspect-[16/10] overflow-hidden group bg-muted/10">
+                  <DotBackground 
+                    dotColor="var(--primary)" 
+                    maskOpacity={0.1}
+                    className="bg-linear-to-br from-primary/5 to-primary/10 group-hover:from-primary/10 group-hover:to-primary/20 transition-all duration-500 absolute inset-0 w-full h-full"
+                  >
+                    <div className="flex items-center justify-center w-full h-full text-primary transition-all duration-500 group-hover:scale-125 group-hover:rotate-6">
+                      {getComponentIcon(item.type, item.slug)}
+                    </div>
+                  </DotBackground>
 
                   {/* Overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition">
+                  <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition bg-background/20 backdrop-blur-[2px]">
                     <Link
                       href={`/components/${item.type.toLowerCase()}/${item.slug}/${item.id}`}
                     >
-                      <Button size="sm" variant="secondary">
-                        <Eye className="h-4 w-4" />
+                      <Button size="sm" variant="secondary" className="rounded-full">
+                        <Eye className="h-4 w-4 mr-2" />
+                        Preview
                       </Button>
                     </Link>
                   </div>
                 </div>
 
                 {/* Content */}
-                <CardHeader className="p-2">
-                  <div className="flex justify-between items-center">
-                    <CardTitle className="text-lg group-hover:text-primary transition">
-                      {item.title}
-                    </CardTitle>
-
-                    <Badge variant="outline" className="text-xs">
+                <CardHeader className="p-6 pb-2">
+                  <div className="flex justify-between items-center mb-2">
+                    <Badge variant="outline" className="text-[10px] uppercase tracking-widest font-bold">
                       {item.type}
                     </Badge>
                   </div>
+                  <CardTitle className="text-xl font-bold italic group-hover:text-primary transition line-clamp-1">
+                    {item.title}
+                  </CardTitle>
                 </CardHeader>
 
-                <CardContent className="p-2">
-                  <p className="text-muted-foreground text-sm line-clamp-3">
+                <CardContent className="p-6 pt-2">
+                  <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed mb-6">
                     {item.description}
                   </p>
 
-                  <div className="flex justify-between mt-4">
+                  <div className="flex justify-between">
                     <Link
                       className="w-full"
                       href={`/components/${item.type.toLowerCase()}/${item.slug}/${item.id}`}
                     >
-                      <Button size="sm" variant="outline" className="w-full">
-                        View Component
+                      <Button size="sm" variant="outline" className="w-full rounded-xl font-bold italic hover:bg-primary hover:text-primary-foreground transition-all duration-300">
+                        View Details
                       </Button>
                     </Link>
                   </div>

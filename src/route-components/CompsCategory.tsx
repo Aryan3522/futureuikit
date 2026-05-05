@@ -3,7 +3,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import { compsCategory } from "@/route-components/componentsCategoryData";
-import { PillHeader } from "@/components/ui/PillHeader";
+import { Header } from "@/components/ui/header";
 
 interface ComponentsCategoryPageProps {
   category: string;
@@ -22,7 +22,7 @@ const ComponentsCategoryPage: React.FC<ComponentsCategoryPageProps> = ({ categor
 
   return (
     <div className="min-h-screen text-foreground pt-24">
-      <PillHeader />
+      <Header />
       <main>
         <CategoryComponent />
       </main>

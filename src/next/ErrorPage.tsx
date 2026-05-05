@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { PillHeader } from "@/components/ui/PillHeader";
+import { Header } from "@/components/ui/header";
 
 export default function ErrorPage() {
   return (
     <div className="relative min-h-screen bg-transparent text-foreground">
-      <PillHeader />
+      <Header />
       <main className="relative z-10 mx-auto flex min-h-[70vh] max-w-3xl flex-col items-center justify-center px-4 text-center">
         <p className="mb-3 text-sm uppercase tracking-[0.3em] text-muted-foreground">
           Page not found

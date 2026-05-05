@@ -27,7 +27,7 @@ export const BasicLoader: React.FC<BasicLoaderProps> = ({
   className, 
   variant = "modern", 
   color = "#3b82f6", 
-  text = "Loading, please wait...", 
+  text, 
   ...props 
 }) => {
   

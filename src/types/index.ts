@@ -11,9 +11,9 @@ export interface ComponentItem {
   type: string;
   slug: string;
   category: string;
-  heroImage: string;
-  previewImage: string;
-  previewVideo: string;
+  heroImage?: string;
+  previewImage?: string;
+  previewVideo?: string;
   description: string;
   details: string[];
   codes: ComponentCode;

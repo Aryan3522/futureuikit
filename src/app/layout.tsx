@@ -22,9 +22,9 @@ export const metadata: Metadata = {
   title: "Future UI | The Next-Gen React 19 UI Library for Stunning Interfaces",
   description: "Elevate your web apps with Future UI. A high-performance, accessible, and visually stunning React 19 component library powered by Tailwind CSS 4 and Framer Motion. Build faster, design better, and ship beautiful UIs in seconds.",
   icons: {
-    icon: "/Images/FUI.webp",
-    shortcut: "/Images/FUI.webp",
-    apple: "/Images/FUI.webp",
+    icon: "/FUI.ico",
+    shortcut: "/FUI.webp",
+    apple: "/FUI.webp",
   },
   verification: {
     google: "PrvjZ6MJSP4TCXj26hfV4wj7yqaQZLfk-DUaL8VE3Ok",
