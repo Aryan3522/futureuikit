@@ -129,4 +129,4 @@ export const GlowyButton = React.forwardRef<HTMLButtonElement, GlowyButtonProps>
   }
 );
 
-GlowyButton.displayName = "GlowyButton";;
+GlowyButton.displayName = "GlowyButton";

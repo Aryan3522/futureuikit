@@ -1,3 +1,7 @@
+/**
+ * @registry-slug sidebar-button
+ * @registry-name Sidebar Button
+ */
 "use client";
 
 import React from "react";

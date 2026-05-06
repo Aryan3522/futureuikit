@@ -1,3 +1,8 @@
+/**
+ * @registry-slug badge
+ * @registry-name Badge
+ * @registry-dependency class-variance-authority
+ */
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 

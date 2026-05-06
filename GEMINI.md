@@ -66,7 +66,7 @@ Note: The CLI expects certain environment variables like `FUTURE_UI_REGISTRY_URL
 
 ## Package Versioning Rules
 
-* Follow a strict incremental versioning strategy based on semantic versioning (MAJOR.MINOR.PATCH).
+* Follow a strict incremental versioning strategy based on semantic versioning (MAJOR.MINOR.PATCH). Increment the package version only if anything is updated in the entire project that need version update. Else keep the version same as it is.
 
 ### Increment Logic
 
@@ -158,7 +158,7 @@ To ensure deterministic, production-safe outputs, Gemini must adhere to the foll
 
 ### Post-Implementation Testing Requirement
 
-* After completing any implementation, Gemini must perform a full application-level validation.
+* After completing any implementation, Gemini must ask a full application-level validation. If permitted then it should perform a proper application-level validation.
 * Gemini must simulate running the project (equivalent to `npm run build` and `npm run start`) and verify:
 
   * No build-time errors

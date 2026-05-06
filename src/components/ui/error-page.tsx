@@ -33,8 +33,8 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ className, errorCode = "40
           text-shadow: 0 0 80px #ffffff, 0 0 30px #008000, 0 0 6px #0000ff;
         }
         .neon-error span { animation: upper 6s linear infinite; }
-        .neon-code span:nth-of-type(2) { animation: lower 9s linear infinite; }
-        .neon-code span:nth-of-type(1) { text-shadow: none; opacity: 0.4; }
+        .neon-error span:nth-of-type(2) { animation: lower 9s linear infinite; }
+        .neon-error span:nth-of-type(1) { text-shadow: none; opacity: 0.4; }
         .error-neon-container:hover .neon-error {
           text-shadow: 0 0 200px #ffffff, 0 0 80px #008000, 0 0 6px #0000ff;
         }

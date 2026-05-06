@@ -1,7 +1,6 @@
 /**
  * @registry-slug dot-background
  * @registry-name Dot Background
- * @registry-type components:ui
  */
 "use client";
 

@@ -28,7 +28,6 @@ const navItems: NavItem[] = [
   { label: "Home", href: "/" },
   { label: "Docs", href: "/docs" },
   { label: "Components", href: "/components" },
-  { label: "Graph", href: "/graph" },
 ];
 
 export const Header: React.FC = () => {

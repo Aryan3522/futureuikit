@@ -233,4 +233,3 @@ export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = ({ options = 
     </div>
   );
 };
-

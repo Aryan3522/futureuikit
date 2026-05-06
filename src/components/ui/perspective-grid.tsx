@@ -1,7 +1,6 @@
 /**
  * @registry-slug perspective-grid
  * @registry-name Perspective Grid
- * @registry-type components:ui
  */
 import React from "react";
 import { cn } from "@/lib/utils";

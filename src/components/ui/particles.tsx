@@ -1,7 +1,6 @@
 /**
  * @registry-slug particles
  * @registry-name Particles
- * @registry-type components:ui
  */
 "use client";
 
