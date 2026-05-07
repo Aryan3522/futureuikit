@@ -31,6 +31,7 @@ import { PerspectiveGrid } from "@/components/ui/perspective-grid";
 import { SearchInput } from "@/components/ui/search-input";
 import { GithubIcon } from "@/components/ui/github-icon";
 import { LinkedinIcon } from "@/components/ui/linkedin-icon";
+import { PointCursor } from "@/components/ui/PointCursor";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
@@ -499,5 +500,54 @@ export const PreviewRegistry: Record<string, React.FC> = {
         </Button>
       </div>
     </div>
+  ),
+  "scroll-progress": () => (
+    <div className="flex items-center justify-center w-full h-full p-8 text-center">
+      <p className="text-muted-foreground font-medium">
+        The scroll progress will be shown on top of the viewport right above header
+      </p>
+    </div>
+  ),
+  "point-cursor": () => (
+    <PointCursor className="rounded-xl overflow-hidden border border-border bg-muted/10">
+      <div className="flex flex-col items-center justify-center w-full h-[300px] sm:h-[400px] p-8 text-center space-y-8 relative overflow-hidden">
+        {/* Decorative background to make it feel like a "playground" */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          <DotBackground dotColor="currentColor" gap={20} />
+        </div>
+
+        <div className="space-y-3 relative z-10">
+          <Badge variant="secondary" className="mb-2">Isolated Custom Cursor</Badge>
+          <h3 className="text-2xl font-bold tracking-tight">Interactive Playground</h3>
+          <p className="text-muted-foreground max-w-sm mx-auto">
+            The custom cursor is only active inside this box. 
+            Hover over the elements to test the <span className="text-primary font-bold italic">Dot-to-Ring</span> transformation.
+          </p>
+        </div>
+        
+        <div className="flex flex-wrap gap-4 justify-center relative z-10">
+          <Button className="rounded-full px-8 shadow-lg shadow-primary/20">
+            Hover Me
+          </Button>
+          <Button variant="outline" className="rounded-full px-8 bg-background/50 backdrop-blur-sm">
+            Try This One
+          </Button>
+          <a href="#" className="text-primary font-medium underline underline-offset-4 hover:text-primary/80 transition-colors py-2 px-4" onClick={(e) => e.preventDefault()}>
+            Interactive Link
+          </a>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 w-full max-w-md relative z-10">
+          <div className="p-4 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm clickable">
+            <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">Custom Box</span>
+            <p className="text-xs mt-1">Has 'clickable' class</p>
+          </div>
+          <div className="p-4 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm">
+            <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">Standard Box</span>
+            <p className="text-xs mt-1">Normal behavior</p>
+          </div>
+        </div>
+      </div>
+    </PointCursor>
   ),
 };

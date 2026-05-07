@@ -21,6 +21,7 @@ import { BoxyBounceLoader as ActualBoxyBounceLoader } from "@/components/ui/boxy
 import { BoxyShiftLoader as ActualBoxyShiftLoader } from "@/components/ui/boxy-shift-loader";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
@@ -128,6 +129,7 @@ const ComponentDetail: React.FC<ComponentDetailProps> = ({ type, slug, id }) => 
 
   return (
     <div className="select-none min-h-screen flex justify-center text-foreground pt-16 md:pt-24">
+      {slug === "scroll-progress" && <ScrollProgress />}
       <Header />
       <div className="relative flex-1 w-full max-w-5xl transition-all duration-300">
         <div className="mx-auto max-w-5xl px-4 py-4">

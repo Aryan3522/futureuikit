@@ -619,6 +619,56 @@ export const componentsList: ComponentItem[] = [
       "Encapsulate in a Link or Button for interactive professional links.",
     ],
   },
+  {
+    id: 24,
+    title: "Scroll Progress",
+    type: "UI",
+    slug: "scroll-progress",
+    category: "ui",
+    description:
+      "A sleek, high-performance scroll progress indicator built with Framer Motion. It provides real-time visual feedback as users scroll through long-form content, featuring a smooth gradient effect and professional aesthetic.",
+    details: [
+      "Built with Framer Motion's useScroll hook for precise scroll tracking.",
+      "Smooth, high-performance animation with zero layout shift.",
+      "Customizable gradient colors and height via CSS.",
+      "Fixed positioning ensures visibility at the top of the viewport.",
+      "Perfect for blogs, documentation, and long-form articles.",
+    ],
+    codes: {
+      next: 'import { ScrollProgress } from "@/components/ui/scroll-progress";\n\nexport default function Layout({ children }) {\n  return (\n    <>\n      <ScrollProgress />\n      {children}\n    </>\n  );\n}',
+    },
+    usage: [
+      "Import ScrollProgress from your UI components directory.",
+      "Place it at the top level of your layout or specific long-form pages.",
+      "Ensure it is rendered outside of containers with 'overflow-hidden' for correct tracking.",
+    ],
+  },
+  {
+    id: 25,
+    title: "Point Cursor",
+    type: "UI",
+    slug: "point-cursor",
+    category: "ui",
+    description:
+      "A sophisticated custom cursor system that transforms the standard mouse pointer into a precision instrument. It features a center dot and a smooth trailing ring that dynamically reacts to interactive elements, providing a premium feel to any section or entire application.",
+    details: [
+      "Built with Framer Motion for high-performance, physics-based animations.",
+      "Smart isolation: the custom cursor is only active within the wrapped container.",
+      "Intelligent hover detection: automatically expands when hovering over links, buttons, or elements with the 'clickable' class.",
+      "Smooth trailing effect using spring-based motion values.",
+      "Fully customizable colors for both the central dot and the trailing ring.",
+      "Accessibility conscious: falls back to the system cursor when not active.",
+    ],
+    codes: {
+      next: 'import { PointCursor } from "@/components/ui/PointCursor";\n\nexport default function Example() {\n  return (\n    <PointCursor>\n      <section className="min-h-[400px] flex items-center justify-center bg-slate-900 text-white rounded-3xl p-12">\n        <div className="text-center">\n          <h2 className="text-3xl font-bold mb-4">Hover anywhere here!</h2>\n          <button className="bg-white text-black px-6 py-2 rounded-full font-medium">\n            Interactive Button\n          </button>\n        </div>\n      </section>\n    </PointCursor>\n  );\n}',
+    },
+    usage: [
+      "Import PointCursor from your UI components directory.",
+      "Wrap the desired section, page, or layout with the PointCursor component.",
+      "Optionally customize 'dotColor' and 'ringColor' to match your theme.",
+      "Add the 'clickable' class to any custom elements you want the cursor to react to.",
+    ],
+  },
 ];
 
 export { registry };
