@@ -337,5 +337,20 @@ export const registry: Registry = {
         "targetPath": "components/ui/typography.tsx"
       }
     ]
+  },
+  "accordion": {
+    "name": "Accordion",
+    "type": "components:ui",
+    "dependencies": [
+      "framer-motion",
+      "lucide-react"
+    ],
+    "files": [
+      {
+        "name": "accordion.tsx",
+        "content": "\"use client\";\r\n\r\nimport React, { useState } from \"react\";\r\nimport { motion, AnimatePresence } from \"framer-motion\";\r\nimport { ChevronDown } from \"lucide-react\";\r\nimport { cn } from \"@/lib/utils\";\r\n\r\nexport interface AccordionItemProps {\r\n  title: string;\r\n  children: React.ReactNode;\r\n  isOpen?: boolean;\r\n  onClick?: () => void;\r\n  className?: string;\r\n}\r\n\r\nexport const AccordionItem: React.FC<AccordionItemProps> = ({\r\n  title,\r\n  children,\r\n  isOpen,\r\n  onClick,\r\n  className,\r\n}) => {\r\n  return (\r\n    <div className={cn(\"border-b border-border/50 last:border-none\", className)}>\r\n      <button\r\n        onClick={onClick}\r\n        className=\"flex w-full items-center justify-between py-4 text-left transition-all hover:text-primary\"\r\n      >\r\n        <span className=\"text-sm font-medium tracking-tight\">{title}</span>\r\n        <motion.div\r\n          animate={{ rotate: isOpen ? 180 : 0 }}\r\n          transition={{ duration: 0.3, ease: \"easeInOut\" }}\r\n        >\r\n          <ChevronDown className=\"h-4 w-4 text-muted-foreground\" />\r\n        </motion.div>\r\n      </button>\r\n      <AnimatePresence initial={false}>\r\n        {isOpen && (\r\n          <motion.div\r\n            initial={{ height: 0, opacity: 0 }}\r\n            animate={{ height: \"auto\", opacity: 1 }}\r\n            exit={{ height: 0, opacity: 0 }}\r\n            transition={{ duration: 0.3, ease: \"easeInOut\" }}\r\n            className=\"overflow-hidden\"\r\n          >\r\n            <div className=\"pb-4 text-sm text-muted-foreground leading-relaxed\">\r\n              {children}\r\n            </div>\r\n          </motion.div>\r\n        )}\r\n      </AnimatePresence>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport interface AccordionProps {\r\n  items: { title: string; content: React.ReactNode }[];\r\n  allowMultiple?: boolean;\r\n  className?: string;\r\n}\r\n\r\nexport const Accordion: React.FC<AccordionProps> = ({\r\n  items,\r\n  allowMultiple = false,\r\n  className,\r\n}) => {\r\n  const [openIndices, setOpenIndices] = useState<number[]>([0]);\r\n\r\n  const handleToggle = (index: number) => {\r\n    if (allowMultiple) {\r\n      setOpenIndices((prev) =>\r\n        prev.includes(index)\r\n          ? prev.filter((i) => i !== index)\r\n          : [...prev, index]\r\n      );\r\n    } else {\r\n      setOpenIndices((prev) => (prev.includes(index) ? [] : [index]));\r\n    }\n  };\r\n\r\n  return (\r\n    <div className={cn(\"w-full max-w-2xl mx-auto\", className)}>\r\n      {items.map((item, index) => (\r\n        <AccordionItem\r\n          key={index}\r\n          title={item.title}\r\n          isOpen={openIndices.includes(index)}\r\n          onClick={() => handleToggle(index)}\r\n        >\r\n          {item.content}\r\n        </AccordionItem>\r\n      ))}\r\n    </div>\r\n  );\r\n};",
+        "targetPath": "components/ui/accordion.tsx"
+      }
+    ]
   }
 };

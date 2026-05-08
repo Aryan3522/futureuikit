@@ -32,6 +32,7 @@ import { SearchInput } from "@/components/ui/search-input";
 import { GithubIcon } from "@/components/ui/github-icon";
 import { LinkedinIcon } from "@/components/ui/linkedin-icon";
 import { PointCursor } from "@/components/ui/PointCursor";
+import { Accordion } from "@/components/ui/accordion";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
@@ -549,5 +550,28 @@ export const PreviewRegistry: Record<string, React.FC> = {
         </div>
       </div>
     </PointCursor>
+  ),
+  accordion: () => (
+    <div className="flex items-center justify-center w-full h-full p-4">
+      <Accordion
+        items={[
+          {
+            title: "What is Future UI?",
+            content:
+              "Future UI is a modern, high-performance UI component library built for Next.js 16 and React 19. It leverages Tailwind CSS 4 and Framer Motion to provide visually stunning, reusable components.",
+          },
+          {
+            title: "How do I install components?",
+            content:
+              "You can use our custom CLI tool to add components directly to your project. Simply run 'npx futureuikit add <slug>' and we'll handle the rest, including dependencies and path aliases.",
+          },
+          {
+            title: "Is it customizable?",
+            content:
+              "Yes! Since you download the source code, you have full ownership and can customize every aspect of the components to fit your specific needs and design system.",
+          },
+        ]}
+      />
+    </div>
   ),
 };

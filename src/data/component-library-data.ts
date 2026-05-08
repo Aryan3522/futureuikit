@@ -669,6 +669,32 @@ export const componentsList: ComponentItem[] = [
       "Add the 'clickable' class to any custom elements you want the cursor to react to.",
     ],
   },
+  {
+    id: 26,
+    title: "Accordion",
+    type: "UI",
+    slug: "accordion",
+    category: "ui",
+    description:
+      "A clean, minimal, and modern accordion component featuring smooth Framer Motion animations. Designed for clarity and ease of use, it supports both single and multiple open items and fits perfectly into documentation, FAQs, or content-heavy layouts.",
+    details: [
+      "Built with Framer Motion for smooth, physics-based height transitions.",
+      "Supports single or multiple item expansion via the 'allowMultiple' prop.",
+      "Modern, minimalist design with subtle border treatments and clean typography.",
+      "Integrated with Lucide React for intuitive directional iconography.",
+      "Fully responsive and keyboard accessible.",
+      "Easily customizable via Tailwind CSS classes.",
+    ],
+    codes: {
+      next: 'import { Accordion } from "@/components/ui/accordion";\n\nconst items = [\n  { title: "What is Future UI?", content: "Future UI is a modern component library built with Next.js and Tailwind CSS." },\n  { title: "How do I install it?", content: "You can use our custom CLI to add components to your project." },\n];\n\nexport default function Example() {\n  return <Accordion items={items} />;\n}',
+    },
+    usage: [
+      "Import the Accordion component into your page or section.",
+      "Define an array of items, each with a 'title' and 'content'.",
+      "Pass the items to the Accordion component.",
+      "Use the 'allowMultiple' prop if you want users to be able to open more than one item at a time.",
+    ],
+  },
 ];
 
 export { registry };

@@ -9,7 +9,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search as SearchIcon, ChevronRight, Square, MousePointerClick, Type, Loader2, GalleryHorizontal, Navigation, MessageSquare, Compass } from "lucide-react";
+import { Search as SearchIcon, ChevronRight, Square, MousePointerClick, Type, Loader2, GalleryHorizontal, Navigation, MessageSquare, Compass, Rows3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -26,6 +26,7 @@ const getComponentIcon = (type: string, slug: string) => {
   const s = slug.toLowerCase();
   if (s.includes("button")) return <MousePointerClick className="w-4 h-4" />;
   if (s.includes("card")) return <Square className="w-4 h-4" />;
+  if (s.includes("accordion")) return <Rows3 className="w-4 h-4" />;
   if (s.includes("text") || s.includes("typography"))
     return <Type className="w-4 h-4" />;
   if (s.includes("loader") || s.includes("spinner"))
