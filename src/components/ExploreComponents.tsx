@@ -5,7 +5,7 @@ import { motion, useReducedMotion, MotionProps, Transition } from "framer-motion
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, MousePointerClick, Square, Type, Loader2, GalleryHorizontal, Navigation, MessageSquare, Compass, Rocket, Zap, Palette, ShieldCheck, Code2, Layout } from "lucide-react";
+import { Eye, MousePointerClick, Square, Type, Loader2, GalleryHorizontal, Navigation, MessageSquare, Compass, Rocket, Zap, Palette, ShieldCheck, Code2, Layout, Rows3 } from "lucide-react";
 import { componentsList } from "@/data/component-library-data";
 import { DotBackground } from "@/components/ui/dot-background";
 import Link from "next/link";
@@ -23,6 +23,7 @@ const getComponentIcon = (type: string, slug: string) => {
   
   if (s.includes('button')) return <MousePointerClick className="w-12 h-12" />;
   if (s.includes('card')) return <Square className="w-12 h-12" />;
+  if (s.includes('accordion')) return <Rows3 className="w-12 h-12" />;
   if (s.includes('text') || s.includes('typography')) return <Type className="w-12 h-12" />;
   if (s.includes('loader') || s.includes('spinner')) return <Loader2 className="w-12 h-12" />;
   if (s.includes('carousel') || s.includes('slider')) return <GalleryHorizontal className="w-12 h-12" />;

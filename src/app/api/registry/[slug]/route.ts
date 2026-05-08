@@ -17,5 +17,17 @@ export async function GET(
     );
   }
 
-  return NextResponse.json(component);
+  // Deep clone to avoid mutating the original registry object
+  const cleanComponent = JSON.parse(JSON.stringify(component));
+
+  // Strip comments from all files
+  cleanComponent.files = cleanComponent.files.map((file: any) => ({
+    ...file,
+    content: file.content
+      .replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm, '$1')
+      .replace(/\n\s*\n/g, '\n\n')
+      .trim()
+  }));
+
+  return NextResponse.json(cleanComponent);
 }
