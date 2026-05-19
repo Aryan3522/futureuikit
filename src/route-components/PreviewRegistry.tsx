@@ -176,9 +176,13 @@ const CalendarPreview: React.FC = () => {
 
   const toggleHighlight = (targetDate: Date) => {
     setHighlighted((prev) => {
-      const exists = prev.some((d) => d.toDateString() === targetDate.toDateString());
+      const exists = prev.some(
+        (d) => d.toDateString() === targetDate.toDateString(),
+      );
       if (exists) {
-        return prev.filter((d) => d.toDateString() !== targetDate.toDateString());
+        return prev.filter(
+          (d) => d.toDateString() !== targetDate.toDateString(),
+        );
       }
       return [...prev, targetDate];
     });
@@ -189,8 +193,12 @@ const CalendarPreview: React.FC = () => {
       <div className="flex flex-col lg:flex-row gap-16 items-start justify-center w-full max-w-5xl">
         <div className="flex flex-col gap-6 items-center w-full">
           <div className="flex flex-col items-center gap-1">
-            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-foreground/40">Professional</h3>
-            <p className="text-[10px] text-muted-foreground/30 font-medium italic">Glassmorphism & Depth</p>
+            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-foreground/40">
+              Professional
+            </h3>
+            <p className="text-[10px] text-muted-foreground/30 font-medium italic">
+              Glassmorphism & Depth
+            </p>
           </div>
           <Calendar
             value={date}
@@ -200,11 +208,15 @@ const CalendarPreview: React.FC = () => {
             variant="modern"
           />
         </div>
-        
+
         <div className="flex flex-col gap-6 items-center w-full">
           <div className="flex flex-col items-center gap-1">
-            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-foreground/40">Minimalist</h3>
-            <p className="text-[10px] text-muted-foreground/30 font-medium italic">Pure & Structured</p>
+            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-foreground/40">
+              Minimalist
+            </h3>
+            <p className="text-[10px] text-muted-foreground/30 font-medium italic">
+              Pure & Structured
+            </p>
           </div>
           <Calendar
             value={date}
@@ -230,7 +242,11 @@ const CalendarPreview: React.FC = () => {
             </Button>
           </div>
           <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.1em] font-bold text-center leading-relaxed">
-            Interact with the grid to <span className="text-primary/60 italic underline underline-offset-4">Toggle Highlighting</span> or select dates.
+            Interact with the grid to{" "}
+            <span className="text-primary/60 italic underline underline-offset-4">
+              Toggle Highlighting
+            </span>{" "}
+            or select dates.
           </p>
         </div>
       </div>
@@ -239,37 +255,39 @@ const CalendarPreview: React.FC = () => {
 };
 
 const CalculatorPreview: React.FC = () => {
-  const [variant, setVariant] = React.useState<"glass" | "brutal" | "neon">("glass");
+  const [variant, setVariant] = React.useState<"glass" | "brutal" | "neon">(
+    "glass",
+  );
 
   return (
     <div className="flex flex-col gap-8 items-center justify-center w-full h-full p-4 sm:p-8">
       <div className="flex flex-wrap justify-center gap-2 sm:gap-4 p-2 bg-muted/20 rounded-full border border-border/50 backdrop-blur-md relative z-20">
-        <Button 
-          variant={variant === "glass" ? "default" : "ghost"} 
-          size="sm" 
+        <Button
+          variant={variant === "glass" ? "default" : "ghost"}
+          size="sm"
           onClick={() => setVariant("glass")}
           className="rounded-full px-6 transition-all"
         >
           Glass
         </Button>
-        <Button 
-          variant={variant === "brutal" ? "default" : "ghost"} 
-          size="sm" 
+        <Button
+          variant={variant === "brutal" ? "default" : "ghost"}
+          size="sm"
           onClick={() => setVariant("brutal")}
           className="rounded-full px-6 transition-all"
         >
           Brutal
         </Button>
-        <Button 
-          variant={variant === "neon" ? "default" : "ghost"} 
-          size="sm" 
+        <Button
+          variant={variant === "neon" ? "default" : "ghost"}
+          size="sm"
           onClick={() => setVariant("neon")}
           className="rounded-full px-6 transition-all"
         >
           Neon
         </Button>
       </div>
-      
+
       <div className="flex items-center justify-center w-full flex-1">
         <Calculator variant={variant} />
       </div>
@@ -360,8 +378,8 @@ export const PreviewRegistry: Record<string, React.FC> = {
             This is muted text for secondary information.
           </Text>
           <Text variant="blockquote">
-            &quot;This is a blockquote variant for citing sources or highlighting
-            quotes.&quot;
+            &quot;This is a blockquote variant for citing sources or
+            highlighting quotes.&quot;
           </Text>
         </div>
         <div className="space-y-2">
@@ -459,7 +477,11 @@ export const PreviewRegistry: Record<string, React.FC> = {
     <div className="flex items-center justify-center w-full h-full p-4">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 w-full max-w-3xl items-center justify-items-center">
         <div className="flex flex-col gap-4 items-center">
-          <BasicLoader variant="modern" color="#3b82f6" text="Modern Rings..." />
+          <BasicLoader
+            variant="modern"
+            color="#3b82f6"
+            text="Modern Rings..."
+          />
         </div>
         <div className="flex flex-col gap-4 items-center">
           <BasicLoader variant="clean" color="#10b981" text="Clean Dots..." />
@@ -605,7 +627,10 @@ export const PreviewRegistry: Record<string, React.FC> = {
         <Badge variant="outline" className="gap-2">
           <LinkedinIcon className="w-3 h-3" /> LinkedIn Profile
         </Badge>
-        <Button size="sm" className="gap-2 bg-[#0077b5] hover:bg-[#0077b5]/90 border-none">
+        <Button
+          size="sm"
+          className="gap-2 bg-[#0077b5] hover:bg-[#0077b5]/90 border-none"
+        >
           <LinkedinIcon className="w-4 h-4 fill-white" /> Connect Now
         </Button>
       </div>
@@ -614,7 +639,8 @@ export const PreviewRegistry: Record<string, React.FC> = {
   "scroll-progress": () => (
     <div className="flex items-center justify-center w-full h-full p-8 text-center">
       <p className="text-muted-foreground font-medium">
-        The scroll progress will be shown on top of the viewport right above header
+        The scroll progress will be shown on top of the viewport right above
+        header
       </p>
     </div>
   ),
@@ -627,33 +653,50 @@ export const PreviewRegistry: Record<string, React.FC> = {
         </div>
 
         <div className="space-y-3 relative z-10">
-          <Badge variant="secondary" className="mb-2">Isolated Custom Cursor</Badge>
-          <h3 className="text-2xl font-bold tracking-tight">Interactive Playground</h3>
+          <Badge variant="secondary" className="mb-2">
+            Isolated Custom Cursor
+          </Badge>
+          <h3 className="text-2xl font-bold tracking-tight">
+            Interactive Playground
+          </h3>
           <p className="text-muted-foreground max-w-sm mx-auto">
-            The custom cursor is only active inside this box. 
-            Hover over the elements to test the <span className="text-primary font-bold italic">Dot-to-Ring</span> transformation.
+            The custom cursor is only active inside this box. Hover over the
+            elements to test the{" "}
+            <span className="text-primary font-bold italic">Dot-to-Ring</span>{" "}
+            transformation.
           </p>
         </div>
-        
+
         <div className="flex flex-wrap gap-4 justify-center relative z-10">
           <Button className="rounded-full px-8 shadow-lg shadow-primary/20">
             Hover Me
           </Button>
-          <Button variant="outline" className="rounded-full px-8 bg-background/50 backdrop-blur-sm">
+          <Button
+            variant="outline"
+            className="rounded-full px-8 bg-background/50 backdrop-blur-sm"
+          >
             Try This One
           </Button>
-          <a href="#" className="text-primary font-medium underline underline-offset-4 hover:text-primary/80 transition-colors py-2 px-4" onClick={(e) => e.preventDefault()}>
+          <a
+            href="#"
+            className="text-primary font-medium underline underline-offset-4 hover:text-primary/80 transition-colors py-2 px-4"
+            onClick={(e) => e.preventDefault()}
+          >
             Interactive Link
           </a>
         </div>
 
         <div className="grid grid-cols-2 gap-4 w-full max-w-md relative z-10">
           <div className="p-4 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm clickable">
-            <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">Custom Box</span>
+            <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">
+              Custom Box
+            </span>
             <p className="text-xs mt-1">Has &apos;clickable&apos; class</p>
           </div>
           <div className="p-4 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm">
-            <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">Standard Box</span>
+            <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">
+              Standard Box
+            </span>
             <p className="text-xs mt-1">Normal behavior</p>
           </div>
         </div>
@@ -685,4 +728,38 @@ export const PreviewRegistry: Record<string, React.FC> = {
   ),
   calendar: CalendarPreview,
   calculator: CalculatorPreview,
+  // "dot-background": () => (
+  //   <div className="w-full h-full overflow-hidden relative">
+  //     <DotBackground gap={24} dotSize={2} maskOpacity={0.8}>
+  //       <div className="flex flex-col items-center justify-center space-y-4 relative z-10 w-full h-full">
+  //         <h3 className="text-3xl font-bold tracking-tight text-foreground">Content Layer</h3>
+  //         <p className="text-muted-foreground text-center max-w-sm">
+  //           Everything inside the component sits perfectly above the dotted pattern.
+  //         </p>
+  //       </div>
+  //     </DotBackground>
+  //   </div>
+  // ),
+  // "perspective-grid": () => (
+  //   <div className="w-full h-full overflow-hidden relative">
+  //     <PerspectiveGrid gridLineGap={40} fadeRadius={70} />
+  //     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-20">
+  //       <h3 className="text-4xl md:text-6xl font-black tracking-tighter uppercase text-foreground">Cyberspace</h3>
+  //       <p className="text-muted-foreground text-center max-w-sm mt-4 font-mono text-sm">
+  //         A fully 3D CSS grid projection that automatically adapts to your theme.
+  //       </p>
+  //     </div>
+  //   </div>
+  // ),
+  // "particles": () => (
+  //   <div className="w-full h-full overflow-hidden relative bg-background">
+  //     <Particles quantity={100} size={1} className="absolute inset-0 z-0" />
+  //     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-20">
+  //       <h3 className="text-4xl md:text-6xl font-light tracking-tight text-foreground">Quantum Space</h3>
+  //       <p className="text-muted-foreground text-center max-w-sm mt-4">
+  //         Interactive particle simulation with physics and cursor magnetism.
+  //       </p>
+  //     </div>
+  //   </div>
+  // ),
 };

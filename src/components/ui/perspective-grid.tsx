@@ -21,7 +21,7 @@ export function PerspectiveGrid({
   return (
     <div
       className={cn(
-        "relative w-full h-full overflow-hidden bg-transparent",
+        "relative w-full h-full overflow-hidden bg-background text-muted-foreground/30",
         "[--fade-stop:theme(colors.background)]",
         className
       )}
@@ -42,15 +42,15 @@ export function PerspectiveGrid({
           backgroundImage: `
             repeating-linear-gradient(
               to right,
-              rgba(156,163,175,0.6) 0px,
-              rgba(156,163,175,0.6) 1px,
+              currentColor 0px,
+              currentColor 1px,
               transparent 1px,
               transparent ${gridLineGap}px
             ),
             repeating-linear-gradient(
               to bottom,
-              rgba(156,163,175,0.6) 0px,
-              rgba(156,163,175,0.6) 1px,
+              currentColor 0px,
+              currentColor 1px,
               transparent 1px,
               transparent ${gridLineGap}px
             )
