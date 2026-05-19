@@ -726,6 +726,34 @@ export const componentsList: ComponentItem[] = [
       "Restrictions: Use 'filterDate' (fn: Date => boolean) to programmatically disable dates (like weekends or past dates).",
     ],
   },
+  {
+    id: 28,
+    title: "Calculator",
+    type: "Utility",
+    slug: "calculator",
+    category: "utility",
+    description:
+      "A cinematic, fully functional calculator with a modern glass-morphic interface. Supports all standard arithmetic operations, percentage calculations, and sign toggling with smooth Framer Motion transitions.",
+    details: [
+      "Fully functional arithmetic operations (+, -, *, /).",
+      "Support for decimal points, percentages, and sign toggling (+/-).",
+      "Cinematic glassmorphism UI with premium blur and subtle shadows.",
+      "Interactive button feedback using physics-based spring animations.",
+      "Dynamic display with smooth entry/exit transitions for numbers.",
+      "Multiple visual variants: Modern (Glass), Clean (Solid), and Minimal.",
+      "Responsive layout optimized for both desktop and mobile interaction.",
+    ],
+    codes: {
+      next: 'import { Calculator } from "@/components/ui/calculator";\n\nexport default function Example() {\n  return (\n    <div className="flex items-center justify-center p-8 bg-black">\n      <Calculator variant="modern" />\n    </div>\n  );\n}',
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add calculator' to download the component and its dependencies.",
+      "Import: 'import { Calculator } from \"@/components/ui/calculator\";'",
+      "Variants: Toggle between \'modern\', \'clean\', and \'minimal\' using the \'variant\' prop.",
+      "Styling: Customize the look by passing a \'className\' or \'primaryColor\'.",
+      "Integration: Use it as a standalone utility component in any part of your application.",
+    ],
+  },
 ];
 
 export { registry };

@@ -34,6 +34,7 @@ import { LinkedinIcon } from "@/components/ui/linkedin-icon";
 import { PointCursor } from "@/components/ui/PointCursor";
 import { Accordion } from "@/components/ui/accordion";
 import { Calendar } from "@/components/ui/calendar";
+import { Calculator } from "@/components/ui/calculator";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
@@ -232,6 +233,45 @@ const CalendarPreview: React.FC = () => {
             Interact with the grid to <span className="text-primary/60 italic underline underline-offset-4">Toggle Highlighting</span> or select dates.
           </p>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const CalculatorPreview: React.FC = () => {
+  const [variant, setVariant] = React.useState<"glass" | "brutal" | "neon">("glass");
+
+  return (
+    <div className="flex flex-col gap-8 items-center justify-center w-full h-full p-4 sm:p-8">
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 p-2 bg-muted/20 rounded-full border border-border/50 backdrop-blur-md relative z-20">
+        <Button 
+          variant={variant === "glass" ? "default" : "ghost"} 
+          size="sm" 
+          onClick={() => setVariant("glass")}
+          className="rounded-full px-6 transition-all"
+        >
+          Glass
+        </Button>
+        <Button 
+          variant={variant === "brutal" ? "default" : "ghost"} 
+          size="sm" 
+          onClick={() => setVariant("brutal")}
+          className="rounded-full px-6 transition-all"
+        >
+          Brutal
+        </Button>
+        <Button 
+          variant={variant === "neon" ? "default" : "ghost"} 
+          size="sm" 
+          onClick={() => setVariant("neon")}
+          className="rounded-full px-6 transition-all"
+        >
+          Neon
+        </Button>
+      </div>
+      
+      <div className="flex items-center justify-center w-full flex-1">
+        <Calculator variant={variant} />
       </div>
     </div>
   );
@@ -644,4 +684,5 @@ export const PreviewRegistry: Record<string, React.FC> = {
     </div>
   ),
   calendar: CalendarPreview,
+  calculator: CalculatorPreview,
 };
