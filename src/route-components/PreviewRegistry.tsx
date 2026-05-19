@@ -33,6 +33,7 @@ import { GithubIcon } from "@/components/ui/github-icon";
 import { LinkedinIcon } from "@/components/ui/linkedin-icon";
 import { PointCursor } from "@/components/ui/PointCursor";
 import { Accordion } from "@/components/ui/accordion";
+import { Calendar } from "@/components/ui/calendar";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
@@ -163,6 +164,74 @@ const ToastPreview: React.FC = () => {
         >
           Show Destructive Toast
         </Button>
+      </div>
+    </div>
+  );
+};
+
+const CalendarPreview: React.FC = () => {
+  const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [highlighted, setHighlighted] = React.useState<Date[]>([]);
+
+  const toggleHighlight = (targetDate: Date) => {
+    setHighlighted((prev) => {
+      const exists = prev.some((d) => d.toDateString() === targetDate.toDateString());
+      if (exists) {
+        return prev.filter((d) => d.toDateString() !== targetDate.toDateString());
+      }
+      return [...prev, targetDate];
+    });
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center w-full h-full p-6 md:p-12 gap-16">
+      <div className="flex flex-col lg:flex-row gap-16 items-start justify-center w-full max-w-5xl">
+        <div className="flex flex-col gap-6 items-center w-full">
+          <div className="flex flex-col items-center gap-1">
+            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-foreground/40">Professional</h3>
+            <p className="text-[10px] text-muted-foreground/30 font-medium italic">Glassmorphism & Depth</p>
+          </div>
+          <Calendar
+            value={date}
+            onChange={setDate}
+            highlightedDates={highlighted}
+            onHighlightToggle={toggleHighlight}
+            variant="modern"
+          />
+        </div>
+        
+        <div className="flex flex-col gap-6 items-center w-full">
+          <div className="flex flex-col items-center gap-1">
+            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-foreground/40">Minimalist</h3>
+            <p className="text-[10px] text-muted-foreground/30 font-medium italic">Pure & Structured</p>
+          </div>
+          <Calendar
+            value={date}
+            onChange={setDate}
+            highlightedDates={highlighted}
+            onHighlightToggle={toggleHighlight}
+            variant="clean"
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-6 items-center w-full max-w-sm">
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-border/40 to-transparent" />
+        <div className="flex flex-col gap-4 items-center">
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setHighlighted([])}
+              className="text-[10px] uppercase tracking-widest font-black h-10 px-6 rounded-full border-primary/20 hover:bg-primary/5 hover:text-primary transition-all"
+            >
+              Clear Highlights
+            </Button>
+          </div>
+          <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.1em] font-bold text-center leading-relaxed">
+            Interact with the grid to <span className="text-primary/60 italic underline underline-offset-4">Toggle Highlighting</span> or select dates.
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -541,7 +610,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
         <div className="grid grid-cols-2 gap-4 w-full max-w-md relative z-10">
           <div className="p-4 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm clickable">
             <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">Custom Box</span>
-            <p className="text-xs mt-1">Has 'clickable' class</p>
+            <p className="text-xs mt-1">Has &apos;clickable&apos; class</p>
           </div>
           <div className="p-4 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm">
             <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">Standard Box</span>
@@ -574,4 +643,5 @@ export const PreviewRegistry: Record<string, React.FC> = {
       />
     </div>
   ),
+  calendar: CalendarPreview,
 };

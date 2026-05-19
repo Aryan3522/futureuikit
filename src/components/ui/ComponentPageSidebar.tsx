@@ -22,6 +22,7 @@ import {
     MessageSquare,
     Compass,
     Newspaper,
+    Layout,
     type LucideIcon,
 } from "lucide-react";
 
@@ -42,6 +43,7 @@ const sidebarItems: SidebarItem[] = [
     { label: "Carousels", to: "/components/carousels", icon: GalleryHorizontal },
     { label: "Navigation", to: "/components/menu", icon: Navigation },
     { label: "Feedback", to: "/components/feedback", icon: MessageSquare },
+    { label: "UI Components", to: "/components/ui", icon: Layout },
 ];
 
 const scrollToTop = () => {
