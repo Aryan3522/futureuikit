@@ -34,6 +34,7 @@ export interface ParticlesProps {
   color?: string;
   vx?: number;
   vy?: number;
+  themeAdaptive?: boolean;
 }
 
 interface Circle {
@@ -56,9 +57,10 @@ export const Particles: React.FC<ParticlesProps> = ({
   ease = 50,
   size = 0.4,
   refresh = false,
-  color = "#ffffff",
+  color,
   vx = 0,
   vy = 0,
+  themeAdaptive = true,
   ...props
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -74,7 +76,35 @@ export const Particles: React.FC<ParticlesProps> = ({
   const initCanvasRef = useRef<() => void>(() => { })
   const animateRef = useRef<() => void>(() => { })
 
-  const rgb = useMemo(() => hexToRgb(color), [color])
+  const [resolvedColor, setResolvedColor] = React.useState(color || "#ffffff");
+
+  useEffect(() => {
+    if (color && !themeAdaptive) {
+      setResolvedColor(color);
+      return;
+    }
+
+    const updateColor = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      setResolvedColor(isDark ? (color || "#ffffff") : (color || "#000000"));
+    };
+
+    updateColor();
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "class") {
+          updateColor();
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, { attributes: true });
+
+    return () => observer.disconnect();
+  }, [color, themeAdaptive]);
+
+  const rgb = useMemo(() => hexToRgb(resolvedColor), [resolvedColor])
 
   const circleParams = (): Circle => {
     const x = Math.floor(Math.random() * canvasSize.current.w)

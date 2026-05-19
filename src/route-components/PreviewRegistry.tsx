@@ -685,4 +685,38 @@ export const PreviewRegistry: Record<string, React.FC> = {
   ),
   calendar: CalendarPreview,
   calculator: CalculatorPreview,
+  "dot-background": () => (
+    <div className="w-full h-full overflow-hidden relative">
+      <DotBackground gap={24} dotSize={2} maskOpacity={0.8}>
+        <div className="flex flex-col items-center justify-center space-y-4 relative z-10 w-full h-full">
+          <h3 className="text-3xl font-bold tracking-tight text-foreground">Content Layer</h3>
+          <p className="text-muted-foreground text-center max-w-sm">
+            Everything inside the component sits perfectly above the dotted pattern.
+          </p>
+        </div>
+      </DotBackground>
+    </div>
+  ),
+  "perspective-grid": () => (
+    <div className="w-full h-full overflow-hidden relative">
+      <PerspectiveGrid gridLineGap={40} fadeRadius={70} />
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-20">
+        <h3 className="text-4xl md:text-6xl font-black tracking-tighter uppercase text-foreground">Cyberspace</h3>
+        <p className="text-muted-foreground text-center max-w-sm mt-4 font-mono text-sm">
+          A fully 3D CSS grid projection that automatically adapts to your theme.
+        </p>
+      </div>
+    </div>
+  ),
+  "particles": () => (
+    <div className="w-full h-full overflow-hidden relative bg-background">
+      <Particles quantity={100} size={1} className="absolute inset-0 z-0" />
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-20">
+        <h3 className="text-4xl md:text-6xl font-light tracking-tight text-foreground">Quantum Space</h3>
+        <p className="text-muted-foreground text-center max-w-sm mt-4">
+          Interactive particle simulation with physics and cursor magnetism.
+        </p>
+      </div>
+    </div>
+  ),
 };
