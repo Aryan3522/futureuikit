@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { notFound, useRouter } from "next/navigation";
 import { componentsList, registry } from "@/data/component-library-data";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { vscDarkPlus, vs } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Check, Copy, Code, ChevronLeft, Moon, Sun, ArrowDown } from "lucide-react";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { cn } from "@/lib/utils";
@@ -24,6 +24,23 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
   const [showCode, setShowCode] = useState(false);
   const [isDark, setIsDark] = useState(true);
   const router = useRouter();
+
+  const activeSyntaxStyle = React.useMemo(() => {
+    const theme = JSON.parse(JSON.stringify(isDark ? vscDarkPlus : vs));
+    
+    // Remove background properties from pre and code blocks to avoid React 
+    // shorthand/non-shorthand conflict errors during theme switching.
+    // The background will be consistently handled by customStyle instead.
+    const keysToClean = ['pre[class*="language-"]', 'code[class*="language-"]'];
+    keysToClean.forEach(key => {
+      if (theme[key]) {
+        delete theme[key].background;
+        delete theme[key].backgroundColor;
+      }
+    });
+
+    return theme;
+  }, [isDark]);
 
   useEffect(() => {
     // Check initial theme
@@ -55,10 +72,10 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
       {slug === "scroll-progress" && <ScrollProgress />}
 
       {/* Top Left Navbar: Back Button */}
-      <div className="absolute top-4 left-4 z-50">
+      <div className="fixed top-4 left-4 z-50">
         <button
           onClick={() => router.back()}
-          className="p-3 rounded-full border border-border/20 bg-background/50 backdrop-blur-md hover:bg-muted/50 transition-colors"
+          className="p-2 rounded-full border border-border/20 bg-background/50 backdrop-blur-md hover:bg-muted/50 transition-colors"
           title="Go Back"
         >
           <ChevronLeft size={20} />
@@ -66,11 +83,11 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
       </div>
 
       {/* Top Right Navbar: Code & Theme Toggles */}
-      <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
         <button
           onClick={() => setShowCode(!showCode)}
           className={cn(
-            "p-3 rounded-full border transition-all duration-300 backdrop-blur-md",
+            "p-2 rounded-full border transition-all duration-300 backdrop-blur-md",
             showCode 
               ? "bg-foreground text-background border-foreground" 
               : "border-border/20 bg-background/50 hover:bg-muted/50"
@@ -81,7 +98,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
         </button>
         <button
           onClick={toggleTheme}
-          className="p-3 rounded-full border border-border/20 bg-background/50 backdrop-blur-md hover:bg-muted/50 transition-colors"
+          className="p-2 rounded-full border border-border/20 bg-background/50 backdrop-blur-md hover:bg-muted/50 transition-colors"
           title="Toggle Theme"
         >
           {isDark ? <Sun size={20} /> : <Moon size={20} />}
@@ -99,29 +116,29 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
               animate={{ width: "100%", opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
               transition={{ type: "spring", bounce: 0, duration: 0.8 }}
-              className="h-full border-r border-border/10 bg-[#0a0a0a] flex flex-col md:max-w-[45vw] overflow-hidden shrink-0"
+              className="h-full border-r border-border/10 bg-background flex flex-col md:max-w-[45vw] overflow-hidden shrink-0"
             >
               <div className="flex-1 overflow-y-auto p-6 md:p-10 pt-24 custom-scrollbar flex flex-col gap-6">
-                <h2 className="text-2xl font-light tracking-tight text-white/90">Manual Source</h2>
+                <h2 className="text-2xl font-light tracking-tight text-foreground/90">Manual Source</h2>
                 
-                <div className="relative group rounded-2xl border border-white/5 bg-black/50 overflow-hidden flex-1 flex flex-col">
+                <div className="relative group rounded-2xl border border-border/20 bg-muted/30 overflow-hidden flex-1 flex flex-col">
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(reusableCode);
                       setCopiedCode(true);
                       setTimeout(() => setCopiedCode(false), 1500);
                     }}
-                    className="absolute top-4 right-4 z-10 p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all opacity-0 group-hover:opacity-100"
+                    className="absolute top-4 right-4 z-10 p-2 rounded-lg bg-foreground/5 hover:bg-foreground/10 text-foreground backdrop-blur-md transition-all opacity-0 group-hover:opacity-100"
                   >
-                    {copiedCode ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
+                    {copiedCode ? <Check size={16} className="text-emerald-600 dark:text-emerald-400" /> : <Copy size={16} />}
                   </button>
                   <SyntaxHighlighter
                     language="javascript"
-                    style={vscDarkPlus as any}
+                    style={activeSyntaxStyle}
                     customStyle={{
                       margin: 0,
                       padding: "2rem",
-                      background: "transparent",
+                      backgroundColor: "transparent",
                       fontSize: "0.85rem",
                       lineHeight: "1.7",
                       flex: 1,
@@ -262,7 +279,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
                   <div className="absolute -left-[37px] md:-left-[53px] top-3 w-3 h-3 rounded-full bg-background border-2 border-primary/40 group-hover:border-primary group-hover:scale-150 transition-all duration-500 z-10" />
                   
                   {/* Step Number Watermark */}
-                  <div className="absolute -top-12 -left-8 md:-left-12 text-7xl md:text-9xl font-black opacity-[0.02] pointer-events-none select-none transition-opacity duration-500 group-hover:opacity-[0.04]">
+                  <div className="absolute -top-12 -left-8 md:-left-12 text-7xl md:text-9xl font-black text-foreground opacity-10 dark:opacity-5 pointer-events-none select-none transition-opacity duration-500 group-hover:opacity-20 dark:group-hover:opacity-10">
                     0{i + 1}
                   </div>
 

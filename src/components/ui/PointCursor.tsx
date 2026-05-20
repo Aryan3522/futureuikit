@@ -61,15 +61,16 @@ export const PointCursor: React.FC<PointCursorProps> = ({
   }, []);
 
   // Use provided colors or fall back to theme-based defaults
-  const activeDotColor = dotColor || (theme === "dark" ? "#ffffff" : "#000000");
-  const activeRingColor = ringColor || (theme === "dark" ? "rgba(255, 255, 255, 0.4)" : "rgba(0, 0, 0, 0.4)");
+  const activeDotColor = dotColor || "hsl(var(--foreground))";
+  const activeRingColor = ringColor || "hsl(var(--foreground) / 0.4)";
 
   // Helper to ensure animatable colors (Framer Motion doesn't like "transparent" keyword)
   const getTransparentColor = (color: string) => {
+    if (color.includes("var(--foreground)")) return "hsl(var(--foreground) / 0)";
     if (color === "#ffffff") return "rgba(255, 255, 255, 0)";
     if (color === "#000000") return "rgba(0, 0, 0, 0)";
     if (color.startsWith("rgba")) return color.replace(/,[\d.]+\)$/, ", 0)");
-    return "rgba(255, 255, 255, 0)";
+    return "hsl(var(--foreground) / 0)";
   };
 
   const transparentDotColor = getTransparentColor(activeDotColor);
@@ -113,6 +114,14 @@ export const PointCursor: React.FC<PointCursorProps> = ({
     mouseX.set(e.clientX);
     mouseY.set(e.clientY);
     setIsVisible(true);
+  };
+
+  const onMouseMoveWrapper = (e: React.MouseEvent) => {
+    if (!isVisible) {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+      setIsVisible(true);
+    }
   };
 
   const onMouseLeave = () => {
@@ -177,6 +186,7 @@ export const PointCursor: React.FC<PointCursorProps> = ({
       ref={containerRef}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      onMouseMove={onMouseMoveWrapper}
       className={cn(
         "relative w-full h-full",
         isVisible && "cursor-none",

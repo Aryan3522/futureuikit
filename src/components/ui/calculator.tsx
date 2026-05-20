@@ -111,9 +111,9 @@ export const Calculator: React.FC<CalculatorProps> = ({
       case "glass":
         return "bg-background/40 backdrop-blur-3xl border border-border/50 rounded-[2.5rem] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] relative overflow-hidden";
       case "brutal":
-        return "bg-zinc-100 dark:bg-zinc-900 border-4 border-black dark:border-white rounded-none relative";
+        return "bg-background border-4 border-foreground rounded-none relative";
       case "neon":
-        return "bg-zinc-950 border border-primary/30 rounded-xl relative overflow-hidden shadow-[inset_0_0_20px_rgba(var(--primary-rgb),0.1)]";
+        return "bg-background border border-primary/30 rounded-xl relative overflow-hidden shadow-[inset_0_0_20px_0] shadow-primary/10";
     }
   };
 
@@ -122,7 +122,7 @@ export const Calculator: React.FC<CalculatorProps> = ({
       case "glass":
         return "text-5xl font-light tracking-tighter text-foreground";
       case "brutal":
-        return "text-5xl font-mono font-black uppercase tracking-tighter text-black dark:text-white border-b-4 border-black dark:border-white mb-2 pb-4";
+        return "text-5xl font-mono font-black uppercase tracking-tighter text-foreground border-b-4 border-foreground mb-2 pb-4";
       case "neon":
         return "text-5xl font-mono font-bold tracking-widest text-primary";
     }
@@ -149,15 +149,15 @@ export const Calculator: React.FC<CalculatorProps> = ({
           return cn(base, "bg-foreground/5 text-foreground hover:bg-foreground/10");
         }
         case "brutal": {
-          const base = "h-14 sm:h-16 rounded-none flex items-center justify-center font-mono font-bold text-xl border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none transition-all";
-          if (type === "equal") return cn(base, "bg-primary text-primary-foreground");
-          if (type === "op") return cn(base, "bg-black text-white dark:bg-white dark:text-black");
-          if (type === "func") return cn(base, "bg-zinc-300 dark:bg-zinc-700 text-black dark:text-white");
-          return cn(base, "bg-white dark:bg-zinc-950 text-black dark:text-white");
+          const base = "h-14 sm:h-16 rounded-none flex items-center justify-center font-mono font-bold text-xl border-2 border-foreground shadow-[3px_3px_0px_0px] shadow-foreground hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none transition-all text-foreground";
+          if (type === "equal") return cn(base, "bg-primary text-primary-foreground border-primary shadow-primary");
+          if (type === "op") return cn(base, "bg-foreground text-background shadow-foreground");
+          if (type === "func") return cn(base, "bg-muted text-foreground shadow-foreground");
+          return cn(base, "bg-card text-foreground shadow-foreground");
         }
         case "neon": {
           const base = "h-14 sm:h-16 rounded-lg flex items-center justify-center font-mono font-medium text-xl border border-primary/20 text-primary hover:bg-primary/10 transition-all duration-300";
-          if (type === "equal") return cn(base, "bg-primary text-primary-foreground shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)] hover:bg-primary hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.8)] border-primary");
+          if (type === "equal") return cn(base, "bg-primary text-primary-foreground shadow-[0_0_15px_0] shadow-primary/50 hover:bg-primary hover:shadow-[0_0_25px_0] hover:shadow-primary/80 border-primary");
           if (type === "op") return cn(base, "border-primary/50 text-primary hover:bg-primary/20");
           if (type === "func") return cn(base, "border-muted-foreground/30 text-muted-foreground hover:bg-muted-foreground/10");
           return base;

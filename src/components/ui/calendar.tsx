@@ -111,7 +111,7 @@ export const Calendar: React.FC<CalendarProps> = ({
   const getVariantStyles = () => {
     switch (variant) {
       case "modern":
-        return "bg-white/5 dark:bg-black/20 backdrop-blur-2xl border-white/10 dark:border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)]";
+        return "bg-background/40 backdrop-blur-2xl border border-border/50 shadow-[0_20px_50px_0] shadow-foreground/10 dark:shadow-foreground/5";
       case "clean":
         return "bg-card border-border/60 shadow-sm";
       case "minimal":

@@ -397,7 +397,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
     </div>
   ),
   "infinite-slider": () => (
-    <div className="w-full h-full overflow-hidden rounded-xl">
+    <div className="w-full h-full overflow-hidden rounded-xl flex flex-col items-center justify-center">
       <CarouselSlider
         slides={[
           {
@@ -555,20 +555,20 @@ export const PreviewRegistry: Record<string, React.FC> = {
     </div>
   ),
   particles: () => (
-    <div className="w-full h-full bg-slate-950">
+    <div className="w-full h-full bg-slate-950 dark:bg-background">
       <Particles quantity={150} color="#3b82f6" />
       <div className="absolute inset-0 z-10 flex items-center justify-center">
-        <h3 className="text-2xl font-bold text-white italic tracking-tighter uppercase pointer-events-none">
+        <h3 className="text-2xl font-bold text-white dark:text-foreground italic tracking-tighter uppercase pointer-events-none">
           Dynamic Particle System
         </h3>
       </div>
     </div>
   ),
   "perspective-grid": () => (
-    <div className="w-full h-full bg-slate-950">
+    <div className="w-full h-full bg-slate-950 dark:bg-background">
       <PerspectiveGrid gridLineGap={50} />
       <div className="absolute inset-0 z-10 flex items-center justify-center">
-        <h3 className="text-2xl font-bold text-white italic tracking-tighter uppercase pointer-events-none">
+        <h3 className="text-2xl font-bold text-white dark:text-foreground italic tracking-tighter uppercase pointer-events-none">
           Perspective Horizon
         </h3>
       </div>
@@ -646,7 +646,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
   ),
   "point-cursor": () => (
     <PointCursor className="rounded-xl overflow-hidden border border-border bg-muted/10">
-      <div className="flex flex-col items-center justify-center w-full h-[300px] sm:h-[400px] p-8 text-center space-y-8 relative overflow-hidden">
+      <div className="flex flex-col items-center justify-center w-full h-full min-h-[300px] sm:min-h-[400px] p-8 text-center space-y-8 relative overflow-hidden">
         {/* Decorative background to make it feel like a "playground" */}
         <div className="absolute inset-0 opacity-5 pointer-events-none">
           <DotBackground dotColor="currentColor" gap={20} />
