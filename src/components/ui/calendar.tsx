@@ -1,3 +1,9 @@
+/**
+ * @registry-slug calendar
+ * @registry-name Calendar
+ * @registry-dependency framer-motion
+ * @registry-dependency lucide-react
+ */
 "use client";
 
 import React, { useState, useMemo } from "react";

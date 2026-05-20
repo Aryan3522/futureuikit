@@ -250,10 +250,16 @@ export const Particles: React.FC<ParticlesProps> = ({
       }
       resizeTimeout.current = setTimeout(() => {
         initCanvasRef.current()
-      }, 200)
+      }, 50)
     }
 
-    window.addEventListener("resize", handleResize)
+    const resizeObserver = new ResizeObserver(() => {
+      handleResize()
+    })
+
+    if (canvasContainerRef.current) {
+      resizeObserver.observe(canvasContainerRef.current)
+    }
 
     const handleMouseMove = (event: MouseEvent) => {
       if (!canvasRef.current) return;
@@ -285,7 +291,7 @@ export const Particles: React.FC<ParticlesProps> = ({
       if (resizeTimeout.current) {
         clearTimeout(resizeTimeout.current)
       }
-      window.removeEventListener("resize", handleResize)
+      resizeObserver.disconnect()
       window.removeEventListener("mousemove", handleMouseMove)
     };
   }, [color, vx, vy, quantity, staticity, ease, size])
