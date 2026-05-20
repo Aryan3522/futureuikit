@@ -1,149 +1,210 @@
-# Future UI - Modern Reusable Components
+# Future UI — Motion-first Component Library for Next.js
 
-Future UI is an open-source library of high-performance, visually stunning, and reusable UI components specifically designed for Next.js applications. Built with **React 19**, **Next.js 16**, and **Tailwind CSS 4**, it provides a foundation for building modern, futuristic web interfaces with ease.
+[![npm version](https://img.shields.io/npm/v/futureuikit?color=%236366f1&label=npm&style=flat-square)](https://www.npmjs.com/package/futureuikit)
+[![npm downloads](https://img.shields.io/npm/dm/futureuikit?color=%236366f1&style=flat-square)](https://www.npmjs.com/package/futureuikit)
+[![license](https://img.shields.io/npm/l/futureuikit?color=%236366f1&style=flat-square)](https://github.com/Aryan3522/future-ui/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/Aryan3522/future-ui?color=%236366f1&style=flat-square)](https://github.com/Aryan3522/future-ui/stargazers)
 
-![Future UI Banner](public/next.svg)
+**Future UI** is an open-source CLI-powered component library built specifically for **Next.js 16** and **React 19**. Each component is crafted with **Framer Motion**, **Tailwind CSS 4**, and **Radix UI** — delivering cinematic animations, glassmorphism, and a seamless dark/light theme system out of the box.
 
-## 🚀 Features
-
-- **Modern Tech Stack**: Leveraging React 19 and Next.js 16 (App Router).
-- **Tailwind CSS 4**: Optimized styling with the latest Tailwind features.
-- **Glassmorphism & Glow Effects**: Built-in support for futuristic aesthetics.
-- **Interactive Previews**: Live code and preview playground for every component.
-- **Dark Mode First**: Seamless theme switching with persistent storage.
-- **Performance Optimized**: Minimal bundle size and fast load times.
-- **Open Source**: Built by the community, for the community.
-
-## 🛠 Tech Stack
-
-- **Framework**: [Next.js 16](https://nextjs.org/)
-- **Library**: [React 19](https://react.dev/)
-- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Typography**: Inter & Poppins
-
-## 💻 Getting Started
-
-### Prerequisites
-
-- **Node.js**: 18.x or later
-- **npm**: 9.x or later (or yarn/pnpm)
-
-### Local Setup
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/Aryan3522/future-ui.git
-   cd future-ui
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Run the development server**:
-   ```bash
-   npm run dev
-   ```
-
-4. **Access the library**:
-   Open [http://localhost:3000](http://localhost:3000) in your browser to explore the components.
-
-## CLI Usage
-
-After the package is published to npm, users can install a component with:
-
-```bash
-npx futureuikit add boxy-bounce
-```
-
-The CLI downloads component files from the registry endpoint configured in `package.json`:
-
-```json
-{
-  "config": {
-    "registryUrl": "https://futureuikit.vercel.app/api/registry"
-  }
-}
-```
-
-If your production deployment uses a different domain, update `config.registryUrl` before publishing to npm. You can also override the registry during testing:
-
-```bash
-npx futureuikit add boxy-bounce --registry https://your-site.vercel.app/api/registry
-```
-
-## Release Checklist
-
-1. Deploy the Next.js app.
-2. Verify the registry response:
-   ```bash
-   curl https://futureuikit.vercel.app/api/registry/boxy-bounce
-   ```
-3. Verify the npm package exposes the CLI:
-   ```bash
-   npm pack --dry-run
-   npm view futureuikit bin
-   ```
-4. Publish the new version:
-   ```bash
-   npm publish
-   ```
-5. Validate from npm:
-   ```bash
-   npx futureuikit@latest add boxy-bounce
-   ```
-
-## ⚙️ Configuration
-
-Create a `.env` file in the root directory and add the following variables:
-
-```env
-# Project Configuration
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-FUTURE_UI_REGISTRY_URL=http://localhost:3000/api/registry
-NEXT_PUBLIC_GITHUB_REPO=https://github.com/Aryan3522/future-ui
-NEXT_PUBLIC_GITHUB_PROFILE=https://github.com/Aryan3522
-NEXT_PUBLIC_LINKEDIN_PROFILE=https://www.linkedin.com/in/aryan-hooda-code/
-```
-
-## 🤝 Contributing
-
-Future UI is open-source and we love contributions! Whether you're fixing a bug, adding a new component, or improving documentation, your help is welcome.
-
-### How to Collaborate:
-
-1. **Fork the Project**: Click the 'Fork' button at the top right of this page.
-2. **Create a Branch**: 
-   ```bash
-   git checkout -b feature/amazing-component
-   ```
-3. **Commit your Changes**: 
-   ```bash
-   git commit -m "feat: Add a new GlassyCard component"
-   ```
-4. **Push to the Branch**: 
-   ```bash
-   git push origin feature/amazing-component
-   ```
-5. **Open a Pull Request**: Go to the original repository and click 'New Pull Request'.
-
-### Contribution Guidelines:
-- Ensure your code follows the existing style and conventions.
-- Add comments where necessary.
-- Update the documentation/README if you're adding new features.
-- Test your changes thoroughly before submitting.
-
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🌟 Support
-
-If you find this project helpful, give it a ⭐ on [GitHub](https://github.com/Aryan3522/future-ui)!
+> **Live Demo & Docs →** [futureuikit.vercel.app](https://futureuikit.vercel.app)
 
 ---
 
-Built with ❤️ by [Aryan Hooda](https://github.com/Aryan3522) and the Open Source Community.
+## ✨ Why Future UI?
+
+- 🎬 **Motion-first** — Every component is animated with Framer Motion physics springs
+- 🌗 **Theme-adaptive** — Full dark/light mode support using CSS variables
+- ⚡ **CLI-powered** — Install individual components directly into your codebase (like shadcn/ui)
+- 🔒 **Zero lock-in** — You own the code. No runtime dependency on Future UI after install
+- 🧩 **29+ components** — Buttons, loaders, cards, particles, calendars, error pages, and more
+- 🏗️ **App Router ready** — Built for Next.js 16 App Router
+
+---
+
+## 🚀 Quick Start
+
+Install any component directly into your project with one command:
+
+```bash
+npx futureuikit add <component-slug>
+```
+
+### Examples
+
+```bash
+# Add a cinematic error page
+npx futureuikit add cinematic-error
+
+# Add a particle background
+npx futureuikit add particles
+
+# Add a glass calculator
+npx futureuikit add calculator
+
+# Add an expanding flex card
+npx futureuikit add expanding-card
+```
+
+The CLI will:
+1. **Detect** your project structure (`src/` or root, TypeScript or JavaScript)
+2. **Create** `lib/utils.ts` with the `cn` helper if needed
+3. **Install** all required dependencies automatically
+4. **Copy** the component file into `components/ui/`
+
+---
+
+## 📦 Available Components
+
+| Slug | Component | Category |
+|------|-----------|----------|
+| `primary` | Primary Button | Form |
+| `glowy` | Glowy Button | Form |
+| `calculator` | Calculator | Utility |
+| `calendar` | Calendar | Utility |
+| `cinematic-error` | Cinematic Error Page | Feedback |
+| `error-page` | Neon Error Page | Feedback |
+| `particles` | Particle Background | Background |
+| `dot-background` | Dot Background | Background |
+| `perspective-grid` | Perspective Grid | Background |
+| `infinite-slider` | Carousel Slider | Display |
+| `expanding-card` | Expanding Flex Card | Display |
+| `basic-card` | Basic Card | Display |
+| `accordion` | Accordion | Layout |
+| `search-input` | Search Input | Form |
+| `toast` | Toast Notification | Feedback |
+| `scroll-progress` | Scroll Progress Bar | UI |
+| `point-cursor` | Custom Cursor | UI |
+| `basic` | Basic Loader | Loader |
+| `boxy-bounce` | Bouncy Loader | Loader |
+| `boxy-rotate` | Rotating Loader | Loader |
+| `boxy-shift` | Boxy Loader | Loader |
+| `menu` | Circle Navigation Menu | Navigation |
+| `badge` | Badge | Display |
+| `button` | Base Button | Form |
+| `card` | Card | Layout |
+| `sidebar-button` | Sidebar Button | Navigation |
+| `text-system` | Typography System | Typography |
+| `github-icon` | GitHub Icon | Icon |
+| `linkedin-icon` | LinkedIn Icon | Icon |
+
+> Browse live previews and copy-paste code at **[futureuikit.vercel.app/components](https://futureuikit.vercel.app/components)**
+
+---
+
+## 🛠 Prerequisites
+
+Your project should already have:
+- **Node.js** `>=18.18.0`
+- **Next.js** `>=15` (with App Router)
+- **React** `>=18`
+- **Tailwind CSS** `>=4`
+- **TypeScript** (optional, but recommended)
+
+Components that use animations additionally require:
+```bash
+npm install framer-motion lucide-react
+```
+
+---
+
+## 💻 Local Development
+
+To run the Future UI website locally:
+
+```bash
+git clone https://github.com/Aryan3522/future-ui.git
+cd future-ui
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to explore all components.
+
+---
+
+## 🔧 CLI Reference
+
+```
+Usage:
+  npx futureuikit add <component-slug> [options]
+
+Options:
+  --force             Overwrite existing component files
+  --registry <url>    Use a custom component registry URL
+  --version, -v       Print CLI version
+  --help, -h          Show help
+
+Environment Variables:
+  FUTURE_UI_REGISTRY_URL    Override the default registry base URL
+```
+
+### Custom Registry
+
+You can point the CLI to a self-hosted registry:
+
+```bash
+npx futureuikit add particles --registry https://your-domain.com/api/registry
+```
+
+---
+
+## 🔄 Release Workflow
+
+```bash
+# 1. Sync component files to registry
+npm run sync
+
+# 2. Deploy the Next.js app (Vercel auto-deploys on push)
+git push
+
+# 3. Verify a registry endpoint
+curl https://futureuikit.vercel.app/api/registry/particles
+
+# 4. Bump version and publish to npm
+npm version patch   # or minor / major
+npm publish
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are what make the open-source community great. Any contribution you make is **hugely appreciated**.
+
+1. **Fork** the project
+2. **Create** a feature branch: `git checkout -b feat/my-new-component`
+3. **Add** your component to `src/components/ui/` with registry annotations
+4. **Sync** the registry: `npm run sync`
+5. **Commit**: `git commit -m "feat: add MyComponent"`
+6. **Push**: `git push origin feat/my-new-component`
+7. **Open a Pull Request**
+
+### Adding a New Component
+
+```tsx
+/**
+ * @registry-slug my-component
+ * @registry-name My Component
+ * @registry-dependency framer-motion
+ */
+"use client";
+
+// ... your component code
+```
+
+Then run `npm run sync` — the component is automatically added to the registry.
+
+---
+
+## 📜 License
+
+MIT © [Aryan Hooda](https://github.com/Aryan3522)
+
+---
+
+## 🌟 Support
+
+If Future UI helped you build something cool, please give it a ⭐ on [GitHub](https://github.com/Aryan3522/future-ui) — it helps more developers discover the project!
+
+Built with ❤️ by [Aryan Hooda](https://github.com/Aryan3522)

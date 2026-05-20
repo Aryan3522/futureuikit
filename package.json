@@ -1,7 +1,7 @@
 {
   "name": "futureuikit",
   "version": "0.2.4",
-  "description": "Future UI component registry and installer CLI for Next.js projects.",
+  "description": "A modern CLI-powered UI component library for Next.js — powered by Framer Motion, Tailwind CSS 4, and React 19.",
   "private": false,
   "license": "MIT",
   "homepage": "https://futureuikit.vercel.app",
@@ -12,6 +12,33 @@
   "bugs": {
     "url": "https://github.com/Aryan3522/future-ui/issues"
   },
+  "keywords": [
+    "ui",
+    "components",
+    "component-library",
+    "nextjs",
+    "next.js",
+    "react",
+    "react19",
+    "tailwindcss",
+    "tailwind",
+    "tailwind-css-4",
+    "framer-motion",
+    "animations",
+    "motion",
+    "design-system",
+    "cli",
+    "glassmorphism",
+    "dark-mode",
+    "dark-theme",
+    "shadcn",
+    "radix-ui",
+    "lucide",
+    "typescript",
+    "app-router",
+    "futureuikit",
+    "future-ui"
+  ],
   "bin": {
     "futureuikit": "bin/cli.mjs"
   },
@@ -37,30 +64,48 @@
     "prepack": "node ./bin/cli.mjs --version",
     "sync": "node scripts/sync-registry.mjs"
   },
-  "dependencies": {
-    "@radix-ui/react-slot": "^1.2.4",
-    "@radix-ui/react-toast": "^1.2.15",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "framer-motion": "^12.38.0",
-    "graphology": "^0.26.0",
-    "lucide-react": "^1.14.0",
-    "next": "16.2.4",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "react-force-graph-2d": "^1.29.1",
-    "react-syntax-highlighter": "^16.1.1",
-    "tailwind-merge": "^3.5.0"
+  "peerDependencies": {
+    "clsx": ">=2.0.0",
+    "framer-motion": ">=10.0.0",
+    "lucide-react": ">=0.300.0",
+    "tailwind-merge": ">=2.0.0"
+  },
+  "peerDependenciesMeta": {
+    "framer-motion": {
+      "optional": true
+    },
+    "lucide-react": {
+      "optional": true
+    },
+    "clsx": {
+      "optional": false
+    },
+    "tailwind-merge": {
+      "optional": false
+    }
   },
   "devDependencies": {
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-toast": "^1.2.15",
     "@tailwindcss/postcss": "^4",
     "@types/node": "25.6.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "eslint": "^9",
-    "eslint-config-next": "16.2.4",
+    "eslint-config-next": "16.2.6",
+    "framer-motion": "^12.38.0",
     "graphify-ts": "^0.2.0",
+    "graphology": "^0.26.0",
+    "lucide-react": "^1.14.0",
+    "next": "16.2.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-force-graph-2d": "^1.29.1",
+    "react-syntax-highlighter": "^16.1.1",
+    "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4",
     "typescript": "^6.0.3"
   }
