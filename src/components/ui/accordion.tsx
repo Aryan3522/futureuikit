@@ -1,3 +1,9 @@
+/**
+ * @registry-slug accordion
+ * @registry-name Accordion
+ * @registry-dependency framer-motion
+ * @registry-dependency lucide-react
+ */
 "use client";
 
 import React, { useState } from "react";

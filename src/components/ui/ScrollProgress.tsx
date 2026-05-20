@@ -7,6 +7,11 @@
  * 
  * @returns {JSX.Element} A motion-enhanced progress bar.
  */
+/**
+ * @registry-slug scroll-progress
+ * @registry-name Scroll Progress
+ * @registry-dependency framer-motion
+ */
 "use client"
 
 import { motion, useScroll, useSpring } from "framer-motion"

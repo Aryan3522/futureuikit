@@ -1,3 +1,9 @@
+/**
+ * @registry-slug calculator
+ * @registry-name Calculator
+ * @registry-dependency framer-motion
+ * @registry-dependency lucide-react
+ */
 "use client";
 
 import React, { useState } from "react";
