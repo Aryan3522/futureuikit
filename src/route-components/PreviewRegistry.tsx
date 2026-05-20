@@ -12,6 +12,7 @@ import { DotBackground } from "@/components/ui/dot-background";
 import { CarouselSlider } from "@/components/ui/carousel-slider";
 import { NavMenu } from "@/components/ui/nav-menu";
 import { ErrorPage } from "@/components/ui/error-page";
+import { CinematicError } from "@/components/ui/cinematic-error";
 import { ExpandingFlexCard } from "@/components/ui/expanding-flex-card";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
@@ -762,4 +763,9 @@ export const PreviewRegistry: Record<string, React.FC> = {
   //     </div>
   //   </div>
   // ),
+  "cinematic-error": () => (
+    <div className="w-full h-full rounded-2xl overflow-hidden border border-border/50">
+      <CinematicError />
+    </div>
+  ),
 };

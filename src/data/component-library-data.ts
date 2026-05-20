@@ -754,6 +754,33 @@ export const componentsList: ComponentItem[] = [
       "Integration: Use it as a standalone utility component in any part of your application.",
     ],
   },
+  {
+    id: 29,
+    title: "Cinematic Error",
+    type: "Components",
+    slug: "cinematic-error",
+    category: "feedback",
+    description:
+      "A stunning, cinematic, and immersive error page designed for ultra-modern web experiences. It features dynamic mouse-tracked 3D perspective tilts, organic glowing spotlights, glassy typography, and a subtle cinematic grit overlay. It's built entirely with Framer Motion to deliver a premium, fluid aesthetic that captures attention immediately.",
+    details: [
+      "Dynamic 3D parallax effects tracking the user's cursor.",
+      "Cinematic glowing spotlight background that shifts fluidly.",
+      "Glassy, ultra-large text typography with screen-blend glowing reflections.",
+      "Subtle noise and grit overlay for a premium cinematic texture.",
+      "Beautifully animated 'Return Home' button with shimmer hover effects.",
+      "Built with Framer Motion for highly optimized, smooth physical springs.",
+      "Fully responsive and theme-adaptive (Light & Dark modes).",
+    ],
+    codes: {
+      next: 'import { CinematicError } from "@/components/ui/cinematic-error";\n\nexport default function NotFoundPage() {\n  return (\n    <CinematicError \n      errorCode="404" \n      title="Lost in the void"\n      description="The reality you are looking for has collapsed."\n      onBack={() => console.log("Go back")}\n    />\n  );\n}',
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add cinematic-error' to download the component and dependencies.",
+      "Import: 'import { CinematicError } from \"@/components/ui/cinematic-error\";'",
+      "Deployment: Use this component inside your Next.js 'not-found.tsx' or 'error.tsx' files for a gorgeous fallback.",
+      "Props: Customize the message via 'errorCode', 'title', and 'description' props.",
+    ],
+  },
 ];
 
 export { registry };
