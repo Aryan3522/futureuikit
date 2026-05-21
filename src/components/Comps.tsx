@@ -19,12 +19,13 @@ const Comps: React.FC = () => {
     []
   );
 
-  const filteredComponents = useMemo(() => 
-    selectedCategory === "All"
-      ? componentsList
-      : componentsList.filter((item) => item.type === selectedCategory),
-    [selectedCategory]
-  );
+  const filteredComponents = useMemo(() => {
+    const list = selectedCategory === "All"
+      ? [...componentsList]
+      : componentsList.filter((item) => item.type === selectedCategory);
+      
+    return list.sort((a, b) => a.title.localeCompare(b.title));
+  }, [selectedCategory]);
 
   // Split components into 3 lists for the 3-column layout
   const componentColumns = useMemo(() => {
@@ -66,9 +67,9 @@ const Comps: React.FC = () => {
 
             <div className="space-y-1">
               <h4 className="text-[10px] uppercase tracking-widest font-black text-foreground/40 mb-3 px-2">Categories</h4>
-              {categories.map((cat) => (
+              {categories.map((cat, idx) => (
                 <SidebarButton 
-                  key={cat}
+                  key={`${cat}-${idx}`}
                   label={cat} 
                   isCategory
                   isActive={activeTab === "components" && selectedCategory === cat} 
