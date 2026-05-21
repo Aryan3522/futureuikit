@@ -781,6 +781,31 @@ export const componentsList: ComponentItem[] = [
       "Props: Customize the message via 'errorCode', 'title', and 'description' props.",
     ],
   },
+  {
+    id: 99,
+    title: "Nexus Card",
+    type: "Cards",
+    slug: "nexus-card",
+    category: "ui",
+    description: "A completely unique, ultra-premium, and modernistic card component. Features reactive 3D tilt, a dynamic mouse-tracking spotlight glow, tactile glassmorphism with subtle noise texture, and an animated ambient border.",
+    details: [
+      "Built with Framer Motion for advanced 3D physics and parallax tilt.",
+      "Reactive spotlight that smoothly tracks the user's mouse position.",
+      "Tactile glassmorphism with a subtle SVG noise overlay for a premium 'frosted glass' feel.",
+      "Animated ambient border that acts as a continuous light source tracing the card's edge.",
+      "Highly reusable with toggleable features and fully customizable colors.",
+    ],
+    codes: {
+      next: 'import { NexusCard } from "@/components/ui/nexus-card";\n\nexport default function Example() {\n  return (\n    <NexusCard className="w-80 h-96">\n      <h2 className="text-2xl font-bold text-foreground mb-2">Nexus Design</h2>\n      <p className="text-muted-foreground">Hover over this card to experience the premium tactile feel, reactive spotlight, and 3D parallax tilt.</p>\n    </NexusCard>\n  );\n}',
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add nexus-card'.",
+      "Import: 'import { NexusCard } from \"@/components/ui/nexus-card\";'",
+      "Interactivity: Tilt and spotlight effects are enabled by default but can be disabled via 'tilt={false}' and 'spotlight={false}'.",
+      "Aesthetics: Toggle the texture and ambient light via 'noise={false}' and 'animatedBorder={false}'.",
+      "Customization: Adjust 'spotlightColor', 'borderGradient', and 'containerColor' to match your brand's unique palette.",
+    ],
+  }
 ];
 
 export { registry };

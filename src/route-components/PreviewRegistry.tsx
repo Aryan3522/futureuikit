@@ -14,6 +14,7 @@ import { NavMenu } from "@/components/ui/nav-menu";
 import { ErrorPage } from "@/components/ui/error-page";
 import { CinematicError } from "@/components/ui/cinematic-error";
 import { ExpandingFlexCard } from "@/components/ui/expanding-flex-card";
+import { NexusCard } from "@/components/ui/nexus-card";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { Button } from "@/components/ui/button";
@@ -766,6 +767,14 @@ export const PreviewRegistry: Record<string, React.FC> = {
   "cinematic-error": () => (
     <div className="w-full h-full rounded-2xl overflow-hidden border border-border/50">
       <CinematicError />
+    </div>
+  ),
+  "nexus-card": () => (
+    <div className="flex items-center justify-center w-full h-full p-4 sm:p-8">
+      <NexusCard className="w-80 h-96">
+        <h2 className="text-2xl font-bold text-foreground mb-2">Nexus Design</h2>
+        <p className="text-muted-foreground">Hover over this card to experience the premium tactile feel, reactive spotlight, and 3D parallax tilt.</p>
+      </NexusCard>
     </div>
   ),
 };

@@ -45,7 +45,9 @@ export default function RootLayout({
       className={`${inter.variable} ${poppins.variable}`}
     >
       <head>
-        <script
+        <Script
+          id="dark-mode"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
