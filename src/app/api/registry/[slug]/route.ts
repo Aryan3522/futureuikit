@@ -3,6 +3,12 @@ import { registry } from "@/data/component-library-data";
 
 export const dynamic = "force-static";
 
+export function generateStaticParams() {
+  return Object.keys(registry).map((slug) => ({
+    slug,
+  }));
+}
+
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ slug: string }> }

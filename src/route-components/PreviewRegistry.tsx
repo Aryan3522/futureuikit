@@ -37,6 +37,7 @@ import { PointCursor } from "@/components/ui/PointCursor";
 import { Accordion } from "@/components/ui/accordion";
 import { Calendar } from "@/components/ui/calendar";
 import { Calculator } from "@/components/ui/calculator";
+import { ScrollTextReveal } from "@/components/ui/scroll-text-reveal";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
@@ -777,4 +778,27 @@ export const PreviewRegistry: Record<string, React.FC> = {
       </NexusCard>
     </div>
   ),
+  "scroll-text-reveal": () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const scrollContainer = React.useRef<HTMLDivElement>(null);
+    return (
+      <div ref={scrollContainer} className="w-full h-full overflow-y-auto">
+        <div className="min-h-[150vh] flex flex-col items-center">
+          <div className="h-[70vh] flex items-center justify-center text-muted-foreground w-full">
+            <span className="animate-pulse">Scroll down to reveal text ↓</span>
+          </div>
+          <div className="py-20 px-8 max-w-4xl flex items-center justify-center">
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-center">
+              <ScrollTextReveal container={scrollContainer}>
+                The future of UI design is here. Experience seamless, highly optimized animations that elevate your application's feel.
+              </ScrollTextReveal>
+            </h2>
+          </div>
+          <div className="h-[60vh] flex items-center justify-center text-muted-foreground w-full">
+            <span className="animate-pulse">Scroll up to reverse ↑</span>
+          </div>
+        </div>
+      </div>
+    );
+  },
 };

@@ -805,6 +805,30 @@ export const componentsList: ComponentItem[] = [
       "Aesthetics: Toggle the texture and ambient light via 'noise={false}' and 'animatedBorder={false}'.",
       "Customization: Adjust 'spotlightColor', 'borderGradient', and 'containerColor' to match your brand's unique palette.",
     ],
+  },
+  {
+    id: 100,
+    title: "Scroll Text Reveal",
+    type: "Typography",
+    slug: "scroll-text-reveal",
+    category: "ui",
+    description:
+      "A smooth text animation component that reveals characters one by one as they scroll into view. The animation seamlessly reverses when scrolling away, creating a highly engaging reading experience.",
+    details: [
+      "Powered by Framer Motion's useScroll and useTransform hooks.",
+      "Automatically splits text into characters and ties their opacity, blur, and position to scroll progress.",
+      "Reversible animation: elements scrub forward and backward based on scroll position.",
+      "Easy to use: simply wrap any text inside the component.",
+    ],
+    codes: {
+      next: 'import { ScrollTextReveal } from "@/components/ui/scroll-text-reveal";\n\nexport default function Example() {\n  return (\n    <div className="w-full flex flex-col items-center">\n      <div className="h-[60vh] flex items-center justify-center text-muted-foreground border-b border-border/50 w-full">\n        <span className="animate-pulse">Scroll down to reveal text ↓</span>\n      </div>\n      <div className="py-32 px-4 max-w-3xl min-h-[80vh] flex items-center justify-center">\n        <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-center">\n          <ScrollTextReveal>\n            The future of UI design is here. Experience seamless, highly optimized animations that elevate your application&apos;s feel.\n          </ScrollTextReveal>\n        </h2>\n      </div>\n      <div className="h-[60vh] flex items-center justify-center text-muted-foreground border-t border-border/50 w-full">\n        <span className="animate-pulse">Scroll up to see it reverse ↑</span>\n      </div>\n    </div>\n  );\n}',
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add scroll-text-reveal'.",
+      "Import: 'import { ScrollTextReveal } from \"@/components/ui/scroll-text-reveal\";'",
+      "Usage: Wrap any plain text string inside <ScrollTextReveal>.",
+      "Customization: The animation range is based on its container entering the viewport.",
+    ],
   }
 ];
 
