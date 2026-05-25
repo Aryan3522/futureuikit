@@ -851,6 +851,35 @@ export const componentsList: ComponentItem[] = [
       "Import: 'import { CursorGlowButton } from \"@/components/ui/cursor-glow-button\";'",
       "Customization: Adjust the 'glowColor', 'glowSize', and 'glowOpacity' props to match your theme.",
     ],
+  },
+  {
+    id: 102,
+    title: "Dynamic Form System",
+    type: "Form",
+    slug: "dynamic-form",
+    category: "form",
+    description:
+      "A production-ready, enterprise-grade form system for React + TypeScript. Powered by React Hook Form and Zod, it supports dynamic field generation from configuration objects, automatic validation, complex conditional rendering, multi-step wizards, custom field injection, auto-save state, and multiple premium SaaS design variants.",
+    details: [
+      "Dynamic field generation: Render standard inputs, password eyes, OTP grids, autocomplete comboboxes, rich file uploads, multi-selects, switches, and custom fields from simple configurations.",
+      "Zod Schema Builder: Automatically constructs an optimized Zod validation schema on the fly, or allows developers to supply their own Zod schema.",
+      "Premium Styling Variants: Out-of-the-box support for seven aesthetic variants (modern, minimal, glass, outline, elevated, dark, compact) using a strict 4px spacing system.",
+      "Asynchronous API Submission: Built-in endpoint integration with automated loading triggers, success alerts, and error feedback callbacks.",
+      "Step Stepper / Wizard Flow: Group fields into multi-step form sequences with independent validations per step.",
+      "Autosave Feature: Option to persist form progress securely in localStorage with custom debounced timing.",
+      "Conditional Fields: Clean visibility triggers that evaluate dependencies based on live form values."
+    ],
+    codes: {
+      next: 'import { DynamicForm, FieldConfig } from "@/components/ui/dynamic-form";\nimport { Mail, Lock, User } from "lucide-react";\n\nconst fields: FieldConfig[] = [\n  {\n    name: "name",\n    type: "text",\n    label: "Full Name",\n    placeholder: "Enter your full name",\n    required: true,\n    icon: User,\n    colSpan: 1\n  },\n  {\n    name: "email",\n    type: "email",\n    label: "Email Address",\n    placeholder: "you@example.com",\n    required: true,\n    icon: Mail,\n    colSpan: 1\n  },\n  {\n    name: "password",\n    type: "password",\n    label: "Password",\n    placeholder: "••••••••",\n    required: true,\n    icon: Lock,\n    colSpan: 1\n  },\n  {\n    name: "role",\n    type: "select",\n    label: "Role",\n    required: true,\n    options: [\n      { label: "Developer", value: "dev" },\n      { label: "Designer", value: "design" }\n    ],\n    colSpan: 1\n  },\n  {\n    name: "notifications",\n    type: "switch",\n    label: "Enable push notifications",\n    defaultValue: true,\n    colSpan: "full"\n  }\n];\n\nexport default function Example() {\n  return (\n    <div className="max-w-md w-full mx-auto p-6 bg-card border rounded-2xl shadow-sm">\n      <h2 className="text-xl font-bold mb-4">Create Account</h2>\n      <DynamicForm\n        variant="modern"\n        fields={fields}\n        submitButtonText="Sign Up"\n        onSubmit={(data) => console.log("Submitted:", data)}\n      />\n    </div>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add dynamic-form' to add the form system component and its package dependencies.",
+      "Import: 'import { DynamicForm, FieldConfig } from \"@/components/ui/dynamic-form\";'",
+      "Fields Config: Define an array of 'FieldConfig' objects specifying 'name', 'type', 'label', 'required', and validation constraints.",
+      "Variants: Toggle between 'minimal', 'modern', 'glass', 'outline', 'elevated', 'dark', and 'compact' to match your page aesthetics.",
+      "Steppers & Wizards: Group fields into multi-step paths by passing the 'steps' prop with grouped fieldNames.",
+      "API Callbacks: Configure direct form submissions by setting the 'api' prop with an endpoint URL, and handle responses via 'onSuccess' and 'onError' callbacks."
+    ]
   }
 ];
 

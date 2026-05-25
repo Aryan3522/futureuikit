@@ -37,10 +37,13 @@ import { PointCursor } from "@/components/ui/PointCursor";
 import { Accordion } from "@/components/ui/accordion";
 import { Calendar } from "@/components/ui/calendar";
 import { Calculator } from "@/components/ui/calculator";
+import { DynamicForm, FieldConfig } from "@/components/ui/dynamic-form";
+import { Sparkles, Terminal, Mail, Lock, User, Globe, Phone as PhoneIcon, Check as CheckIcon, X as XIcon, AlertCircle as AlertCircleIcon } from "lucide-react";
 import { ScrollTextReveal } from "@/components/ui/scroll-text-reveal";
 import { CursorGlowButton } from "@/components/ui/cursor-glow-button";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Typography helper components for the preview
 const headingVariants = cva("font-bold tracking-tight text-foreground", {
@@ -294,6 +297,309 @@ const CalculatorPreview: React.FC = () => {
 
       <div className="flex items-center justify-center w-full flex-1">
         <Calculator variant={variant} />
+      </div>
+    </div>
+  );
+};
+
+const DynamicFormPreview: React.FC = () => {
+  const [activeDemo, setActiveDemo] = React.useState<"contact" | "wizard" | "login">("contact");
+  const [submittedData, setSubmittedData] = React.useState<any>(null);
+
+  const contactFields: FieldConfig[] = [
+    {
+      name: "name",
+      type: "text",
+      label: "Full Name",
+      placeholder: "e.g. John Doe",
+      required: true,
+      icon: User,
+      colSpan: 1
+    },
+    {
+      name: "email",
+      type: "email",
+      label: "Email Address",
+      placeholder: "e.g. john@company.com",
+      required: true,
+      icon: Mail,
+      colSpan: 1
+    },
+    {
+      name: "subject",
+      type: "autocomplete",
+      label: "Inquiry Subject",
+      placeholder: "Select or search...",
+      required: true,
+      options: [
+        { label: "Product Integration Support", value: "integration" },
+        { label: "Enterprise Licensing & Sales", value: "sales" },
+        { label: "Partnership Opportunities", value: "partnerships" },
+        { label: "Other inquiries", value: "other" }
+      ],
+      colSpan: 2
+    },
+    {
+      name: "otherSubjectDetails",
+      type: "text",
+      label: "Inquiry Details",
+      placeholder: "Provide more details on other subject",
+      required: true,
+      condition: (values) => values.subject === "other",
+      colSpan: 2
+    },
+    {
+      name: "message",
+      type: "textarea",
+      label: "Detailed Description",
+      placeholder: "How can we help your business succeed?",
+      required: true,
+      colSpan: 2
+    },
+    {
+      name: "interests",
+      type: "multi-select",
+      label: "Areas of Interest",
+      placeholder: "Choose subjects...",
+      options: [
+        { label: "Next.js 16 Framework", value: "nextjs" },
+        { label: "React 19 Server Components", value: "react19" },
+        { label: "Tailwind CSS v4.0", value: "tailwind4" },
+        { label: "Framer Motion Physics", value: "framer" }
+      ],
+      colSpan: 2
+    },
+    {
+      name: "newsletter",
+      type: "switch",
+      label: "Subscribe to our developer newsletters",
+      defaultValue: true,
+      colSpan: 2
+    }
+  ];
+
+  const wizardFields: FieldConfig[] = [
+    {
+      name: "username",
+      type: "text",
+      label: "Desired Username",
+      placeholder: "e.g. johndoe_dev",
+      required: true,
+      icon: User,
+      colSpan: 2
+    },
+    {
+      name: "companyUrl",
+      type: "url",
+      label: "Company Website URL",
+      placeholder: "e.g. https://google.com",
+      required: true,
+      icon: Globe,
+      colSpan: 2
+    },
+    {
+      name: "wizardEmail",
+      type: "email",
+      label: "Primary Email",
+      placeholder: "e.g. dev@company.com",
+      required: true,
+      icon: Mail,
+      colSpan: 1
+    },
+    {
+      name: "wizardPhone",
+      type: "phone",
+      label: "Phone Number",
+      placeholder: "e.g. +1 555-0199",
+      required: true,
+      icon: PhoneIcon,
+      colSpan: 1
+    },
+    {
+      name: "verificationCode",
+      type: "otp",
+      label: "Enter 6-digit Verification Code",
+      required: true,
+      otpLength: 6,
+      colSpan: 2
+    }
+  ];
+
+  const wizardSteps = [
+    { title: "Profile Credentials", fieldNames: ["username", "companyUrl"] },
+    { title: "Contact Details", fieldNames: ["wizardEmail", "wizardPhone"] },
+    { title: "Verification Grid", fieldNames: ["verificationCode"] }
+  ];
+
+  const loginFields: FieldConfig[] = [
+    {
+      name: "loginEmail",
+      type: "email",
+      label: "Corporate Email Address",
+      placeholder: "you@enterprise.com",
+      required: true,
+      icon: Mail,
+      colSpan: 2
+    },
+    {
+      name: "loginPassword",
+      type: "password",
+      label: "Access Password",
+      placeholder: "Enter account password",
+      required: true,
+      icon: Lock,
+      colSpan: 2
+    },
+    {
+      name: "rememberMe",
+      type: "checkbox",
+      label: "Remember this device for 30 days",
+      defaultValue: true,
+      colSpan: 2
+    }
+  ];
+
+  return (
+    <div className="flex flex-col gap-8 items-center justify-center w-full h-full p-4 sm:p-8 select-text">
+      <div className="flex flex-wrap justify-center gap-2 p-1.5 bg-muted/20 rounded-full border border-border/50 backdrop-blur-md relative z-20">
+        <Button
+          variant={activeDemo === "contact" ? "default" : "ghost"}
+          size="sm"
+          onClick={() => {
+            setActiveDemo("contact");
+            setSubmittedData(null);
+          }}
+          className="rounded-full px-6 transition-all"
+        >
+          Contact Form
+        </Button>
+        <Button
+          variant={activeDemo === "wizard" ? "default" : "ghost"}
+          size="sm"
+          onClick={() => {
+            setActiveDemo("wizard");
+            setSubmittedData(null);
+          }}
+          className="rounded-full px-6 transition-all"
+        >
+          Multi-Step Wizard
+        </Button>
+        <Button
+          variant={activeDemo === "login" ? "default" : "ghost"}
+          size="sm"
+          onClick={() => {
+            setActiveDemo("login");
+            setSubmittedData(null);
+          }}
+          className="rounded-full px-6 transition-all"
+        >
+          Compact Login
+        </Button>
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-8 items-stretch justify-center w-full max-w-5xl">
+        <div className="flex-1 flex flex-col justify-center min-w-0">
+          <AnimatePresence mode="wait">
+            {activeDemo === "contact" && (
+              <motion.div
+                key="contact"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                className="w-full"
+              >
+                <DynamicForm
+                  variant="modern"
+                  fields={contactFields}
+                  submitButtonText="Send Inquiry"
+                  showResetButton={true}
+                  onSubmit={(data) => {
+                    setSubmittedData(data);
+                  }}
+                />
+              </motion.div>
+            )}
+
+            {activeDemo === "wizard" && (
+              <motion.div
+                key="wizard"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                className="w-full"
+              >
+                <DynamicForm
+                  variant="glass"
+                  fields={wizardFields}
+                  steps={wizardSteps}
+                  submitButtonText="Verify & Register"
+                  showResetButton={false}
+                  onSubmit={(data) => {
+                    setSubmittedData(data);
+                  }}
+                />
+              </motion.div>
+            )}
+
+            {activeDemo === "login" && (
+              <motion.div
+                key="login"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                className="w-full max-w-md mx-auto"
+              >
+                <DynamicForm
+                  variant="dark"
+                  fields={loginFields}
+                  submitButtonText="Authorize Session"
+                  showResetButton={true}
+                  autoSaveKey="saas_login_autosave"
+                  onSubmit={(data) => {
+                    setSubmittedData(data);
+                  }}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <div className="w-full lg:w-80 shrink-0 flex flex-col justify-between p-6 rounded-2xl border border-border/40 bg-muted/10 backdrop-blur-sm">
+          <div className="space-y-4">
+            <h4 className="text-xs uppercase tracking-widest font-black text-primary flex items-center gap-1.5 select-none">
+              <Terminal className="w-4 h-4" /> Live Engine Output
+            </h4>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Submit any of the live forms to see the processed type-safe JSON payload emitted by the validation resolver in real time.
+            </p>
+          </div>
+
+          <div className="mt-4 flex-1 flex flex-col justify-center min-h-[200px] border border-dashed border-border/60 rounded-xl p-4 bg-black/5 dark:bg-black/40 overflow-hidden">
+            {submittedData ? (
+              <div className="space-y-3 h-full flex flex-col justify-between">
+                <div className="text-[10px] font-black uppercase tracking-wider text-emerald-500 flex items-center gap-1">
+                  <CheckIcon className="w-3.5 h-3.5" /> Payload Validation Passed
+                </div>
+                <pre className="text-[11px] font-mono text-foreground/80 overflow-auto max-h-48 custom-scrollbar bg-muted/40 p-2 rounded-lg leading-relaxed flex-1 select-text">
+                  {JSON.stringify(submittedData, null, 2)}
+                </pre>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setSubmittedData(null)}
+                  className="w-full h-8 text-[10px] uppercase font-bold tracking-wider"
+                >
+                  Clear Output
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center text-center p-4 text-muted-foreground/40 space-y-2 select-none h-full">
+                <Sparkles className="w-8 h-8 animate-pulse text-muted-foreground/30" />
+                <span className="text-[11px] font-bold uppercase tracking-wider">Awaiting Form Submit</span>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -814,4 +1120,5 @@ export const PreviewRegistry: Record<string, React.FC> = {
       </div>
     </div>
   ),
+  "dynamic-form": DynamicFormPreview,
 };
