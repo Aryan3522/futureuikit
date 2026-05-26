@@ -38,9 +38,10 @@ import { Accordion } from "@/components/ui/accordion";
 import { Calendar } from "@/components/ui/calendar";
 import { Calculator } from "@/components/ui/calculator";
 import { DynamicForm, FieldConfig } from "@/components/ui/dynamic-form";
-import { Sparkles, Terminal, Mail, Lock, User, Globe, Phone as PhoneIcon, Check as CheckIcon, X as XIcon, AlertCircle as AlertCircleIcon } from "lucide-react";
+import { Sparkles, Terminal, Mail, Lock, User, Globe, Phone as PhoneIcon, Check as CheckIcon, X as XIcon, AlertCircle as AlertCircleIcon, Home, Search, Settings, Compass, MessageSquare, Plus, Monitor } from "lucide-react";
 import { ScrollTextReveal } from "@/components/ui/scroll-text-reveal";
 import { CursorGlowButton } from "@/components/ui/cursor-glow-button";
+import { Dock, DockItem, DockDivider } from "@/components/ui/dock";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -605,6 +606,64 @@ const DynamicFormPreview: React.FC = () => {
   );
 };
 
+const DockPreview: React.FC = () => {
+  const [variant, setVariant] = React.useState<"modern" | "clean" | "interactive">("modern");
+
+  return (
+    <div className="flex flex-col items-center w-full h-full p-4 pt-16 relative min-h-[400px]">
+      <div className="flex gap-2 z-10 bg-background/50 backdrop-blur-sm p-1 rounded-lg border border-border/50 mb-12 self-end">
+        <button 
+          onClick={() => setVariant("modern")}
+          className={cn("px-3 py-1.5 text-xs font-bold rounded-md transition-colors", variant === "modern" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:bg-muted/50")}
+        >
+          Modern
+        </button>
+        <button 
+          onClick={() => setVariant("clean")}
+          className={cn("px-3 py-1.5 text-xs font-bold rounded-md transition-colors", variant === "clean" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:bg-muted/50")}
+        >
+          Clean
+        </button>
+        <button 
+          onClick={() => setVariant("interactive")}
+          className={cn("px-3 py-1.5 text-xs font-bold rounded-md transition-colors", variant === "interactive" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:bg-muted/50")}
+        >
+          Interactive
+        </button>
+      </div>
+
+      <div className="flex flex-col items-center w-full flex-1 justify-center transition-all duration-500 ease-in-out pb-20">
+        <Dock variant={variant}>
+          <DockItem label="Home" href="#"><Home size={20} /></DockItem>
+          <DockItem label="Explore" href="#"><Compass size={20} /></DockItem>
+          {variant !== "clean" && <DockDivider />}
+          <DockItem label="Messages" href="#"><MessageSquare size={20} /></DockItem>
+          <DockItem label="Apps" href="#"><Plus size={20} /></DockItem>
+          <DockItem label="Desktop" href="#"><Monitor size={20} /></DockItem>
+          {variant !== "clean" && <DockDivider />}
+          <DockItem label="Settings" onClick={() => {}}><Settings size={20} /></DockItem>
+        </Dock>
+        
+        <div className="mt-12 text-sm text-center max-w-sm h-16 flex items-center justify-center">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={variant}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="text-muted-foreground"
+            >
+              {variant === "modern" && "The standard macOS style dock with smooth cinematic scaling and a glassmorphic backdrop."}
+              {variant === "clean" && "A minimal, non-scaling dock perfect for standard enterprise dashboards and clean minimal UIs."}
+              {variant === "interactive" && "A highly bouncy, playful variant with intense physics, floating elements, and deep shadows."}
+            </motion.p>
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const PreviewRegistry: Record<string, React.FC> = {
   primary: () => (
     <div className="flex items-center justify-center w-full h-full">
@@ -1121,4 +1180,5 @@ export const PreviewRegistry: Record<string, React.FC> = {
     </div>
   ),
   "dynamic-form": DynamicFormPreview,
+  dock: DockPreview,
 };
