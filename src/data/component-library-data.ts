@@ -880,6 +880,35 @@ export const componentsList: ComponentItem[] = [
       "Steppers & Wizards: Group fields into multi-step paths by passing the 'steps' prop with grouped fieldNames.",
       "API Callbacks: Configure direct form submissions by setting the 'api' prop with an endpoint URL, and handle responses via 'onSuccess' and 'onError' callbacks."
     ]
+  },
+  {
+    id: 103,
+    title: "Dock Navigation",
+    type: "Navigation",
+    slug: "dock",
+    category: "ui",
+    description:
+      "A fully reusable, production-grade Dock Style Navigation Component inspired by the macOS dock interaction system. Features smooth cinematic motion, fluid hover scaling, and clean architecture.",
+    details: [
+      "Built with Framer Motion for premium physics-based scaling.",
+      "Cinematic wave effect that scales nearby items based on cursor proximity.",
+      "Supports both internal Next.js routing and external links.",
+      "Includes Classic macOS style and Divided Dock variants.",
+      "Fully responsive and gracefully handles mobile touch interactions.",
+      "Extensively customizable physics, gaps, sizes, and colors.",
+    ],
+    codes: {
+      next: 'import { Dock, DockItem, DockDivider } from "@/components/ui/dock";\nimport { Home, Search, Settings, User } from "lucide-react";\n\nexport default function Example() {\n  return (\n    <Dock>\n      <DockItem label="Home" href="/">\n        <Home size={20} />\n      </DockItem>\n      <DockItem label="Search" href="/search">\n        <Search size={20} />\n      </DockItem>\n      <DockDivider />\n      <DockItem label="Profile" href="/profile">\n        <User size={20} />\n      </DockItem>\n      <DockItem label="Settings" onClick={() => alert("Settings")}>\n        <Settings size={20} />\n      </DockItem>\n    </Dock>\n  );\n}',
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add dock' to add the dock component and Framer Motion dependency.",
+      "Import: 'import { Dock, DockItem, DockDivider } from \"@/components/ui/dock\";'",
+      "Setup: Wrap your items in the '<Dock>' provider container.",
+      "Variants: Pass 'variant=\"modern\"' (default), '\"clean\"', or '\"interactive\"' to <Dock> to change its style and physics.",
+      "Items: Use '<DockItem>' for individual links or buttons. Pass 'label' for tooltips and 'href' for links.",
+      "Dividers: Insert '<DockDivider />' anywhere in the list for separated sections.",
+      "Controls: Tweak 'magnification' and 'distance' props on the main Dock component.",
+    ],
   }
 ];
 

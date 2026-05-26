@@ -37,7 +37,7 @@ const Comps: React.FC = () => {
   }, [filteredComponents]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center relative overflow-hidden bg-background">
+    <div className="min-h-screen flex flex-col items-center relative overflow-clip bg-background">
       <div className="absolute inset-0 z-0">
         <DotBackground dotColor="var(--primary)" maskOpacity={0.02} />
       </div>
