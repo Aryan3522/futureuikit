@@ -89,7 +89,7 @@ export const ModalClose = DialogPrimitive.Close;
 // --- Content & Variants ---
 
 const modalOverlayVariants = cva(
-  "fixed inset-0 z-50 overflow-y-auto grid place-items-center",
+  "fixed inset-0 z-50 overflow-y-auto flex",
   {
     variants: {
       variant: {
@@ -101,11 +101,11 @@ const modalOverlayVariants = cva(
         spotlight: "bg-black/80 backdrop-blur-sm",
       },
       position: {
-        center: "place-items-center p-4",
-        "top-center": "items-start justify-items-center pt-16 p-4",
-        "bottom-sheet": "items-end justify-items-center p-0 md:p-4",
-        "left-side": "items-start justify-items-start p-0",
-        "right-side": "items-start justify-items-end p-0",
+        center: "items-center justify-center p-4",
+        "top-center": "items-start justify-center pt-16 p-4",
+        "bottom-sheet": "items-end justify-center p-0 md:p-4",
+        "left-side": "items-start justify-start p-0",
+        "right-side": "items-start justify-end p-0",
       }
     },
     defaultVariants: {
@@ -133,15 +133,15 @@ const modalContentVariants = cva(
         md: "w-full max-w-md",
         lg: "w-full max-w-lg",
         xl: "w-full max-w-xl",
-        "full-width": "w-full max-w-[calc(100vw-2rem)]",
+        "full-width": "w-full max-w-[calc(100%-2rem)] mx-auto",
         "full-screen": "w-screen h-[100dvh] rounded-none border-none",
       },
       position: {
         center: "rounded-xl",
         "top-center": "rounded-xl mt-4 sm:mt-8",
         "bottom-sheet": "rounded-t-2xl sm:rounded-xl rounded-b-none sm:rounded-b-xl w-full",
-        "left-side": "rounded-r-2xl sm:rounded-xl rounded-l-none sm:rounded-l-xl h-full sm:h-auto min-h-[100dvh] sm:min-h-0",
-        "right-side": "rounded-l-2xl sm:rounded-xl rounded-r-none sm:rounded-r-xl h-full sm:h-auto min-h-[100dvh] sm:min-h-0",
+        "left-side": "rounded-r-2xl sm:rounded-xl rounded-l-none sm:rounded-l-xl h-full min-h-[100dvh]",
+        "right-side": "rounded-l-2xl sm:rounded-xl rounded-r-none sm:rounded-r-xl h-full min-h-[100dvh]",
       }
     },
     defaultVariants: {

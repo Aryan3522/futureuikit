@@ -41,12 +41,14 @@ import { DynamicForm, FieldConfig } from "@/components/ui/dynamic-form";
 import { Sparkles, Terminal, Mail, Lock, User, Globe, Phone as PhoneIcon, Check as CheckIcon, X as XIcon, AlertCircle as AlertCircleIcon, Home, Search, Settings, Compass, MessageSquare, Plus, Monitor } from "lucide-react";
 import { ScrollTextReveal } from "@/components/ui/scroll-text-reveal";
 import { CursorGlowButton } from "@/components/ui/cursor-glow-button";
+
 import { Dock, DockItem, DockDivider } from "@/components/ui/dock";
 
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerBody, DrawerFooter, DrawerClose } from "@/components/ui/drawer";
 import { Toggle } from "@/components/ui/toggle";
 import { Modal, ModalTrigger, ModalContent, ModalHeader, ModalTitle, ModalDescription, ModalBody, ModalFooter, ModalClose } from "@/components/ui/modal";
 import { CommandPalette, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem, CommandSeparator, CommandShortcut } from "@/components/ui/command-palette";
+import { Select, SelectTrigger, SelectContent, SelectSearch, SelectList, SelectGroup, SelectItem, SelectEmpty } from "@/components/ui/select";
 
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
@@ -904,6 +906,97 @@ const CommandPalettePreview: React.FC = () => {
   );
 };
 
+const SelectPreview: React.FC = () => {
+  const [variant, setVariant] = React.useState<"default" | "soft" | "floating" | "glass" | "minimal">("default");
+  const [size, setSize] = React.useState<"sm" | "md" | "lg">("md");
+  const [isMulti, setIsMulti] = React.useState(false);
+  const [searchable, setSearchable] = React.useState(true);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  const frameworks = [
+    { value: "nextjs", label: "Next.js" },
+    { value: "sveltekit", label: "SvelteKit" },
+    { value: "nuxtjs", label: "Nuxt.js" },
+    { value: "remix", label: "Remix" },
+    { value: "astro", label: "Astro" },
+    { value: "gatsby", label: "Gatsby" },
+    { value: "redwood", label: "RedwoodJS" },
+    { value: "solidstart", label: "SolidStart" },
+  ];
+
+  return (
+    <div ref={containerRef} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+      <div className="flex flex-col gap-4 mb-8 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-4xl w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="flex flex-col gap-2">
+            <span className="text-xs uppercase tracking-widest font-bold opacity-50">Variant</span>
+            <div className="flex flex-wrap gap-2">
+              {(["default", "soft", "floating", "glass", "minimal"] as const).map((v) => (
+                <Button key={v} variant={variant === v ? "default" : "outline"} size="sm" onClick={() => setVariant(v)}>{v}</Button>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <span className="text-xs uppercase tracking-widest font-bold opacity-50">Size</span>
+            <div className="flex flex-wrap gap-2">
+              {(["sm", "md", "lg"] as const).map((s) => (
+                <Button key={s} variant={size === s ? "default" : "outline"} size="sm" onClick={() => setSize(s)}>{s}</Button>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <span className="text-xs uppercase tracking-widest font-bold opacity-50">Mode</span>
+            <div className="flex flex-wrap gap-2">
+              <Button variant={!isMulti ? "default" : "outline"} size="sm" onClick={() => setIsMulti(false)}>Single</Button>
+              <Button variant={isMulti ? "default" : "outline"} size="sm" onClick={() => setIsMulti(true)}>Multi-Select</Button>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <span className="text-xs uppercase tracking-widest font-bold opacity-50">Search</span>
+            <div className="flex flex-wrap gap-2">
+              <Button variant={searchable ? "default" : "outline"} size="sm" onClick={() => setSearchable(true)}>Enabled</Button>
+              <Button variant={!searchable ? "default" : "outline"} size="sm" onClick={() => setSearchable(false)}>Disabled</Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-center w-full max-w-sm flex-1 mb-32">
+        <Select 
+          key={isMulti ? "multi" : "single"}
+          variant={variant} 
+          size={size} 
+          multiSelect={isMulti} 
+          searchable={searchable} 
+          container={containerRef.current}
+        >
+          <SelectTrigger placeholder={isMulti ? "Select frameworks..." : "Select a framework..."} />
+          <SelectContent>
+            <SelectSearch placeholder="Search framework..." />
+            <SelectList>
+              <SelectEmpty>No frameworks found.</SelectEmpty>
+              <SelectGroup heading="Popular">
+                {frameworks.slice(0, 4).map((fw) => (
+                  <SelectItem key={fw.value} value={fw.value} label={fw.label}>
+                    {fw.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+              <SelectGroup heading="Rising">
+                {frameworks.slice(4).map((fw) => (
+                  <SelectItem key={fw.value} value={fw.value} label={fw.label}>
+                    {fw.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectList>
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+  );
+};
+
 export const PreviewRegistry: Record<string, React.FC> = {
   primary: () => (
     <div className="flex items-center justify-center w-full h-full">
@@ -1391,4 +1484,6 @@ export const PreviewRegistry: Record<string, React.FC> = {
   toggle: TogglePreview,
   modal: ModalPreview,
   "command-palette": CommandPalettePreview,
+  select: SelectPreview,
 };
+

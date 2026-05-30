@@ -1023,12 +1023,31 @@ export const componentsList: ComponentItem[] = [
     },
     usage: [
       "Overview: The Command Palette is built on top of 'cmdk' (the industry standard headless command menu library). It provides extremely fast, fuzzy search navigation.",
-      "Installation: Run 'npx futureuikit add command-palette' to install the component and its cmdk dependency.",
-      "Keyboard Shortcuts: Simply listen for 'Cmd+K' on the document to toggle the 'open' state of <CommandPalette>.",
-      "Variants: Pass the 'variant' prop ('default', 'compact', 'floating', 'glass', 'spotlight') to drastically alter the appearance and backdrop of the palette.",
-      "Groups & Separators: Organize items cleanly with <CommandGroup heading=\"...\"> and <CommandSeparator />.",
-      "Shortcuts: Use <CommandShortcut> on the right side of a <CommandItem> to display keyboard hints.",
-      "Best Practices: Use the 'spotlight' variant for global application menus, and 'floating' for contextual, localized commands."
+    ],
+  },
+
+  {
+    id: 108,
+    title: "Select / Combobox",
+    type: "Form",
+    slug: "select",
+    category: "form",
+    description: "A fully reusable, accessible Select and Combobox component with search, multi-select, and virtualization support.",
+    details: [
+      "Built on top of Radix UI Popover and cmdk.",
+      "Supports searchable, multi-select dropdowns.",
+      "Includes virtualization for handling thousands of items.",
+      "Accessible with keyboard navigation and ARIA roles."
+    ],
+    codes: {
+      next: 'import { Select, SelectTrigger, SelectContent, SelectSearch, SelectList, SelectGroup, SelectItem } from "@/components/ui/select";\n\nexport default function Example() {\n  return (\n    <Select>\n      <SelectTrigger placeholder="Select an option..." />\n      <SelectContent>\n        <SelectSearch placeholder="Search options..." />\n        <SelectList>\n          <SelectGroup heading="Options">\n            <SelectItem value="1">Option 1</SelectItem>\n            <SelectItem value="2">Option 2</SelectItem>\n            <SelectItem value="3">Option 3</SelectItem>\n          </SelectGroup>\n        </SelectList>\n      </SelectContent>\n    </Select>\n  );\n}'
+    },
+    usage: [
+      "Overview: The Select component is built on top of Radix UI Popover and cmdk to provide an extremely robust, searchable, multi-select capable dropdown.",
+      "Installation: Run 'npx futureuikit add select' to install the component and its dependencies.",
+      "Multi-Select: Simply pass the 'multiSelect={true}' prop to <Select> to enable multiple selections. The trigger will automatically render selections as removable tags.",
+      "Search: Enabled by default. Pass 'searchable={false}' to <Select> to hide the search input.",
+      "Virtualization: For thousands of items, wrap your options in <SelectVirtualizer> and pass the items and renderItem function."
     ]
   }
 ];
