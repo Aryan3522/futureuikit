@@ -909,6 +909,127 @@ export const componentsList: ComponentItem[] = [
       "Dividers: Insert '<DockDivider />' anywhere in the list for separated sections.",
       "Controls: Tweak 'magnification' and 'distance' props on the main Dock component.",
     ],
+  },
+  {
+    id: 104,
+    title: "Drawer",
+    type: "Overlay",
+    slug: "drawer",
+    category: "ui",
+    description: "A fully reusable, accessible Drawer component inspired by iOS design patterns. It features focus trapping, scroll locking, and smooth Framer Motion animations. Built as a compound component for maximum flexibility.",
+    details: [
+      "Compound architecture: Drawer, Trigger, Content, Header, Title, Description, Body, Footer, and Close.",
+      "Five variants: Default, Floating, Glass, Compact, and Elevated.",
+      "Four placements: Left, Right, Top, and Bottom.",
+      "Accessible by default: Handles focus trapping, escape key to close, and scroll locking.",
+      "Smooth, physics-based animations using Framer Motion.",
+      "Clean, modern aesthetic utilizing a 4px spacing system."
+    ],
+    codes: {
+      next: 'import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerBody, DrawerFooter, DrawerClose } from "@/components/ui/drawer";\nimport { Button } from "@/components/ui/button";\n\nexport default function Example() {\n  return (\n    <Drawer placement="right" variant="floating">\n      <DrawerTrigger asChild>\n        <Button>Open Drawer</Button>\n      </DrawerTrigger>\n      <DrawerContent>\n        <DrawerHeader>\n          <DrawerTitle>Settings</DrawerTitle>\n          <DrawerDescription>Manage your preferences.</DrawerDescription>\n        </DrawerHeader>\n        <DrawerBody>\n          <div className="space-y-4">\n            <p>Profile configuration</p>\n            <p>Notifications</p>\n          </div>\n        </DrawerBody>\n        <DrawerFooter>\n          <DrawerClose asChild>\n            <Button variant="outline">Cancel</Button>\n          </DrawerClose>\n          <Button>Save Changes</Button>\n        </DrawerFooter>\n      </DrawerContent>\n    </Drawer>\n  );\n}'
+    },
+    usage: [
+      "Overview: A fully reusable, accessible Drawer component inspired by iOS design patterns. It features focus trapping, scroll locking, and smooth Framer Motion animations.",
+      "Installation: Run 'npx futureuikit add drawer' to add the drawer component to your project.",
+      "Basic Usage: Import the components from '@/components/ui/drawer' and wrap your UI in the <Drawer> component. Use <DrawerTrigger> to open it and <DrawerContent> for the payload.",
+      "Variants: Pass the 'variant' prop to <Drawer> to choose between 'default', 'floating', 'glass', 'compact', and 'elevated' aesthetics.",
+      "Placements: Control the slide-in direction by passing the 'placement' prop ('left', 'right', 'top', 'bottom') to the <Drawer> component.",
+      "Accessibility: The drawer handles focus trapping, scroll locking, and Escape key functionality automatically to meet ARIA guidelines.",
+      "Best Practices: Use the 'elevated' variant for dashboard settings, 'floating' for quick actions, and 'glass' over complex backgrounds.",
+      "API Reference: The <Drawer> accepts 'isOpen' and 'onOpenChange' for controlled state, and 'defaultIsOpen' for uncontrolled state.",
+      "Examples: Check the live preview above to experiment with all variant and placement combinations interactively."
+    ]
+  },
+  {
+    id: 105,
+    title: "Toggle",
+    type: "Form",
+    slug: "toggle",
+    category: "form",
+    description: "A fully reusable, clean, and futuristic Toggle component inspired by premium operating systems. It features physics-based thumb animations, multiple visual variants, responsive sizes, and robust accessibility.",
+    details: [
+      "Built with Framer Motion for premium, physics-based thumb animations.",
+      "Eight visual variants: Default, Soft, Elevated, Glass, Modern, Enterprise, Neon, and Scenic.",
+      "Four sizes (sm, md, lg, xl) and four shapes (rounded, pill, squircle, square).",
+      "Robust state support: Hover, Focus, Active, Disabled, Loading, and Read Only.",
+      "Icon support: Seamlessly swap checked and unchecked icons with cross-fading.",
+      "Scenic support: Automatically cross-fades checkedImage and uncheckedImage backgrounds.",
+      "Fully accessible with proper ARIA roles, keyboard navigation, and focus rings."
+    ],
+    codes: {
+      next: 'import { Toggle } from "@/components/ui/toggle";\nimport { Check, X } from "lucide-react";\n\nexport default function Example() {\n  return (\n    <div className="flex flex-col gap-6">\n      <Toggle \n        label="Enable Notifications" \n        description="Receive updates on your account." \n        variant="glass" \n      />\n      <Toggle \n        label="Auto Save" \n        checkedIcon={<Check />} \n        uncheckedIcon={<X />} \n        defaultChecked \n      />\n    </div>\n  );\n}'
+    },
+    usage: [
+      "Overview: A premium Toggle component designed for modern, high-end interfaces. It uses Framer Motion for natural thumb interactions and CVA for extensive visual configuration.",
+      "Installation: Run 'npx futureuikit add toggle' to add the toggle component to your project.",
+      "Usage: Import the component from '@/components/ui/toggle' and render it. Pass 'label' or 'description' props to automatically render an accessible label layout.",
+      "Controlled Usage: Use the 'checked' and 'onCheckedChange' props to manage the toggle's state from a parent component.",
+      "Uncontrolled Usage: Provide a 'defaultChecked' prop to let the component manage its own internal state.",
+      "Sizes: Adjust the component's scale by passing the 'size' prop ('sm', 'md', 'lg', 'xl').",
+      "Variants: Use the 'variant' prop ('default', 'soft', 'elevated', 'glass', 'modern', 'enterprise', 'neon', 'scenic') to match your application's aesthetic.",
+      "Shapes: Pass the 'shape' prop ('rounded', 'pill', 'squircle', 'square') to control the corner radiuses of both the track and thumb.",
+      "Accessibility: The toggle automatically implements standard ARIA attributes and keyboard controls. Always provide a 'label' prop for screen readers.",
+      "Best Practices: Use the 'loading' prop during async operations to show a spinner. Avoid excessive 'neon' variants in standard forms.",
+      "API Reference: The component extends all standard HTMLButtonElement attributes. See the source file for the complete type definition."
+    ]
+  },
+  {
+    id: 106,
+    title: "Modal",
+    type: "Overlay",
+    slug: "modal",
+    category: "ui",
+    description: "A highly polished, enterprise-ready Modal component powered by Radix UI and Framer Motion. It supports multiple sizes, screen positions, visual variants, and ensures absolute accessibility out of the box.",
+    details: [
+      "Compound architecture: Modal, Trigger, Content, Header, Title, Description, Body, Footer, and Close.",
+      "Six visual variants: Default, Floating, Glass, Elevated, Minimal, and Spotlight.",
+      "Seven sizes: xs, sm, md, lg, xl, full-width, and full-screen.",
+      "Five positions: Center, Top Center, Bottom Sheet, Left Side, and Right Side.",
+      "Flawless accessibility: Focus trapping, Escape key to close, Scroll locking, and ARIA roles.",
+      "Smooth physics-based animations that automatically adapt to the chosen position."
+    ],
+    codes: {
+      next: 'import { Modal, ModalTrigger, ModalContent, ModalHeader, ModalTitle, ModalDescription, ModalBody, ModalFooter, ModalClose } from "@/components/ui/modal";\nimport { Button } from "@/components/ui/button";\n\nexport default function Example() {\n  return (\n    <Modal variant="glass" size="md" position="center">\n      <ModalTrigger asChild>\n        <Button>Open Modal</Button>\n      </ModalTrigger>\n      <ModalContent>\n        <ModalHeader>\n          <ModalTitle>Account Settings</ModalTitle>\n          <ModalDescription>Manage your premium subscription.</ModalDescription>\n        </ModalHeader>\n        <ModalBody>\n          <div className="space-y-4">\n            <p>Your subscription is active until next year.</p>\n          </div>\n        </ModalBody>\n        <ModalFooter>\n          <ModalClose asChild>\n            <Button variant="outline">Close</Button>\n          </ModalClose>\n          <Button>Upgrade Plan</Button>\n        </ModalFooter>\n      </ModalContent>\n    </Modal>\n  );\n}'
+    },
+    usage: [
+      "Overview: A premium, accessible Modal system designed for modern SaaS applications. Combines Radix UI's bulletproof Dialog primitive with Framer Motion's elegant animations.",
+      "Installation: Run 'npx futureuikit add modal' to install the modal component.",
+      "Basic Usage: Wrap your UI with the <Modal> component. Use <ModalTrigger asChild> for the launch button and <ModalContent> for the payload.",
+      "Controlled Usage: Pass 'open' and 'onOpenChange' to <Modal> to manage the state via React state.",
+      "Uncontrolled Usage: By default, the Modal manages its own state internally.",
+      "Variants: Use the 'variant' prop ('default', 'floating', 'glass', 'elevated', 'minimal', 'spotlight') to change the backdrop and content styling.",
+      "Sizes: Use the 'size' prop ('xs', 'sm', 'md', 'lg', 'xl', 'full-width', 'full-screen') to adjust the modal's maximum width.",
+      "Positions: Use the 'position' prop ('center', 'top-center', 'bottom-sheet', 'left-side', 'right-side') to control where the modal appears and how it animates in.",
+      "Accessibility: The modal automatically handles focus trapping, scroll locking, and Escape key functionality.",
+      "Best Practices: Use the 'bottom-sheet' position for mobile-first interactions, and 'glass' variant for highly visual interfaces."
+    ]
+  },
+  {
+    id: 107,
+    title: "Command Palette",
+    type: "Navigation",
+    slug: "command-palette",
+    category: "ui",
+    description: "A highly performant, accessible Command Palette component inspired by Linear and Raycast. Features fuzzy search, keyboard navigation, nested commands, and premium design variants.",
+    details: [
+      "Compound architecture: CommandPalette, Input, List, Group, Item, Empty, Separator, and Shortcut.",
+      "Powered by cmdk for flawless, native-feeling keyboard interactions and fuzzy search.",
+      "Five premium visual variants: Default, Compact, Floating, Glass, and Spotlight.",
+      "Out-of-the-box support for Cmd+K / Ctrl+K keyboard shortcuts.",
+      "Fully accessible with automatic focus trapping and ARIA roles."
+    ],
+    codes: {
+      next: 'import { \n  CommandPalette, \n  CommandInput, \n  CommandList, \n  CommandEmpty, \n  CommandGroup, \n  CommandItem, \n  CommandSeparator, \n  CommandShortcut \n} from "@/components/ui/command-palette";\nimport { Calculator, Calendar, CreditCard, Settings, Smile, User } from "lucide-react";\nimport React from "react";\n\nexport default function Example() {\n  const [open, setOpen] = React.useState(false);\n\n  React.useEffect(() => {\n    const down = (e: KeyboardEvent) => {\n      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {\n        e.preventDefault();\n        setOpen((open) => !open);\n      }\n    };\n    document.addEventListener("keydown", down);\n    return () => document.removeEventListener("keydown", down);\n  }, []);\n\n  return (\n    <CommandPalette open={open} onOpenChange={setOpen} variant="spotlight">\n      <CommandInput placeholder="Type a command or search..." />\n      <CommandList>\n        <CommandEmpty>No results found.</CommandEmpty>\n        <CommandGroup heading="Suggestions">\n          <CommandItem>\n            <Calendar className="mr-2 h-4 w-4" />\n            <span>Calendar</span>\n          </CommandItem>\n          <CommandItem>\n            <Smile className="mr-2 h-4 w-4" />\n            <span>Search Emoji</span>\n          </CommandItem>\n          <CommandItem>\n            <Calculator className="mr-2 h-4 w-4" />\n            <span>Calculator</span>\n          </CommandItem>\n        </CommandGroup>\n        <CommandSeparator />\n        <CommandGroup heading="Settings">\n          <CommandItem>\n            <User className="mr-2 h-4 w-4" />\n            <span>Profile</span>\n            <CommandShortcut>⌘P</CommandShortcut>\n          </CommandItem>\n          <CommandItem>\n            <CreditCard className="mr-2 h-4 w-4" />\n            <span>Billing</span>\n            <CommandShortcut>⌘B</CommandShortcut>\n          </CommandItem>\n          <CommandItem>\n            <Settings className="mr-2 h-4 w-4" />\n            <span>Settings</span>\n            <CommandShortcut>⌘S</CommandShortcut>\n          </CommandItem>\n        </CommandGroup>\n      </CommandList>\n    </CommandPalette>\n  );\n}'
+    },
+    usage: [
+      "Overview: The Command Palette is built on top of 'cmdk' (the industry standard headless command menu library). It provides extremely fast, fuzzy search navigation.",
+      "Installation: Run 'npx futureuikit add command-palette' to install the component and its cmdk dependency.",
+      "Keyboard Shortcuts: Simply listen for 'Cmd+K' on the document to toggle the 'open' state of <CommandPalette>.",
+      "Variants: Pass the 'variant' prop ('default', 'compact', 'floating', 'glass', 'spotlight') to drastically alter the appearance and backdrop of the palette.",
+      "Groups & Separators: Organize items cleanly with <CommandGroup heading=\"...\"> and <CommandSeparator />.",
+      "Shortcuts: Use <CommandShortcut> on the right side of a <CommandItem> to display keyboard hints.",
+      "Best Practices: Use the 'spotlight' variant for global application menus, and 'floating' for contextual, localized commands."
+    ]
   }
 ];
 
