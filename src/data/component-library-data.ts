@@ -1182,6 +1182,31 @@ export const componentsList: ComponentItem[] = [
       'Customization: Pass custom Tiptap extensions via the extensions prop.'
     ]
   },
+  {
+    id: 44,
+    title: 'AI Chat Interface',
+    type: 'Application',
+    slug: 'ai-chat',
+    category: 'application-ui',
+    description: 'A fully reusable, highly customizable AI Chat Interface inspired by ChatGPT, Claude, and Perplexity. Features streaming responses, markdown rendering, syntax highlighting, and multiple premium layouts.',
+    details: [
+      'Multi-modal support with file and image uploads.',
+      'Supports streaming messages with typing indicators.',
+      'Markdown rendering powered by react-markdown and syntax highlighting.',
+      'Fully customizable layouts (ChatGPT, Claude, Perplexity, Compact, Enterprise).',
+      'Fully customizable input variants (Standard, Floating, Command, Multi-line).',
+      'Built-in message actions (Copy, Regenerate, Edit, Upvote/Downvote).',
+      'Prompt suggestions and workspace sidebars.'
+    ],
+    codes: {
+      next: 'import { AIChat, ChatMessages, ChatInput, ChatPromptSuggestions } from "@/components/ui/ai-chat";\n\nexport default function Example() {\n  return (\n    <AIChat messages={[]} input="" setInput={() => {}} onSubmit={() => {}}>\n      <ChatMessages />\n      <ChatPromptSuggestions suggestions={["Write a poem", "Explain quantum computing"]} />\n      <ChatInput />\n    </AIChat>\n  );\n}'
+    },
+    usage: [
+      'Installation: Run npx futureuikit add ai-chat',
+      'Usage: Use the <AIChat /> context provider to wrap chat subcomponents like <ChatMessages /> and <ChatInput />.',
+      'Customization: Switch layouts using the layout prop and input styles via inputVariant.'
+    ]
+  },
 ];
 
 export { registry };

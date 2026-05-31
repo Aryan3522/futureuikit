@@ -54,6 +54,7 @@ import { FormBuilder, SchemaField } from "@/components/ui/form-builder";
 import { KanbanBoard, KanbanColumn, KanbanCard, KanbanColumnData } from "@/components/ui/kanban";
 import { WorkflowBuilder, WorkflowCanvas, WorkflowToolbar, WorkflowMiniMap } from "@/components/ui/workflow-builder";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import { AIChat, ChatMessages, ChatInput, ChatPromptSuggestions } from "@/components/ui/ai-chat";
 
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
@@ -932,7 +933,7 @@ const SelectPreview: React.FC = () => {
   return (
     <div ref={containerRef} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
       <div className="flex flex-col gap-4 mb-8 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-4xl w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex flex-col gap-2">
             <span className="text-xs uppercase tracking-widest font-bold opacity-50">Variant</span>
             <div className="flex flex-wrap gap-2">
@@ -956,7 +957,6 @@ const SelectPreview: React.FC = () => {
               <Button variant={isMulti ? "default" : "outline"} size="sm" onClick={() => setIsMulti(true)}>Multi-Select</Button>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -1797,5 +1797,559 @@ export const PreviewRegistry: Record<string, React.FC> = {
   "form-builder": FormBuilderPreview,
   kanban: KanbanPreview,
   "workflow-builder": WorkflowPreview,
+  "ai-chat": AIChatPreview,
 };
+
+function AIChatPreview() {
+  const [messages, setMessages] = useState<any[]>([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [layout, setLayout] = useState<"chatgpt" | "claude" | "perplexity" | "compact" | "enterprise" | "minimal">("chatgpt");
+  const [inputVariant, setInputVariant] = useState<"standard" | "floating" | "command" | "multiline" | "workspace">("standard");
+
+  // ---- Response Data ----
+
+  const GREETINGS = [
+    // English
+    "hi", "hello", "hey", "hey there", "hi there", "howdy", "greetings", "what's up", "sup", "yo",
+    // Spanish
+    "hola", "buenos dias", "buenas tardes", "buenas noches",
+    // French
+    "bonjour", "bonsoir", "salut",
+    // German
+    "hallo", "guten tag", "guten morgen", "guten abend",
+    // Italian
+    "ciao", "salve", "buongiorno",
+    // Portuguese
+    "olá", "oi", "bom dia",
+    // Japanese (romaji)
+    "konnichiwa", "ohayo", "konbanwa",
+    // Hindi (romaji)
+    "namaste", "namaskar",
+    // Arabic (romaji)
+    "marhaba", "ahlan",
+    // Chinese (romaji)
+    "ni hao",
+    // Korean (romaji)
+    "annyeong", "annyeonghaseyo",
+    // Russian (romaji)
+    "privet", "zdravstvuyte",
+    // Dutch
+    "hoi", "dag", "goedendag",
+    // Swedish
+    "hej", "god dag",
+  ];
+
+  const GREETING_RESPONSES = [
+    "Hello! 👋 How can I help you today? Try asking me for a poem, some code, or just chat!",
+    "Hey there! Great to see you. What are we building today?",
+    "Hi! I'm your AI assistant. Ask me for code, poems, or anything else!",
+    "Greetings! I'm fully wired up and ready to help. What's on your mind?",
+    "Hello! I'm a demo AI interface. Type 'poem' for a poem or 'react code' for a React component!",
+    "Hey! 🚀 I'm ready. Ask me for code in any language, a poem, or just say something fun!",
+    "Howdy! What can I do for you today?",
+    "Bonjour! (Hello!) I'm your multilingual AI assistant. How can I help?",
+    "¡Hola! I speak all languages — ask me anything!",
+    "Ciao! Your AI is ready. What do you need?",
+  ];
+
+  const POEMS = [
+    {
+      title: "The Road Not Taken (excerpt) – Robert Frost",
+      text: "Two roads diverged in a yellow wood,\nAnd sorry I could not travel both\nAnd be one traveler, long I stood\nAnd looked down one as far as I could\nTo where it bent in the undergrowth.",
+    },
+    {
+      title: "If — Rudyard Kipling (excerpt)",
+      text: "If you can keep your head when all about you\n    Are losing theirs and blaming it on you,\nIf you can trust yourself when all men doubt you,\n    But make allowance for their doubting too;",
+    },
+    {
+      title: "Still I Rise – Maya Angelou (excerpt)",
+      text: "You may write me down in history\nWith your bitter, twisted lies,\nYou may trod me in the very dirt\nBut still, like dust, I'll rise.",
+    },
+    {
+      title: "Shall I compare thee – Shakespeare (Sonnet 18)",
+      text: "Shall I compare thee to a summer's day?\nThou art more lovely and more temperate.\nRough winds do shake the darling buds of May,\nAnd summer's lease hath all too short a date.",
+    },
+    {
+      title: "Ozymandias – Percy Bysshe Shelley",
+      text: "I met a traveller from an antique land,\nWho said — 'Two vast and trunkless legs of stone\nStand in the desert. Near them, on the sand,\nHalf sunk, a shattered visage lies.'",
+    },
+    {
+      title: "Hope is the Thing with Feathers – Emily Dickinson",
+      text: "Hope is the thing with feathers\nThat perches in the soul,\nAnd sings the tune without the words,\nAnd never stops at all.",
+    },
+    {
+      title: "Do Not Go Gentle – Dylan Thomas (excerpt)",
+      text: "Do not go gentle into that good night,\nOld age should burn and rave at close of day;\nRage, rage against the dying of the light.",
+    },
+    {
+      title: "Invictus – William Ernest Henley (excerpt)",
+      text: "Out of the night that covers me,\n      Black as the pit from pole to pole,\nI thank whatever gods may be\n      For my unconquerable soul.",
+    },
+  ];
+
+  const CODE_SNIPPETS = [
+    {
+      lang: "tsx",
+      label: "React Counter Component",
+      code: `import { useState } from "react";
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+  return (
+    <div className="flex flex-col items-center gap-4 p-8">
+      <h1 className="text-4xl font-bold">{count}</h1>
+      <div className="flex gap-2">
+        <button onClick={() => setCount(c => c - 1)} className="px-4 py-2 bg-red-500 text-white rounded-lg">-</button>
+        <button onClick={() => setCount(c => c + 1)} className="px-4 py-2 bg-green-500 text-white rounded-lg">+</button>
+      </div>
+    </div>
+  );
+}`,
+    },
+    {
+      lang: "tsx",
+      label: "React Todo List",
+      code: `import { useState } from "react";
+
+export default function TodoApp() {
+  const [todos, setTodos] = useState<string[]>([]);
+  const [input, setInput] = useState("");
+
+  const add = () => {
+    if (!input.trim()) return;
+    setTodos(prev => [...prev, input]);
+    setInput("");
+  };
+
+  return (
+    <div className="p-6 max-w-sm mx-auto">
+      <div className="flex gap-2 mb-4">
+        <input value={input} onChange={e => setInput(e.target.value)}
+          className="flex-1 border rounded px-3 py-1 text-sm" placeholder="Add a task..." />
+        <button onClick={add} className="px-3 py-1 bg-blue-500 text-white rounded text-sm">Add</button>
+      </div>
+      <ul className="space-y-1">
+        {todos.map((t, i) => <li key={i} className="text-sm px-3 py-1 bg-muted rounded">{t}</li>)}
+      </ul>
+    </div>
+  );
+}`,
+    },
+    {
+      lang: "typescript",
+      label: "TypeScript Generic Stack",
+      code: `class Stack<T> {
+  private items: T[] = [];
+
+  push(item: T): void {
+    this.items.push(item);
+  }
+
+  pop(): T | undefined {
+    return this.items.pop();
+  }
+
+  peek(): T | undefined {
+    return this.items[this.items.length - 1];
+  }
+
+  get size(): number {
+    return this.items.length;
+  }
+
+  isEmpty(): boolean {
+    return this.items.length === 0;
+  }
+}
+
+const stack = new Stack<number>();
+stack.push(1);
+stack.push(2);
+console.log(stack.peek()); // 2
+console.log(stack.pop());  // 2`,
+    },
+    {
+      lang: "python",
+      label: "Python Fibonacci",
+      code: `def fibonacci(n: int) -> list[int]:
+    """Generate Fibonacci sequence up to n terms."""
+    if n <= 0:
+        return []
+    if n == 1:
+        return [0]
+    
+    seq = [0, 1]
+    while len(seq) < n:
+        seq.append(seq[-1] + seq[-2])
+    return seq
+
+result = fibonacci(10)
+print(result)  # [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]`,
+    },
+    {
+      lang: "python",
+      label: "Python Decorator",
+      code: `import time
+from functools import wraps
+
+def timer(func):
+    """A decorator that prints execution time."""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.perf_counter()
+        result = func(*args, **kwargs)
+        end = time.perf_counter()
+        print(f"{func.__name__} took {end - start:.4f}s")
+        return result
+    return wrapper
+
+@timer
+def slow_sum(n):
+    return sum(range(n))
+
+slow_sum(1_000_000)`,
+    },
+    {
+      lang: "javascript",
+      label: "JavaScript Debounce",
+      code: `function debounce(fn, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+const handleSearch = debounce((query) => {
+  console.log("Searching for:", query);
+  // fetch("/api/search?q=" + query)
+}, 300);
+
+// Usage
+document.getElementById("search").addEventListener("input", e => {
+  handleSearch(e.target.value);
+});`,
+    },
+    {
+      lang: "java",
+      label: "Java Binary Search",
+      code: `public class BinarySearch {
+    public static int search(int[] arr, int target) {
+        int left = 0, right = arr.length - 1;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+
+            if (arr[mid] == target) return mid;
+            else if (arr[mid] < target) left = mid + 1;
+            else right = mid - 1;
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {1, 3, 5, 7, 9, 11, 13};
+        System.out.println(search(arr, 7)); // 3
+        System.out.println(search(arr, 4)); // -1
+    }
+}`,
+    },
+    {
+      lang: "cpp",
+      label: "C++ Linked List",
+      code: `#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+    Node(int d) : data(d), next(nullptr) {}
+};
+
+class LinkedList {
+    Node* head = nullptr;
+public:
+    void push(int val) {
+        Node* n = new Node(val);
+        n->next = head;
+        head = n;
+    }
+    void print() {
+        for (Node* cur = head; cur; cur = cur->next)
+            cout << cur->data << " -> ";
+        cout << "null" << endl;
+    }
+};
+
+int main() {
+    LinkedList list;
+    list.push(3); list.push(2); list.push(1);
+    list.print(); // 1 -> 2 -> 3 -> null
+}`,
+    },
+    {
+      lang: "rust",
+      label: "Rust Ownership Example",
+      code: `fn main() {
+    let s1 = String::from("Hello, Rust!");
+    let s2 = s1.clone(); // Deep copy
+
+    println!("s1 = {}", s1);
+    println!("s2 = {}", s2);
+
+    let len = calculate_length(&s1); // Borrow
+    println!("Length of '{}' is {}", s1, len);
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len()
+}`,
+    },
+    {
+      lang: "go",
+      label: "Go Goroutine",
+      code: `package main
+
+import (
+    "fmt"
+    "sync"
+)
+
+func worker(id int, wg *sync.WaitGroup) {
+    defer wg.Done()
+    fmt.Printf("Worker %d starting\\n", id)
+    // Simulate work
+    fmt.Printf("Worker %d done\\n", id)
+}
+
+func main() {
+    var wg sync.WaitGroup
+
+    for i := 1; i <= 5; i++ {
+        wg.Add(1)
+        go worker(i, &wg)
+    }
+
+    wg.Wait()
+    fmt.Println("All workers done!")
+}`,
+    },
+    {
+      lang: "swift",
+      label: "Swift Protocol",
+      code: `protocol Drawable {
+    func draw() -> String
+}
+
+struct Circle: Drawable {
+    var radius: Double
+    func draw() -> String {
+        return "Drawing a circle with radius \\(radius)"
+    }
+}
+
+struct Rectangle: Drawable {
+    var width: Double
+    var height: Double
+    func draw() -> String {
+        return "Drawing a \\(width)x\\(height) rectangle"
+    }
+}
+
+let shapes: [Drawable] = [Circle(radius: 5), Rectangle(width: 10, height: 4)]
+shapes.forEach { print($0.draw()) }`,
+    },
+    {
+      lang: "kotlin",
+      label: "Kotlin Data Class",
+      code: `data class User(
+    val id: Int,
+    val name: String,
+    val email: String
+)
+
+fun main() {
+    val user1 = User(1, "Alice", "alice@example.com")
+    val user2 = user1.copy(name = "Bob", email = "bob@example.com")
+
+    println(user1) // User(id=1, name=Alice, email=alice@example.com)
+    println(user2) // User(id=1, name=Bob, email=bob@example.com)
+    println(user1 == user2) // false
+}`,
+    },
+    {
+      lang: "css",
+      label: "CSS Glassmorphism Card",
+      code: `.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  color: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+}`,
+    },
+    {
+      lang: "sql",
+      label: "SQL Window Function",
+      code: `-- Rank employees by salary within each department
+SELECT
+    name,
+    department,
+    salary,
+    RANK() OVER (
+        PARTITION BY department
+        ORDER BY salary DESC
+    ) AS salary_rank,
+    AVG(salary) OVER (
+        PARTITION BY department
+    ) AS dept_avg_salary
+FROM employees
+ORDER BY department, salary_rank;`,
+    },
+  ];
+
+  const getResponse = (userText: string): string => {
+    const t = userText.toLowerCase().trim();
+
+    // Greetings check
+    const isGreeting = GREETINGS.some(g => t === g || t.startsWith(g + " ") || t.endsWith(" " + g) || t.includes(" " + g + " ") || t === g);
+    if (isGreeting) {
+      return GREETING_RESPONSES[Math.floor(Math.random() * GREETING_RESPONSES.length)];
+    }
+
+    // Poem
+    if (t.includes("poem") || t.includes("poetry") || t.includes("verse") || t.includes("rhyme")) {
+      const p = POEMS[Math.floor(Math.random() * POEMS.length)];
+      return `Here's a poem for you:\n\n**${p.title}**\n\n${p.text}`;
+    }
+
+    // Code — language-specific matches first, then generic "code" keyword
+    const langMatches: { keywords: string[]; lang: string }[] = [
+      { keywords: ["react", "jsx", "tsx", "component"], lang: "tsx" },
+      { keywords: ["typescript", "ts"], lang: "typescript" },
+      { keywords: ["javascript", "js", "node"], lang: "javascript" },
+      { keywords: ["python", "py"], lang: "python" },
+      { keywords: ["java"], lang: "java" },
+      { keywords: ["c++", "cpp"], lang: "cpp" },
+      { keywords: ["rust"], lang: "rust" },
+      { keywords: ["go", "golang"], lang: "go" },
+      { keywords: ["swift"], lang: "swift" },
+      { keywords: ["kotlin"], lang: "kotlin" },
+      { keywords: ["css", "style", "glassmorphism"], lang: "css" },
+      { keywords: ["sql", "database", "query"], lang: "sql" },
+    ];
+
+    let matchedLang: string | null = null;
+    for (const { keywords, lang } of langMatches) {
+      if (keywords.some(k => t.includes(k))) {
+        matchedLang = lang;
+        break;
+      }
+    }
+
+    if (matchedLang || t.includes("code") || t.includes("example") || t.includes("snippet") || t.includes("write") || t.includes("show")) {
+      const pool = matchedLang
+        ? CODE_SNIPPETS.filter(s => s.lang === matchedLang)
+        : CODE_SNIPPETS;
+      const snippet = pool.length > 0
+        ? pool[Math.floor(Math.random() * pool.length)]
+        : CODE_SNIPPETS[Math.floor(Math.random() * CODE_SNIPPETS.length)];
+      return `Here's a **${snippet.label}** for you:\n\n\`\`\`${snippet.lang}\n${snippet.code}\n\`\`\`\n\nYou can copy this using the copy button at the top-right of the code block!`;
+    }
+
+    // Default
+    return "I'm a fully interactive demo AI interface. I can respond to greetings in any language, write poems, and generate code in React, TypeScript, Python, Java, C++, Rust, Go, Swift, Kotlin, CSS, SQL, and more!\n\nTry asking:\n- **\"hi\"** (or any greeting)\n- **\"write a poem\"**\n- **\"show me some Python code\"**\n- **\"give me a React component\"**";
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    const userText = input.trim();
+    const newMsg = { id: Date.now().toString(), role: "user", content: userText };
+    setMessages((prev) => [...prev, newMsg]);
+    setInput("");
+    setIsLoading(true);
+
+    setTimeout(() => {
+      const assistantId = (Date.now() + 1).toString();
+      setMessages((prev) => [...prev, { id: assistantId, role: "assistant", content: "", isStreaming: true }]);
+
+      const responseText = getResponse(userText);
+      let currentText = "";
+      let i = 0;
+
+      const interval = setInterval(() => {
+        currentText += responseText[i];
+        setMessages((prev) => prev.map(m => m.id === assistantId ? { ...m, content: currentText } : m));
+        i++;
+        if (i >= responseText.length) {
+          clearInterval(interval);
+          setMessages((prev) => prev.map(m => m.id === assistantId ? { ...m, isStreaming: false } : m));
+          setIsLoading(false);
+        }
+      }, 12);
+    }, 300);
+  };
+
+  const SUGGESTIONS = [
+    "Hi", "Hola", "Bonjour", "Namaste", "Ni hao",
+    "Write a poem", "Give me React code", "Show me Python code",
+    "Write a SQL query", "Give me a Go example",
+  ];
+
+  return (
+    <div className="flex flex-col w-full h-full overflow-hidden">
+      {/* Controls bar — never scrolls */}
+      <div className="shrink-0 flex flex-wrap gap-x-6 gap-y-3 p-4 border-b border-border/50 bg-background/80 backdrop-blur-sm">
+        <div className="flex flex-col gap-1.5">
+          <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Layout</span>
+          <div className="flex flex-wrap gap-1.5">
+            {(["chatgpt", "claude", "perplexity", "compact", "enterprise", "minimal"] as const).map((l) => (
+              <Button key={l} variant={layout === l ? "default" : "outline"} size="sm" onClick={() => setLayout(l)} className="capitalize h-7 text-xs">{l}</Button>
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Input</span>
+          <div className="flex flex-wrap gap-1.5">
+            {(["standard", "floating", "command", "multiline", "workspace"] as const).map((v) => (
+              <Button key={v} variant={inputVariant === v ? "default" : "outline"} size="sm" onClick={() => setInputVariant(v)} className="capitalize h-7 text-xs">{v}</Button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Chat panel — fills remaining height, no page scroll */}
+      <div className="flex-1 min-h-0 overflow-hidden">
+        <AIChat
+          messages={messages}
+          input={input}
+          setInput={setInput}
+          onSubmit={handleSubmit}
+          isLoading={isLoading}
+          onStop={() => setIsLoading(false)}
+          layout={layout}
+          inputVariant={inputVariant}
+        >
+          <ChatMessages />
+          <ChatPromptSuggestions suggestions={SUGGESTIONS} />
+          <ChatInput />
+        </AIChat>
+      </div>
+    </div>
+  );
+}
 

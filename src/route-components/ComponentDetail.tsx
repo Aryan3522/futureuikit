@@ -71,42 +71,41 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
     <div className="min-h-screen w-full bg-background text-foreground selection:bg-primary/30 font-sans overflow-x-hidden">
       {slug === "scroll-progress" && <ScrollProgress />}
 
-      {/* Top Left Navbar: Back Button */}
-      <div className="fixed top-4 left-4 z-50">
+      {/* Header */}
+      <header className="sticky top-0 z-50 w-full h-16 bg-background/80 backdrop-blur-md border-b border-border/10 flex items-center justify-between px-4">
         <button
           onClick={() => router.back()}
-          className="p-2 rounded-full border border-border/20 bg-background/50 backdrop-blur-md hover:bg-muted/50 transition-colors"
+          className="p-2 rounded-full border border-border/20 hover:bg-muted/50 transition-colors flex items-center justify-center"
           title="Go Back"
         >
           <ChevronLeft size={20} />
         </button>
-      </div>
+        
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowCode(!showCode)}
+            className={cn(
+              "p-2 rounded-full border transition-all duration-300",
+              showCode 
+                ? "bg-foreground text-background border-foreground" 
+                : "border-border/20 hover:bg-muted/50"
+            )}
+            title="Toggle Code"
+          >
+            <Code size={20} />
+          </button>
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full border border-border/20 hover:bg-muted/50 transition-colors"
+            title="Toggle Theme"
+          >
+            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+        </div>
+      </header>
 
-      {/* Top Right Navbar: Code & Theme Toggles */}
-      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
-        <button
-          onClick={() => setShowCode(!showCode)}
-          className={cn(
-            "p-2 rounded-full border transition-all duration-300 backdrop-blur-md",
-            showCode 
-              ? "bg-foreground text-background border-foreground" 
-              : "border-border/20 bg-background/50 hover:bg-muted/50"
-          )}
-          title="Toggle Code"
-        >
-          <Code size={20} />
-        </button>
-        <button
-          onClick={toggleTheme}
-          className="p-2 rounded-full border border-border/20 bg-background/50 backdrop-blur-md hover:bg-muted/50 transition-colors"
-          title="Toggle Theme"
-        >
-          {isDark ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
-      </div>
-
-      {/* Hero Section (h-[100dvh]) */}
-      <div className="h-[100dvh] w-full flex overflow-hidden border-b border-border/10">
+      {/* Hero Section */}
+      <div className="h-[calc(100dvh-4rem)] w-full flex overflow-hidden border-b border-border/10">
         
         {/* Code Panel (Slides from left) */}
         <AnimatePresence initial={false}>
@@ -156,7 +155,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
         <motion.div 
           layout
           transition={{ type: "spring", bounce: 0, duration: 0.8 }}
-          className="flex-1 h-[100dvh] relative bg-background flex items-center justify-center overflow-hidden"
+          className="flex-1 h-full relative bg-background flex items-center justify-center overflow-hidden"
         >
           {!component.type.toLowerCase().includes("background") && (
             <div className="absolute inset-0 opacity-30 pointer-events-none">
