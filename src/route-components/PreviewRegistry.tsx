@@ -52,6 +52,7 @@ import { Select, SelectTrigger, SelectContent, SelectSearch, SelectList, SelectG
 import { FileUpload, UploadDropzone, UploadPreview, UploadProgress, FileState } from "@/components/ui/file-upload";
 import { FormBuilder, SchemaField } from "@/components/ui/form-builder";
 import { KanbanBoard, KanbanColumn, KanbanCard, KanbanColumnData } from "@/components/ui/kanban";
+import { WorkflowBuilder, WorkflowCanvas, WorkflowToolbar, WorkflowMiniMap } from "@/components/ui/workflow-builder";
 
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
@@ -1231,6 +1232,46 @@ const KanbanPreview: React.FC = () => {
   );
 };
 
+const WorkflowPreview: React.FC = () => {
+  const [variant, setVariant] = React.useState<"default" | "compact" | "enterprise" | "minimal" | "glass">("enterprise");
+
+  return (
+    <div className="flex flex-col items-center justify-start w-full h-full p-4 md:p-8 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+      <div className="flex flex-col gap-4 mb-4 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-5xl w-full shrink-0">
+        <div className="flex flex-col gap-2">
+          <span className="text-xs uppercase tracking-widest font-bold opacity-50">Variant</span>
+          <div className="flex flex-wrap gap-2">
+            {(["default", "enterprise", "minimal", "glass", "compact"] as const).map((v) => (
+              <Button key={v} variant={variant === v ? "default" : "outline"} size="sm" onClick={() => setVariant(v)}>{v}</Button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full max-w-5xl flex-1 min-h-[500px] bg-background/20 rounded-xl overflow-hidden p-0 border border-border/50 relative">
+        <WorkflowBuilder 
+          variant={variant}
+          initialNodes={[
+            { id: "trigger-1", type: "trigger", position: { x: 100, y: 150 }, data: { label: "Schedule Trigger", description: "Runs every 1 hour" } },
+            { id: "agent-1", type: "agent", position: { x: 450, y: 150 }, data: { label: "AI Classifier", description: "Analyzes incoming data" } },
+            { id: "action-1", type: "action", position: { x: 800, y: 50 }, data: { label: "Slack Notification", description: "Send positive reviews" } },
+            { id: "action-2", type: "action", position: { x: 800, y: 250 }, data: { label: "Zendesk Ticket", description: "Flag negative reviews" } }
+          ]}
+          initialEdges={[
+            { id: "e1", source: "trigger-1", target: "agent-1", animated: true },
+            { id: "e2", source: "agent-1", target: "action-1" },
+            { id: "e3", source: "agent-1", target: "action-2" }
+          ]}
+        >
+          <WorkflowCanvas />
+          <WorkflowToolbar />
+          <WorkflowMiniMap />
+        </WorkflowBuilder>
+      </div>
+    </div>
+  );
+};
+
 export const PreviewRegistry: Record<string, React.FC> = {
   primary: () => (
     <div className="flex items-center justify-center w-full h-full">
@@ -1722,5 +1763,6 @@ export const PreviewRegistry: Record<string, React.FC> = {
   "file-upload": FileUploadPreview,
   "form-builder": FormBuilderPreview,
   kanban: KanbanPreview,
+  "workflow-builder": WorkflowPreview,
 };
 
