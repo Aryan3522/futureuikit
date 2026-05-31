@@ -164,7 +164,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
             </div>
           )}
 
-          <div className="absolute bottom-8 left-8 md:bottom-12 md:left-12 z-20 pointer-events-none">
+          {/* <div className="absolute bottom-8 left-8 md:bottom-12 md:left-12 z-20 pointer-events-none">
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -173,7 +173,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
             >
               {component.title}
             </motion.h1>
-          </div>
+          </div> */}
 
           <div className="relative z-10 w-full h-full flex items-center justify-center">
              <ComponentLivePreview id={id} slug={slug} />
