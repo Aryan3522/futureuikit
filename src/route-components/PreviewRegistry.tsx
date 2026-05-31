@@ -932,7 +932,7 @@ const SelectPreview: React.FC = () => {
   return (
     <div ref={containerRef} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
       <div className="flex flex-col gap-4 mb-8 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-4xl w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="flex flex-col gap-2">
             <span className="text-xs uppercase tracking-widest font-bold opacity-50">Variant</span>
             <div className="flex flex-wrap gap-2">
@@ -956,13 +956,7 @@ const SelectPreview: React.FC = () => {
               <Button variant={isMulti ? "default" : "outline"} size="sm" onClick={() => setIsMulti(true)}>Multi-Select</Button>
             </div>
           </div>
-          <div className="flex flex-col gap-2">
-            <span className="text-xs uppercase tracking-widest font-bold opacity-50">Search</span>
-            <div className="flex flex-wrap gap-2">
-              <Button variant={searchable ? "default" : "outline"} size="sm" onClick={() => setSearchable(true)}>Enabled</Button>
-              <Button variant={!searchable ? "default" : "outline"} size="sm" onClick={() => setSearchable(false)}>Disabled</Button>
-            </div>
-          </div>
+
         </div>
       </div>
 

@@ -389,12 +389,12 @@ export const SelectItem = React.forwardRef<
       keywords={label ? [label] : undefined}
       onSelect={handleSelect}
       className={cn(
-        "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-        variant === "default" && "aria-selected:bg-accent aria-selected:text-accent-foreground",
-        variant === "soft" && "aria-selected:bg-muted/80",
-        variant === "floating" && "aria-selected:bg-accent/50 aria-selected:font-medium",
-        variant === "glass" && "aria-selected:bg-white/10 dark:aria-selected:bg-white/5",
-        variant === "minimal" && "aria-selected:bg-transparent aria-selected:font-bold aria-selected:text-foreground hover:bg-muted",
+        "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+        variant === "default" && "data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground",
+        variant === "soft" && "data-[selected=true]:bg-muted/80",
+        variant === "floating" && "data-[selected=true]:bg-accent/50 data-[selected=true]:font-medium",
+        variant === "glass" && "data-[selected=true]:bg-white/10 dark:data-[selected=true]:bg-white/5",
+        variant === "minimal" && "data-[selected=true]:bg-transparent data-[selected=true]:font-bold data-[selected=true]:text-foreground hover:bg-muted",
         className
       )}
       {...props}
