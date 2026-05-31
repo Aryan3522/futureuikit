@@ -1158,6 +1158,30 @@ export const componentsList: ComponentItem[] = [
       'Variants: Toggle between enterprise, minimal, glass, etc., via the variant prop.'
     ]
   },
+  {
+    id: 43,
+    title: 'Rich Text Editor',
+    type: 'Editor',
+    slug: 'rich-text-editor',
+    category: 'data-input',
+    description: 'A fully reusable, highly customizable, production-ready Rich Text Editor component inspired by Notion and Linear. Features slash commands, markdown support, bubble menus, and rich formatting powered by Tiptap.',
+    details: [
+      'Slash Commands (type "/" to open formatting menu).',
+      'Bubble Menu for quick formatting of selected text.',
+      'Markdown shortcuts (e.g., "# " for H1, "- " for bullet list).',
+      'Support for Tables, Images, Task Lists, Quotes, and Code Blocks.',
+      'Fully customizable Toolbar and Extensions.',
+      'Multiple visual variants: Default, Minimal, Writing, Enterprise, Glass.'
+    ],
+    codes: {
+      next: 'import { RichTextEditor } from "@/components/ui/rich-text-editor";\n\nexport default function Example() {\n  return (\n    <div className="w-full max-w-3xl mx-auto h-[500px]">\n      <RichTextEditor \n        variant="default" \n        content="<h1>Welcome</h1><p>Type / for commands</p>"\n      />\n    </div>\n  );\n}'
+    },
+    usage: [
+      'Installation: Run npx futureuikit add rich-text-editor',
+      'Usage: Use the <RichTextEditor /> component as a drop-in replacement for standard textareas.',
+      'Customization: Pass custom Tiptap extensions via the extensions prop.'
+    ]
+  },
 ];
 
 export { registry };
