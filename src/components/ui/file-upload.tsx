@@ -452,14 +452,15 @@ export function UploadPreview({ className }: { className?: string }) {
               </div>
 
               {/* Remove Button */}
-              <button
+              <motion.button
+                whileTap={{ scale: 0.9 }}
                 type="button"
                 onClick={() => handleRemoveFile(fileState.id)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-muted opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring"
               >
                 <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                 <span className="sr-only">Remove file</span>
-              </button>
+              </motion.button>
 
               {/* Progress Bar Overlay for the specific file */}
               {fileState.status === 'uploading' && (

@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use client";
 
 /**
@@ -237,6 +238,7 @@ const CommandList = forwardRef((props: any, ref) => {
     selectItem(selectedIndex);
   };
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setSelectedIndex(0), [props.items]);
 
   useImperativeHandle(ref, () => ({

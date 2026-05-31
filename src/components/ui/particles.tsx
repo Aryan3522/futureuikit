@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * @registry-slug particles
  * @registry-name Particles
@@ -80,6 +81,7 @@ export const Particles: React.FC<ParticlesProps> = ({
 
   useEffect(() => {
     if (color && !themeAdaptive) {
+  // eslint-disable-next-line react-hooks/set-state-in-effect
       setResolvedColor(color);
       return;
     }

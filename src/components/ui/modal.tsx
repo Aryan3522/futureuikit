@@ -93,12 +93,12 @@ const modalOverlayVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-black/40 backdrop-blur-sm",
-        floating: "bg-black/30 backdrop-blur-[2px]",
-        glass: "bg-black/20 backdrop-blur-md",
-        elevated: "bg-black/50 backdrop-blur-sm",
-        minimal: "bg-black/40",
-        spotlight: "bg-black/80 backdrop-blur-sm",
+        default: "bg-background/80 backdrop-blur-sm",
+        floating: "bg-background/60 backdrop-blur-[2px]",
+        glass: "bg-background/40 backdrop-blur-md",
+        elevated: "bg-background/90 backdrop-blur-sm",
+        minimal: "bg-background/80",
+        spotlight: "bg-background/95 backdrop-blur-sm",
       },
       position: {
         center: "items-center justify-center p-4",
@@ -227,9 +227,11 @@ export const ModalContent = React.forwardRef<React.ElementRef<typeof DialogPrimi
                   >
                     {children}
                     {!hideCloseButton && (
-                      <DialogPrimitive.Close className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-full p-1.5 bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 z-10">
-                        <X className="h-4 w-4" />
-                        <span className="sr-only">Close</span>
+                      <DialogPrimitive.Close asChild>
+                        <motion.button whileTap={{ scale: 0.9 }} className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-full p-1.5 bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 z-10">
+                          <X className="h-4 w-4" />
+                          <span className="sr-only">Close</span>
+                        </motion.button>
                       </DialogPrimitive.Close>
                     )}
                   </motion.div>

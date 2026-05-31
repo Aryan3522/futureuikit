@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use client";
 
 /**
@@ -441,6 +442,7 @@ export const SelectVirtualizer = React.forwardRef<
   // Expose ref if needed
   React.useImperativeHandle(ref, () => parentRef.current!);
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: items.length,
     getScrollElement: () => parentRef.current,

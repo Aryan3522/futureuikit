@@ -4,7 +4,7 @@ import AppProviders from "@/next/AppProviders";
 import { PointCursor } from "@/components/ui/PointCursor";
 import Script from "next/script";
 import React from "react";
-import { Metadata } from "next";
+import { Metadata, Viewport } from "next";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,6 +33,13 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -48,15 +55,30 @@ export default function RootLayout({
         className="antialiased bg-background text-foreground"
         suppressHydrationWarning
       >
-        <Script
+        <script
           id="dark-mode"
-          strategy="beforeInteractive"
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
                   document.documentElement.classList.add('dark');
                 } catch (_) {}
+              })();
+            `,
+          }}
+        />
+        <script
+          id="disable-zoom"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                document.addEventListener('wheel', function(e) {
+                  if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                  }
+                }, { passive: false });
               })();
             `,
           }}

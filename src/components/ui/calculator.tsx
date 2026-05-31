@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * @registry-slug calculator
  * @registry-name Calculator

@@ -28,9 +28,10 @@ export const AccordionItem: React.FC<AccordionItemProps> = ({
 }) => {
   return (
     <div className={cn("border-b border-border/50 last:border-none", className)}>
-      <button
+      <motion.button
+        whileTap={{ scale: 0.99 }}
         onClick={onClick}
-        className="flex w-full items-center justify-between py-4 text-left transition-all hover:text-primary"
+        className="flex w-full items-center justify-between py-4 text-left transition-all hover:text-primary rounded-lg px-2 -mx-2 hover:bg-muted/50"
       >
         <span className="text-sm font-medium tracking-tight">{title}</span>
         <motion.div
@@ -39,7 +40,7 @@ export const AccordionItem: React.FC<AccordionItemProps> = ({
         >
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </motion.div>
-      </button>
+      </motion.button>
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div

@@ -54,8 +54,8 @@ export const GlowyButton = React.forwardRef<HTMLButtonElement, GlowyButtonProps>
         whileHover={!disabled ? "hover" : "initial"}
         whileTap={!disabled ? "hover" : "initial"}
         className={cn(
-          "relative inline-flex items-center justify-center sm:min-w-42.5 h-12 rounded-full font-bold text-white overflow-hidden",
-          "bg-slate-950 border-2",
+          "relative inline-flex items-center justify-center sm:min-w-42.5 h-12 rounded-full font-bold overflow-hidden",
+          "bg-background text-foreground border-2",
           "w-full sm:w-auto",
           disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
           className
@@ -95,7 +95,7 @@ export const GlowyButton = React.forwardRef<HTMLButtonElement, GlowyButtonProps>
             }
           }}
           transition={{ type: "spring", stiffness: 250, damping: 25 }}
-          className="absolute z-20 flex items-center justify-center backdrop-blur-xl border border-white/30 shadow-2xl pointer-events-none m-0 p-0"
+          className="absolute z-20 flex items-center justify-center backdrop-blur-xl border border-black/10 dark:border-white/30 shadow-2xl pointer-events-none m-0 p-0"
           style={{
             backgroundColor: finalGlass,
           }}
@@ -106,14 +106,14 @@ export const GlowyButton = React.forwardRef<HTMLButtonElement, GlowyButtonProps>
               hover: { opacity: 1, scale: 1, x: 0, rotate: 0 }
             }}
             transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 }}
-            className="flex items-center justify-center"
+            className="flex items-center justify-center text-foreground"
           >
             <Icon size={20} />
           </motion.div>
         </motion.div>
 
         <motion.div
-          className="absolute inset-0 z-0 bg-linear-to-r from-transparent via-white/10 to-transparent"
+          className="absolute inset-0 z-0 bg-linear-to-r from-transparent via-black/5 dark:via-white/10 to-transparent"
           variants={{
             initial: { x: "-100%" },
             hover: { x: "100%" }

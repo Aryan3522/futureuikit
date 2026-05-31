@@ -87,19 +87,21 @@ export const CursorGlowButton = React.forwardRef<HTMLButtonElement, CursorGlowBu
     }
 
     return (
-      <button
+      <motion.button
         ref={ref}
         onMouseMove={handleMouseMove}
-        onMouseEnter={(e) => {
+        onMouseEnter={(e: any) => {
           setIsHovered(true);
           if (onMouseEnter) onMouseEnter(e);
         }}
-        onMouseLeave={(e) => {
+        onMouseLeave={(e: any) => {
           setIsHovered(false);
           if (onMouseLeave) onMouseLeave(e);
         }}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
         className={cn(buttonVariants({ variant, size, className }), "group")}
-        {...props}
+        {...(props as any)}
       >
         {/*
          * Border glow overlay — rendered client-side only.
@@ -125,7 +127,7 @@ export const CursorGlowButton = React.forwardRef<HTMLButtonElement, CursorGlowBu
         <div className="relative z-10 flex items-center justify-center gap-2">
           {children}
         </div>
-      </button>
+      </motion.button>
     );
   }
 );

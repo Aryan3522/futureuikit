@@ -253,7 +253,7 @@ export const componentsList: ComponentItem[] = [
   {
     id: 10,
     title: "Error Page",
-    type: "Feedback",
+    type: "Pages",
     slug: "error-page",
     category: "ui",
     description:
@@ -645,6 +645,64 @@ export const componentsList: ComponentItem[] = [
     ],
   },
   {
+    id: 99,
+    title: "Filter Builder",
+    type: "UI",
+    slug: "filter-builder",
+    category: "Complex",
+    description: "An enterprise-grade, highly customizable dynamic filter builder. It empowers users to create complex query rules with nested AND/OR logic, making it the perfect companion for advanced data tables, search interfaces, and CRM dashboards.",
+    details: [
+      "Nested Groups: Supports unlimited levels of nested AND/OR logic groups to handle complex query requirements.",
+      "Headless Architecture: Powered by a robust Context API that separates state management from presentation.",
+      "Drag & Drop: Features clean HTML5 native drag-and-drop for reordering rules and groups without heavy external dependencies.",
+      "Animations: Fully animated with Framer Motion, providing buttery smooth state transitions when adding, removing, or reordering rules.",
+      "Custom Dropdowns: Includes a built-in headless dropdown system that perfectly matches all 5 aesthetic variants.",
+      "Variants: Supports Default (SaaS), Minimal (Clean), Enterprise (High Contrast), Compact (Dense Data), and Glass (Premium Translucent) themes.",
+      "Data Agnostic: Outputs a clean, serialized JSON tree that can be easily parsed into SQL, MongoDB queries, or API payloads."
+    ],
+    codes: {
+      next: `import { FilterBuilder, createEmptyGroup } from "@/components/ui/filter-builder";
+import { useState } from "react";
+
+// 1. Define the fields available to your users
+const myFields = [
+  { id: "status", label: "Status", type: "select", options: [
+    { value: "todo", label: "To Do" },
+    { value: "done", label: "Done" }
+  ]},
+  { id: "email", label: "Email Address", type: "text" },
+  { id: "created_at", label: "Date Created", type: "date" }
+];
+
+export default function AdvancedSearch() {
+  // 2. Initialize with an empty group or persisted data
+  const [data, setData] = useState(() => createEmptyGroup(myFields));
+
+  // 3. Render the builder and listen for onChange events
+  return (
+    <div className="p-6 bg-background rounded-xl border">
+      <FilterBuilder 
+        initialData={data} 
+        onChange={(newData) => {
+          setData(newData);
+          console.log("New Query State:", newData);
+        }} 
+        fields={myFields}
+        variant="default" // "default", "minimal", "enterprise", "compact", "glass"
+      />
+    </div>
+  );
+}`
+    },
+    usage: [
+      "Installation: Run 'npx futureuikit add filter-builder' in your terminal.",
+      "Setup Fields: Define your schema using the 'FilterField' type. Supported types include 'text', 'number', 'date', 'select', 'boolean', etc.",
+      "State Management: The component expects an 'initialData' object of type 'FilterGroup'. It emits changes via the 'onChange' callback.",
+      "Custom Operators: While it ships with default operators (Equals, Contains, GT, LT, etc.), you can override them by passing your own 'operators' array.",
+      "Variants: Use the 'variant' prop to instantly switch the visual aesthetic to match your specific dashboard design."
+    ]
+  },
+  {
     id: 25,
     title: "Point Cursor",
     type: "UI",
@@ -757,9 +815,9 @@ export const componentsList: ComponentItem[] = [
   {
     id: 29,
     title: "Cinematic Error",
-    type: "Components",
+    type: "Pages",
     slug: "cinematic-error",
-    category: "feedback",
+    category: "pages",
     description:
       "A stunning, cinematic, and immersive error page designed for ultra-modern web experiences. It features dynamic mouse-tracked 3D perspective tilts, organic glowing spotlights, glassy typography, and a subtle cinematic grit overlay. It's built entirely with Framer Motion to deliver a premium, fluid aesthetic that captures attention immediately.",
     details: [
@@ -1109,7 +1167,7 @@ export const componentsList: ComponentItem[] = [
   {
     id: 111,
     title: "Kanban Board",
-    type: "Layout",
+    type: "Board",
     slug: "kanban",
     category: "layout",
     description: "A highly performant, zero-dependency Native HTML5 drag-and-drop Kanban Board inspired by modern project management tools like Linear.",
@@ -1161,7 +1219,7 @@ export const componentsList: ComponentItem[] = [
   {
     id: 43,
     title: 'Rich Text Editor',
-    type: 'Editor',
+    type: 'Form',
     slug: 'rich-text-editor',
     category: 'data-input',
     description: 'A fully reusable, highly customizable, production-ready Rich Text Editor component inspired by Notion and Linear. Features slash commands, markdown support, bubble menus, and rich formatting powered by Tiptap.',

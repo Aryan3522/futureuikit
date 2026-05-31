@@ -220,7 +220,8 @@ export const Calendar: React.FC<CalendarProps> = ({
                       />
                     )}
                     
-                    <button
+                    <motion.button
+                      whileTap={{ scale: 0.85 }}
                       onClick={() => !disabled && handleDateClick(date)}
                       disabled={disabled}
                       className={cn(
@@ -236,7 +237,7 @@ export const Calendar: React.FC<CalendarProps> = ({
                       {isToday && !selected && (
                         <div className="absolute bottom-1.5 w-1 h-1 rounded-full bg-primary/60" />
                       )}
-                    </button>
+                    </motion.button>
                   </div>
                 );
               })}

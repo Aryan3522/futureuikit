@@ -5,6 +5,7 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface SidebarButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -21,18 +22,20 @@ export const SidebarButton: React.FC<SidebarButtonProps> = ({
   ...props
 }) => {
   return (
-    <button
+    <motion.button
+      whileHover={{ x: 4 }}
+      whileTap={{ scale: 0.98 }}
       className={cn(
-        "w-full text-left py-2 text-sm transition-colors relative group flex items-center justify-between",
+        "w-full text-left py-2 px-3 text-sm transition-colors relative group flex items-center justify-between rounded-lg",
         isActive 
-          ? "text-primary font-bold italic" 
-          : "text-muted-foreground hover:text-foreground",
+          ? "bg-primary/10 text-primary font-bold italic" 
+          : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
         className
       )}
-      {...props}
+      {...(props as any)}
     >
-      <span className={cn(isCategory && "pl-4")}>{label}</span>
-      {isActive && <div className="w-1 h-1 rounded-full bg-primary" />}
-    </button>
+      <span className={cn(isCategory && "pl-4 text-xs font-semibold tracking-wider uppercase opacity-70")}>{label}</span>
+      {isActive && <div className="w-1.5 h-1.5 rounded-full bg-primary" />}
+    </motion.button>
   );
 };

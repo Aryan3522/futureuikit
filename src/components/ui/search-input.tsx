@@ -168,7 +168,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
                   Recommendations
                 </div>
                 {results.map((item) => (
-                  <button
+                  <motion.button
+                    whileTap={{ scale: 0.98 }}
                     key={item.id}
                     type="button"
                     onClick={() => {
@@ -197,7 +198,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
                       </span>
                     </div>
                     <ChevronRight className="ml-auto w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
-                  </button>
+                  </motion.button>
                 ))}
                 <Link
                   href="/components"

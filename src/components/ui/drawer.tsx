@@ -7,9 +7,11 @@
  * @registry-dependency class-variance-authority
  * @registry-dependency lucide-react
  * @registry-dependency @radix-ui/react-slot
+ * @registry-file src/components/ui/button.tsx
  */
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { Slot } from "@radix-ui/react-slot";
 import { AnimatePresence, motion } from "framer-motion";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -179,6 +181,11 @@ export const DrawerContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => {
   const { isOpen, setIsOpen, placement, variant } = useDrawer();
   const contentRef = React.useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Expose ref
   React.useImperativeHandle(ref, () => contentRef.current!);
@@ -275,7 +282,9 @@ export const DrawerContent = React.forwardRef<
     },
   };
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
@@ -285,7 +294,7 @@ export const DrawerContent = React.forwardRef<
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+            className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm"
             onClick={() => setIsOpen(false)}
             aria-hidden="true"
           />
@@ -307,7 +316,8 @@ export const DrawerContent = React.forwardRef<
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 });
 DrawerContent.displayName = "DrawerContent";
@@ -398,7 +408,8 @@ export const DrawerClose = React.forwardRef<
   }
 
   return (
-    <button
+    <motion.button
+      whileTap={{ scale: 0.9 }}
       ref={ref}
       type="button"
       onClick={() => setIsOpen(false)}
@@ -406,11 +417,11 @@ export const DrawerClose = React.forwardRef<
         "absolute right-4 top-4 rounded-full p-2 opacity-70 ring-offset-background transition-opacity hover:opacity-100 hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none",
         className
       )}
-      {...props}
+      {...(props as any)}
     >
       <X className="h-4 w-4" />
       <span className="sr-only">Close</span>
-    </button>
+    </motion.button>
   );
 });
 DrawerClose.displayName = "DrawerClose";

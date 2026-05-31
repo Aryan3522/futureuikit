@@ -13,6 +13,7 @@ import { CarouselSlider } from "@/components/ui/carousel-slider";
 import { NavMenu } from "@/components/ui/nav-menu";
 import { ErrorPage } from "@/components/ui/error-page";
 import { CinematicError } from "@/components/ui/cinematic-error";
+import { FilterBuilder, FilterGroup, FilterField, createEmptyGroup, FilterRule } from "@/components/ui/filter-builder";
 import { ExpandingFlexCard } from "@/components/ui/expanding-flex-card";
 import { NexusCard } from "@/components/ui/nexus-card";
 import { useToast } from "@/hooks/use-toast";
@@ -38,7 +39,7 @@ import { Accordion } from "@/components/ui/accordion";
 import { Calendar } from "@/components/ui/calendar";
 import { Calculator } from "@/components/ui/calculator";
 import { DynamicForm, FieldConfig } from "@/components/ui/dynamic-form";
-import { Sparkles, Terminal, Mail, Lock, User, Globe, Phone as PhoneIcon, Check as CheckIcon, X as XIcon, AlertCircle as AlertCircleIcon, Home, Search, Settings, Compass, MessageSquare, Plus, Monitor } from "lucide-react";
+import { Sparkles, Terminal, Mail, Lock, User, Globe, Phone as PhoneIcon, Check as CheckIcon, X as XIcon, AlertCircle as AlertCircleIcon, Home, Search, Settings, Compass, MessageSquare, Plus, Monitor, Filter } from "lucide-react";
 import { ScrollTextReveal } from "@/components/ui/scroll-text-reveal";
 import { CursorGlowButton } from "@/components/ui/cursor-glow-button";
 
@@ -134,6 +135,68 @@ const Code: React.FC<{ className?: string; children: React.ReactNode }> = ({
   />
 );
 
+// ==========================================
+// STANDARD PREVIEW WRAPPER
+// ==========================================
+
+interface PreviewContainerProps {
+  title: string;
+  description?: string;
+  variants?: readonly string[];
+  activeVariant?: string;
+  onVariantChange?: (variant: any) => void;
+  children: React.ReactNode;
+  className?: string;
+  contentClassName?: string;
+}
+
+const PreviewContainer: React.FC<PreviewContainerProps> = ({
+  title,
+  description,
+  variants,
+  activeVariant,
+  onVariantChange,
+  children,
+  className,
+  contentClassName,
+}) => {
+  return (
+    <div className={cn("w-full h-full flex flex-col overflow-y-auto bg-background", className)}>
+      {/* Header & Controls */}
+      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between w-full shrink-0 relative z-10 px-4 py-4 md:px-8 md:py-6 bg-transparent">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
+          {description && <p className="text-sm text-muted-foreground mt-1">{description}</p>}
+        </div>
+        
+        {variants && variants.length > 0 && onVariantChange && (
+          <div className="flex items-center gap-2 p-1 bg-muted/30 rounded-lg overflow-x-auto max-w-full">
+            {variants.map(v => (
+              <button
+                key={v}
+                onClick={() => onVariantChange(v)}
+                className={cn(
+                  "px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap",
+                  activeVariant === v 
+                    ? "bg-background shadow-sm text-foreground" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                )}
+              >
+                {v}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Content Area */}
+      <div className={cn("flex items-center justify-center flex-1 w-full relative px-4 md:px-8 pb-8 pt-4 md:pt-8", contentClassName)}>
+        {children}
+      </div>
+    </div>
+  );
+};
+
 const ToastPreview: React.FC = () => {
   const { toast } = useToast();
   const [position, setPosition] = React.useState<
@@ -195,6 +258,7 @@ const ToastPreview: React.FC = () => {
 const CalendarPreview: React.FC = () => {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [highlighted, setHighlighted] = React.useState<Date[]>([]);
+  const [variant, setVariant] = React.useState<"modern" | "clean">("modern");
 
   const toggleHighlight = (targetDate: Date) => {
     setHighlighted((prev) => {
@@ -211,49 +275,25 @@ const CalendarPreview: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full p-6 md:p-12 gap-16">
-      <div className="flex flex-col lg:flex-row gap-16 items-start justify-center w-full max-w-5xl">
-        <div className="flex flex-col gap-6 items-center w-full">
-          <div className="flex flex-col items-center gap-1">
-            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-foreground/40">
-              Professional
-            </h3>
-            <p className="text-[10px] text-muted-foreground/30 font-medium italic">
-              Glassmorphism & Depth
-            </p>
-          </div>
-          <Calendar
-            value={date}
-            onChange={setDate}
-            highlightedDates={highlighted}
-            onHighlightToggle={toggleHighlight}
-            variant="modern"
-          />
-        </div>
+    <PreviewContainer 
+      title="Calendar" 
+      description="A beautiful, interactive calendar with selection and highlighting."
+      variants={["modern", "clean"]}
+      activeVariant={variant}
+      onVariantChange={setVariant}
+    >
+      <div className="flex flex-col items-center justify-center w-full h-full p-6 gap-8">
+        <Calendar
+          value={date}
+          onChange={setDate}
+          highlightedDates={highlighted}
+          onHighlightToggle={toggleHighlight}
+          variant={variant}
+        />
 
-        <div className="flex flex-col gap-6 items-center w-full">
-          <div className="flex flex-col items-center gap-1">
-            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-foreground/40">
-              Minimalist
-            </h3>
-            <p className="text-[10px] text-muted-foreground/30 font-medium italic">
-              Pure & Structured
-            </p>
-          </div>
-          <Calendar
-            value={date}
-            onChange={setDate}
-            highlightedDates={highlighted}
-            onHighlightToggle={toggleHighlight}
-            variant="clean"
-          />
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-6 items-center w-full max-w-sm">
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-border/40 to-transparent" />
-        <div className="flex flex-col gap-4 items-center">
-          <div className="flex gap-2">
+        <div className="flex flex-col gap-6 items-center w-full max-w-sm">
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-border/40 to-transparent" />
+          <div className="flex flex-col gap-4 items-center">
             <Button
               size="sm"
               variant="outline"
@@ -262,17 +302,17 @@ const CalendarPreview: React.FC = () => {
             >
               Clear Highlights
             </Button>
+            <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.1em] font-bold text-center leading-relaxed">
+              Interact with the grid to{" "}
+              <span className="text-primary/60 italic underline underline-offset-4">
+                Toggle Highlighting
+              </span>{" "}
+              or select dates.
+            </p>
           </div>
-          <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.1em] font-bold text-center leading-relaxed">
-            Interact with the grid to{" "}
-            <span className="text-primary/60 italic underline underline-offset-4">
-              Toggle Highlighting
-            </span>{" "}
-            or select dates.
-          </p>
         </div>
       </div>
-    </div>
+    </PreviewContainer>
   );
 };
 
@@ -282,38 +322,17 @@ const CalculatorPreview: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col gap-8 items-center justify-center w-full h-full p-4 sm:p-8">
-      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 p-2 bg-muted/20 rounded-full border border-border/50 backdrop-blur-md relative z-20">
-        <Button
-          variant={variant === "glass" ? "default" : "ghost"}
-          size="sm"
-          onClick={() => setVariant("glass")}
-          className="rounded-full px-6 transition-all"
-        >
-          Glass
-        </Button>
-        <Button
-          variant={variant === "brutal" ? "default" : "ghost"}
-          size="sm"
-          onClick={() => setVariant("brutal")}
-          className="rounded-full px-6 transition-all"
-        >
-          Brutal
-        </Button>
-        <Button
-          variant={variant === "neon" ? "default" : "ghost"}
-          size="sm"
-          onClick={() => setVariant("neon")}
-          className="rounded-full px-6 transition-all"
-        >
-          Neon
-        </Button>
-      </div>
-
+    <PreviewContainer
+      title="Calculator"
+      description="A fully functional, styled calculator with various aesthetic variants."
+      variants={["glass", "brutal", "neon"]}
+      activeVariant={variant}
+      onVariantChange={setVariant}
+    >
       <div className="flex items-center justify-center w-full flex-1">
         <Calculator variant={variant} />
       </div>
-    </div>
+    </PreviewContainer>
   );
 };
 
@@ -475,43 +494,16 @@ const DynamicFormPreview: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-8 items-center justify-center w-full h-full p-4 sm:p-8 select-text">
-      <div className="flex flex-wrap justify-center gap-2 p-1.5 bg-muted/20 rounded-full border border-border/50 backdrop-blur-md relative z-20">
-        <Button
-          variant={activeDemo === "contact" ? "default" : "ghost"}
-          size="sm"
-          onClick={() => {
-            setActiveDemo("contact");
-            setSubmittedData(null);
-          }}
-          className="rounded-full px-6 transition-all"
-        >
-          Contact Form
-        </Button>
-        <Button
-          variant={activeDemo === "wizard" ? "default" : "ghost"}
-          size="sm"
-          onClick={() => {
-            setActiveDemo("wizard");
-            setSubmittedData(null);
-          }}
-          className="rounded-full px-6 transition-all"
-        >
-          Multi-Step Wizard
-        </Button>
-        <Button
-          variant={activeDemo === "login" ? "default" : "ghost"}
-          size="sm"
-          onClick={() => {
-            setActiveDemo("login");
-            setSubmittedData(null);
-          }}
-          className="rounded-full px-6 transition-all"
-        >
-          Compact Login
-        </Button>
-      </div>
-
+    <PreviewContainer
+      title="Dynamic Form"
+      description="A highly dynamic, JSON-driven form builder with built-in validation."
+      variants={["contact", "wizard", "login"]}
+      activeVariant={activeDemo}
+      onVariantChange={(v) => {
+        setActiveDemo(v);
+        setSubmittedData(null);
+      }}
+    >
       <div className="flex flex-col lg:flex-row gap-8 items-stretch justify-center w-full max-w-5xl">
         <div className="flex-1 flex flex-col justify-center min-w-0">
           <AnimatePresence mode="wait">
@@ -616,7 +608,7 @@ const DynamicFormPreview: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </PreviewContainer>
   );
 };
 
@@ -624,29 +616,14 @@ const DockPreview: React.FC = () => {
   const [variant, setVariant] = React.useState<"modern" | "clean" | "interactive">("modern");
 
   return (
-    <div className="flex flex-col items-center w-full h-full p-4 pt-16 relative min-h-[400px]">
-      <div className="flex gap-2 z-10 bg-background/50 backdrop-blur-sm p-1 rounded-lg border border-border/50 mb-12 self-end">
-        <button 
-          onClick={() => setVariant("modern")}
-          className={cn("px-3 py-1.5 text-xs font-bold rounded-md transition-colors", variant === "modern" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:bg-muted/50")}
-        >
-          Modern
-        </button>
-        <button 
-          onClick={() => setVariant("clean")}
-          className={cn("px-3 py-1.5 text-xs font-bold rounded-md transition-colors", variant === "clean" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:bg-muted/50")}
-        >
-          Clean
-        </button>
-        <button 
-          onClick={() => setVariant("interactive")}
-          className={cn("px-3 py-1.5 text-xs font-bold rounded-md transition-colors", variant === "interactive" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:bg-muted/50")}
-        >
-          Interactive
-        </button>
-      </div>
-
-      <div className="flex flex-col items-center w-full flex-1 justify-center transition-all duration-500 ease-in-out pb-20">
+    <PreviewContainer
+      title="Dock"
+      description="A macOS style animated dock with interactive icons."
+      variants={["modern", "clean", "interactive"]}
+      activeVariant={variant}
+      onVariantChange={setVariant}
+    >
+      <div className="flex flex-col items-center w-full flex-1 justify-center transition-all duration-500 ease-in-out pb-20 pt-16">
         <Dock variant={variant}>
           <DockItem label="Home" href="#"><Home size={20} /></DockItem>
           <DockItem label="Explore" href="#"><Compass size={20} /></DockItem>
@@ -674,7 +651,7 @@ const DockPreview: React.FC = () => {
           </AnimatePresence>
         </div>
       </div>
-    </div>
+    </PreviewContainer>
   );
 };
 
@@ -684,8 +661,15 @@ const DrawerPreview: React.FC = () => {
   const [variant, setVariant] = React.useState<"default" | "compact" | "glass" | "elevated" | "floating">("default");
   
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full p-4 relative overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-      <div className="flex flex-wrap gap-4 mb-8 z-10 p-4 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm">
+    <PreviewContainer
+      title="Drawer"
+      description="A flexible drawer with placement options and multiple styles."
+      variants={["default", "compact", "glass", "elevated", "floating"]}
+      activeVariant={variant}
+      onVariantChange={setVariant}
+      contentClassName="relative overflow-hidden"
+    >
+      <div className="flex flex-col gap-4 mb-8 z-10 p-4 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm self-start">
         <div className="flex flex-col gap-2">
           <span className="text-xs font-bold uppercase tracking-widest opacity-50">Placement</span>
           <div className="flex gap-2">
@@ -694,20 +678,13 @@ const DrawerPreview: React.FC = () => {
             ))}
           </div>
         </div>
-        <div className="flex flex-col gap-2">
-          <span className="text-xs font-bold uppercase tracking-widest opacity-50">Variant</span>
-          <div className="flex flex-wrap gap-2">
-            {(["default", "compact", "glass", "elevated", "floating"] as const).map(v => (
-              <Button key={v} variant={variant === v ? "default" : "outline"} size="sm" onClick={() => setVariant(v)}>{v}</Button>
-            ))}
-          </div>
-        </div>
       </div>
       
-      <Drawer placement={placement} variant={variant}>
-        <DrawerTrigger asChild>
-          <Button size="lg" className="rounded-full px-8 shadow-lg shadow-primary/20">Open Drawer</Button>
-        </DrawerTrigger>
+      <div className="flex-1 flex items-center justify-center w-full min-h-[300px]">
+        <Drawer placement={placement} variant={variant}>
+          <DrawerTrigger asChild>
+            <Button size="lg" className="rounded-full px-8 shadow-lg shadow-primary/20">Open Drawer</Button>
+          </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Premium Drawer</DrawerTitle>
@@ -728,43 +705,46 @@ const DrawerPreview: React.FC = () => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-    </div>
+      </div>
+    </PreviewContainer>
   );
 };
 
 const TogglePreview: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full p-12 space-y-12 bg-zinc-50 dark:bg-zinc-950/50">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-12 justify-items-center">
-        <div className="flex flex-col items-center gap-4">
-          <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Default</span>
-          <Toggle size="md" variant="default" />
+    <PreviewContainer title="Toggle" description="A flexible toggle component with multiple states and variants.">
+      <div className="flex flex-col items-center justify-center w-full h-full p-12 space-y-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 justify-items-center">
+          <div className="flex flex-col items-center gap-4">
+            <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Default</span>
+            <Toggle size="md" variant="default" />
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Modern</span>
+            <Toggle size="md" variant="modern" defaultChecked />
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Glass</span>
+            <Toggle size="md" variant="glass" />
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Neon</span>
+            <Toggle size="md" variant="neon" defaultChecked />
+          </div>
         </div>
+        
+        <div className="w-full h-px bg-border/40" />
+        
         <div className="flex flex-col items-center gap-4">
-          <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Modern</span>
-          <Toggle size="md" variant="modern" defaultChecked />
-        </div>
-        <div className="flex flex-col items-center gap-4">
-          <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Glass</span>
-          <Toggle size="md" variant="glass" />
-        </div>
-        <div className="flex flex-col items-center gap-4">
-          <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Neon</span>
-          <Toggle size="md" variant="neon" defaultChecked />
+          <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Sizes</span>
+          <div className="flex items-center gap-8">
+            <Toggle size="sm" variant="default" />
+            <Toggle size="md" variant="default" defaultChecked />
+            <Toggle size="lg" variant="default" />
+          </div>
         </div>
       </div>
-      
-      <div className="w-full h-px bg-border/40" />
-      
-      <div className="flex flex-col items-center gap-4">
-        <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Sizes</span>
-        <div className="flex items-center gap-8">
-          <Toggle size="sm" variant="default" />
-          <Toggle size="md" variant="default" defaultChecked />
-          <Toggle size="lg" variant="default" />
-        </div>
-      </div>
-    </div>
+    </PreviewContainer>
   );
 };
 
@@ -773,73 +753,73 @@ const ModalPreview: React.FC = () => {
   const [variant, setVariant] = React.useState<"default" | "floating" | "glass" | "elevated" | "minimal" | "spotlight">("default");
   const [size, setSize] = React.useState<"xs" | "sm" | "md" | "lg" | "xl" | "full-width" | "full-screen">("md");
   const [position, setPosition] = React.useState<"center" | "top-center" | "bottom-sheet" | "left-side" | "right-side">("center");
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [container, setContainer] = React.useState<HTMLDivElement | null>(null);
 
   return (
-    <div ref={containerRef} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-      <div className="flex flex-col gap-4 mb-8 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-4xl w-full">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex flex-col gap-2">
-            <span className="text-xs uppercase font-bold tracking-widest opacity-50">Variant</span>
-            <div className="flex flex-wrap gap-2">
-              {(["default", "floating", "glass", "elevated", "minimal", "spotlight"] as const).map(v => (
-                <Button key={v} variant={variant === v ? "default" : "outline"} size="sm" onClick={() => setVariant(v)} className="capitalize">{v}</Button>
-              ))}
+    <PreviewContainer
+      title="Modal"
+      description="A premium modal interface with diverse variants and positions."
+      variants={["default", "floating", "glass", "elevated", "minimal", "spotlight"]}
+      activeVariant={variant}
+      onVariantChange={setVariant}
+    >
+      <div ref={setContainer} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+        <div className="flex flex-col gap-4 mb-8 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-4xl w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-2">
+              <span className="text-xs uppercase font-bold tracking-widest opacity-50">Size</span>
+              <div className="flex flex-wrap gap-2">
+                {(["xs", "sm", "md", "lg", "xl", "full-width", "full-screen"] as const).map(s => (
+                  <Button key={s} variant={size === s ? "default" : "outline"} size="sm" onClick={() => setSize(s)}>{s}</Button>
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <span className="text-xs uppercase font-bold tracking-widest opacity-50">Size</span>
-            <div className="flex flex-wrap gap-2">
-              {(["xs", "sm", "md", "lg", "xl", "full-width", "full-screen"] as const).map(s => (
-                <Button key={s} variant={size === s ? "default" : "outline"} size="sm" onClick={() => setSize(s)}>{s}</Button>
-              ))}
-            </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <span className="text-xs uppercase font-bold tracking-widest opacity-50">Position</span>
-            <div className="flex flex-wrap gap-2">
-              {(["center", "top-center", "bottom-sheet", "left-side", "right-side"] as const).map(p => (
-                <Button key={p} variant={position === p ? "default" : "outline"} size="sm" onClick={() => setPosition(p)} className="capitalize">{p.replace("-", " ")}</Button>
-              ))}
+            <div className="flex flex-col gap-2">
+              <span className="text-xs uppercase font-bold tracking-widest opacity-50">Position</span>
+              <div className="flex flex-wrap gap-2">
+                {(["center", "top-center", "bottom-sheet", "left-side", "right-side"] as const).map(p => (
+                  <Button key={p} variant={position === p ? "default" : "outline"} size="sm" onClick={() => setPosition(p)} className="capitalize">{p.replace("-", " ")}</Button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      
-      <div className="flex items-center justify-center w-full h-64 border border-dashed border-border/50 rounded-2xl relative">
-        <Button onClick={() => setOpen(true)} size="lg" className="rounded-full shadow-lg shadow-primary/20 px-8">Open Modal</Button>
-      </div>
-      
-      <Modal open={open} onOpenChange={setOpen} variant={variant} size={size} position={position} container={containerRef.current}>
-        <ModalContent container={containerRef.current}>
-          <ModalHeader>
-            <ModalTitle>Premium Modal Interface</ModalTitle>
-            <ModalDescription>Configure variants, sizes, and positions effortlessly.</ModalDescription>
-          </ModalHeader>
-          <ModalBody>
-            <div className="space-y-4 py-2">
-              <div className="w-full h-32 rounded-xl bg-muted/50 animate-pulse border border-border/50" />
-              <div className="space-y-2">
-                <div className="h-4 bg-muted rounded w-5/6 animate-pulse" />
-                <div className="h-4 bg-muted rounded w-4/6 animate-pulse" />
-                <div className="h-4 bg-muted rounded w-full animate-pulse" />
+        
+        <div className="flex items-center justify-center w-full h-64 border border-dashed border-border/50 rounded-2xl relative">
+          <Button onClick={() => setOpen(true)} size="lg" className="rounded-full shadow-lg shadow-primary/20 px-8">Open Modal</Button>
+        </div>
+        
+        <Modal open={open} onOpenChange={setOpen} variant={variant} size={size} position={position} container={container}>
+          <ModalContent container={container}>
+            <ModalHeader>
+              <ModalTitle>Premium Modal Interface</ModalTitle>
+              <ModalDescription>Configure variants, sizes, and positions effortlessly.</ModalDescription>
+            </ModalHeader>
+            <ModalBody>
+              <div className="space-y-4 py-2">
+                <div className="w-full h-32 rounded-xl bg-muted/50 animate-pulse border border-border/50" />
+                <div className="space-y-2">
+                  <div className="h-4 bg-muted rounded w-5/6 animate-pulse" />
+                  <div className="h-4 bg-muted rounded w-4/6 animate-pulse" />
+                  <div className="h-4 bg-muted rounded w-full animate-pulse" />
+                </div>
               </div>
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={() => setOpen(false)}>Confirm</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </div>
+            </ModalBody>
+            <ModalFooter>
+              <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+              <Button onClick={() => setOpen(false)}>Confirm</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </div>
+    </PreviewContainer>
   );
 };
 
 const CommandPalettePreview: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const [variant, setVariant] = React.useState<"default" | "compact" | "floating" | "glass" | "spotlight">("spotlight");
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [container, setContainer] = React.useState<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -853,62 +833,64 @@ const CommandPalettePreview: React.FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-      <div className="flex flex-col gap-4 mb-12 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 w-full max-w-2xl">
-        <div className="flex flex-wrap gap-2 items-center justify-center">
-          <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground mr-2">Variant</span>
-          {(["default", "compact", "floating", "glass", "spotlight"] as const).map((v) => (
-            <Button key={v} variant={variant === v ? "default" : "outline"} size="sm" onClick={() => setVariant(v)} className="capitalize">{v}</Button>
-          ))}
+    <PreviewContainer
+      title="Command Palette"
+      description="A quick, keyboard-accessible command palette."
+      variants={["default", "compact", "floating", "glass", "spotlight"]}
+      activeVariant={variant}
+      onVariantChange={setVariant}
+    >
+      <div ref={setContainer} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+        <div className="flex flex-col gap-4 mb-12 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 w-full max-w-2xl">
+          <p className="text-center text-xs text-muted-foreground mt-2">
+            Press <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"><span className="text-xs">⌘</span>K</kbd> or <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"><span className="text-xs">Ctrl</span>K</kbd> to open the command palette.
+          </p>
         </div>
-        <p className="text-center text-xs text-muted-foreground mt-2">
-          Press <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"><span className="text-xs">⌘</span>K</kbd> or <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"><span className="text-xs">Ctrl</span>K</kbd> to open the command palette.
-        </p>
-      </div>
 
-      <div className="flex items-center justify-center w-full h-32 border border-dashed border-border/50 rounded-2xl relative cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => setOpen(true)}>
-        <p className="text-muted-foreground font-medium">Click here or press <CommandShortcut className="ml-2 inline-flex bg-background px-1.5 py-0.5 rounded-md border">Cmd+K</CommandShortcut> to open</p>
-      </div>
+        <div className="flex items-center justify-center w-full h-32 border border-dashed border-border/50 rounded-2xl relative cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => setOpen(true)}>
+          <p className="text-muted-foreground font-medium">Click here or press <CommandShortcut className="ml-2 inline-flex bg-background px-1.5 py-0.5 rounded-md border">Cmd+K</CommandShortcut> to open</p>
+        </div>
 
-      <CommandPalette open={open} onOpenChange={setOpen} variant={variant} container={containerRef.current}>
-        <CommandInput placeholder="Type a command or search..." />
-        <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="Suggestions">
-            <CommandItem>
-              <Search className="mr-2 h-4 w-4" />
-              <span>Search Projects</span>
-            </CommandItem>
-            <CommandItem>
-              <Plus className="mr-2 h-4 w-4" />
-              <span>Create New Project</span>
-            </CommandItem>
-            <CommandItem>
-              <Terminal className="mr-2 h-4 w-4" />
-              <span>Run Terminal Command</span>
-            </CommandItem>
-          </CommandGroup>
-          <CommandSeparator />
-          <CommandGroup heading="Settings">
-            <CommandItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Profile Settings</span>
-              <CommandShortcut>⌘P</CommandShortcut>
-            </CommandItem>
-            <CommandItem>
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Preferences</span>
-              <CommandShortcut>⌘S</CommandShortcut>
-            </CommandItem>
-            <CommandItem>
-              <Monitor className="mr-2 h-4 w-4" />
-              <span>Appearance</span>
-              <CommandShortcut>⌘A</CommandShortcut>
-            </CommandItem>
-          </CommandGroup>
-        </CommandList>
-      </CommandPalette>
-    </div>
+        <CommandPalette open={open} onOpenChange={setOpen} variant={variant} container={container}>
+          <CommandInput placeholder="Type a command or search..." />
+          <CommandList>
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup heading="Suggestions">
+              <CommandItem>
+                <Search className="mr-2 h-4 w-4" />
+                <span>Search Projects</span>
+              </CommandItem>
+              <CommandItem>
+                <Plus className="mr-2 h-4 w-4" />
+                <span>Create New Project</span>
+              </CommandItem>
+              <CommandItem>
+                <Terminal className="mr-2 h-4 w-4" />
+                <span>Run Terminal Command</span>
+              </CommandItem>
+            </CommandGroup>
+            <CommandSeparator />
+            <CommandGroup heading="Settings">
+              <CommandItem>
+                <User className="mr-2 h-4 w-4" />
+                <span>Profile Settings</span>
+                <CommandShortcut>⌘P</CommandShortcut>
+              </CommandItem>
+              <CommandItem>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Preferences</span>
+                <CommandShortcut>⌘S</CommandShortcut>
+              </CommandItem>
+              <CommandItem>
+                <Monitor className="mr-2 h-4 w-4" />
+                <span>Appearance</span>
+                <CommandShortcut>⌘A</CommandShortcut>
+              </CommandItem>
+            </CommandGroup>
+          </CommandList>
+        </CommandPalette>
+      </div>
+    </PreviewContainer>
   );
 };
 
@@ -917,7 +899,7 @@ const SelectPreview: React.FC = () => {
   const [size, setSize] = React.useState<"sm" | "md" | "lg">("md");
   const [isMulti, setIsMulti] = React.useState(false);
   const [searchable, setSearchable] = React.useState(true);
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [container, setContainer] = React.useState<HTMLDivElement | null>(null);
 
   const frameworks = [
     { value: "nextjs", label: "Next.js" },
@@ -931,68 +913,68 @@ const SelectPreview: React.FC = () => {
   ];
 
   return (
-    <div ref={containerRef} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-      <div className="flex flex-col gap-4 mb-8 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-4xl w-full">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex flex-col gap-2">
-            <span className="text-xs uppercase tracking-widest font-bold opacity-50">Variant</span>
-            <div className="flex flex-wrap gap-2">
-              {(["default", "soft", "floating", "glass", "minimal"] as const).map((v) => (
-                <Button key={v} variant={variant === v ? "default" : "outline"} size="sm" onClick={() => setVariant(v)}>{v}</Button>
-              ))}
+    <PreviewContainer
+      title="Select Input"
+      description="A highly customizable select component with search and multi-select capabilities."
+      variants={["default", "soft", "floating", "glass", "minimal"]}
+      activeVariant={variant}
+      onVariantChange={setVariant}
+    >
+      <div ref={setContainer} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+        <div className="flex flex-col gap-4 mb-8 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-4xl w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-2">
+              <span className="text-xs uppercase tracking-widest font-bold opacity-50">Size</span>
+              <div className="flex flex-wrap gap-2">
+                {(["sm", "md", "lg"] as const).map((s) => (
+                  <Button key={s} variant={size === s ? "default" : "outline"} size="sm" onClick={() => setSize(s)}>{s}</Button>
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <span className="text-xs uppercase tracking-widest font-bold opacity-50">Size</span>
-            <div className="flex flex-wrap gap-2">
-              {(["sm", "md", "lg"] as const).map((s) => (
-                <Button key={s} variant={size === s ? "default" : "outline"} size="sm" onClick={() => setSize(s)}>{s}</Button>
-              ))}
-            </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <span className="text-xs uppercase tracking-widest font-bold opacity-50">Mode</span>
-            <div className="flex flex-wrap gap-2">
-              <Button variant={!isMulti ? "default" : "outline"} size="sm" onClick={() => setIsMulti(false)}>Single</Button>
-              <Button variant={isMulti ? "default" : "outline"} size="sm" onClick={() => setIsMulti(true)}>Multi-Select</Button>
+            <div className="flex flex-col gap-2">
+              <span className="text-xs uppercase tracking-widest font-bold opacity-50">Mode</span>
+              <div className="flex flex-wrap gap-2">
+                <Button variant={!isMulti ? "default" : "outline"} size="sm" onClick={() => setIsMulti(false)}>Single</Button>
+                <Button variant={isMulti ? "default" : "outline"} size="sm" onClick={() => setIsMulti(true)}>Multi-Select</Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="flex items-center justify-center w-full max-w-sm flex-1 mb-32">
-        <Select 
-          key={isMulti ? "multi" : "single"}
-          variant={variant} 
-          size={size} 
-          multiSelect={isMulti} 
-          searchable={searchable} 
-          container={containerRef.current}
-        >
-          <SelectTrigger placeholder={isMulti ? "Select frameworks..." : "Select a framework..."} />
-          <SelectContent>
-            <SelectSearch placeholder="Search framework..." />
-            <SelectList>
-              <SelectEmpty>No frameworks found.</SelectEmpty>
-              <SelectGroup heading="Popular">
-                {frameworks.slice(0, 4).map((fw) => (
-                  <SelectItem key={fw.value} value={fw.value} label={fw.label}>
-                    {fw.label}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-              <SelectGroup heading="Rising">
-                {frameworks.slice(4).map((fw) => (
-                  <SelectItem key={fw.value} value={fw.value} label={fw.label}>
-                    {fw.label}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectList>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center justify-center w-full max-w-sm flex-1 mb-32">
+          <Select 
+            key={isMulti ? "multi" : "single"}
+            variant={variant} 
+            size={size} 
+            multiSelect={isMulti} 
+            searchable={searchable} 
+            container={container}
+          >
+            <SelectTrigger placeholder={isMulti ? "Select frameworks..." : "Select a framework..."} />
+            <SelectContent>
+              <SelectSearch placeholder="Search framework..." />
+              <SelectList>
+                <SelectEmpty>No frameworks found.</SelectEmpty>
+                <SelectGroup heading="Popular">
+                  {frameworks.slice(0, 4).map((fw) => (
+                    <SelectItem key={fw.value} value={fw.value} label={fw.label}>
+                      {fw.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+                <SelectGroup heading="Rising">
+                  {frameworks.slice(4).map((fw) => (
+                    <SelectItem key={fw.value} value={fw.value} label={fw.label}>
+                      {fw.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectList>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
-    </div>
+    </PreviewContainer>
   );
 };
 
@@ -1035,37 +1017,34 @@ const FileUploadPreview: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-      <div className="flex flex-col gap-4 mb-8 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-4xl w-full">
-        <div className="flex flex-col gap-2">
-          <span className="text-xs uppercase tracking-widest font-bold opacity-50">Variant</span>
-          <div className="flex flex-wrap gap-2">
-            {(["default", "compact", "card", "glass", "minimal"] as const).map((v) => (
-              <Button key={v} variant={variant === v ? "default" : "outline"} size="sm" onClick={() => setVariant(v)}>{v}</Button>
-            ))}
-          </div>
+    <PreviewContainer
+      title="File Upload"
+      description="A drag-and-drop file upload component with real-time progress."
+      variants={["default", "compact", "card", "glass", "minimal"]}
+      activeVariant={variant}
+      onVariantChange={setVariant}
+    >
+      <div className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+        <div className="flex items-center justify-center w-full max-w-md flex-1 mb-32 pt-12">
+          <FileUpload
+            variant={variant}
+            maxFiles={5}
+            maxSize={1024 * 1024 * 10} // 10MB
+            accept={{
+              "image/*": [".png", ".jpg", ".jpeg", ".gif"],
+              "video/*": [".mp4", ".webm"],
+              "application/pdf": [".pdf"]
+            }}
+            onUpload={handleUpload}
+            onFilesChange={setFiles}
+          >
+            <UploadDropzone />
+            <UploadPreview />
+            <UploadProgress />
+          </FileUpload>
         </div>
       </div>
-
-      <div className="flex items-center justify-center w-full max-w-md flex-1 mb-32">
-        <FileUpload
-          variant={variant}
-          maxFiles={5}
-          maxSize={1024 * 1024 * 10} // 10MB
-          accept={{
-            "image/*": [".png", ".jpg", ".jpeg", ".gif"],
-            "video/*": [".mp4", ".webm"],
-            "application/pdf": [".pdf"]
-          }}
-          onUpload={handleUpload}
-          onFilesChange={setFiles}
-        >
-          <UploadDropzone />
-          <UploadPreview />
-          <UploadProgress />
-        </FileUpload>
-      </div>
-    </div>
+    </PreviewContainer>
   );
 };
 
@@ -1131,49 +1110,49 @@ const FormBuilderPreview: React.FC = () => {
   const [submittedData, setSubmittedData] = React.useState<any>(null);
 
   return (
-    <div className="flex flex-col items-center justify-start w-full h-full p-4 md:p-8 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-      <div className="flex flex-col gap-4 mb-8 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-4xl w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col gap-2">
-            <span className="text-xs uppercase tracking-widest font-bold opacity-50">Variant</span>
-            <div className="flex flex-wrap gap-2">
-              {(["default", "minimal", "enterprise", "compact"] as const).map((v) => (
-                <Button key={v} variant={variant === v ? "default" : "outline"} size="sm" onClick={() => setVariant(v)}>{v}</Button>
-              ))}
-            </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <span className="text-xs uppercase tracking-widest font-bold opacity-50">Layout Mode</span>
-            <div className="flex flex-wrap gap-2">
-              {(["auto", "single", "two", "three"] as const).map((l) => (
-                <Button key={l} variant={layout === l ? "default" : "outline"} size="sm" onClick={() => setLayout(l)}>{l}</Button>
-              ))}
+    <PreviewContainer
+      title="Form Builder"
+      description="A schema-driven form builder for rapid layout construction."
+      variants={["default", "minimal", "enterprise", "compact"]}
+      activeVariant={variant}
+      onVariantChange={setVariant}
+    >
+      <div className="flex flex-col items-center justify-start w-full h-full p-4 md:p-8 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+        <div className="flex flex-col gap-4 mb-8 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-4xl w-full">
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+            <div className="flex flex-col gap-2">
+              <span className="text-xs uppercase tracking-widest font-bold opacity-50">Layout Mode</span>
+              <div className="flex flex-wrap gap-2">
+                {(["auto", "single", "two", "three"] as const).map((l) => (
+                  <Button key={l} variant={layout === l ? "default" : "outline"} size="sm" onClick={() => setLayout(l)}>{l}</Button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="w-full max-w-4xl flex flex-col lg:flex-row gap-8">
-        <div className="flex-1">
-          <FormBuilder
-            schema={sampleSchema}
-            variant={variant}
-            layout={layout}
-            onSubmit={(data) => setSubmittedData(data)}
-          />
-        </div>
-        {submittedData && (
-          <div className="w-full lg:w-80 shrink-0">
-            <div className="p-4 rounded-xl bg-muted/30 border border-border/50">
-              <h4 className="text-sm font-semibold mb-2">Submitted Data</h4>
-              <pre className="text-xs overflow-auto p-3 rounded-lg bg-background border border-border/50">
-                {JSON.stringify(submittedData, null, 2)}
-              </pre>
-            </div>
+        <div className="w-full max-w-4xl flex flex-col lg:flex-row gap-8">
+          <div className="flex-1">
+            <FormBuilder
+              schema={sampleSchema}
+              variant={variant}
+              layout={layout}
+              onSubmit={(data) => setSubmittedData(data)}
+            />
           </div>
-        )}
+          {submittedData && (
+            <div className="w-full lg:w-80 shrink-0">
+              <div className="p-4 rounded-xl bg-muted/30 border border-border/50">
+                <h4 className="text-sm font-semibold mb-2">Submitted Data</h4>
+                <pre className="text-xs overflow-auto p-3 rounded-lg bg-background border border-border/50">
+                  {JSON.stringify(submittedData, null, 2)}
+                </pre>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </PreviewContainer>
   );
 };
 
@@ -1208,22 +1187,17 @@ const KanbanPreview: React.FC = () => {
   const [variant, setVariant] = React.useState<"default" | "compact" | "enterprise" | "minimal">("enterprise");
 
   return (
-    <div className="flex flex-col items-center justify-start w-full h-full p-4 md:p-8 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-      <div className="flex flex-col gap-4 mb-4 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-5xl w-full shrink-0">
-        <div className="flex flex-col gap-2">
-          <span className="text-xs uppercase tracking-widest font-bold opacity-50">Variant</span>
-          <div className="flex flex-wrap gap-2">
-            {(["default", "compact", "enterprise", "minimal"] as const).map((v) => (
-              <Button key={v} variant={variant === v ? "default" : "outline"} size="sm" onClick={() => setVariant(v)}>{v}</Button>
-            ))}
-          </div>
-        </div>
+    <PreviewContainer
+      title="Kanban Board"
+      description="A highly interactive, drag-and-drop Kanban board."
+      variants={["default", "compact", "enterprise", "minimal"]}
+      activeVariant={variant}
+      onVariantChange={setVariant}
+    >
+      <div className="w-full flex justify-center overflow-x-auto self-start p-8" style={{ transform: 'translateZ(0)' }}>
+        <KanbanBoard variant={variant} initialColumns={initialKanbanData} className="min-w-max" />
       </div>
-
-      <div className="w-full max-w-5xl flex-1 min-h-[500px] bg-background/20 rounded-xl overflow-hidden p-2">
-        <KanbanBoard variant={variant} initialColumns={initialKanbanData} />
-      </div>
-    </div>
+    </PreviewContainer>
   );
 };
 
@@ -1231,529 +1205,844 @@ const WorkflowPreview: React.FC = () => {
   const [variant, setVariant] = React.useState<"default" | "compact" | "enterprise" | "minimal" | "glass">("enterprise");
 
   return (
-    <div className="flex flex-col items-center justify-start w-full h-full p-4 md:p-8 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-      <div className="flex flex-col gap-4 mb-4 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-5xl w-full shrink-0">
-        <div className="flex flex-col gap-2">
-          <span className="text-xs uppercase tracking-widest font-bold opacity-50">Variant</span>
-          <div className="flex flex-wrap gap-2">
-            {(["default", "enterprise", "minimal", "glass", "compact"] as const).map((v) => (
-              <Button key={v} variant={variant === v ? "default" : "outline"} size="sm" onClick={() => setVariant(v)}>{v}</Button>
-            ))}
-          </div>
+    <PreviewContainer
+      title="Workflow Builder"
+      description="A node-based visual workflow editor for powerful automation pipelines."
+      variants={["default", "enterprise", "minimal", "glass", "compact"]}
+      activeVariant={variant}
+      onVariantChange={setVariant}
+    >
+      <div className="flex flex-col items-center justify-start w-full h-full p-4 md:p-8 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+        <div className="w-full max-w-5xl flex-1 min-h-[500px] bg-background/20 rounded-xl overflow-hidden p-0 border border-border/50 relative mt-4">
+          <WorkflowBuilder 
+            variant={variant}
+            initialNodes={[
+              { id: "trigger-1", type: "trigger", position: { x: 100, y: 150 }, data: { label: "Schedule Trigger", description: "Runs every 1 hour" } },
+              { id: "agent-1", type: "agent", position: { x: 450, y: 150 }, data: { label: "AI Classifier", description: "Analyzes incoming data" } },
+              { id: "action-1", type: "action", position: { x: 800, y: 50 }, data: { label: "Slack Notification", description: "Send positive reviews" } },
+              { id: "action-2", type: "action", position: { x: 800, y: 250 }, data: { label: "Zendesk Ticket", description: "Flag negative reviews" } }
+            ]}
+            initialEdges={[
+              { id: "e1", source: "trigger-1", target: "agent-1", animated: true },
+              { id: "e2", source: "agent-1", target: "action-1" },
+              { id: "e3", source: "agent-1", target: "action-2" }
+            ]}
+          >
+            <WorkflowCanvas />
+            <WorkflowToolbar />
+            <WorkflowMiniMap />
+          </WorkflowBuilder>
         </div>
       </div>
-
-      <div className="w-full max-w-5xl flex-1 min-h-[500px] bg-background/20 rounded-xl overflow-hidden p-0 border border-border/50 relative">
-        <WorkflowBuilder 
-          variant={variant}
-          initialNodes={[
-            { id: "trigger-1", type: "trigger", position: { x: 100, y: 150 }, data: { label: "Schedule Trigger", description: "Runs every 1 hour" } },
-            { id: "agent-1", type: "agent", position: { x: 450, y: 150 }, data: { label: "AI Classifier", description: "Analyzes incoming data" } },
-            { id: "action-1", type: "action", position: { x: 800, y: 50 }, data: { label: "Slack Notification", description: "Send positive reviews" } },
-            { id: "action-2", type: "action", position: { x: 800, y: 250 }, data: { label: "Zendesk Ticket", description: "Flag negative reviews" } }
-          ]}
-          initialEdges={[
-            { id: "e1", source: "trigger-1", target: "agent-1", animated: true },
-            { id: "e2", source: "agent-1", target: "action-1" },
-            { id: "e3", source: "agent-1", target: "action-2" }
-          ]}
-        >
-          <WorkflowCanvas />
-          <WorkflowToolbar />
-          <WorkflowMiniMap />
-        </WorkflowBuilder>
-      </div>
-    </div>
+    </PreviewContainer>
   );
 };
 
-export const PreviewRegistry: Record<string, React.FC> = {
-  primary: () => (
-    <div className="flex items-center justify-center w-full h-full">
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 items-center justify-items-center w-full">
-        <PrimaryButton variant="primary">Primary</PrimaryButton>
-        <PrimaryButton variant="success">Success</PrimaryButton>
-        <PrimaryButton variant="warning">Warning</PrimaryButton>
-        <PrimaryButton variant="danger">Danger</PrimaryButton>
-        <PrimaryButton variant="info">Info</PrimaryButton>
-        <PrimaryButton variant="secondary">Secondary</PrimaryButton>
-      </div>
-    </div>
-  ),
-  glowy: () => (
-    <div className="flex flex-wrap gap-6 items-center justify-center w-full h-full p-4">
-      <GlowyButton variant="primary">Primary</GlowyButton>
-      <GlowyButton variant="success">Success</GlowyButton>
-      <GlowyButton variant="danger">Danger</GlowyButton>
-    </div>
-  ),
-  "basic-card": () => (
-    <div className="flex items-center justify-center w-full h-full">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 w-full justify-items-center">
-        <div className="flex flex-col gap-2 items-center w-full">
-          <BasicCard
-            variant="modern"
-            color="#6366f1"
-            name="Aryan Hooda"
-            title="Full Stack Developer"
-          />
+// ==========================================
+// FILTER BUILDER
+// ==========================================
+
+const DEMO_TASKS = [
+  { id: 1, title: "Implement new dashboard", status: "in_progress", priority: "critical", assignee: "Alice", due_date: "2026-06-15", story_points: 8, is_active: true, tags: ["frontend", "ui"] },
+  { id: 2, title: "Fix login bug", status: "todo", priority: "high", assignee: "Bob", due_date: "2026-06-05", story_points: 3, is_active: true, tags: ["bug", "auth"] },
+  { id: 3, title: "Update dependencies", status: "done", priority: "low", assignee: "Charlie", due_date: "2026-05-20", story_points: 2, is_active: false, tags: ["chore"] },
+  { id: 4, title: "Write API documentation", status: "todo", priority: "medium", assignee: "Alice", due_date: "2026-06-10", story_points: 5, is_active: true, tags: ["docs", "api"] },
+  { id: 5, title: "Design landing page", status: "in_progress", priority: "high", assignee: "Bob", due_date: "2026-06-25", story_points: 13, is_active: true, tags: ["design", "marketing"] },
+  { id: 6, title: "Setup CI/CD pipeline", status: "done", priority: "critical", assignee: "Diana", due_date: "2026-05-15", story_points: 8, is_active: false, tags: ["devops", "infrastructure"] },
+  { id: 7, title: "Optimize database queries", status: "todo", priority: "high", assignee: "Charlie", due_date: "2026-06-30", story_points: 5, is_active: true, tags: ["backend", "performance"] },
+  { id: 8, title: "User testing session", status: "in_progress", priority: "medium", assignee: "Diana", due_date: "2026-06-12", story_points: 3, is_active: true, tags: ["research", "qa"] },
+  { id: 9, title: "Refactor state management", status: "todo", priority: "medium", assignee: "Alice", due_date: "2026-07-05", story_points: 13, is_active: false, tags: ["frontend", "tech-debt"] },
+  { id: 10, title: "Fix payment gateway timeout", status: "in_progress", priority: "critical", assignee: "Charlie", due_date: "2026-06-02", story_points: 8, is_active: true, tags: ["bug", "payments"] },
+  { id: 11, title: "Create email templates", status: "done", priority: "low", assignee: "Bob", due_date: "2026-05-28", story_points: 2, is_active: false, tags: ["design", "email"] },
+  { id: 12, title: "Audit security policies", status: "todo", priority: "high", assignee: "Diana", due_date: "2026-06-20", story_points: 5, is_active: true, tags: ["security", "compliance"] },
+];
+
+const evaluateRule = (task: any, rule: FilterRule) => {
+  const taskValue = task[rule.fieldId];
+  const filterValue = rule.value;
+  
+  if (rule.operatorId === "is_empty") return !taskValue;
+  if (rule.operatorId === "is_not_empty") return !!taskValue;
+  
+  if (taskValue === undefined) return false;
+  
+  const valString = String(taskValue).toLowerCase();
+  const filterString = String(filterValue).toLowerCase();
+  
+  switch (rule.operatorId) {
+    case "eq": return valString === filterString;
+    case "neq": return valString !== filterString;
+    case "contains": return valString.includes(filterString);
+    case "not_contains": return !valString.includes(filterString);
+    case "starts_with": return valString.startsWith(filterString);
+    case "ends_with": return valString.endsWith(filterString);
+    case "gt": return Number(taskValue) > Number(filterValue);
+    case "lt": return Number(taskValue) < Number(filterValue);
+    default: return false;
+  }
+};
+
+const evaluateGroup = (task: any, group: FilterGroup): boolean => {
+  if (!group.children || group.children.length === 0) return true;
+  
+  if (group.logicalOperator === "AND") {
+    return group.children.every(child => 
+      child.type === "group" ? evaluateGroup(task, child as FilterGroup) : evaluateRule(task, child as FilterRule)
+    );
+  } else {
+    return group.children.some(child => 
+      child.type === "group" ? evaluateGroup(task, child as FilterGroup) : evaluateRule(task, child as FilterRule)
+    );
+  }
+};
+
+function FilterBuilderPreview() {
+  const [variant, setVariant] = useState<"default" | "minimal" | "enterprise" | "compact" | "glass">("default");
+  
+  const fields: FilterField[] = [
+    { id: "status", label: "Status", type: "select", options: [
+      { value: "todo", label: "To Do" },
+      { value: "in_progress", label: "In Progress" },
+      { value: "done", label: "Done" }
+    ]},
+    { id: "priority", label: "Priority", type: "select", options: [
+      { value: "low", label: "Low" },
+      { value: "medium", label: "Medium" },
+      { value: "high", label: "High" },
+      { value: "critical", label: "Critical" }
+    ]},
+    { id: "assignee", label: "Assignee", type: "user" },
+    { id: "due_date", label: "Due Date", type: "date" },
+    { id: "story_points", label: "Story Points", type: "number" },
+    { id: "title", label: "Title", type: "text" },
+    { id: "tags", label: "Labels", type: "tags" },
+    { id: "is_active", label: "Active", type: "boolean" },
+  ];
+
+  const [data, setData] = useState<FilterGroup>(() => {
+    // Initial realistic data with hardcoded IDs to prevent SSR hydration mismatch
+    const root: FilterGroup = {
+      type: "group",
+      id: "root-group-1",
+      logicalOperator: "AND",
+      children: []
+    };
+    root.children = [
+      { type: "rule", id: "r1", fieldId: "status", operatorId: "eq", value: "in_progress" },
+      { 
+        type: "group", 
+        id: "g1", 
+        logicalOperator: "OR", 
+        children: [
+          { type: "rule", id: "r2", fieldId: "priority", operatorId: "eq", value: "high" },
+          { type: "rule", id: "r3", fieldId: "priority", operatorId: "eq", value: "critical" },
+        ]
+      }
+    ];
+    return root;
+  });
+
+  return (
+    <PreviewContainer
+      title="Filter Builder"
+      description="Manage and filter your project tasks with advanced query logic."
+      variants={["default", "minimal", "enterprise", "compact", "glass"]}
+      activeVariant={variant}
+      onVariantChange={setVariant}
+      contentClassName="bg-transparent border-none p-0 shadow-none min-h-0"
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
+        <div className="lg:col-span-2 space-y-6">
+          
+          {/* The Component Itself */}
+          <div className={cn(
+            "rounded-2xl transition-all duration-500",
+            variant === "glass" ? "p-6 bg-gradient-to-br from-background/40 to-background/10 backdrop-blur-xl border border-white/10 shadow-2xl" : "",
+            variant !== "glass" && variant !== "minimal" ? "p-6 bg-background border shadow-sm" : "",
+            variant === "minimal" ? "p-2" : ""
+          )}>
+            <div className="flex items-center gap-2 mb-4 text-sm font-medium text-muted-foreground">
+              <Filter className="w-4 h-4" />
+              Filter Rules
+            </div>
+            <FilterBuilder 
+              initialData={data} 
+              onChange={setData} 
+              fields={fields}
+              variant={variant}
+            />
+          </div>
+
+          {/* Active Results Table */}
+          <div className="bg-background rounded-2xl border shadow-sm overflow-hidden flex flex-col h-[300px]">
+            <div className="grid grid-cols-4 sm:grid-cols-5 gap-4 p-4 border-b bg-muted/30 text-xs font-semibold text-muted-foreground uppercase tracking-wider shrink-0">
+              <div className="col-span-2">Task Title</div>
+              <div>Status</div>
+              <div>Priority</div>
+              <div className="hidden sm:block">Assignee</div>
+            </div>
+            <div className="flex-1 overflow-y-auto p-2 custom-scrollbar">
+              <AnimatePresence mode="popLayout">
+                {DEMO_TASKS.filter(t => evaluateGroup(t, data)).length === 0 ? (
+                  <motion.div 
+                    initial={{ opacity: 0 }} 
+                    animate={{ opacity: 1 }} 
+                    exit={{ opacity: 0 }}
+                    className="flex flex-col items-center justify-center h-full text-center p-8 opacity-60"
+                  >
+                    <Filter className="w-8 h-8 text-muted-foreground mb-3" />
+                    <h3 className="text-sm font-medium">No tasks found</h3>
+                    <p className="text-xs text-muted-foreground mt-1">Try adjusting your filter rules.</p>
+                  </motion.div>
+                ) : (
+                  DEMO_TASKS.filter(t => evaluateGroup(t, data)).map(task => (
+                    <motion.div 
+                      layout
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      key={task.id} 
+                      className="grid grid-cols-4 sm:grid-cols-5 gap-4 p-3 rounded-xl hover:bg-muted/50 items-center text-sm transition-colors border border-transparent hover:border-border/50 mb-1"
+                    >
+                      <div className="col-span-2 font-medium truncate">{task.title}</div>
+                      <div>
+                        <Badge variant={task.status === "done" ? "default" : task.status === "in_progress" ? "secondary" : "outline"} className="capitalize">
+                          {task.status.replace("_", " ")}
+                        </Badge>
+                      </div>
+                      <div>
+                        <span className={cn(
+                          "text-xs font-medium px-2 py-1 rounded-md capitalize",
+                          task.priority === "critical" && "bg-red-500/10 text-red-500",
+                          task.priority === "high" && "bg-orange-500/10 text-orange-500",
+                          task.priority === "medium" && "bg-blue-500/10 text-blue-500",
+                          task.priority === "low" && "bg-slate-500/10 text-slate-500"
+                        )}>
+                          {task.priority}
+                        </span>
+                      </div>
+                      <div className="hidden sm:flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary shrink-0">
+                          {task.assignee.charAt(0)}
+                        </div>
+                        <span className="text-muted-foreground truncate">{task.assignee}</span>
+                      </div>
+                    </motion.div>
+                  ))
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+          
         </div>
-        <div className="flex flex-col gap-2 items-center w-full">
-          <BasicCard
-            variant="clean"
-            color="#10b981"
-            name="John Doe"
-            title="Product Designer"
-          />
-        </div>
-      </div>
-    </div>
-  ),
-  "boxy-rotate": () => (
-    <div className="flex items-center justify-center w-full h-full">
-      <BoxyRotateLoader />
-    </div>
-  ),
-  "boxy-bounce": () => (
-    <div className="flex items-center justify-center w-full h-full">
-      <BoxyBounceLoader />
-    </div>
-  ),
-  "boxy-shift": () => (
-    <div className="flex items-center justify-center w-full h-full">
-      <BoxyShiftLoader />
-    </div>
-  ),
-  "text-system": () => (
-    <div className="flex items-center justify-center w-full h-full">
-      <div className="max-w-2xl w-full flex flex-col gap-8 select-text text-left">
-        <div className="space-y-2">
-          <Label className="text-xs uppercase tracking-widest text-blue-500">
-            Semantic Headings
-          </Label>
-          <Heading variant="h1">Heading 1</Heading>
-          <Heading variant="h2">Heading 2</Heading>
-          <Heading variant="h3">Heading 3</Heading>
-        </div>
-        <div className="space-y-4">
-          <Label className="text-xs uppercase tracking-widest text-emerald-500">
-            Text Variants
-          </Label>
-          <Text variant="lead">
-            This is a lead paragraph with larger font and muted color.
-          </Text>
-          <Text>
-            This is the default body text that users will read most of the time.
-          </Text>
-          <Text variant="large">This is large text for emphasis.</Text>
-          <Text variant="muted">
-            This is muted text for secondary information.
-          </Text>
-          <Text variant="blockquote">
-            &quot;This is a blockquote variant for citing sources or
-            highlighting quotes.&quot;
-          </Text>
-        </div>
-        <div className="space-y-2">
-          <Label className="text-xs uppercase tracking-widest text-orange-500">
-            Form Elements
-          </Label>
-          <div className="flex flex-col gap-2">
-            <Label>Input Label</Label>
+        
+        {/* Output State Viewer */}
+        <div className="bg-[#0D0D12] rounded-2xl border border-white/10 p-5 overflow-hidden flex flex-col h-[500px] lg:h-auto shadow-2xl relative group">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-50" />
+          <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Code>npm install futureuikit</Code>
+              <Terminal className="w-4 h-4 text-indigo-400" />
+              <span className="text-xs font-semibold tracking-wider uppercase text-zinc-300">Output JSON</span>
+            </div>
+            <div className="px-2 py-1 rounded bg-zinc-800 text-[10px] text-zinc-400 font-medium">
+              Live State
+            </div>
+          </div>
+          <div className="flex-1 overflow-auto rounded-xl border border-white/5 bg-black/40 p-4 custom-scrollbar">
+            <pre 
+              className="text-[11px] leading-relaxed text-zinc-300 font-mono whitespace-pre-wrap"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify(data, null, 2).replace(/"([^"]+)":/g, '<span class="text-indigo-300">"$1"</span>:')
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    </PreviewContainer>
+  );
+}
+
+export const PreviewRegistry: Record<string, React.FC> = {
+  primary: function PrimaryPreview() {
+    return (
+      <PreviewContainer title="Primary Button" description="Semantic primary buttons with micro-interactions.">
+        <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[300px]">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 items-center justify-items-center w-full">
+            <PrimaryButton variant="primary">Primary</PrimaryButton>
+            <PrimaryButton variant="success">Success</PrimaryButton>
+            <PrimaryButton variant="warning">Warning</PrimaryButton>
+            <PrimaryButton variant="danger">Danger</PrimaryButton>
+            <PrimaryButton variant="info">Info</PrimaryButton>
+            <PrimaryButton variant="secondary">Secondary</PrimaryButton>
+          </div>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  glowy: function GlowyPreview() {
+    return (
+      <PreviewContainer title="Glowy Button" description="Buttons with a highly aesthetic background glow effect on hover.">
+        <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[300px]">
+          <div className="flex flex-wrap gap-6 items-center justify-center w-full">
+            <GlowyButton variant="primary">Primary</GlowyButton>
+            <GlowyButton variant="success">Success</GlowyButton>
+            <GlowyButton variant="danger">Danger</GlowyButton>
+          </div>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  "basic-card": function BasicCardPreview() {
+    const [variant, setVariant] = React.useState<
+      "default" | "elevated" | "interactive" | "feature" | "stats" | "content" | "compact" | "media"
+    >("default");
+
+    return (
+      <PreviewContainer
+        title="Basic Card"
+        description="A premium composable card system. Each variant is purpose-built for a specific UI context."
+        variants={["default", "elevated", "interactive", "feature", "stats", "content", "compact", "media"]}
+        activeVariant={variant}
+        onVariantChange={setVariant}
+      >
+        <div className="w-full flex items-center justify-center p-8">
+          <BasicCard variant={variant} />
+        </div>
+      </PreviewContainer>
+    );
+  },
+  "boxy-rotate": function BoxyRotatePreview() {
+    return (
+      <PreviewContainer title="Boxy Rotate Loader" description="A minimal 3D rotating box loader.">
+        <BoxyRotateLoader />
+      </PreviewContainer>
+    );
+  },
+  "boxy-bounce": function BoxyBouncePreview() {
+    return (
+      <PreviewContainer title="Boxy Bounce Loader" description="A playful bouncing box loader.">
+        <BoxyBounceLoader />
+      </PreviewContainer>
+    );
+  },
+  "boxy-shift": function BoxyShiftPreview() {
+    return (
+      <PreviewContainer title="Boxy Shift Loader" description="An elegant shifting box loader.">
+        <BoxyShiftLoader />
+      </PreviewContainer>
+    );
+  },
+  "text-system": function TextSystemPreview() {
+    return (
+      <PreviewContainer title="Text System" description="A robust and fully responsive typography system.">
+        <div className="max-w-2xl w-full flex flex-col gap-8 select-text text-left">
+          <div className="space-y-2">
+            <Label className="text-xs uppercase tracking-widest text-blue-500">
+              Semantic Headings
+            </Label>
+            <Heading variant="h1">Heading 1</Heading>
+            <Heading variant="h2">Heading 2</Heading>
+            <Heading variant="h3">Heading 3</Heading>
+          </div>
+          <div className="space-y-4">
+            <Label className="text-xs uppercase tracking-widest text-emerald-500">
+              Text Variants
+            </Label>
+            <Text variant="lead">
+              This is a lead paragraph with larger font and muted color.
+            </Text>
+            <Text>
+              This is the default body text that users will read most of the time.
+            </Text>
+            <Text variant="large">This is large text for emphasis.</Text>
+            <Text variant="muted">
+              This is muted text for secondary information.
+            </Text>
+            <Text variant="blockquote">
+              &quot;This is a blockquote variant for citing sources or
+              highlighting quotes.&quot;
+            </Text>
+          </div>
+          <div className="space-y-2">
+            <Label className="text-xs uppercase tracking-widest text-orange-500">
+              Form Elements
+            </Label>
+            <div className="flex flex-col gap-2">
+              <Label>Input Label</Label>
+              <div className="flex items-center gap-2">
+                <Code>npm install futureuikit</Code>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  ),
-  "infinite-slider": () => (
-    <div className="w-full h-full overflow-hidden rounded-xl flex flex-col items-center justify-center">
-      <CarouselSlider
-        slides={[
-          {
-            id: 1,
-            tag: "EXPLORE",
-            title: "EXOTIC ADVENTURE",
-            location: "Bali, Indonesia",
-            image:
-              "https://images.unsplash.com/photo-1556206079-747a7a424d3d?ixlib=rb-4.0.3&q=80",
-            tagBg: "bg-indigo-600",
-          },
-          {
-            id: 2,
-            tag: "CITY",
-            title: "URBAN EXPLORER",
-            location: "Tokyo, Japan",
-            image:
-              "https://images.unsplash.com/photo-1571900670723-a317a66e3fb7?ixlib=rb-4.0.3&q=80",
-            tagBg: "bg-emerald-600",
-          },
-          {
-            id: 3,
-            tag: "NATURE",
-            title: "MOUNTAIN RETREAT",
-            location: "Swiss Alps",
-            image:
-              "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&q=80",
-            tagBg: "bg-amber-600",
-          },
-        ]}
-      />
-    </div>
-  ),
-  menu: () => (
-    <div className="flex items-center justify-center w-full h-full relative">
-      <NavMenu />
-    </div>
-  ),
-  "error-page": () => <ErrorPage errorCode="404" errorText="ERROR" />,
-  "expanding-card": () => (
-    <div className="w-full h-full flex items-center justify-center">
-      <ExpandingFlexCard
-        options={[
-          {
-            id: 1,
-            main: "Forest",
-            sub: "Majestic trees",
-            img: "https://66.media.tumblr.com/6fb397d822f4f9f4596dff2085b18f2e/tumblr_nzsvb4p6xS1qho82wo1_1280.jpg",
-            icon: "🚶",
-          },
-          {
-            id: 2,
-            main: "Winter",
-            sub: "Delicate fall",
-            img: "https://66.media.tumblr.com/8b69cdde47aa952e4176b4200052abf4/tumblr_o51p7mFFF21qho82wo1_1280.jpg",
-            icon: "❄️",
-          },
-          {
-            id: 3,
-            main: "Ocean",
-            sub: "Deep blue",
-            img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
-            icon: "🌊",
-          },
-          {
-            id: 4,
-            main: "Desert",
-            sub: "Golden sands",
-            img: "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?ixlib=rb-4.0.3&q=80",
-            icon: "☀️",
-          },
-        ]}
-      />
-    </div>
-  ),
-  basic: () => (
-    <div className="flex items-center justify-center w-full h-full p-4">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 w-full max-w-3xl items-center justify-items-center">
-        <div className="flex flex-col gap-4 items-center">
-          <BasicLoader
-            variant="modern"
-            color="#3b82f6"
-            text="Modern Rings..."
-          />
-        </div>
-        <div className="flex flex-col gap-4 items-center">
-          <BasicLoader variant="clean" color="#10b981" text="Clean Dots..." />
-        </div>
-        <div className="flex flex-col gap-4 items-center">
-          <BasicLoader variant="minimal" color="#f59e0b" text="Minimal..." />
-        </div>
-      </div>
-    </div>
-  ),
-  toast: ToastPreview,
-  "dot-background": () => (
-    <DotBackground dotColor="#6366f1" maskOpacity={0.15}>
-      <div className="flex items-center justify-center w-full h-full">
-        <h3 className="text-xl md:text-3xl font-black italic tracking-tighter uppercase opacity-50">
-          Premium Dotted Grid
-        </h3>
-      </div>
-    </DotBackground>
-  ),
-  badge: () => (
-    <div className="flex flex-wrap gap-8 items-center justify-center w-full h-full">
-      <Badge variant="default">Default</Badge>
-      <Badge variant="secondary">Secondary</Badge>
-      <Badge variant="destructive">Destructive</Badge>
-      <Badge variant="outline">Outline</Badge>
-    </div>
-  ),
-  button: () => (
-    <div className="flex flex-wrap gap-8 items-center justify-center w-full h-full">
-      <Button variant="default">Default</Button>
-      <Button variant="secondary">Secondary</Button>
-      <Button variant="outline">Outline</Button>
-      <Button variant="ghost">Ghost</Button>
-      <Button variant="destructive">Destructive</Button>
-      <Button variant="link">Link</Button>
-    </div>
-  ),
-  card: () => (
-    <div className="flex items-center justify-center w-full h-full">
-      <Card className="w-full max-w-md mx-auto">
-        <CardHeader>
-          <CardTitle>Card Title</CardTitle>
-          <CardDescription>Card Description goes here.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground text-left">
-            This is the main content area of the card component. It can hold any
-            type of content.
-          </p>
-        </CardContent>
-        <CardFooter className="flex justify-end gap-2">
-          <Button variant="outline" size="sm">
-            Cancel
-          </Button>
-          <Button size="sm">Action</Button>
-        </CardFooter>
-      </Card>
-    </div>
-  ),
-  "sidebar-button": () => (
-    <div className="flex items-center justify-center w-full h-full">
-      <div className="w-full max-w-60 flex flex-col gap-1 p-4 bg-muted/20 rounded-xl">
-        <SidebarButton label="Dashboard" isActive />
-        <SidebarButton label="Analytics" />
-        <SidebarButton label="Settings" />
-        <div className="h-4" />
-        <SidebarButton label="User Profile" isCategory />
-        <SidebarButton label="Billing" isCategory />
-      </div>
-    </div>
-  ),
-  particles: () => (
-    <div className="w-full h-full bg-slate-950 dark:bg-background relative overflow-hidden">
-      <Particles quantity={150} color="#3b82f6" />
-      <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-        <h3 className="text-2xl font-bold text-white dark:text-foreground italic tracking-tighter uppercase">
-          Dynamic Particle System
-        </h3>
-      </div>
-    </div>
-  ),
-  "perspective-grid": () => (
-    <div className="w-full h-full bg-slate-950 dark:bg-background relative overflow-hidden">
-      <PerspectiveGrid gridLineGap={50} />
-      <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-        <h3 className="text-2xl font-bold text-white dark:text-foreground italic tracking-tighter uppercase">
-          Perspective Horizon
-        </h3>
-      </div>
-    </div>
-  ),
-  "search-input": () => (
-    <div className="flex items-center justify-center w-full h-full p-8">
-      <div className="w-full max-w-sm">
-        <SearchInput placeholder="Try searching 'button'..." />
-      </div>
-    </div>
-  ),
-  "github-icon": () => (
-    <div className="flex flex-col gap-8 items-center justify-center w-full h-full p-8">
-      <div className="flex gap-12 items-center">
-        <div className="flex flex-col items-center gap-2">
-          <GithubIcon className="w-6 h-6" />
-          <span className="text-[10px] uppercase font-bold opacity-50">sm</span>
-        </div>
-        <div className="flex flex-col items-center gap-2 text-primary">
-          <GithubIcon className="w-10 h-10" />
-          <span className="text-[10px] uppercase font-bold opacity-50">md</span>
-        </div>
-        <div className="flex flex-col items-center gap-2">
-          <GithubIcon className="w-16 h-16" />
-          <span className="text-[10px] uppercase font-bold opacity-50">lg</span>
-        </div>
-      </div>
-      <div className="flex gap-4">
-        <Badge variant="outline" className="gap-2">
-          <GithubIcon className="w-3 h-3" /> GitHub Repo
-        </Badge>
-        <Button size="sm" className="gap-2">
-          <GithubIcon className="w-4 h-4" /> View Source
-        </Button>
-      </div>
-    </div>
-  ),
-  "linkedin-icon": () => (
-    <div className="flex flex-col gap-8 items-center justify-center w-full h-full p-8">
-      <div className="flex gap-12 items-center">
-        <div className="flex flex-col items-center gap-2">
-          <LinkedinIcon className="w-6 h-6" />
-          <span className="text-[10px] uppercase font-bold opacity-50">sm</span>
-        </div>
-        <div className="flex flex-col items-center gap-2 text-primary">
-          <LinkedinIcon className="w-10 h-10" />
-          <span className="text-[10px] uppercase font-bold opacity-50">md</span>
-        </div>
-        <div className="flex flex-col items-center gap-2">
-          <LinkedinIcon className="w-16 h-16" />
-          <span className="text-[10px] uppercase font-bold opacity-50">lg</span>
-        </div>
-      </div>
-      <div className="flex gap-4">
-        <Badge variant="outline" className="gap-2">
-          <LinkedinIcon className="w-3 h-3" /> LinkedIn Profile
-        </Badge>
-        <Button
-          size="sm"
-          className="gap-2 bg-[#0077b5] hover:bg-[#0077b5]/90 border-none"
-        >
-          <LinkedinIcon className="w-4 h-4 fill-white" /> Connect Now
-        </Button>
-      </div>
-    </div>
-  ),
-  "scroll-progress": () => (
-    <div className="flex items-center justify-center w-full h-full p-8 text-center">
-      <p className="text-muted-foreground font-medium">
-        The scroll progress will be shown on top of the viewport right above
-        header
-      </p>
-    </div>
-  ),
-  "point-cursor": () => (
-    <PointCursor className="rounded-xl overflow-hidden border border-border bg-muted/10">
-      <div className="flex flex-col items-center justify-center w-full h-full min-h-[300px] sm:min-h-[400px] p-8 text-center space-y-8 relative overflow-hidden">
-        {/* Decorative background to make it feel like a "playground" */}
-        <div className="absolute inset-0 opacity-5 pointer-events-none">
-          <DotBackground dotColor="currentColor" gap={20} />
-        </div>
-
-        <div className="space-y-3 relative z-10">
-          <Badge variant="secondary" className="mb-2">
-            Isolated Custom Cursor
-          </Badge>
-          <h3 className="text-2xl font-bold tracking-tight">
-            Interactive Playground
-          </h3>
-          <p className="text-muted-foreground max-w-sm mx-auto">
-            The custom cursor is only active inside this box. Hover over the
-            elements to test the{" "}
-            <span className="text-primary font-bold italic">Dot-to-Ring</span>{" "}
-            transformation.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap gap-4 justify-center relative z-10">
-          <Button className="rounded-full px-8 shadow-lg shadow-primary/20">
-            Hover Me
-          </Button>
-          <Button
-            variant="outline"
-            className="rounded-full px-8 bg-background/50 backdrop-blur-sm"
-          >
-            Try This One
-          </Button>
-          <a
-            href="#"
-            className="text-primary font-medium underline underline-offset-4 hover:text-primary/80 transition-colors py-2 px-4"
-            onClick={(e) => e.preventDefault()}
-          >
-            Interactive Link
-          </a>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 w-full max-w-md relative z-10">
-          <div className="p-4 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm clickable">
-            <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">
-              Custom Box
-            </span>
-            <p className="text-xs mt-1">Has &apos;clickable&apos; class</p>
-          </div>
-          <div className="p-4 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm">
-            <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">
-              Standard Box
-            </span>
-            <p className="text-xs mt-1">Normal behavior</p>
-          </div>
-        </div>
-      </div>
-    </PointCursor>
-  ),
-  accordion: () => (
-    <div className="flex items-center justify-center w-full h-full p-4">
-      <Accordion
-        items={[
-          {
-            title: "What is Future UI?",
-            content:
-              "Future UI is a modern, high-performance UI component library built for Next.js 16 and React 19. It leverages Tailwind CSS 4 and Framer Motion to provide visually stunning, reusable components.",
-          },
-          {
-            title: "How do I install components?",
-            content:
-              "You can use our custom CLI tool to add components directly to your project. Simply run 'npx futureuikit add <slug>' and we'll handle the rest, including dependencies and path aliases.",
-          },
-          {
-            title: "Is it customizable?",
-            content:
-              "Yes! Since you download the source code, you have full ownership and can customize every aspect of the components to fit your specific needs and design system.",
-          },
-        ]}
-      />
-    </div>
-  ),
-  calendar: CalendarPreview,
-  calculator: CalculatorPreview,
-  "cinematic-error": () => (
-    <div className="w-full h-full rounded-2xl overflow-hidden border border-border/50">
-      <CinematicError />
-    </div>
-  ),
-  "nexus-card": () => (
-    <div className="flex items-center justify-center w-full h-full p-4 sm:p-8">
-      <NexusCard className="w-80 h-96">
-        <h2 className="text-2xl font-bold text-foreground mb-2">Nexus Design</h2>
-        <p className="text-muted-foreground">Hover over this card to experience the premium tactile feel, reactive spotlight, and 3D parallax tilt.</p>
-      </NexusCard>
-    </div>
-  ),
-  "scroll-text-reveal": () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const scrollContainer = React.useRef<HTMLDivElement>(null);
-    return (
-      <div ref={scrollContainer} className="w-full h-full overflow-y-auto">
-        <div className="min-h-[150vh] flex flex-col items-center">
-          <div className="h-[70vh] flex items-center justify-center text-muted-foreground w-full">
-            <span className="animate-pulse">Scroll down to reveal text ↓</span>
-          </div>
-          <div className="py-20 px-8 max-w-4xl flex items-center justify-center">
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-center">
-              <ScrollTextReveal container={scrollContainer}>
-                The future of UI design is here. Experience seamless, highly optimized animations that elevate your application's feel.
-              </ScrollTextReveal>
-            </h2>
-          </div>
-          <div className="h-[60vh] flex items-center justify-center text-muted-foreground w-full">
-            <span className="animate-pulse">Scroll up to reverse ↑</span>
-          </div>
-        </div>
-      </div>
+      </PreviewContainer>
     );
   },
-  "rich-text-editor": function RichTextEditorPreview() {
-    const [variant, setVariant] = useState<"default" | "minimal" | "writing" | "enterprise" | "glass">("default");
-
+  "infinite-slider": function InfiniteSliderPreview() {
     return (
-      <div className="flex flex-col w-full h-full p-4 md:p-8 gap-6 overflow-auto relative z-10 bg-muted/10">
-        <div className="flex flex-wrap gap-2 shrink-0">
-          {(["default", "minimal", "writing", "enterprise", "glass"] as const).map(v => (
-            <button
-              key={v}
-              onClick={() => setVariant(v)}
-              className={cn("px-4 py-2 text-sm font-medium rounded-lg capitalize transition-all", variant === v ? "bg-primary text-primary-foreground shadow-md" : "bg-card text-muted-foreground hover:bg-muted hover:text-foreground border border-border")}
-            >
-              {v} Variant
-            </button>
-          ))}
+      <PreviewContainer title="Carousel Slider" description="An expansive interactive image slider." contentClassName="p-0 border-none">
+        <CarouselSlider
+          slides={[
+            {
+              id: 1,
+              tag: "EXPLORE",
+              title: "EXOTIC ADVENTURE",
+              location: "Bali, Indonesia",
+              image:
+                "https://images.unsplash.com/photo-1556206079-747a7a424d3d?ixlib=rb-4.0.3&q=80",
+              tagBg: "bg-indigo-600",
+            },
+            {
+              id: 2,
+              tag: "CITY",
+              title: "URBAN EXPLORER",
+              location: "Tokyo, Japan",
+              image:
+                "https://images.unsplash.com/photo-1571900670723-a317a66e3fb7?ixlib=rb-4.0.3&q=80",
+              tagBg: "bg-emerald-600",
+            },
+            {
+              id: 3,
+              tag: "NATURE",
+              title: "MOUNTAIN RETREAT",
+              location: "Swiss Alps",
+              image:
+                "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&q=80",
+              tagBg: "bg-amber-600",
+            },
+          ]}
+        />
+      </PreviewContainer>
+    );
+  },
+  menu: function NavMenuPreview() {
+    return (
+      <PreviewContainer title="Navigation Menu" description="A dynamic floating menu." contentClassName="relative">
+        <NavMenu />
+      </PreviewContainer>
+    );
+  },
+  "error-page": function ErrorPagePreview() {
+    return (
+      <PreviewContainer title="Error Page" description="A clean, full-screen error component." contentClassName="p-0">
+        <ErrorPage errorCode="404" errorText="ERROR" />
+      </PreviewContainer>
+    );
+  },
+  "expanding-card": function ExpandingCardPreview() {
+    return (
+      <PreviewContainer title="Expanding Flex Card" description="A beautiful, interactive expanding flex layout." contentClassName="bg-black text-white p-0">
+        <ExpandingFlexCard
+          options={[
+            {
+              id: 1,
+              main: "Forest",
+              sub: "Majestic trees",
+              img: "https://66.media.tumblr.com/6fb397d822f4f9f4596dff2085b18f2e/tumblr_nzsvb4p6xS1qho82wo1_1280.jpg",
+              icon: "🚶",
+            },
+            {
+              id: 2,
+              main: "Winter",
+              sub: "Delicate fall",
+              img: "https://66.media.tumblr.com/8b69cdde47aa952e4176b4200052abf4/tumblr_o51p7mFFF21qho82wo1_1280.jpg",
+              icon: "❄️",
+            },
+            {
+              id: 3,
+              main: "Ocean",
+              sub: "Deep blue",
+              img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+              icon: "🌊",
+            },
+            {
+              id: 4,
+              main: "Desert",
+              sub: "Golden sands",
+              img: "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?ixlib=rb-4.0.3&q=80",
+              icon: "☀️",
+            },
+          ]}
+        />
+      </PreviewContainer>
+    );
+  },
+  basic: function BasicLoaderPreview() {
+    return (
+      <PreviewContainer title="Basic Loader" description="Versatile spinning or pulsing loaders.">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 w-full max-w-3xl items-center justify-items-center">
+          <div className="flex flex-col gap-4 items-center">
+            <BasicLoader
+              variant="modern"
+              color="#3b82f6"
+              text="Modern Rings..."
+            />
+          </div>
+          <div className="flex flex-col gap-4 items-center">
+            <BasicLoader variant="clean" color="#10b981" text="Clean Dots..." />
+          </div>
+          <div className="flex flex-col gap-4 items-center">
+            <BasicLoader variant="minimal" color="#f59e0b" text="Minimal..." />
+          </div>
         </div>
-        
-        <div className="flex-1 w-full mx-auto min-h-[600px] shrink-0 flex flex-col">
+      </PreviewContainer>
+    );
+  },
+  toast: function ToastWrapperPreview() {
+    return (
+      <PreviewContainer title="Toast Notifications" description="Customizable toast notification system.">
+        <ToastPreview />
+      </PreviewContainer>
+    );
+  },
+  "dot-background": function DotBackgroundPreview() {
+    return (
+      <PreviewContainer title="Dot Background" description="A clean, dot-matrix style background component." contentClassName="p-0 border-none">
+        <DotBackground dotColor="#6366f1" maskOpacity={0.15}>
+          <div className="flex items-center justify-center w-full h-full min-h-[400px]">
+            <h3 className="text-xl md:text-3xl font-black italic tracking-tighter uppercase opacity-50 text-foreground">
+              Premium Dotted Grid
+            </h3>
+          </div>
+        </DotBackground>
+      </PreviewContainer>
+    );
+  },
+  badge: function BadgePreview() {
+    return (
+      <PreviewContainer title="Badge" description="A small status descriptor for UI elements.">
+        <div className="flex flex-wrap gap-8 items-center justify-center w-full">
+          <Badge variant="default">Default</Badge>
+          <Badge variant="secondary">Secondary</Badge>
+          <Badge variant="destructive">Destructive</Badge>
+          <Badge variant="outline">Outline</Badge>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  button: function StandardButtonPreview() {
+    return (
+      <PreviewContainer title="Standard Button" description="The base button component matching Radix / shadcn spec.">
+        <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[300px]">
+          <div className="flex flex-wrap gap-8 items-center justify-center w-full">
+            <Button variant="default">Default</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="outline">
+              <GithubIcon className="w-4 h-4 mr-2" />
+              GitHub
+            </Button>
+            <Button variant="ghost">Ghost</Button>
+            <Button variant="default" className="bg-[#0077b5] text-white hover:bg-[#0077b5]/90">
+              <LinkedinIcon className="w-4 h-4 mr-2" />
+              LinkedIn
+            </Button>
+            <Button variant="destructive">Destructive</Button>
+            <Button variant="link">Link</Button>
+          </div>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  card: function StandardCardPreview() {
+    return (
+      <PreviewContainer title="Standard Card" description="A base structural card component.">
+        <Card className="w-full max-w-md mx-auto">
+          <CardHeader>
+            <CardTitle>Card Title</CardTitle>
+            <CardDescription>Card Description goes here.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground text-left">
+              Card Content inside the default card.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Button className="w-full">Action</Button>
+          </CardFooter>
+        </Card>
+      </PreviewContainer>
+    );
+  },
+  "sidebar-button": function SidebarButtonPreview() {
+    return (
+      <PreviewContainer title="Sidebar Button" description="Navigation button with active state and category styling for sidebars.">
+        <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[300px]">
+          <div className="w-full max-w-60 flex flex-col gap-1 p-4 bg-muted/20 rounded-xl">
+            <SidebarButton label="Dashboard" isActive />
+            <SidebarButton label="Analytics" />
+            <SidebarButton label="Settings" />
+            <div className="h-4" />
+            <SidebarButton label="User Profile" isCategory />
+            <SidebarButton label="Billing" isCategory />
+          </div>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  particles: function ParticlesPreview() {
+    return (
+      <PreviewContainer title="Particles" description="A dynamic particle system for beautiful backgrounds." contentClassName="bg-slate-950 dark:bg-background p-0 border-none">
+        <div className="w-full h-full relative overflow-hidden min-h-[400px]">
+          <Particles quantity={150} color="#3b82f6" />
+          <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+            <h3 className="text-2xl font-bold text-white dark:text-foreground italic tracking-tighter uppercase">
+              Dynamic Particle System
+            </h3>
+          </div>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  "perspective-grid": function PerspectiveGridPreview() {
+    return (
+      <PreviewContainer title="Perspective Grid" description="A 3D perspective grid horizon background." contentClassName="bg-slate-950 dark:bg-background p-0 border-none">
+        <div className="w-full h-full relative overflow-hidden min-h-[400px]">
+          <PerspectiveGrid gridLineGap={50} />
+          <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+            <h3 className="text-2xl font-bold text-white dark:text-foreground italic tracking-tighter uppercase">
+              Perspective Horizon
+            </h3>
+          </div>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  "search-input": function SearchInputPreview() {
+    return (
+      <PreviewContainer title="Search Input" description="A highly styled, interactive search input component with micro-animations.">
+        <div className="w-full max-w-sm">
+          <SearchInput placeholder="Try searching 'button'..." />
+        </div>
+      </PreviewContainer>
+    );
+  },
+  "github-icon": function GithubIconPreview() {
+    return (
+      <PreviewContainer title="GitHub Icon" description="A beautifully animated GitHub icon.">
+        <div className="flex flex-col gap-8 items-center justify-center w-full h-full p-8">
+          <div className="flex gap-12 items-center">
+            <div className="flex flex-col items-center gap-2">
+              <GithubIcon className="w-6 h-6" />
+              <span className="text-[10px] uppercase font-bold opacity-50">sm</span>
+            </div>
+            <div className="flex flex-col items-center gap-2 text-primary">
+              <GithubIcon className="w-10 h-10" />
+              <span className="text-[10px] uppercase font-bold opacity-50">md</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <GithubIcon className="w-16 h-16" />
+              <span className="text-[10px] uppercase font-bold opacity-50">lg</span>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <Badge variant="outline" className="gap-2">
+              <GithubIcon className="w-3 h-3" /> GitHub Repo
+            </Badge>
+            <Button size="sm" className="gap-2">
+              <GithubIcon className="w-4 h-4" /> View Source
+            </Button>
+          </div>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  "linkedin-icon": function LinkedinIconPreview() {
+    return (
+      <PreviewContainer title="LinkedIn Icon" description="An interactive LinkedIn icon.">
+        <div className="flex flex-col gap-8 items-center justify-center w-full h-full p-8">
+          <div className="flex gap-12 items-center">
+            <div className="flex flex-col items-center gap-2">
+              <LinkedinIcon className="w-6 h-6" />
+              <span className="text-[10px] uppercase font-bold opacity-50">sm</span>
+            </div>
+            <div className="flex flex-col items-center gap-2 text-primary">
+              <LinkedinIcon className="w-10 h-10" />
+              <span className="text-[10px] uppercase font-bold opacity-50">md</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <LinkedinIcon className="w-16 h-16" />
+              <span className="text-[10px] uppercase font-bold opacity-50">lg</span>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <Badge variant="outline" className="gap-2">
+              <LinkedinIcon className="w-3 h-3" /> LinkedIn Profile
+            </Badge>
+            <Button
+              size="sm"
+              className="gap-2 bg-[#0077b5] hover:bg-[#0077b5]/90 border-none"
+            >
+              <LinkedinIcon className="w-4 h-4 fill-white" /> Connect Now
+            </Button>
+          </div>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  "scroll-progress": function ScrollProgressPreview() {
+    return (
+      <PreviewContainer title="Scroll Progress" description="A minimal scroll progress indicator.">
+        <div className="flex items-center justify-center w-full h-full p-8 text-center">
+          <p className="text-muted-foreground font-medium">
+            The scroll progress will be shown on top of the viewport right above
+            header
+          </p>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  "point-cursor": function PointCursorPreview() {
+    return (
+      <PreviewContainer title="Point Cursor" description="A custom interactive cursor.">
+        <PointCursor className="rounded-xl overflow-hidden border border-border bg-muted/10 w-full h-full">
+          <div className="flex flex-col items-center justify-center w-full h-full min-h-[300px] sm:min-h-[400px] p-8 text-center space-y-8 relative overflow-hidden">
+            {/* Decorative background to make it feel like a "playground" */}
+            <div className="absolute inset-0 opacity-5 pointer-events-none">
+              <DotBackground dotColor="currentColor" gap={20} />
+            </div>
+
+            <div className="space-y-3 relative z-10">
+              <Badge variant="secondary" className="mb-2">
+                Isolated Custom Cursor
+              </Badge>
+              <h3 className="text-2xl font-bold tracking-tight">
+                Interactive Playground
+              </h3>
+              <p className="text-muted-foreground max-w-sm mx-auto">
+                The custom cursor is only active inside this box. Hover over the
+                elements to test the{" "}
+                <span className="text-primary font-bold italic">Dot-to-Ring</span>{" "}
+                transformation.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-4 justify-center relative z-10">
+              <Button className="rounded-full px-8 shadow-lg shadow-primary/20">
+                Hover Me
+              </Button>
+              <Button
+                variant="outline"
+                className="rounded-full px-8 bg-background/50 backdrop-blur-sm"
+              >
+                Try This One
+              </Button>
+              <a
+                href="#"
+                className="text-primary font-medium underline underline-offset-4 hover:text-primary/80 transition-colors py-2 px-4"
+                onClick={(e) => e.preventDefault()}
+              >
+                Interactive Link
+              </a>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 w-full max-w-md relative z-10 mx-auto">
+              <div className="p-4 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm clickable">
+                <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">
+                  Custom Box
+                </span>
+                <p className="text-xs mt-1">Has &apos;clickable&apos; class</p>
+              </div>
+              <div className="p-4 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm">
+                <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">
+                  Standard Box
+                </span>
+                <p className="text-xs mt-1">Normal behavior</p>
+              </div>
+            </div>
+          </div>
+        </PointCursor>
+      </PreviewContainer>
+    );
+  },
+  accordion: function AccordionPreview() {
+    return (
+      <PreviewContainer title="Accordion" description="A vertically collapsing accordion component.">
+        <div className="flex items-center justify-center w-full max-w-2xl h-full p-4 mx-auto">
+          <Accordion
+            items={[
+              {
+                title: "What is Future UI?",
+                content:
+                  "Future UI is a modern, high-performance UI component library built for Next.js 16 and React 19. It leverages Tailwind CSS 4 and Framer Motion to provide visually stunning, reusable components.",
+              },
+              {
+                title: "How do I install components?",
+                content:
+                  "You can use our custom CLI tool to add components directly to your project. Simply run 'npx futureuikit add <slug>' and we'll handle the rest, including dependencies and path aliases.",
+              },
+              {
+                title: "Is it customizable?",
+                content:
+                  "Yes! Since you download the source code, you have full ownership and can customize every aspect of the components to fit your specific needs and design system.",
+              },
+            ]}
+          />
+        </div>
+      </PreviewContainer>
+    );
+  },
+  calendar: CalendarPreview,
+  calculator: CalculatorPreview,
+  "cinematic-error": function CinematicErrorPreview() {
+    return (
+      <PreviewContainer 
+        title="Cinematic Error" 
+        description="A dramatic and immersive error page."
+        contentClassName="p-2 md:p-4 bg-transparent border-0 shadow-none"
+      >
+        <div className="w-full h-[600px] rounded-2xl overflow-hidden relative">
+          <CinematicError className="w-full h-full min-h-full" />
+        </div>
+      </PreviewContainer>
+    );
+  },
+  "nexus-card": function NexusCardPreview() {
+    return (
+      <PreviewContainer title="Nexus Card" description="A premium 3D parallax card with reactive spotlight.">
+        <div className="flex items-center justify-center w-full h-full p-4 sm:p-8">
+          <NexusCard className="w-80 h-96">
+            <h2 className="text-2xl font-bold text-foreground mb-2">Nexus Design</h2>
+            <p className="text-muted-foreground">Hover over this card to experience the premium tactile feel, reactive spotlight, and 3D parallax tilt.</p>
+          </NexusCard>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  "scroll-text-reveal": function ScrollTextRevealPreview() {
+    const scrollContainer = React.useRef<HTMLDivElement>(null);
+    return (
+      <PreviewContainer title="Scroll Text Reveal" description="Text that reveals itself as you scroll down the container." contentClassName="p-0">
+        <div ref={scrollContainer} className="w-full h-[500px] overflow-y-auto custom-scrollbar relative bg-background rounded-xl">
+          <div className="min-h-[150vh] flex flex-col items-center">
+            <div className="h-[70vh] flex items-center justify-center text-muted-foreground w-full">
+              <span className="animate-pulse">Scroll down to reveal text ↓</span>
+            </div>
+            <div className="py-20 px-8 max-w-4xl flex items-center justify-center">
+              <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-center">
+                <ScrollTextReveal container={scrollContainer}>
+                  The future of UI design is here. Experience seamless, highly optimized animations that elevate your application&apos;s feel.
+                </ScrollTextReveal>
+              </h2>
+            </div>
+            <div className="h-[60vh] flex items-center justify-center text-muted-foreground w-full">
+              <span className="animate-pulse">Scroll up to reverse ↑</span>
+            </div>
+          </div>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  "rich-text-editor": function RichTextEditorPreviewWrapper() {
+    const [variant, setVariant] = useState<"default" | "minimal" | "writing" | "enterprise" | "glass">("default");
+    return (
+      <PreviewContainer 
+        title="Rich Text Editor" 
+        description="A powerful Notion-style rich text editor built with Tiptap."
+        variants={["default", "minimal", "writing", "enterprise", "glass"]}
+        activeVariant={variant}
+        onVariantChange={setVariant}
+      >
+        <div className="w-full max-w-4xl mx-auto min-h-[500px]">
           <RichTextEditor 
             variant={variant}
             content={`
@@ -1771,21 +2060,26 @@ export const PreviewRegistry: Record<string, React.FC> = {
             `}
           />
         </div>
-      </div>
+      </PreviewContainer>
     );
   },
-  "cursor-glow-button": () => (
-    <div className="flex items-center justify-center w-full h-full p-4">
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-3xl justify-items-center">
-        <CursorGlowButton variant="default">Primary</CursorGlowButton>
-        <CursorGlowButton variant="secondary">Secondary</CursorGlowButton>
-        <CursorGlowButton variant="outline">Outline</CursorGlowButton>
-        <CursorGlowButton variant="destructive" glowColor="rgba(239, 68, 68, 0.8)">Destructive</CursorGlowButton>
-        <CursorGlowButton variant="ghost">Ghost</CursorGlowButton>
-        <CursorGlowButton variant="link">Link</CursorGlowButton>
-      </div>
-    </div>
-  ),
+  "cursor-glow-button": function CursorGlowButtonPreview() {
+    return (
+      <PreviewContainer title="Cursor Glow Button" description="Buttons with a reactive glowing effect following the cursor.">
+        <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[300px]">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-3xl justify-items-center">
+            <CursorGlowButton variant="default">Primary</CursorGlowButton>
+            <CursorGlowButton variant="secondary">Secondary</CursorGlowButton>
+            <CursorGlowButton variant="outline">Outline</CursorGlowButton>
+            <CursorGlowButton variant="destructive" glowColor="rgba(239, 68, 68, 0.8)">Destructive</CursorGlowButton>
+            <CursorGlowButton variant="ghost">Ghost</CursorGlowButton>
+            <CursorGlowButton variant="link">Link</CursorGlowButton>
+          </div>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  "filter-builder": FilterBuilderPreview,
   "dynamic-form": DynamicFormPreview,
   dock: DockPreview,
   drawer: DrawerPreview,
@@ -2311,45 +2605,46 @@ ORDER BY department, salary_rank;`,
   ];
 
   return (
-    <div className="flex flex-col w-full h-full overflow-hidden">
-      {/* Controls bar — never scrolls */}
-      <div className="shrink-0 flex flex-wrap gap-x-6 gap-y-3 p-4 border-b border-border/50 bg-background/80 backdrop-blur-sm">
-        <div className="flex flex-col gap-1.5">
-          <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Layout</span>
-          <div className="flex flex-wrap gap-1.5">
-            {(["chatgpt", "claude", "perplexity", "compact", "enterprise", "minimal"] as const).map((l) => (
-              <Button key={l} variant={layout === l ? "default" : "outline"} size="sm" onClick={() => setLayout(l)} className="capitalize h-7 text-xs">{l}</Button>
-            ))}
+    <PreviewContainer
+      title="AI Chat"
+      description="A highly customizable AI chat interface with markdown and code support."
+      variants={["chatgpt", "claude", "perplexity", "compact", "enterprise", "minimal"]}
+      activeVariant={layout}
+      onVariantChange={setLayout}
+      contentClassName="p-0 overflow-hidden"
+    >
+      <div className="flex flex-col w-full h-full min-h-[500px]">
+        {/* Controls bar — never scrolls */}
+        <div className="shrink-0 flex flex-wrap gap-x-6 gap-y-3 p-4 border-b border-border/50 bg-background/80 backdrop-blur-sm z-10 relative">
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Input Variant</span>
+            <div className="flex flex-wrap gap-1.5">
+              {(["standard", "floating", "command", "multiline", "workspace"] as const).map((v) => (
+                <Button key={v} variant={inputVariant === v ? "default" : "outline"} size="sm" onClick={() => setInputVariant(v)} className="capitalize h-7 text-xs">{v}</Button>
+              ))}
+            </div>
           </div>
         </div>
-        <div className="flex flex-col gap-1.5">
-          <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Input</span>
-          <div className="flex flex-wrap gap-1.5">
-            {(["standard", "floating", "command", "multiline", "workspace"] as const).map((v) => (
-              <Button key={v} variant={inputVariant === v ? "default" : "outline"} size="sm" onClick={() => setInputVariant(v)} className="capitalize h-7 text-xs">{v}</Button>
-            ))}
-          </div>
-        </div>
-      </div>
 
-      {/* Chat panel — fills remaining height, no page scroll */}
-      <div className="flex-1 min-h-0 overflow-hidden">
-        <AIChat
-          messages={messages}
-          input={input}
-          setInput={setInput}
-          onSubmit={handleSubmit}
-          isLoading={isLoading}
-          onStop={() => setIsLoading(false)}
-          layout={layout}
-          inputVariant={inputVariant}
-        >
-          <ChatMessages />
-          <ChatPromptSuggestions suggestions={SUGGESTIONS} />
-          <ChatInput />
-        </AIChat>
+        {/* Chat panel — fills remaining height, no page scroll */}
+        <div className="flex-1 min-h-[500px] overflow-hidden relative">
+          <AIChat
+            messages={messages}
+            input={input}
+            setInput={setInput}
+            onSubmit={handleSubmit}
+            isLoading={isLoading}
+            onStop={() => setIsLoading(false)}
+            layout={layout}
+            inputVariant={inputVariant}
+          >
+            <ChatMessages />
+            <ChatPromptSuggestions suggestions={SUGGESTIONS} />
+            <ChatInput />
+          </AIChat>
+        </div>
       </div>
-    </div>
+    </PreviewContainer>
   );
 }
 

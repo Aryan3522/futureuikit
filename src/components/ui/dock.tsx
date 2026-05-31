@@ -85,9 +85,9 @@ export const Dock = React.forwardRef<HTMLDivElement, DockProps>(
           onMouseLeave={() => mouseX.set(Infinity)}
           className={cn(
             "mx-auto flex h-16 items-end gap-3 rounded-2xl px-3 pb-2 pt-2",
-            variant === "modern" && "bg-white/10 dark:bg-black/20 backdrop-blur-2xl border border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]",
-            variant === "clean" && "bg-background border border-border shadow-sm",
-            variant === "interactive" && "bg-neutral-100/80 dark:bg-neutral-900/80 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 shadow-xl",
+            variant === "modern" && "bg-white/10 dark:bg-black/20 backdrop-blur-2xl border border-white/20 dark:border-white/10 dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]",
+            variant === "clean" && "bg-background border border-border shadow-none dark:shadow-sm",
+            variant === "interactive" && "bg-neutral-100/80 dark:bg-neutral-900/80 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 dark:shadow-xl",
             className
           )}
           {...props}
@@ -132,7 +132,8 @@ export const DockItem = React.forwardRef<HTMLDivElement, DockItemProps>(
     const itemRef = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
 
-    const mouseX = dock?.mouseX ?? useMotionValue(Infinity);
+    const defaultMouseX = useMotionValue(Infinity);
+    const mouseX = dock?.mouseX ?? defaultMouseX;
     const magnification = dock?.magnification ?? 60;
     const distance = dock?.distance ?? 140;
     const disableMagnification = dock?.disableMagnification ?? false;

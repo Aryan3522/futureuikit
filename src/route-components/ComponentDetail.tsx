@@ -155,7 +155,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
         <motion.div 
           layout
           transition={{ type: "spring", bounce: 0, duration: 0.8 }}
-          className="flex-1 h-full relative bg-background flex items-center justify-center overflow-hidden"
+          className="flex-1 h-full relative bg-background flex items-center justify-center overflow-hidden mt-8"
         >
           {!component.type.toLowerCase().includes("background") && (
             <div className="absolute inset-0 opacity-30 pointer-events-none">

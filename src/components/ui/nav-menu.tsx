@@ -5,6 +5,7 @@
 "use client";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Home, User, Settings, Mail, Bell, Search } from "lucide-react";
 
 export interface NavMenuItem {
   title: string;
@@ -21,12 +22,12 @@ export const NavMenu: React.FC<NavMenuProps> = ({ items = [], className }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const defaultItems: NavMenuItem[] = [
-    { title: "Cat", icon: "🐱" },
-    { title: "Cookie", icon: "🍪" },
-    { title: "Bird", icon: "🐦" },
-    { title: "Fly", icon: "🪰" },
-    { title: "Gem", icon: "💎" },
-    { title: "Cheers", icon: "🍻" },
+    { title: "Home", icon: <Home className="w-5 h-5" /> },
+    { title: "Profile", icon: <User className="w-5 h-5" /> },
+    { title: "Settings", icon: <Settings className="w-5 h-5" /> },
+    { title: "Messages", icon: <Mail className="w-5 h-5" /> },
+    { title: "Notifications", icon: <Bell className="w-5 h-5" /> },
+    { title: "Search", icon: <Search className="w-5 h-5" /> },
   ];
 
   const displayItems = items.length > 0 ? items : defaultItems;
@@ -47,7 +48,7 @@ export const NavMenu: React.FC<NavMenuProps> = ({ items = [], className }) => {
           width: 40px;
           height: 5px;
           border-radius: 2.5px;
-          background: rgba(230, 239, 250, 0.9);
+          background: hsl(var(--foreground) / 0.9);
           cursor: pointer;
           z-index: 10;
           transition: background 0.5s, transform 0.5s;
@@ -59,7 +60,7 @@ export const NavMenu: React.FC<NavMenuProps> = ({ items = [], className }) => {
           width: 40px;
           height: 5px;
           border-radius: 2.5px;
-          background: rgba(230, 239, 250, 0.9);
+          background: hsl(var(--foreground) / 0.9);
           transition: transform 0.5s, top 0.5s;
         }
         .nav-toggler::before { top: 10px; }
@@ -84,28 +85,29 @@ export const NavMenu: React.FC<NavMenuProps> = ({ items = [], className }) => {
           position: absolute;
           width: 60px;
           height: 60px;
-          background: rgba(230, 230, 250, 0.7);
+          background: hsl(var(--muted) / 0.8);
+          border: 1px solid hsl(var(--border));
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 24px;
-          color: white;
+          color: hsl(var(--foreground));
           opacity: 0;
-          transition: transform 0.5s ease, opacity 0.5s ease;
+          transition: transform 0.5s ease, opacity 0.5s ease, background 0.2s ease;
           pointer-events: none;
           cursor: pointer;
         }
         .circular-nav.open .circ-item { opacity: 1; pointer-events: auto; }
         .circular-nav.open .circ-item:nth-child(2) { transform: rotate(0deg) translate(-100px) rotate(0deg); }
-        .circular-nav.open .circ-item:nth-child(3) { transform: rotate(60deg) translate(-100px) rotate(60deg); }
-        .circular-nav.open .circ-item:nth-child(4) { transform: rotate(120deg) translate(-100px) rotate(120deg); }
-        .circular-nav.open .circ-item:nth-child(5) { transform: rotate(180deg) translate(-100px) rotate(180deg); }
-        .circular-nav.open .circ-item:nth-child(6) { transform: rotate(240deg) translate(-100px) rotate(240deg); }
-        .circular-nav.open .circ-item:nth-child(7) { transform: rotate(300deg) translate(-100px) rotate(300deg); }
+        .circular-nav.open .circ-item:nth-child(3) { transform: rotate(60deg) translate(-100px) rotate(-60deg); }
+        .circular-nav.open .circ-item:nth-child(4) { transform: rotate(120deg) translate(-100px) rotate(-120deg); }
+        .circular-nav.open .circ-item:nth-child(5) { transform: rotate(180deg) translate(-100px) rotate(-180deg); }
+        .circular-nav.open .circ-item:nth-child(6) { transform: rotate(240deg) translate(-100px) rotate(-240deg); }
+        .circular-nav.open .circ-item:nth-child(7) { transform: rotate(300deg) translate(-100px) rotate(-300deg); }
         
         .circ-item:hover {
-          background: rgba(255, 255, 255, 0.4);
+          background: hsl(var(--accent));
+          color: hsl(var(--accent-foreground));
         }
       `}</style>
       <div className={cn("circular-nav", menuOpen && "open")}>
@@ -115,7 +117,7 @@ export const NavMenu: React.FC<NavMenuProps> = ({ items = [], className }) => {
         {displayItems.map((item, idx) => (
           <div
             key={idx}
-            className="circ-item"
+            className="circ-item shadow-md"
             title={item.title}
             onClick={() => {
               setMenuOpen(false);

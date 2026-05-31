@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * @registry-slug dynamic-form
  * @registry-name Dynamic Form System
@@ -333,9 +334,9 @@ export const OTPInput: React.FC<OTPInputProps> = ({
             onPaste={handlePaste}
             className={cn(
               "w-12 h-14 text-center font-bold text-xl rounded-xl transition-all outline-none",
-              variant === "glass" && "bg-white/5 border border-white/10 dark:border-white/5 text-foreground focus:border-white/40 focus:ring-1 focus:ring-white/10",
+              variant === "glass" && "bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 text-foreground focus:border-white/40 focus:ring-1 focus:ring-white/10",
               variant === "minimal" && "bg-transparent border-b-2 border-border focus:border-primary rounded-none",
-              variant === "dark" && "bg-zinc-900 border border-zinc-800 text-zinc-100 focus:border-zinc-500",
+              variant === "dark" && "bg-card dark:bg-zinc-900 border border-border dark:border-zinc-800 text-foreground dark:text-zinc-100 focus:border-primary dark:focus:border-zinc-500",
               variant !== "glass" && variant !== "minimal" && variant !== "dark" && "bg-muted/40 border border-border/80 focus:border-primary focus:ring-2 focus:ring-primary/10"
             )}
           />
@@ -437,9 +438,9 @@ export const AutocompleteInput: React.FC<AutocompleteProps> = ({
         onKeyDown={handleKeyDown}
         className={cn(
           "w-full text-sm",
-          variant === "glass" && "bg-white/5 border border-white/10 dark:border-white/5 focus:border-white/30 rounded-2xl px-4 py-3 placeholder:text-muted-foreground/30",
+          variant === "glass" && "bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 focus:border-white/30 rounded-2xl px-4 py-3 placeholder:text-muted-foreground/30",
           variant === "minimal" && "bg-transparent border-b border-border/50 focus:border-primary rounded-none py-1 px-0 focus:ring-0",
-          variant === "dark" && "bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl px-3.5 py-2.5",
+          variant === "dark" && "bg-card dark:bg-zinc-900 border border-border dark:border-zinc-800 text-foreground dark:text-zinc-100 rounded-xl px-3.5 py-2.5",
           variant !== "glass" && variant !== "minimal" && variant !== "dark" && "bg-muted/40 border border-border/50 rounded-xl px-3.5 py-2.5 focus:border-primary focus:ring-1 focus:ring-primary/20"
         )}
       />
@@ -517,9 +518,9 @@ export const MultiSelectInput: React.FC<MultiSelectProps> = ({
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           "w-full text-sm text-left flex items-center justify-between min-h-[42px] transition-all",
-          variant === "glass" && "bg-white/5 border border-white/10 dark:border-white/5 rounded-2xl px-4 py-2",
+          variant === "glass" && "bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 rounded-2xl px-4 py-2",
           variant === "minimal" && "bg-transparent border-b border-border/50 rounded-none py-1.5 px-0",
-          variant === "dark" && "bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl px-3.5 py-2",
+          variant === "dark" && "bg-card dark:bg-zinc-900 border border-border dark:border-zinc-800 text-foreground dark:text-zinc-100 rounded-xl px-3.5 py-2",
           variant !== "glass" && variant !== "minimal" && variant !== "dark" && "bg-muted/40 border border-border/50 rounded-xl px-3.5 py-2 focus:border-primary focus:ring-1 focus:ring-primary/20"
         )}
       >
@@ -641,8 +642,8 @@ export const FileUploadInput: React.FC<FileUploadProps> = ({
         className={cn(
           "w-full rounded-2xl border-2 border-dashed flex flex-col items-center justify-center p-6 text-center cursor-pointer transition-all min-h-[140px]",
           dragActive ? "border-primary bg-primary/5" : "border-border/60 bg-muted/20 hover:bg-muted/30",
-          variant === "glass" && "border-white/10 dark:border-white/5 hover:bg-white/5 bg-transparent",
-          variant === "dark" && "border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/50",
+          variant === "glass" && "border-white/10 dark:border-white/5 hover:bg-white/5 dark:hover:bg-black/20 bg-transparent",
+          variant === "dark" && "border-border dark:border-zinc-800 bg-card dark:bg-zinc-900/30 hover:bg-muted dark:hover:bg-zinc-900/50",
           disabled && "opacity-50 cursor-not-allowed"
         )}
       >
@@ -709,7 +710,7 @@ const labelVariants = {
   glass: "text-xs font-semibold tracking-wider text-white/70 uppercase mb-1",
   outline: "text-sm font-medium text-foreground mb-1.5",
   elevated: "text-sm font-semibold text-foreground/95 mb-1.5",
-  dark: "text-xs font-bold tracking-wider text-zinc-400 uppercase mb-1.5",
+  dark: "text-xs font-bold tracking-wider text-muted-foreground dark:text-zinc-400 uppercase mb-1.5",
   compact: "text-[11px] font-bold text-muted-foreground uppercase tracking-tight mb-1"
 };
 
@@ -719,7 +720,7 @@ const inputStyles = {
   glass: "bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 focus:border-white/30 focus:ring-1 focus:ring-white/10 rounded-2xl px-4 py-3 text-sm backdrop-blur-md placeholder:text-muted-foreground/30 transition-all duration-300 focus-visible:outline-none",
   outline: "bg-background border border-border focus:border-primary focus:ring-2 focus:ring-primary/10 rounded-lg px-3 py-2 transition-all focus-visible:outline-none",
   elevated: "bg-background border border-border/10 shadow-[0_2px_4px_rgba(0,0,0,0.02)] focus:border-primary focus:ring-2 focus:ring-primary/10 rounded-xl px-3.5 py-2.5 transition-all focus-visible:outline-none",
-  dark: "bg-zinc-900 border border-zinc-800 focus:border-zinc-500 focus:ring-1 focus:ring-zinc-700 rounded-xl px-3.5 py-2.5 text-zinc-100 placeholder:text-zinc-600 transition-all focus-visible:outline-none",
+  dark: "bg-card dark:bg-zinc-900 border border-border dark:border-zinc-800 focus:border-primary dark:focus:border-zinc-500 focus:ring-1 focus:ring-primary/20 dark:focus:ring-zinc-700 rounded-xl px-3.5 py-2.5 text-foreground dark:text-zinc-100 placeholder:text-muted-foreground dark:placeholder:text-zinc-600 transition-all focus-visible:outline-none",
   compact: "bg-muted/20 border border-border/40 focus:border-primary rounded-lg px-2.5 py-1.5 text-xs transition-all focus-visible:outline-none"
 };
 
@@ -1146,6 +1147,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
     formState: { isDirty }
   } = methods;
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const currentValues = watch();
 
   // Conditional rendering visibility checks

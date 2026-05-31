@@ -44,7 +44,7 @@ const Comps: React.FC = () => {
 
       <div className="relative z-10 w-full max-w-7xl px-4 md:px-8 flex gap-12 pt-24 pb-20">
         {/* Sticky Sidebar */}
-        <aside className="hidden md:block w-56 shrink-0 h-fit sticky top-12 overflow-y-auto max-h-[calc(100vh-48px)] scrollbar-hide py-10">
+        <aside className="hidden md:block w-56 shrink-0 h-fit sticky top-12 overflow-y-auto overflow-x-hidden max-h-[calc(100vh-48px)] scrollbar-hide py-10">
           <div className="space-y-8">
             <div className="space-y-1">
               <h4 className="text-[10px] uppercase tracking-widest font-black text-foreground/40 mb-3 px-2">Resources</h4>

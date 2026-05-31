@@ -710,10 +710,10 @@ function DefaultNode({ id, data, type }: { id: string, data: any, type: string }
     <div className={cn(
       "w-full p-4 flex flex-col gap-2 rounded-xl backdrop-blur-sm border shadow-sm",
       variant === "default" && "bg-card border-border",
-      variant === "enterprise" && "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-md rounded-md",
+      variant === "enterprise" && "bg-card border-border/50 shadow-md rounded-md",
       variant === "minimal" && "bg-transparent border-border rounded-none border-l-4 border-l-primary",
       variant === "glass" && "bg-background/40 border-border/50 shadow-lg",
-      variant === "compact" && "p-2 gap-1"
+      variant === "compact" && "p-2 gap-1 bg-card"
     )}>
       <div className="flex items-center gap-3">
         <div className={cn(
@@ -728,9 +728,8 @@ function DefaultNode({ id, data, type }: { id: string, data: any, type: string }
         </div>
         <div className="flex flex-col">
           <span className={cn(
-            "font-semibold tracking-tight leading-none",
-            variant === "compact" && "text-sm",
-            variant === "enterprise" && "text-slate-800 dark:text-slate-200"
+            "font-semibold tracking-tight leading-none text-foreground",
+            variant === "compact" && "text-sm"
           )}>{data?.label || type}</span>
           {data?.description && variant !== "compact" && (
             <span className="text-xs text-muted-foreground mt-1 line-clamp-1">{data.description}</span>

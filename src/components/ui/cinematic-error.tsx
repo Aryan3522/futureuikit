@@ -64,7 +64,7 @@ export const CinematicError: React.FC<CinematicErrorProps> = ({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "relative w-full h-full min-h-[500px] md:min-h-[700px] flex items-center justify-center overflow-hidden bg-background",
+        "relative w-screen h-screen flex items-center justify-center overflow-hidden bg-background",
         className
       )}
       style={{ perspective: "1000px" }}

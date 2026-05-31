@@ -69,21 +69,17 @@ export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = ({ options = 
           right: 20px;
           display: flex;
           align-items: center; gap: 12px;
-          background: rgba(0, 0, 0, 0.3);
-          backdrop-filter: blur(8px);
+          backdrop-filter: blur(12px);
           padding: 12px;
           border-radius: 16px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          color: white;
           pointer-events: none;
+          z-index: 20;
         }
         
         .card-icon-wrapper {
           width: 40px;
           height: 40px;
           border-radius: 12px;
-          background: white;
-          color: black;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -116,6 +112,7 @@ export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = ({ options = 
           font-size: 24px;
           transition: opacity 0.3s ease;
           pointer-events: none;
+          z-index: 20;
         }
         
         @media (min-width: 768px) {
@@ -162,10 +159,11 @@ export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = ({ options = 
                 <div
                   key={opt.id}
                   className="mobile-card shrink-0"
-                  style={{ backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url("${opt.img}")` }}
+                  style={{ backgroundImage: `url("${opt.img}")` }}
                 >
-                  <div className="card-content opacity-100 transform-none">
-                    <div className="card-icon-wrapper">
+                  <div className="absolute inset-0 bg-linear-to-b from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90 pointer-events-none z-10" />
+                  <div className="card-content opacity-100 transform-none bg-white/70 dark:bg-black/50 border border-white/50 dark:border-white/10 text-slate-900 dark:text-white shadow-lg">
+                    <div className="card-icon-wrapper bg-white shadow-sm text-slate-900 dark:bg-white dark:text-black">
                       {opt.icon}
                     </div>
                     <div className="card-info flex flex-col">
@@ -199,12 +197,14 @@ export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = ({ options = 
                 "expanding-card",
                 activeOption === opt.id ? "open" : "closed"
               )}
-              style={{ backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url("${opt.img}")` }}
+              style={{ backgroundImage: `url("${opt.img}")` }}
             >
-              <div className="closed-icon">{opt.icon}</div>
+              <div className="absolute inset-0 bg-linear-to-b from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90 pointer-events-none z-10" />
               
-              <div className="card-content desktop-only-content">
-                <div className="card-icon-wrapper">
+              <div className="closed-icon text-slate-900 dark:text-white drop-shadow-sm dark:drop-shadow-md">{opt.icon}</div>
+              
+              <div className="card-content desktop-only-content bg-white/70 dark:bg-black/50 border border-white/50 dark:border-white/10 text-slate-900 dark:text-white shadow-lg">
+                <div className="card-icon-wrapper bg-white shadow-sm text-slate-900 dark:bg-white dark:text-black">
                   {opt.icon}
                 </div>
                 <div className="card-info flex flex-col">
