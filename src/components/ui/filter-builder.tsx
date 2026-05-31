@@ -87,18 +87,18 @@ const useFilterBuilder = () => {
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
 export const DEFAULT_OPERATORS: FilterOperator[] = [
-  { id: "eq", label: "Equals", types: ["text", "number", "select", "boolean", "currency", "percentage", "user", "date"] },
-  { id: "neq", label: "Not Equals", types: ["text", "number", "select", "boolean", "currency", "percentage", "user", "date"] },
-  { id: "contains", label: "Contains", types: ["text", "multiselect", "tags"] },
-  { id: "not_contains", label: "Does Not Contain", types: ["text", "multiselect", "tags"] },
-  { id: "starts_with", label: "Starts With", types: ["text"] },
-  { id: "ends_with", label: "Ends With", types: ["text"] },
-  { id: "gt", label: "Greater Than", types: ["number", "currency", "percentage", "date"] },
-  { id: "lt", label: "Less Than", types: ["number", "currency", "percentage", "date"] },
-  { id: "between", label: "Between", types: ["number", "date", "currency", "percentage"] },
-  { id: "is_empty", label: "Is Empty", types: ["text", "number", "select", "multiselect", "date", "user", "tags"] },
-  { id: "is_not_empty", label: "Is Not Empty", types: ["text", "number", "select", "multiselect", "date", "user", "tags"] },
-];
+          { id: "eq", label: "Equals", types: ["text", "number", "select", "boolean", "currency", "percentage", "user", "date"] },
+          { id: "neq", label: "Not Equals", types: ["text", "number", "select", "boolean", "currency", "percentage", "user", "date"] },
+          { id: "contains", label: "Contains", types: ["text", "multiselect", "tags"] },
+          { id: "not_contains", label: "Does Not Contain", types: ["text", "multiselect", "tags"] },
+          { id: "starts_with", label: "Starts With", types: ["text"] },
+          { id: "ends_with", label: "Ends With", types: ["text"] },
+          { id: "gt", label: "Greater Than", types: ["number", "currency", "percentage", "date"] },
+          { id: "lt", label: "Less Than", types: ["number", "currency", "percentage", "date"] },
+          { id: "between", label: "Between", types: ["number", "date", "currency", "percentage"] },
+          { id: "is_empty", label: "Is Empty", types: ["text", "number", "select", "multiselect", "date", "user", "tags"] },
+          { id: "is_not_empty", label: "Is Not Empty", types: ["text", "number", "select", "multiselect", "date", "user", "tags"] },
+        ];
 
 export const createEmptyRule = (fields: FilterField[]): FilterRule => {
   const fieldId = fields[0]?.id || "";
@@ -131,7 +131,7 @@ export interface FilterBuilderProps {
   className?: string;
 }
 
-export function FilterBuilder({
+export const FilterBuilder = React.memo(function FilterBuilder({
   initialData,
   onChange,
   fields,
@@ -276,7 +276,8 @@ export function FilterBuilder({
       </div>
     </FilterBuilderContext.Provider>
   );
-}
+});
+FilterBuilder.displayName = "FilterBuilder";
 
 // ==========================================
 // GROUP RENDERER

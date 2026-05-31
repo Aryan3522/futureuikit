@@ -85,7 +85,7 @@ export interface FileUploadProps {
   className?: string;
 }
 
-export function FileUpload({
+export const FileUpload = React.memo(function FileUpload({
   children,
   maxFiles = 10,
   maxSize = 10 * 1024 * 1024, // 10MB default
@@ -146,7 +146,8 @@ export function FileUpload({
       </div>
     </FileUploadContext.Provider>
   );
-}
+});
+FileUpload.displayName = "FileUpload";
 
 // --- Dropzone Component ---
 
@@ -183,7 +184,7 @@ export interface UploadDropzoneProps extends React.HTMLAttributes<HTMLDivElement
   subtitle?: string;
 }
 
-export function UploadDropzone({ 
+export const UploadDropzone = React.memo(function UploadDropzone({ 
   className, 
   title = "Click or drag files here to upload", 
   subtitle,
@@ -381,11 +382,12 @@ export function UploadDropzone({
       </AnimatePresence>
     </div>
   );
-}
+});
+UploadDropzone.displayName = "UploadDropzone";
 
 // --- Preview Component ---
 
-export function UploadPreview({ className }: { className?: string }) {
+export const UploadPreview = React.memo(function UploadPreview({ className }: { className?: string }) {
   const { files, handleRemoveFile, variant } = useFileUpload();
 
   if (files.length === 0) return null;
@@ -479,11 +481,12 @@ export function UploadPreview({ className }: { className?: string }) {
       </AnimatePresence>
     </div>
   );
-}
+});
+UploadPreview.displayName = "UploadPreview";
 
 // --- Overall Progress Component ---
 
-export function UploadProgress({ className }: { className?: string }) {
+export const UploadProgress = React.memo(function UploadProgress({ className }: { className?: string }) {
   const { files } = useFileUpload();
 
   const uploadingFiles = files.filter(f => f.status === "uploading");
@@ -507,4 +510,5 @@ export function UploadProgress({ className }: { className?: string }) {
       </div>
     </div>
   );
-}
+});
+UploadProgress.displayName = "UploadProgress";

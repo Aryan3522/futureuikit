@@ -47,89 +47,89 @@ export interface CursorGlowButtonProps
   borderWidth?: string;
 }
 
-export const CursorGlowButton = React.forwardRef<HTMLButtonElement, CursorGlowButtonProps>(
-  (
-    {
-      className,
-      variant,
-      size,
-      children,
-      glowColor = "rgba(255, 255, 255, 0.85)",
-      glowSize = 160,
-      glowOpacity = 1,
-      borderWidth = "2px",
-      onMouseMove,
-      onMouseLeave,
-      onMouseEnter,
-      ...props
-    },
-    ref
-  ) => {
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-    const [isHovered, setIsHovered] = useState(false);
-    const [isMounted, setIsMounted] = React.useState(false);
+export const CursorGlowButton = React.memo(React.forwardRef<HTMLButtonElement, CursorGlowButtonProps>(
+          (
+            {
+              className,
+              variant,
+              size,
+              children,
+              glowColor = "rgba(255, 255, 255, 0.85)",
+              glowSize = 160,
+              glowOpacity = 1,
+              borderWidth = "2px",
+              onMouseMove,
+              onMouseLeave,
+              onMouseEnter,
+              ...props
+            },
+            ref
+          ) => {
+            const mouseX = useMotionValue(0);
+            const mouseY = useMotionValue(0);
+            const [isHovered, setIsHovered] = useState(false);
+            const [isMounted, setIsMounted] = React.useState(false);
 
-    // Only enable the glow layer on the client — prevents SSR/hydration mismatch
-    // because useMotionTemplate serialises differently between server and browser.
-    React.useEffect(() => {
-      setIsMounted(true);
-    }, []);
+            // Only enable the glow layer on the client — prevents SSR/hydration mismatch
+            // because useMotionTemplate serialises differently between server and browser.
+            React.useEffect(() => {
+              setIsMounted(true);
+            }, []);
 
-    // useMotionTemplate MUST be called at hook-level, never inside a JSX style prop.
-    const glowBackground = useMotionTemplate`radial-gradient(${glowSize}px circle at ${mouseX}px ${mouseY}px, ${glowColor}, transparent 100%)`;
+            // useMotionTemplate MUST be called at hook-level, never inside a JSX style prop.
+            const glowBackground = useMotionTemplate`radial-gradient(${glowSize}px circle at ${mouseX}px ${mouseY}px, ${glowColor}, transparent 100%)`;
 
-    function handleMouseMove(e: React.MouseEvent<HTMLButtonElement>) {
-      const { left, top } = e.currentTarget.getBoundingClientRect();
-      mouseX.set(e.clientX - left);
-      mouseY.set(e.clientY - top);
-      if (onMouseMove) onMouseMove(e);
-    }
+            function handleMouseMove(e: React.MouseEvent<HTMLButtonElement>) {
+              const { left, top } = e.currentTarget.getBoundingClientRect();
+              mouseX.set(e.clientX - left);
+              mouseY.set(e.clientY - top);
+              if (onMouseMove) onMouseMove(e);
+            }
 
-    return (
-      <motion.button
-        ref={ref}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={(e: any) => {
-          setIsHovered(true);
-          if (onMouseEnter) onMouseEnter(e);
-        }}
-        onMouseLeave={(e: any) => {
-          setIsHovered(false);
-          if (onMouseLeave) onMouseLeave(e);
-        }}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className={cn(buttonVariants({ variant, size, className }), "group")}
-        {...(props as any)}
-      >
-        {/*
-         * Border glow overlay — rendered client-side only.
-         * Uses a CSS mask to restrict the radial gradient to the border ring only,
-         * keeping the button's inner background clean.
-         */}
-        {isMounted && (
-          <motion.div
-            className="absolute inset-0 z-0 pointer-events-none rounded-[inherit]"
-            animate={{ opacity: isHovered ? glowOpacity : 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            style={{
-              background: glowBackground,
-              WebkitMask:
-                "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-              WebkitMaskComposite: "xor",
-              maskComposite: "exclude",
-              padding: borderWidth,
-            }}
-          />
-        )}
+            return (
+              <motion.button
+                ref={ref}
+                onMouseMove={handleMouseMove}
+                onMouseEnter={(e: any) => {
+                  setIsHovered(true);
+                  if (onMouseEnter) onMouseEnter(e);
+                }}
+                onMouseLeave={(e: any) => {
+                  setIsHovered(false);
+                  if (onMouseLeave) onMouseLeave(e);
+                }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className={cn(buttonVariants({ variant, size, className }), "group")}
+                {...(props as any)}
+              >
+                {/*
+                 * Border glow overlay — rendered client-side only.
+                 * Uses a CSS mask to restrict the radial gradient to the border ring only,
+                 * keeping the button's inner background clean.
+                 */}
+                {isMounted && (
+                  <motion.div
+                    className="absolute inset-0 z-0 pointer-events-none rounded-[inherit]"
+                    animate={{ opacity: isHovered ? glowOpacity : 0 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                    style={{
+                      background: glowBackground,
+                      WebkitMask:
+                        "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                      WebkitMaskComposite: "xor",
+                      maskComposite: "exclude",
+                      padding: borderWidth,
+                    }}
+                  />
+                )}
 
-        <div className="relative z-10 flex items-center justify-center gap-2">
-          {children}
-        </div>
-      </motion.button>
-    );
-  }
-);
+                <div className="relative z-10 flex items-center justify-center gap-2">
+                  {children}
+                </div>
+              </motion.button>
+            );
+          }
+        ));
 
 CursorGlowButton.displayName = "CursorGlowButton";

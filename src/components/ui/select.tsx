@@ -71,7 +71,7 @@ export interface SelectProps {
   onCreate?: (val: string) => void;
 }
 
-export function Select({
+export const Select = React.memo(function Select({
   children,
   value: controlledValue,
   defaultValue,
@@ -134,7 +134,8 @@ export function Select({
       </PopoverPrimitive.Root>
     </SelectContext.Provider>
   );
-}
+});
+Select.displayName = "Select";
 
 const selectTriggerVariants = cva(
   "flex items-center justify-between w-full transition-all focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 ring-offset-background",
@@ -165,77 +166,77 @@ export interface SelectTriggerProps extends React.ButtonHTMLAttributes<HTMLButto
   renderValue?: (val: string | string[]) => React.ReactNode;
 }
 
-export const SelectTrigger = React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
-  ({ className, placeholder = "Select an option...", renderValue, children, ...props }, ref) => {
-    const { open, value, disabled, variant, size, multiSelect, onValueChange } = useSelectContext();
+export const SelectTrigger = React.memo(React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
+          ({ className, placeholder = "Select an option...", renderValue, children, ...props }, ref) => {
+            const { open, value, disabled, variant, size, multiSelect, onValueChange } = useSelectContext();
 
-    const handleRemoveItem = (e: React.MouseEvent, itemToRemove: string) => {
-      e.stopPropagation();
-      e.preventDefault();
-      if (Array.isArray(value)) {
-        onValueChange(value.filter((i) => i !== itemToRemove));
-      }
-    };
+            const handleRemoveItem = (e: React.MouseEvent, itemToRemove: string) => {
+              e.stopPropagation();
+              e.preventDefault();
+              if (Array.isArray(value)) {
+                onValueChange(value.filter((i) => i !== itemToRemove));
+              }
+            };
 
-    const displayValue = React.useMemo(() => {
-      if (renderValue) return renderValue(value);
-      
-      if (multiSelect && Array.isArray(value)) {
-        if (value.length === 0) return <span className="text-muted-foreground">{placeholder}</span>;
-        return (
-          <div className="flex flex-wrap items-center gap-1 overflow-hidden">
-            {value.map((v) => (
-              <span
-                key={v}
-                className="inline-flex items-center gap-1 rounded bg-secondary px-1.5 py-0.5 text-xs font-medium text-secondary-foreground"
-              >
-                {v}
-                <span
-                  role="button"
-                  tabIndex={0}
-                  className="rounded-full hover:bg-background/50 focus:bg-background/50 outline-none"
-                  onClick={(e) => handleRemoveItem(e, v)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      handleRemoveItem(e as any, v);
-                    }
-                  }}
+            const displayValue = React.useMemo(() => {
+              if (renderValue) return renderValue(value);
+              
+              if (multiSelect && Array.isArray(value)) {
+                if (value.length === 0) return <span className="text-muted-foreground">{placeholder}</span>;
+                return (
+                  <div className="flex flex-wrap items-center gap-1 overflow-hidden">
+                    {value.map((v) => (
+                      <span
+                        key={v}
+                        className="inline-flex items-center gap-1 rounded bg-secondary px-1.5 py-0.5 text-xs font-medium text-secondary-foreground"
+                      >
+                        {v}
+                        <span
+                          role="button"
+                          tabIndex={0}
+                          className="rounded-full hover:bg-background/50 focus:bg-background/50 outline-none"
+                          onClick={(e) => handleRemoveItem(e, v)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              handleRemoveItem(e as any, v);
+                            }
+                          }}
+                        >
+                          <X className="h-3 w-3" />
+                        </span>
+                      </span>
+                    ))}
+                  </div>
+                );
+              }
+
+              if (!value || value.length === 0) {
+                return <span className="text-muted-foreground">{placeholder}</span>;
+              }
+              return value;
+            }, [value, multiSelect, placeholder, renderValue]);
+
+            return (
+              <PopoverPrimitive.Trigger asChild>
+                <button
+                  ref={ref}
+                  disabled={disabled}
+                  className={cn(selectTriggerVariants({ variant, size }), className)}
+                  aria-expanded={open}
+                  {...props}
                 >
-                  <X className="h-3 w-3" />
-                </span>
-              </span>
-            ))}
-          </div>
-        );
-      }
-
-      if (!value || value.length === 0) {
-        return <span className="text-muted-foreground">{placeholder}</span>;
-      }
-      return value;
-    }, [value, multiSelect, placeholder, renderValue]);
-
-    return (
-      <PopoverPrimitive.Trigger asChild>
-        <button
-          ref={ref}
-          disabled={disabled}
-          className={cn(selectTriggerVariants({ variant, size }), className)}
-          aria-expanded={open}
-          {...props}
-        >
-          <span className="truncate flex-1 text-left">{displayValue}</span>
-          <ChevronDown
-            className={cn(
-              "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
-              open && "rotate-180"
-            )}
-          />
-        </button>
-      </PopoverPrimitive.Trigger>
-    );
-  }
-);
+                  <span className="truncate flex-1 text-left">{displayValue}</span>
+                  <ChevronDown
+                    className={cn(
+                      "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
+                      open && "rotate-180"
+                    )}
+                  />
+                </button>
+              </PopoverPrimitive.Trigger>
+            );
+          }
+        ));
 SelectTrigger.displayName = "SelectTrigger";
 
 const selectContentVariants = cva(
@@ -256,225 +257,225 @@ const selectContentVariants = cva(
   }
 );
 
-export const SelectContent = React.forwardRef<
-  React.ElementRef<typeof PopoverPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
->(({ className, children, sideOffset = 4, ...props }, ref) => {
-  const { container, variant, size } = useSelectContext();
+export const SelectContent = React.memo(React.forwardRef<
+          React.ElementRef<typeof PopoverPrimitive.Content>,
+          React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
+        >(({ className, children, sideOffset = 4, ...props }, ref) => {
+          const { container, variant, size } = useSelectContext();
 
-  return (
-    <PopoverPrimitive.Portal container={container}>
-      <PopoverPrimitive.Content
-        ref={ref}
-        sideOffset={sideOffset}
-        className={cn(
-          selectContentVariants({ variant }),
-          "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
-          "w-[var(--radix-popover-trigger-width)]",
-          className
-        )}
-        {...props}
-      >
-        <CommandPrimitive className="flex h-full w-full flex-col overflow-hidden bg-transparent">
-          {children}
-        </CommandPrimitive>
-      </PopoverPrimitive.Content>
-    </PopoverPrimitive.Portal>
-  );
-});
+          return (
+            <PopoverPrimitive.Portal container={container}>
+              <PopoverPrimitive.Content
+                ref={ref}
+                sideOffset={sideOffset}
+                className={cn(
+                  selectContentVariants({ variant }),
+                  "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+                  "w-[var(--radix-popover-trigger-width)]",
+                  className
+                )}
+                {...props}
+              >
+                <CommandPrimitive className="flex h-full w-full flex-col overflow-hidden bg-transparent">
+                  {children}
+                </CommandPrimitive>
+              </PopoverPrimitive.Content>
+            </PopoverPrimitive.Portal>
+          );
+        }));
 SelectContent.displayName = "SelectContent";
 
-export const SelectSearch = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Input>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & { isLoading?: boolean }
->(({ className, isLoading, ...props }, ref) => {
-  const { searchable, size } = useSelectContext();
+export const SelectSearch = React.memo(React.forwardRef<
+          React.ElementRef<typeof CommandPrimitive.Input>,
+          React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & { isLoading?: boolean }
+        >(({ className, isLoading, ...props }, ref) => {
+          const { searchable, size } = useSelectContext();
 
-  if (!searchable) return null;
+          if (!searchable) return null;
 
-  return (
-    <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
-      <Search className="mr-2 h-4 w-4 shrink-0 text-muted-foreground opacity-50" />
-      <CommandPrimitive.Input
-        ref={ref}
-        className={cn(
-          "flex w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
-          size === "sm" && "py-2 text-xs",
-          size === "lg" && "py-4 text-base",
-          className
-        )}
-        {...props}
-      />
-      {isLoading && <Loader2 className="ml-2 h-4 w-4 shrink-0 animate-spin text-muted-foreground" />}
-    </div>
-  );
-});
+          return (
+            <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+              <Search className="mr-2 h-4 w-4 shrink-0 text-muted-foreground opacity-50" />
+              <CommandPrimitive.Input
+                ref={ref}
+                className={cn(
+                  "flex w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+                  size === "sm" && "py-2 text-xs",
+                  size === "lg" && "py-4 text-base",
+                  className
+                )}
+                {...props}
+              />
+              {isLoading && <Loader2 className="ml-2 h-4 w-4 shrink-0 animate-spin text-muted-foreground" />}
+            </div>
+          );
+        }));
 SelectSearch.displayName = "SelectSearch";
 
-export const SelectList = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
->(({ className, ...props }, ref) => (
-  <CommandPrimitive.List
-    ref={ref}
-    className={cn("max-h-72 overflow-y-auto overflow-x-hidden custom-scrollbar", className)}
-    {...props}
-  />
-));
+export const SelectList = React.memo(React.forwardRef<
+          React.ElementRef<typeof CommandPrimitive.List>,
+          React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
+        >(({ className, ...props }, ref) => (
+          <CommandPrimitive.List
+            ref={ref}
+            className={cn("max-h-72 overflow-y-auto overflow-x-hidden custom-scrollbar", className)}
+            {...props}
+          />
+        )));
 SelectList.displayName = "SelectList";
 
-export const SelectGroup = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Group>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group>
->(({ className, ...props }, ref) => (
-  <CommandPrimitive.Group
-    ref={ref}
-    className={cn(
-      "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:text-muted-foreground",
-      className
-    )}
-    {...props}
-  />
-));
+export const SelectGroup = React.memo(React.forwardRef<
+          React.ElementRef<typeof CommandPrimitive.Group>,
+          React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group>
+        >(({ className, ...props }, ref) => (
+          <CommandPrimitive.Group
+            ref={ref}
+            className={cn(
+              "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:text-muted-foreground",
+              className
+            )}
+            {...props}
+          />
+        )));
 SelectGroup.displayName = "SelectGroup";
 
-export const SelectEmpty = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Empty>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>
->(({ className, ...props }, ref) => (
-  <CommandPrimitive.Empty
-    ref={ref}
-    className={cn("py-6 text-center text-sm text-muted-foreground", className)}
-    {...props}
-  />
-));
+export const SelectEmpty = React.memo(React.forwardRef<
+          React.ElementRef<typeof CommandPrimitive.Empty>,
+          React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>
+        >(({ className, ...props }, ref) => (
+          <CommandPrimitive.Empty
+            ref={ref}
+            className={cn("py-6 text-center text-sm text-muted-foreground", className)}
+            {...props}
+          />
+        )));
 SelectEmpty.displayName = "SelectEmpty";
 
-export const SelectItem = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item> & { 
-    value: string;
-    label?: string;
-  }
->(({ className, children, value: itemValue, label, onSelect, ...props }, ref) => {
-  const { value, onValueChange, multiSelect, setOpen, variant } = useSelectContext();
+export const SelectItem = React.memo(React.forwardRef<
+          React.ElementRef<typeof CommandPrimitive.Item>,
+          React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item> & { 
+            value: string;
+            label?: string;
+          }
+        >(({ className, children, value: itemValue, label, onSelect, ...props }, ref) => {
+          const { value, onValueChange, multiSelect, setOpen, variant } = useSelectContext();
 
-  const isSelected = React.useMemo(() => {
-    if (multiSelect && Array.isArray(value)) {
-      return value.includes(itemValue);
-    }
-    return value === itemValue;
-  }, [value, itemValue, multiSelect]);
+          const isSelected = React.useMemo(() => {
+            if (multiSelect && Array.isArray(value)) {
+              return value.includes(itemValue);
+            }
+            return value === itemValue;
+          }, [value, itemValue, multiSelect]);
 
-  const handleSelect = React.useCallback(
-    (currentValue: string) => {
-      if (multiSelect && Array.isArray(value)) {
-        if (isSelected) {
-          onValueChange(value.filter((v) => v !== currentValue));
-        } else {
-          onValueChange([...value, currentValue]);
-        }
-      } else {
-        onValueChange(currentValue);
-        setOpen(false);
-      }
-      if (onSelect) onSelect(currentValue);
-    },
-    [multiSelect, value, isSelected, onValueChange, setOpen, onSelect]
-  );
+          const handleSelect = React.useCallback(
+            (currentValue: string) => {
+              if (multiSelect && Array.isArray(value)) {
+                if (isSelected) {
+                  onValueChange(value.filter((v) => v !== currentValue));
+                } else {
+                  onValueChange([...value, currentValue]);
+                }
+              } else {
+                onValueChange(currentValue);
+                setOpen(false);
+              }
+              if (onSelect) onSelect(currentValue);
+            },
+            [multiSelect, value, isSelected, onValueChange, setOpen, onSelect]
+          );
 
-  return (
-    <CommandPrimitive.Item
-      ref={ref}
-      value={itemValue}
-      keywords={label ? [label] : undefined}
-      onSelect={handleSelect}
-      className={cn(
-        "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
-        variant === "default" && "data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground",
-        variant === "soft" && "data-[selected=true]:bg-muted/80",
-        variant === "floating" && "data-[selected=true]:bg-accent/50 data-[selected=true]:font-medium",
-        variant === "glass" && "data-[selected=true]:bg-white/10 dark:data-[selected=true]:bg-white/5",
-        variant === "minimal" && "data-[selected=true]:bg-transparent data-[selected=true]:font-bold data-[selected=true]:text-foreground hover:bg-muted",
-        className
-      )}
-      {...props}
-    >
-      <span className="flex items-center flex-1 truncate">
-        {children || label || itemValue}
-      </span>
-      <span
-        className={cn(
-          "ml-auto flex h-4 w-4 items-center justify-center shrink-0 transition-opacity",
-          isSelected ? "opacity-100" : "opacity-0"
-        )}
-      >
-        <Check className="h-4 w-4" />
-      </span>
-    </CommandPrimitive.Item>
-  );
-});
+          return (
+            <CommandPrimitive.Item
+              ref={ref}
+              value={itemValue}
+              keywords={label ? [label] : undefined}
+              onSelect={handleSelect}
+              className={cn(
+                "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+                variant === "default" && "data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground",
+                variant === "soft" && "data-[selected=true]:bg-muted/80",
+                variant === "floating" && "data-[selected=true]:bg-accent/50 data-[selected=true]:font-medium",
+                variant === "glass" && "data-[selected=true]:bg-white/10 dark:data-[selected=true]:bg-white/5",
+                variant === "minimal" && "data-[selected=true]:bg-transparent data-[selected=true]:font-bold data-[selected=true]:text-foreground hover:bg-muted",
+                className
+              )}
+              {...props}
+            >
+              <span className="flex items-center flex-1 truncate">
+                {children || label || itemValue}
+              </span>
+              <span
+                className={cn(
+                  "ml-auto flex h-4 w-4 items-center justify-center shrink-0 transition-opacity",
+                  isSelected ? "opacity-100" : "opacity-0"
+                )}
+              >
+                <Check className="h-4 w-4" />
+              </span>
+            </CommandPrimitive.Item>
+          );
+        }));
 SelectItem.displayName = "SelectItem";
 
-export const SelectSeparator = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Separator>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Separator>
->(({ className, ...props }, ref) => (
-  <CommandPrimitive.Separator
-    ref={ref}
-    className={cn("-mx-1 h-px bg-border", className)}
-    {...props}
-  />
-));
+export const SelectSeparator = React.memo(React.forwardRef<
+          React.ElementRef<typeof CommandPrimitive.Separator>,
+          React.ComponentPropsWithoutRef<typeof CommandPrimitive.Separator>
+        >(({ className, ...props }, ref) => (
+          <CommandPrimitive.Separator
+            ref={ref}
+            className={cn("-mx-1 h-px bg-border", className)}
+            {...props}
+          />
+        )));
 SelectSeparator.displayName = "SelectSeparator";
 
-export const SelectVirtualizer = React.forwardRef<
-  HTMLDivElement,
-  {
-    items: any[];
-    renderItem: (item: any, index: number) => React.ReactNode;
-    estimateSize?: number;
-    className?: string;
-  }
->(({ items, renderItem, estimateSize = 36, className }, ref) => {
-  const parentRef = React.useRef<HTMLDivElement>(null);
-  
-  // Expose ref if needed
-  React.useImperativeHandle(ref, () => parentRef.current!);
+export const SelectVirtualizer = React.memo(React.forwardRef<
+          HTMLDivElement,
+          {
+            items: any[];
+            renderItem: (item: any, index: number) => React.ReactNode;
+            estimateSize?: number;
+            className?: string;
+          }
+        >(({ items, renderItem, estimateSize = 36, className }, ref) => {
+          const parentRef = React.useRef<HTMLDivElement>(null);
+          
+          // Expose ref if needed
+          React.useImperativeHandle(ref, () => parentRef.current!);
 
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const virtualizer = useVirtualizer({
-    count: items.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => estimateSize,
-    overscan: 5,
-  });
+          // eslint-disable-next-line react-hooks/incompatible-library
+          const virtualizer = useVirtualizer({
+            count: items.length,
+            getScrollElement: () => parentRef.current,
+            estimateSize: () => estimateSize,
+            overscan: 5,
+          });
 
-  return (
-    <div
-      ref={parentRef}
-      className={cn("max-h-72 w-full overflow-y-auto custom-scrollbar", className)}
-    >
-      <div
-        className="w-full relative"
-        style={{
-          height: `${virtualizer.getTotalSize()}px`,
-        }}
-      >
-        {virtualizer.getVirtualItems().map((virtualItem) => (
-          <div
-            key={virtualItem.key}
-            className="absolute top-0 left-0 w-full"
-            style={{
-              height: `${virtualItem.size}px`,
-              transform: `translateY(${virtualItem.start}px)`,
-            }}
-          >
-            {renderItem(items[virtualItem.index], virtualItem.index)}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-});
+          return (
+            <div
+              ref={parentRef}
+              className={cn("max-h-72 w-full overflow-y-auto custom-scrollbar", className)}
+            >
+              <div
+                className="w-full relative"
+                style={{
+                  height: `${virtualizer.getTotalSize()}px`,
+                }}
+              >
+                {virtualizer.getVirtualItems().map((virtualItem) => (
+                  <div
+                    key={virtualItem.key}
+                    className="absolute top-0 left-0 w-full"
+                    style={{
+                      height: `${virtualItem.size}px`,
+                      transform: `translateY(${virtualItem.start}px)`,
+                    }}
+                  >
+                    {renderItem(items[virtualItem.index], virtualItem.index)}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        }));
 SelectVirtualizer.displayName = "SelectVirtualizer";

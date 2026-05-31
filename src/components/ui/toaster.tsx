@@ -12,7 +12,7 @@ import {
   ToastViewport,
 } from "@/components/ui/toast"
 
-export function Toaster() {
+export const Toaster = React.memo(function Toaster() {
   const { toasts } = useToast()
 
   // Group toasts by position
@@ -52,4 +52,5 @@ export function Toaster() {
       )}
     </ToastProvider>
   );
-}
+});
+Toaster.displayName = "Toaster";

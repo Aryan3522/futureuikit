@@ -14,28 +14,29 @@ interface SidebarButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   isCategory?: boolean;
 }
 
-export const SidebarButton: React.FC<SidebarButtonProps> = ({
-  label,
-  isActive,
-  isCategory = false,
-  className,
-  ...props
-}) => {
-  return (
-    <motion.button
-      whileHover={{ x: 4 }}
-      whileTap={{ scale: 0.98 }}
-      className={cn(
-        "w-full text-left py-2 px-3 text-sm transition-colors relative group flex items-center justify-between rounded-lg",
-        isActive 
-          ? "bg-primary/10 text-primary font-bold italic" 
-          : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
-        className
-      )}
-      {...(props as any)}
-    >
-      <span className={cn(isCategory && "pl-4 text-xs font-semibold tracking-wider uppercase opacity-70")}>{label}</span>
-      {isActive && <div className="w-1.5 h-1.5 rounded-full bg-primary" />}
-    </motion.button>
-  );
-};
+export const SidebarButton: React.FC<SidebarButtonProps> = React.memo(({
+          label,
+          isActive,
+          isCategory = false,
+          className,
+          ...props
+        }) => {
+          return (
+            <motion.button
+              whileHover={{ x: 4 }}
+              whileTap={{ scale: 0.98 }}
+              className={cn(
+                "w-full text-left py-2 px-3 text-sm transition-colors relative group flex items-center justify-between rounded-lg",
+                isActive 
+                  ? "bg-primary/10 text-primary font-bold italic" 
+                  : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
+                className
+              )}
+              {...(props as any)}
+            >
+              <span className={cn(isCategory && "pl-4 text-xs font-semibold tracking-wider uppercase opacity-70")}>{label}</span>
+              {isActive && <div className="w-1.5 h-1.5 rounded-full bg-primary" />}
+            </motion.button>
+          );
+        });
+SidebarButton.displayName = "SidebarButton";

@@ -305,7 +305,7 @@ const editorVariants = cva(
         default: "bg-background border rounded-xl overflow-hidden shadow-sm",
         minimal: "bg-transparent border-none",
         writing: "bg-background w-full max-w-[900px] mx-auto border-none",
-        enterprise: "bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-sm shadow-sm",
+        enterprise: "bg-card border border-border rounded-sm shadow-sm",
         glass: "bg-background/40 backdrop-blur-xl border border-border/50 rounded-2xl shadow-lg",
       },
     },
@@ -325,7 +325,7 @@ export interface RichTextEditorProps {
   children?: React.ReactNode;
 }
 
-export function RichTextEditor({ 
+export const RichTextEditor = React.memo(function RichTextEditor({ 
   content = "", 
   onChange, 
   variant = "default", 
@@ -425,13 +425,14 @@ export function RichTextEditor({
       </div>
     </RichTextContext.Provider>
   );
-}
+});
+RichTextEditor.displayName = "RichTextEditor";
 
 // ==========================================
 // TOOLBAR
 // ==========================================
 
-export function EditorToolbar() {
+export const EditorToolbar = React.memo(function EditorToolbar() {
   const { editor, variant } = useRichText();
 
   const setLink = useCallback(() => {
@@ -460,7 +461,7 @@ export function EditorToolbar() {
       "flex flex-wrap items-center gap-1 p-2 border-b",
       variant === "minimal" && "border-none px-0 pb-4",
       variant === "glass" && "border-border/30 bg-background/20 backdrop-blur-md",
-      variant === "enterprise" && "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 p-1"
+      variant === "enterprise" && "bg-muted/50 border-border p-1"
     )}>
       <ToolbarButton
         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -584,7 +585,8 @@ export function EditorToolbar() {
       />
     </div>
   );
-}
+});
+EditorToolbar.displayName = "EditorToolbar";
 
 function ToolbarButton({ onClick, isActive, icon, title }: { onClick: () => void; isActive: boolean; icon: React.ReactNode; title: string }) {
   const { variant } = useRichText();
@@ -611,7 +613,7 @@ function ToolbarButton({ onClick, isActive, icon, title }: { onClick: () => void
 // EDITOR CONTENT WRAPPER
 // ==========================================
 
-export function EditorContent() {
+export const EditorContent = React.memo(function EditorContent() {
   const { editor, variant } = useRichText();
   
   return (
@@ -620,19 +622,20 @@ export function EditorContent() {
       variant === "default" && "p-4 sm:p-6",
       variant === "minimal" && "py-4",
       variant === "writing" && "py-12 px-4 sm:px-8 text-lg w-full max-w-[800px] mx-auto",
-      variant === "enterprise" && "p-4 sm:p-8 bg-white dark:bg-slate-950",
+      variant === "enterprise" && "p-4 sm:p-8 bg-card",
       variant === "glass" && "p-6"
     )}>
       <TiptapEditorContent editor={editor} className="flex-1 w-full" />
     </div>
   );
-}
+});
+EditorContent.displayName = "EditorContent";
 
 // ==========================================
 // BUBBLE MENU
 // ==========================================
 
-export function EditorBubbleMenu() {
+export const EditorBubbleMenu = React.memo(function EditorBubbleMenu() {
   const { editor } = useRichText();
 
   if (!editor) return null;
@@ -666,7 +669,8 @@ export function EditorBubbleMenu() {
       />
     </TiptapBubbleMenu>
   );
-}
+});
+EditorBubbleMenu.displayName = "EditorBubbleMenu";
 
 function BubbleButton({ onClick, isActive, icon }: { onClick: () => void; isActive: boolean; icon: React.ReactNode }) {
   return (

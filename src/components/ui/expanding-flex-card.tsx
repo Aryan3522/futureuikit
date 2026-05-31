@@ -21,29 +21,29 @@ export interface ExpandingFlexCardProps {
   className?: string;
 }
 
-export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = ({ options = [], className }) => {
-  const [activeOption, setActiveOption] = useState<string | number | undefined>(options[0]?.id);
-  const [isMobile, setIsMobile] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const carouselRef = useRef<HTMLDivElement>(null);
+export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = React.memo(({ options = [], className }) => {
+          const [activeOption, setActiveOption] = useState<string | number | undefined>(options[0]?.id);
+          const [isMobile, setIsMobile] = useState(false);
+          const containerRef = useRef<HTMLDivElement>(null);
+          const carouselRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+          useEffect(() => {
+            const checkMobile = () => {
+              setIsMobile(window.innerWidth < 768);
+            };
+            checkMobile();
+            window.addEventListener("resize", checkMobile);
+            return () => window.removeEventListener("resize", checkMobile);
+          }, []);
 
-  if (!options.length) return null;
+          if (!options.length) return null;
 
-  // Limit to 8 cards
-  const displayOptions = options.slice(0, 8);
+          // Limit to 8 cards
+          const displayOptions = options.slice(0, 8);
 
-  return (
-    <div className={cn("w-full max-w-6xl mx-auto px-4 py-8", className)} ref={containerRef}>
-      <style>{`
+          return (
+            <div className={cn("w-full max-w-6xl mx-auto px-4 py-8", className)} ref={containerRef}>
+              <style>{`
         .expanding-card {
           position: relative;
           background-size: cover;
@@ -132,90 +132,68 @@ export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = ({ options = 
 
         /* Mobile Specific Carousel Fixes */
         .mobile-card {
-          flex: 0 0 85%;
           height: 400px;
           border-radius: 24px;
-          margin-right: 16px;
           position: relative;
           background-size: cover;
           background-position: center;
           overflow: hidden;
         }
-        .mobile-card:last-child {
-          margin-right: 0;
-        }
       `}</style>
 
-      {isMobile ? (
-        <div className="relative">
-          <div className="overflow-hidden cursor-grab active:cursor-grabbing">
-            <motion.div
-              ref={carouselRef}
-              drag="x"
-              dragConstraints={containerRef}
-              className="flex"
-            >
-              {displayOptions.map((opt) => (
-                <div
-                  key={opt.id}
-                  className="mobile-card shrink-0"
-                  style={{ backgroundImage: `url("${opt.img}")` }}
-                >
-                  <div className="absolute inset-0 bg-linear-to-b from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90 pointer-events-none z-10" />
-                  <div className="card-content opacity-100 transform-none bg-white/70 dark:bg-black/50 border border-white/50 dark:border-white/10 text-slate-900 dark:text-white shadow-lg">
-                    <div className="card-icon-wrapper bg-white shadow-sm text-slate-900 dark:bg-white dark:text-black">
-                      {opt.icon}
-                    </div>
-                    <div className="card-info flex flex-col">
-                      <div className="card-title">{opt.main}</div>
-                      <div className="card-label">{opt.sub}</div>
-                    </div>
+              {isMobile ? (
+                <div className="relative w-full">
+                  <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mx-4 px-4 w-[calc(100%+2rem)] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    {displayOptions.map((opt) => (
+                      <div
+                        key={opt.id}
+                        className="mobile-card snap-center shrink-0 w-[85%] sm:w-[60%]"
+                        style={{ backgroundImage: `url("${opt.img}")` }}
+                      >
+                        <div className="absolute inset-0 bg-linear-to-b from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90 pointer-events-none z-10" />
+                        <div className="card-content opacity-100 transform-none bg-white/70 dark:bg-black/50 border border-white/50 dark:border-white/10 text-slate-900 dark:text-white shadow-lg">
+                          <div className="card-icon-wrapper bg-white shadow-sm text-slate-900 dark:bg-white dark:text-black">
+                            {opt.icon}
+                          </div>
+                          <div className="card-info flex flex-col">
+                            <div className="card-title">{opt.main}</div>
+                            <div className="card-label">{opt.sub}</div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
-            </motion.div>
-          </div>
-          <div className="mt-6 flex justify-center gap-2">
-            {displayOptions.map((opt) => (
-              <div 
-                key={opt.id} 
-                className={cn(
-                  "w-2 h-2 rounded-full transition-all duration-300",
-                  activeOption === opt.id ? "w-6 bg-primary" : "bg-muted-foreground/30"
-                )}
-              />
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="flex gap-3 h-112.5 items-center justify-center">
-          {displayOptions.map((opt) => (
-            <div
-              key={opt.id}
-              onClick={() => setActiveOption(opt.id)}
-              className={cn(
-                "expanding-card",
-                activeOption === opt.id ? "open" : "closed"
+              ) : (
+                <div className="flex gap-3 h-112.5 items-center justify-center">
+                  {displayOptions.map((opt) => (
+                    <div
+                      key={opt.id}
+                      onClick={() => setActiveOption(opt.id)}
+                      className={cn(
+                        "expanding-card",
+                        activeOption === opt.id ? "open" : "closed"
+                      )}
+                      style={{ backgroundImage: `url("${opt.img}")` }}
+                    >
+                      <div className="absolute inset-0 bg-linear-to-b from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90 pointer-events-none z-10" />
+                      
+                      <div className="closed-icon text-slate-900 dark:text-white drop-shadow-sm dark:drop-shadow-md">{opt.icon}</div>
+                      
+                      <div className="card-content desktop-only-content bg-white/70 dark:bg-black/50 border border-white/50 dark:border-white/10 text-slate-900 dark:text-white shadow-lg">
+                        <div className="card-icon-wrapper bg-white shadow-sm text-slate-900 dark:bg-white dark:text-black">
+                          {opt.icon}
+                        </div>
+                        <div className="card-info flex flex-col">
+                          <div className="card-title">{opt.main}</div>
+                          <div className="card-label">{opt.sub}</div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
-              style={{ backgroundImage: `url("${opt.img}")` }}
-            >
-              <div className="absolute inset-0 bg-linear-to-b from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90 pointer-events-none z-10" />
-              
-              <div className="closed-icon text-slate-900 dark:text-white drop-shadow-sm dark:drop-shadow-md">{opt.icon}</div>
-              
-              <div className="card-content desktop-only-content bg-white/70 dark:bg-black/50 border border-white/50 dark:border-white/10 text-slate-900 dark:text-white shadow-lg">
-                <div className="card-icon-wrapper bg-white shadow-sm text-slate-900 dark:bg-white dark:text-black">
-                  {opt.icon}
-                </div>
-                <div className="card-info flex flex-col">
-                  <div className="card-title">{opt.main}</div>
-                  <div className="card-label">{opt.sub}</div>
-                </div>
-              </div>
             </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
+          );
+        });
+ExpandingFlexCard.displayName = "ExpandingFlexCard";

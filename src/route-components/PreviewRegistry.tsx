@@ -172,7 +172,7 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
   return (
     <div className={cn("w-full h-full flex flex-col overflow-y-auto bg-background", className)}>
       {/* Header & Controls */}
-      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between w-full shrink-0 relative z-10 px-4 py-4 md:px-8 md:py-6 bg-transparent">
+      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between w-full shrink-0 relative z-10 px-2 py-2 md:px-8 md:py-6 bg-transparent">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
           {description && <p className="text-sm text-muted-foreground mt-1">{description}</p>}
@@ -181,7 +181,7 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
           {variants && variants.length > 0 && onVariantChange && (
             <div className="flex flex-col gap-1.5 w-full md:items-end">
               <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground hidden md:block">Layout Variant</span>
-              <div className="flex items-center gap-2 p-1 bg-muted/30 rounded-lg overflow-x-auto max-w-full">
+              <div className="flex items-center flex-wrap gap-2 p-1 bg-muted/30 rounded-lg max-w-full">
                 {variants.map(v => (
                   <button
                     key={v}
@@ -524,6 +524,7 @@ const DynamicFormPreview: React.FC = () => {
       description="A highly dynamic, JSON-driven form builder with built-in validation."
       variants={["contact", "wizard", "login"]}
       activeVariant={activeDemo}
+      contentClassName="items-start py-8"
       onVariantChange={(v) => {
         setActiveDemo(v);
         setSubmittedData(null);
@@ -697,7 +698,7 @@ const DrawerPreview: React.FC = () => {
       extraControls={
         <div className="flex flex-col gap-1.5 md:items-end">
           <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Placement</span>
-          <div className="flex gap-1.5">
+          <div className="flex flex-wrap gap-1.5">
             {(["left", "right", "top", "bottom"] as const).map(p => (
               <Button key={p} variant={placement === p ? "default" : "outline"} size="sm" onClick={() => setPlacement(p)} className="h-7 text-xs">{p}</Button>
             ))}
@@ -966,8 +967,8 @@ const SelectPreview: React.FC = () => {
         </div>
       }
     >
-      <div ref={setContainer} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-        <div className="flex items-center justify-center w-full max-w-sm flex-1 mb-32">
+      <div ref={setContainer} className="flex flex-col items-center justify-start w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+        <div className="flex items-center justify-center w-full max-w-sm flex-1 mt-12 mb-32">
           <Select 
             key={isMulti ? "multi" : "single"}
             variant={variant} 
@@ -1217,8 +1218,8 @@ const KanbanPreview: React.FC = () => {
       activeVariant={variant}
       onVariantChange={setVariant}
     >
-      <div className="w-full flex justify-center overflow-x-auto self-start p-8" style={{ transform: 'translateZ(0)' }}>
-        <KanbanBoard variant={variant} initialColumns={initialKanbanData} className="min-w-max" />
+      <div className="w-full flex justify-center self-start p-2 sm:p-8" style={{ transform: 'translateZ(0)' }}>
+        <KanbanBoard variant={variant} initialColumns={initialKanbanData} />
       </div>
     </PreviewContainer>
   );
@@ -1372,7 +1373,7 @@ function FilterBuilderPreview() {
       variants={["default", "minimal", "enterprise", "compact", "glass"]}
       activeVariant={variant}
       onVariantChange={setVariant}
-      contentClassName="bg-transparent border-none p-0 shadow-none min-h-0"
+      contentClassName="bg-transparent border-none p-4 md:p-8 shadow-none min-h-0 items-start overflow-y-auto custom-scrollbar"
     >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
         <div className="lg:col-span-2 space-y-6">
@@ -1428,9 +1429,9 @@ function FilterBuilderPreview() {
                       className="grid grid-cols-4 sm:grid-cols-5 gap-4 p-3 rounded-xl hover:bg-muted/50 items-center text-sm transition-colors border border-transparent hover:border-border/50 mb-1"
                     >
                       <div className="col-span-2 font-medium truncate">{task.title}</div>
-                      <div>
-                        <Badge variant={task.status === "done" ? "default" : task.status === "in_progress" ? "secondary" : "outline"} className="capitalize">
-                          {task.status.replace("_", " ")}
+                      <div className="min-w-0 flex">
+                        <Badge variant={task.status === "done" ? "default" : task.status === "in_progress" ? "secondary" : "outline"} className="capitalize max-w-full">
+                          <span className="truncate block w-full text-center">{task.status.replace("_", " ")}</span>
                         </Badge>
                       </div>
                       <div>
@@ -1654,7 +1655,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
   },
   "expanding-card": function ExpandingCardPreview() {
     return (
-      <PreviewContainer title="Expanding Flex Card" description="A beautiful, interactive expanding flex layout." contentClassName="bg-black text-white p-0">
+      <PreviewContainer title="Expanding Flex Card" description="A beautiful, interactive expanding flex layout.">
         <ExpandingFlexCard
           options={[
             {
@@ -1720,7 +1721,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
   "dot-background": function DotBackgroundPreview() {
     return (
       <PreviewContainer title="Dot Background" description="A clean, dot-matrix style background component." contentClassName="p-0 border-none">
-        <DotBackground dotColor="#6366f1" maskOpacity={0.15}>
+        <DotBackground dotColor="#6366f1" maskOpacity={0.5}>
           <div className="flex items-center justify-center w-full h-full min-h-[400px]">
             <h3 className="text-xl md:text-3xl font-black italic tracking-tighter uppercase opacity-50 text-foreground">
               Premium Dotted Grid
@@ -1766,9 +1767,17 @@ export const PreviewRegistry: Record<string, React.FC> = {
     );
   },
   card: function StandardCardPreview() {
+    const [variant, setVariant] = React.useState<"default" | "outline" | "ghost" | "glass">("default");
+    
     return (
-      <PreviewContainer title="Standard Card" description="A base structural card component.">
-        <Card className="w-full max-w-md mx-auto">
+      <PreviewContainer 
+        title="Standard Card" 
+        description="A base structural card component."
+        variants={["default", "outline", "ghost", "glass"]}
+        activeVariant={variant}
+        onVariantChange={setVariant as any}
+      >
+        <Card className="w-full max-w-md mx-auto" variant={variant}>
           <CardHeader>
             <CardTitle>Card Title</CardTitle>
             <CardDescription>Card Description goes here.</CardDescription>
@@ -1830,10 +1839,17 @@ export const PreviewRegistry: Record<string, React.FC> = {
     );
   },
   "search-input": function SearchInputPreview() {
+    const [variant, setVariant] = React.useState<"default" | "minimal" | "glass" | "pill">("default");
     return (
-      <PreviewContainer title="Search Input" description="A highly styled, interactive search input component with micro-animations.">
+      <PreviewContainer 
+        title="Search Input" 
+        description="A highly styled, interactive search input component with micro-animations."
+        variants={["default", "minimal", "glass", "pill"]}
+        activeVariant={variant}
+        onVariantChange={setVariant as any}
+      >
         <div className="w-full max-w-sm">
-          <SearchInput placeholder="Try searching 'button'..." />
+          <SearchInput placeholder="Try searching 'button'..." variant={variant} />
         </div>
       </PreviewContainer>
     );
@@ -2019,10 +2035,18 @@ export const PreviewRegistry: Record<string, React.FC> = {
     );
   },
   "nexus-card": function NexusCardPreview() {
+    const [variant, setVariant] = React.useState<"default" | "glass" | "solid" | "neon">("default");
+    
     return (
-      <PreviewContainer title="Nexus Card" description="A premium 3D parallax card with reactive spotlight.">
+      <PreviewContainer 
+        title="Nexus Card" 
+        description="A premium 3D parallax card with reactive spotlight."
+        variants={["default", "glass", "solid", "neon"]}
+        activeVariant={variant}
+        onVariantChange={setVariant as any}
+      >
         <div className="flex items-center justify-center w-full h-full p-4 sm:p-8">
-          <NexusCard className="w-80 h-96">
+          <NexusCard className="w-80 h-96" variant={variant}>
             <h2 className="text-2xl font-bold text-foreground mb-2">Nexus Design</h2>
             <p className="text-muted-foreground">Hover over this card to experience the premium tactile feel, reactive spotlight, and 3D parallax tilt.</p>
           </NexusCard>

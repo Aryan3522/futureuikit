@@ -15,8 +15,9 @@
 "use client"
 
 import { motion, useScroll, useSpring } from "framer-motion"
+import React from "react";
 
-export function ScrollProgress() {
+export const ScrollProgress = React.memo(function ScrollProgress() {
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -30,4 +31,5 @@ export function ScrollProgress() {
       style={{ scaleX }}
     />
   )
-}
+});
+ScrollProgress.displayName = "ScrollProgress";

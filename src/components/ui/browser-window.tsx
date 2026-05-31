@@ -14,33 +14,35 @@ export interface BrowserWindowProps extends React.HTMLAttributes<HTMLDivElement>
   scrollRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-export const BrowserWindow = React.forwardRef<HTMLDivElement, BrowserWindowProps>(
-  ({ className, contentClassName, children, scrollRef, ...props }, ref) => {
-    return (
-      <div 
-        ref={ref}
-        className={cn(
-          "w-full h-full relative overflow-hidden rounded-2xl border border-border/40 bg-background flex flex-col items-center justify-center shadow-sm", 
-          className
-        )} 
-        {...props}
-      >
-        {/* Mock Window Header */}
-        <div className="absolute top-0 left-0 w-full h-8 bg-muted border-b border-border/40 flex items-center px-4 gap-1.5 z-50">
-          <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
-          <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
-          <div className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
-        </div>
-        
-        {/* Canvas */}
-        <div 
-          ref={scrollRef} 
-          className={cn("relative w-full h-full pt-8 px-0 pb-0 flex flex-col items-center justify-center overflow-y-auto overflow-x-hidden custom-scrollbar", contentClassName)}
-        >
-          {children}
-        </div>
-      </div>
-    );
-  }
-);
+export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, BrowserWindowProps>(
+          ({ className, contentClassName, children, scrollRef, ...props }, ref) => {
+            return (
+              <div 
+                ref={ref}
+                className={cn(
+                  "w-full h-full relative flex flex-col shadow-sm rounded-2xl overflow-hidden bg-background border border-border/40", 
+                  className
+                )} 
+                {...props}
+              >
+                {/* Mock Window Header */}
+                <div className="w-full h-10 shrink-0 bg-muted border-b border-border/40 flex items-center px-4 gap-1.5 z-50">
+                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                  <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                </div>
+                
+                {/* Canvas */}
+                <div 
+                  ref={scrollRef} 
+                  className={cn("relative flex-1 w-full overflow-y-auto overflow-x-hidden custom-scrollbar p-1", contentClassName)}
+                >
+                  <div className="w-full min-h-full flex flex-col items-center justify-center">
+                    {children}
+                  </div>
+                </div>
+              </div>
+            );
+          }
+        ));
 BrowserWindow.displayName = "BrowserWindow";

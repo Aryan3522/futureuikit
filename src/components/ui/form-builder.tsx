@@ -425,7 +425,7 @@ const ArrayField: React.FC<FieldProps & { colSpanClass: string }> = ({ field, pa
 // ROOT FORM BUILDER COMPONENT
 // ==========================================
 
-export function FormBuilder({
+export const FormBuilder = React.memo(function FormBuilder({
   schema,
   defaultValues,
   onSubmit,
@@ -515,4 +515,5 @@ export function FormBuilder({
       </form>
     </div>
   );
-}
+});
+FormBuilder.displayName = "FormBuilder";

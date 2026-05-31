@@ -9,10 +9,10 @@ import { cn } from "@/lib/utils";
 
 export interface BoxyBounceLoaderProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export const BoxyBounceLoader: React.FC<BoxyBounceLoaderProps> = ({ className, ...props }) => {
-  return (
-    <div className={cn("flex flex-col items-center justify-center w-full h-full min-h-[inherit]", className)} {...props}>
-      <style>{`
+export const BoxyBounceLoader: React.FC<BoxyBounceLoaderProps> = React.memo(({ className, ...props }) => {
+          return (
+            <div className={cn("flex flex-col items-center justify-center w-full h-full min-h-[inherit]", className)} {...props}>
+              <style>{`
         .pl2-container {
           --hue: 223;
           --bg: hsl(var(--hue), 90%, 90%);
@@ -47,29 +47,30 @@ export const BoxyBounceLoader: React.FC<BoxyBounceLoaderProps> = ({ className, .
           66.67% { animation-timing-function: cubic-bezier(0.33, 1, 0.67, 1); width: 28px; height: 44px; transform: rotate(180deg) translateX(6px); }
         }
       `}</style>
-      <div className="pl2-container">
-        <svg className="pl2" viewBox="0 0 128 128" width="128" height="128">
-          <defs>
-            <linearGradient id="pl-grad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#000" />
-              <stop offset="100%" stopColor="#fff" />
-            </linearGradient>
-            <mask id="pl-mask">
-              <rect x="0" y="0" width="128" height="128" fill="url(#pl-grad)" />
-            </mask>
-          </defs>
-          <g fill="hsl(223, 90%, 50%)">
-            <g className="pl2__rect-g"><rect className="pl2__rect" rx="8" ry="8" x="0" y="128" width="40" height="24" transform="rotate(180)" /></g>
-            <g className="pl2__rect-g"><rect className="pl2__rect" rx="8" ry="8" x="44" y="128" width="40" height="24" transform="rotate(180)" /></g>
-            <g className="pl2__rect-g"><rect className="pl2__rect" rx="8" ry="8" x="88" y="128" width="40" height="24" transform="rotate(180)" /></g>
-          </g>
-          <g fill="hsl(283,90%,50%)" mask="url(#pl-mask)">
-            <g className="pl2__rect-g"><rect className="pl2__rect" rx="8" ry="8" x="0" y="128" width="40" height="24" transform="rotate(180)" /></g>
-            <g className="pl2__rect-g"><rect className="pl2__rect" rx="8" ry="8" x="44" y="128" width="40" height="24" transform="rotate(180)" /></g>
-            <g className="pl2__rect-g"><rect className="pl2__rect" rx="8" ry="8" x="88" y="128" width="40" height="24" transform="rotate(180)" /></g>
-          </g>
-        </svg>
-      </div>
-    </div>
-  );
-};
+              <div className="pl2-container">
+                <svg className="pl2" viewBox="0 0 128 128" width="128" height="128">
+                  <defs>
+                    <linearGradient id="pl-grad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#000" />
+                      <stop offset="100%" stopColor="#fff" />
+                    </linearGradient>
+                    <mask id="pl-mask">
+                      <rect x="0" y="0" width="128" height="128" fill="url(#pl-grad)" />
+                    </mask>
+                  </defs>
+                  <g fill="hsl(223, 90%, 50%)">
+                    <g className="pl2__rect-g"><rect className="pl2__rect" rx="8" ry="8" x="0" y="128" width="40" height="24" transform="rotate(180)" /></g>
+                    <g className="pl2__rect-g"><rect className="pl2__rect" rx="8" ry="8" x="44" y="128" width="40" height="24" transform="rotate(180)" /></g>
+                    <g className="pl2__rect-g"><rect className="pl2__rect" rx="8" ry="8" x="88" y="128" width="40" height="24" transform="rotate(180)" /></g>
+                  </g>
+                  <g fill="hsl(283,90%,50%)" mask="url(#pl-mask)">
+                    <g className="pl2__rect-g"><rect className="pl2__rect" rx="8" ry="8" x="0" y="128" width="40" height="24" transform="rotate(180)" /></g>
+                    <g className="pl2__rect-g"><rect className="pl2__rect" rx="8" ry="8" x="44" y="128" width="40" height="24" transform="rotate(180)" /></g>
+                    <g className="pl2__rect-g"><rect className="pl2__rect" rx="8" ry="8" x="88" y="128" width="40" height="24" transform="rotate(180)" /></g>
+                  </g>
+                </svg>
+              </div>
+            </div>
+          );
+        });
+BoxyBounceLoader.displayName = "BoxyBounceLoader";

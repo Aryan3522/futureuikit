@@ -51,45 +51,49 @@ export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   as?: any;
 }
 
-export const Heading: React.FC<HeadingProps> = ({ className, variant, as: Tag = "h1", ...props }) => {
-  return (
-    <Tag
-      className={cn(headingVariants({ variant, className }))}
-      {...props}
-    />
-  );
-};
+export const Heading: React.FC<HeadingProps> = React.memo(({ className, variant, as: Tag = "h1", ...props }) => {
+          return (
+            <Tag
+              className={cn(headingVariants({ variant, className }))}
+              {...props}
+            />
+          );
+        });
+Heading.displayName = "Heading";
 
 export interface TextProps extends React.HTMLAttributes<HTMLParagraphElement> {
   variant?: "default" | "lead" | "large" | "small" | "muted" | "blockquote";
   as?: any;
 }
 
-export const Text: React.FC<TextProps> = ({ className, variant, as: Tag = "p", ...props }) => {
-  return (
-    <Tag
-      className={cn(textVariants({ variant, className }))}
-      {...props}
-    />
-  );
-};
+export const Text: React.FC<TextProps> = React.memo(({ className, variant, as: Tag = "p", ...props }) => {
+          return (
+            <Tag
+              className={cn(textVariants({ variant, className }))}
+              {...props}
+            />
+          );
+        });
+Text.displayName = "Text";
 
-export const Label: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>> = ({ className, ...props }) => (
-  <label
-    className={cn(
-      "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
-      className
-    )}
-    {...props}
-  />
-);
+export const Label: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>> = React.memo(({ className, ...props }) => (
+          <label
+            className={cn(
+              "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+              className
+            )}
+            {...props}
+          />
+        ));
+Label.displayName = "Label";
 
-export const Code: React.FC<React.HTMLAttributes<HTMLElement>> = ({ className, ...props }) => (
-  <code
-    className={cn(
-      "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
-      className
-    )}
-    {...props}
-  />
-);
+export const Code: React.FC<React.HTMLAttributes<HTMLElement>> = React.memo(({ className, ...props }) => (
+          <code
+            className={cn(
+              "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
+              className
+            )}
+            {...props}
+          />
+        ));
+Code.displayName = "Code";

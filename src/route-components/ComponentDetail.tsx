@@ -44,6 +44,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
 
   useEffect(() => {
     // Check initial theme
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsDark(document.documentElement.classList.contains("dark"));
   }, []);
 

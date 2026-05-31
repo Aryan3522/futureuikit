@@ -106,7 +106,7 @@ export interface WorkflowBuilderProps {
   onEdgesChange?: (edges: WorkflowEdgeData[]) => void;
 }
 
-export function WorkflowBuilder({
+export const WorkflowBuilder = React.memo(function WorkflowBuilder({
   initialNodes = [],
   initialEdges = [],
   nodeTypes = {},
@@ -313,13 +313,14 @@ export function WorkflowBuilder({
       </div>
     </WorkflowContext.Provider>
   );
-}
+});
+WorkflowBuilder.displayName = "WorkflowBuilder";
 
 // ==========================================
 // CANVAS & RENDERER
 // ==========================================
 
-export function WorkflowCanvas() {
+export const WorkflowCanvas = React.memo(function WorkflowCanvas() {
   const { 
     nodes, edges, viewport, setViewport, 
     clearSelection, isConnecting, connectionStart, connectionEnd, endConnection,
@@ -491,7 +492,8 @@ export function WorkflowCanvas() {
       </div>
     </div>
   );
-}
+});
+WorkflowCanvas.displayName = "WorkflowCanvas";
 
 // ==========================================
 // EDGE RENDERER
@@ -651,7 +653,7 @@ function WorkflowNodeWrapper({ node, children }: { node: WorkflowNodeData, child
   );
 }
 
-export function WorkflowHandle({ type, position, nodeId, id = "default" }: { type: "source" | "target", position: "left" | "right" | "top" | "bottom", nodeId: string, id?: string }) {
+export const WorkflowHandle = React.memo(function WorkflowHandle({ type, position, nodeId, id = "default" }: { type: "source" | "target", position: "left" | "right" | "top" | "bottom", nodeId: string, id?: string }) {
   const { startConnection, isConnecting, hoveredHandle, setHoveredHandle } = useWorkflow();
 
   const handlePointerDown = (e: React.PointerEvent) => {
@@ -688,7 +690,8 @@ export function WorkflowHandle({ type, position, nodeId, id = "default" }: { typ
       onPointerLeave={handlePointerLeave}
     />
   );
-}
+});
+WorkflowHandle.displayName = "WorkflowHandle";
 
 // ==========================================
 // DEFAULT NODE TYPES
@@ -822,7 +825,7 @@ function WorkflowNodeEditor() {
 // CONTROLS & UTILS
 // ==========================================
 
-export function WorkflowToolbar() {
+export const WorkflowToolbar = React.memo(function WorkflowToolbar() {
   const { setViewport, setNodes, setEdges, variant, setEditingNode, viewport } = useWorkflow();
 
   const handleZoomIn = () => setViewport(p => ({ ...p, zoom: Math.min(2, p.zoom + 0.2) }));
@@ -867,9 +870,10 @@ export function WorkflowToolbar() {
       </button>
     </div>
   );
-}
+});
+WorkflowToolbar.displayName = "WorkflowToolbar";
 
-export function WorkflowMiniMap() {
+export const WorkflowMiniMap = React.memo(function WorkflowMiniMap() {
   const { nodes, viewport, variant } = useWorkflow();
   
   if (variant === "compact") return null;
@@ -901,4 +905,5 @@ export function WorkflowMiniMap() {
       </div>
     </div>
   );
-}
+});
+WorkflowMiniMap.displayName = "WorkflowMiniMap";

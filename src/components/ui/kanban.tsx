@@ -78,7 +78,7 @@ export interface KanbanBoardProps {
   className?: string;
 }
 
-export function KanbanBoard({
+export const KanbanBoard = React.memo(function KanbanBoard({
   initialColumns = [],
   variant = "default",
   onChange,
@@ -273,7 +273,7 @@ export function KanbanBoard({
     }}>
       <div 
         className={cn(
-          "flex items-start gap-4 h-full w-full overflow-x-auto pb-4 custom-scrollbar select-none relative",
+          "flex flex-col md:flex-row items-start gap-4 h-full w-full overflow-y-auto md:overflow-y-hidden md:overflow-x-auto md:snap-x md:snap-mandatory pb-4 custom-scrollbar select-none relative",
           className
         )}
       >
@@ -288,9 +288,9 @@ export function KanbanBoard({
         <button 
           onClick={() => openModal("add-column", null)}
           className={cn(
-            "flex items-center justify-center gap-2 shrink-0 w-80 h-16 rounded-xl border-2 border-dashed border-border/50 hover:border-primary/50 text-muted-foreground hover:text-foreground transition-all bg-background/30",
-            variant === "minimal" && "border-none bg-transparent hover:bg-muted/30 h-10 w-40 justify-start px-2",
-            variant === "compact" && "w-72"
+            "flex items-center justify-center gap-2 shrink-0 w-full md:w-80 h-16 rounded-xl border-2 border-dashed border-border/50 hover:border-primary/50 text-muted-foreground hover:text-foreground transition-all bg-background/30",
+            variant === "minimal" && "border-none bg-transparent hover:bg-muted/30 h-10 w-full md:w-40 justify-start px-2",
+            variant === "compact" && "md:w-72"
           )}
         >
           <Plus className="w-5 h-5" />
@@ -310,7 +310,8 @@ export function KanbanBoard({
       </AnimatePresence>
     </KanbanContext.Provider>
   );
-}
+});
+KanbanBoard.displayName = "KanbanBoard";
 
 // ==========================================
 // COLUMN COMPONENT
@@ -324,7 +325,7 @@ export interface KanbanColumnProps {
   className?: string;
 }
 
-export function KanbanColumn({ id, title, count, children, className }: KanbanColumnProps) {
+export const KanbanColumn = React.memo(function KanbanColumn({ id, title, count, children, className }: KanbanColumnProps) {
   const { 
     variant, 
     handleDragStart, 
@@ -380,9 +381,9 @@ export function KanbanColumn({ id, title, count, children, className }: KanbanCo
       onDrop={onDrop}
       onDragEnd={handleDragEnd}
       className={cn(
-        "flex flex-col shrink-0 w-80 h-full max-h-full rounded-xl transition-all duration-200",
+        "flex flex-col shrink-0 w-full md:w-80 max-w-full h-full max-h-full rounded-xl transition-all duration-200 md:snap-center",
         variant === "default" && "bg-muted/40 border border-border/50",
-        variant === "compact" && "w-72 bg-muted/20 border-border/30",
+        variant === "compact" && "md:w-72 bg-muted/20 border-border/30",
         variant === "enterprise" && "bg-muted/30 border border-border shadow-sm",
         variant === "minimal" && "bg-transparent border-transparent",
         isDraggedCol && "opacity-30 scale-95",
@@ -477,7 +478,8 @@ export function KanbanColumn({ id, title, count, children, className }: KanbanCo
       </div>
     </div>
   );
-}
+});
+KanbanColumn.displayName = "KanbanColumn";
 
 // ==========================================
 // CARD COMPONENT
@@ -488,7 +490,7 @@ export interface KanbanCardProps extends KanbanCardData {
   className?: string;
 }
 
-export function KanbanCard(props: KanbanCardProps) {
+export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps) {
   const { 
     id, columnId, title, description, labels, assignees, 
     comments, attachments, dueDate, priority, className 
@@ -610,12 +612,12 @@ export function KanbanCard(props: KanbanCardProps) {
         {(labels?.length || priority) && (
           <div className="flex flex-wrap items-center gap-1.5 pr-6">
             {priority && (
-              <span className={cn("text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-sm tracking-wider", priorityColors[priority])}>
+              <span className={cn("truncate max-w-full inline-block text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-sm tracking-wider", priorityColors[priority])}>
                 {priority}
               </span>
             )}
             {labels?.map((label, i) => (
-              <span key={i} className="text-[10px] font-medium px-1.5 py-0.5 rounded-sm bg-muted text-muted-foreground" style={label.color ? { backgroundColor: `${label.color}20`, color: label.color } : {}}>
+              <span key={i} className="truncate max-w-full inline-block text-[10px] font-medium px-1.5 py-0.5 rounded-sm bg-muted text-muted-foreground" style={label.color ? { backgroundColor: `${label.color}20`, color: label.color } : {}}>
                 {label.text}
               </span>
             ))}
@@ -680,7 +682,8 @@ export function KanbanCard(props: KanbanCardProps) {
       </div>
     </>
   );
-}
+});
+KanbanCard.displayName = "KanbanCard";
 
 // ==========================================
 // MODAL COMPONENT (Built-in)

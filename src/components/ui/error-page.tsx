@@ -12,10 +12,10 @@ interface ErrorPageProps {
   errorText?: string;
 }
 
-export const ErrorPage: React.FC<ErrorPageProps> = ({ className, errorCode = "404", errorText = "ERROR" }) => {
-  return (
-    <div className={cn("w-full h-full flex items-center justify-center text-center", className)}>
-      <style>{`
+export const ErrorPage: React.FC<ErrorPageProps> = React.memo(({ className, errorCode = "404", errorText = "ERROR" }) => {
+          return (
+            <div className={cn("w-full h-full flex items-center justify-center text-center", className)}>
+              <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
         .error-neon-container {
           font-family: 'Monoton', cursive;
@@ -56,20 +56,21 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ className, errorCode = "40
           19%, 22.99%, 32%, 36.999%, 45%, 45.999%, 50%, 50.99%, 59%, 60.999%, 69%, 70.999%, 86%, 95.999% { opacity: 0.4; text-shadow: none; }
         }
       `}</style>
-      <div className="error-neon-container">
-        <div className="neon-error flex justify-center">
-          {errorText.split("").map((char, i) => (
-            <React.Fragment key={i}>
-              {i === 1 ? <span>{char}</span> : char}
-            </React.Fragment>
-          ))}
-        </div>
-        <div className="neon-code flex justify-center">
-          {errorCode.split("").map((char, i) => (
-            <span key={i}>{char}</span>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
+              <div className="error-neon-container">
+                <div className="neon-error flex justify-center">
+                  {errorText.split("").map((char, i) => (
+                    <React.Fragment key={i}>
+                      {i === 1 ? <span>{char}</span> : char}
+                    </React.Fragment>
+                  ))}
+                </div>
+                <div className="neon-code flex justify-center">
+                  {errorCode.split("").map((char, i) => (
+                    <span key={i}>{char}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        });
+ErrorPage.displayName = "ErrorPage";

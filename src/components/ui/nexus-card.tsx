@@ -9,8 +9,26 @@
 import React, { useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useMotionTemplate, HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { cva, type VariantProps } from "class-variance-authority";
 
-export interface NexusCardProps extends HTMLMotionProps<"div"> {
+export const nexusCardVariants = cva(
+  "relative w-full rounded-3xl p-[1px] transition-transform duration-200 ease-linear",
+  {
+    variants: {
+      variant: {
+        default: "",
+        glass: "",
+        solid: "",
+        neon: "",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+);
+
+export interface NexusCardProps extends HTMLMotionProps<"div">, VariantProps<typeof nexusCardVariants> {
   children: React.ReactNode;
   tilt?: boolean;
   spotlight?: boolean;
@@ -31,6 +49,7 @@ export const NexusCard: React.FC<NexusCardProps> = ({
   spotlightColor = "hsl(var(--primary) / 0.15)",
   borderGradient = "conic-gradient(from 0deg at 50% 50%, transparent 0%, hsl(var(--primary) / 0.5) 25%, transparent 50%)",
   containerColor = "hsl(var(--card))",
+  variant = "default",
   ...props
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -46,6 +65,25 @@ export const NexusCard: React.FC<NexusCardProps> = ({
   // Transform raw mouse values into rotation degrees (-5deg to +5deg)
   const rotateX = useMotionTemplate`${springY}deg`;
   const rotateY = useMotionTemplate`${springX}deg`;
+
+  let currentContainerColor = containerColor;
+  let currentBorderGradient = borderGradient;
+  let currentNoise = noise;
+  let currentAnimatedBorder = animatedBorder;
+  let currentSpotlightColor = spotlightColor;
+
+  if (variant === "glass") {
+    currentContainerColor = "transparent";
+    currentBorderGradient = "conic-gradient(from 0deg at 50% 50%, transparent 0%, rgba(255,255,255,0.2) 25%, transparent 50%)";
+  } else if (variant === "solid") {
+    currentContainerColor = "hsl(var(--card))";
+    currentNoise = false;
+    currentAnimatedBorder = false;
+  } else if (variant === "neon") {
+    currentContainerColor = "hsl(var(--card))";
+    currentBorderGradient = "conic-gradient(from 0deg at 50% 50%, transparent 0%, #0ff 25%, #f0f 50%, transparent 75%)";
+    currentSpotlightColor = "rgba(0, 255, 255, 0.2)";
+  }
 
   // Raw mouse coordinates for the spotlight effect
   const [spotlightPos, setSpotlightPos] = useState({ x: 0, y: 0 });
@@ -106,18 +144,15 @@ export const NexusCard: React.FC<NexusCardProps> = ({
           rotateY: tilt ? rotateY : 0,
           transformStyle: "preserve-3d",
         }}
-        className={cn(
-          "relative w-full rounded-3xl p-[1px] transition-transform duration-200 ease-linear",
-          className
-        )}
+        className={cn(nexusCardVariants({ variant }), className)}
         {...props}
       >
         {/* Animated Border Layer */}
-        {animatedBorder && (
+        {currentAnimatedBorder && (
           <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none z-0">
             <motion.div 
               className="absolute inset-[-100%] rounded-full opacity-50 group-hover:opacity-100 transition-opacity duration-500"
-              style={{ background: borderGradient }}
+              style={{ background: currentBorderGradient }}
               animate={{ rotate: 360 }}
               transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
             />
@@ -126,11 +161,11 @@ export const NexusCard: React.FC<NexusCardProps> = ({
 
         {/* Main Card Content Container */}
         <div 
-          className="relative h-full w-full rounded-[23px] overflow-hidden z-10"
-          style={{ backgroundColor: containerColor }}
+          className={cn("relative h-full w-full rounded-[23px] overflow-hidden z-10", variant === "glass" && "backdrop-blur-xl bg-background/20")}
+          style={{ backgroundColor: currentContainerColor }}
         >
           {/* Noise Overlay */}
-          {noise && (
+          {currentNoise && (
             <div 
               className="absolute inset-0 z-0 opacity-[0.03] mix-blend-overlay pointer-events-none"
               style={{ backgroundImage: `url("${noiseUrl}")`, backgroundSize: "100px 100px" }}
@@ -143,7 +178,7 @@ export const NexusCard: React.FC<NexusCardProps> = ({
               className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-500"
               style={{
                 opacity: isHovered ? 1 : 0,
-                background: `radial-gradient(400px circle at ${spotlightPos.x}px ${spotlightPos.y}px, ${spotlightColor}, transparent 40%)`,
+                background: `radial-gradient(400px circle at ${spotlightPos.x}px ${spotlightPos.y}px, ${currentSpotlightColor}, transparent 40%)`,
               }}
             />
           )}

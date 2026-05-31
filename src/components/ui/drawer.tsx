@@ -42,7 +42,7 @@ export interface DrawerProps {
   variant?: "default" | "floating" | "glass" | "compact" | "elevated";
 }
 
-export function Drawer({
+export const Drawer = React.memo(function Drawer({
   children,
   isOpen: controlledIsOpen,
   onOpenChange,
@@ -70,32 +70,33 @@ export function Drawer({
       {children}
     </DrawerContext.Provider>
   );
-}
-
-export const DrawerTrigger = React.forwardRef<
-  HTMLButtonElement,
-  React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }
->(({ className, children, asChild = false, onClick, ...props }, ref) => {
-  const { setIsOpen } = useDrawer();
-
-  const Comp = asChild ? Slot : "button";
-  const buttonProps = asChild ? {} : { type: "button" as const };
-
-  return (
-    <Comp
-      ref={ref as any}
-      className={className}
-      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-        setIsOpen(true);
-        onClick?.(e);
-      }}
-      {...buttonProps}
-      {...props}
-    >
-      {children}
-    </Comp>
-  );
 });
+Drawer.displayName = "Drawer";
+
+export const DrawerTrigger = React.memo(React.forwardRef<
+          HTMLButtonElement,
+          React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }
+        >(({ className, children, asChild = false, onClick, ...props }, ref) => {
+          const { setIsOpen } = useDrawer();
+
+          const Comp = asChild ? Slot : "button";
+          const buttonProps = asChild ? {} : { type: "button" as const };
+
+          return (
+            <Comp
+              ref={ref as any}
+              className={className}
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                setIsOpen(true);
+                onClick?.(e);
+              }}
+              {...buttonProps}
+              {...props}
+            >
+              {children}
+            </Comp>
+          );
+        }));
 DrawerTrigger.displayName = "DrawerTrigger";
 
 const drawerVariants = cva(
@@ -175,256 +176,257 @@ const drawerVariants = cva(
   }
 );
 
-export const DrawerContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { container?: HTMLElement | null }
->(({ className, children, container, ...props }, ref) => {
-  const { isOpen, setIsOpen, placement, variant } = useDrawer();
-  const contentRef = React.useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = React.useState(false);
+export const DrawerContent = React.memo(React.forwardRef<
+          HTMLDivElement,
+          React.HTMLAttributes<HTMLDivElement> & { container?: HTMLElement | null }
+        >(({ className, children, container, ...props }, ref) => {
+          const { isOpen, setIsOpen, placement, variant } = useDrawer();
+          const contentRef = React.useRef<HTMLDivElement>(null);
+          const [mounted, setMounted] = React.useState(false);
 
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+          React.useEffect(() => {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setMounted(true);
+          }, []);
 
-  // Expose ref
-  React.useImperativeHandle(ref, () => contentRef.current!);
+          // Expose ref
+          React.useImperativeHandle(ref, () => contentRef.current!);
 
-  // Scroll lock & Escape key
-  React.useEffect(() => {
-    if (!isOpen) return;
+          // Scroll lock & Escape key
+          React.useEffect(() => {
+            if (!isOpen) return;
 
-    const originalStyle = window.getComputedStyle(document.body).overflow;
-    document.body.style.overflow = "hidden";
+            const originalStyle = window.getComputedStyle(document.body).overflow;
+            document.body.style.overflow = "hidden";
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setIsOpen(false);
-      }
-    };
+            const handleKeyDown = (e: KeyboardEvent) => {
+              if (e.key === "Escape") {
+                setIsOpen(false);
+              }
+            };
 
-    document.addEventListener("keydown", handleKeyDown);
+            document.addEventListener("keydown", handleKeyDown);
 
-    return () => {
-      document.body.style.overflow = originalStyle;
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isOpen, setIsOpen]);
+            return () => {
+              document.body.style.overflow = originalStyle;
+              document.removeEventListener("keydown", handleKeyDown);
+            };
+          }, [isOpen, setIsOpen]);
 
-  // Focus trap
-  React.useEffect(() => {
-    if (!isOpen || !contentRef.current) return;
+          // Focus trap
+          React.useEffect(() => {
+            if (!isOpen || !contentRef.current) return;
 
-    const focusableElements = contentRef.current.querySelectorAll(
-      'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select, [tabindex]:not([tabindex="-1"])'
-    );
-    
-    const firstElement = focusableElements[0] as HTMLElement;
-    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+            const focusableElements = contentRef.current.querySelectorAll(
+              'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select, [tabindex]:not([tabindex="-1"])'
+            );
+            
+            const firstElement = focusableElements[0] as HTMLElement;
+            const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
 
-    // Focus the first element on open
-    if (firstElement) {
-      setTimeout(() => firstElement.focus({ preventScroll: true }), 50); // slight delay to allow animation to start
-    } else {
-      setTimeout(() => contentRef.current?.focus({ preventScroll: true }), 50);
-    }
+            // Focus the first element on open
+            if (firstElement) {
+              setTimeout(() => firstElement.focus({ preventScroll: true }), 50); // slight delay to allow animation to start
+            } else {
+              setTimeout(() => contentRef.current?.focus({ preventScroll: true }), 50);
+            }
 
-    const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
+            const handleTabKey = (e: KeyboardEvent) => {
+              if (e.key !== "Tab") return;
 
-      if (e.shiftKey) {
-        if (document.activeElement === firstElement) {
-          lastElement?.focus({ preventScroll: true });
-          e.preventDefault();
-        }
-      } else {
-        if (document.activeElement === lastElement) {
-          firstElement?.focus({ preventScroll: true });
-          e.preventDefault();
-        }
-      }
-    };
+              if (e.shiftKey) {
+                if (document.activeElement === firstElement) {
+                  lastElement?.focus({ preventScroll: true });
+                  e.preventDefault();
+                }
+              } else {
+                if (document.activeElement === lastElement) {
+                  firstElement?.focus({ preventScroll: true });
+                  e.preventDefault();
+                }
+              }
+            };
 
-    document.addEventListener("keydown", handleTabKey);
-    return () => document.removeEventListener("keydown", handleTabKey);
-  }, [isOpen]);
+            document.addEventListener("keydown", handleTabKey);
+            return () => document.removeEventListener("keydown", handleTabKey);
+          }, [isOpen]);
 
-  const animationVariants: any = {
-    hidden: {
-      x: placement === "left" ? "-100%" : placement === "right" ? "100%" : 0,
-      y: placement === "top" ? "-100%" : placement === "bottom" ? "100%" : 0,
-      opacity: variant === "floating" ? 0 : 1,
-      scale: variant === "floating" ? 0.95 : 1,
-    },
-    visible: {
-      x: 0,
-      y: 0,
-      opacity: 1,
-      scale: 1,
-      transition: {
-        type: "spring",
-        damping: 24,
-        stiffness: 200,
-        mass: 0.8,
-      },
-    },
-    exit: {
-      x: placement === "left" ? "-100%" : placement === "right" ? "100%" : 0,
-      y: placement === "top" ? "-100%" : placement === "bottom" ? "100%" : 0,
-      opacity: variant === "floating" ? 0 : 1,
-      scale: variant === "floating" ? 0.95 : 1,
-      transition: {
-        type: "spring",
-        damping: 24,
-        stiffness: 200,
-        mass: 0.8,
-      },
-    },
-  };
+          const animationVariants: any = {
+            hidden: {
+              x: placement === "left" ? "-100%" : placement === "right" ? "100%" : 0,
+              y: placement === "top" ? "-100%" : placement === "bottom" ? "100%" : 0,
+              opacity: variant === "floating" ? 0 : 1,
+              scale: variant === "floating" ? 0.95 : 1,
+            },
+            visible: {
+              x: 0,
+              y: 0,
+              opacity: 1,
+              scale: 1,
+              transition: {
+                type: "spring",
+                damping: 24,
+                stiffness: 200,
+                mass: 0.8,
+              },
+            },
+            exit: {
+              x: placement === "left" ? "-100%" : placement === "right" ? "100%" : 0,
+              y: placement === "top" ? "-100%" : placement === "bottom" ? "100%" : 0,
+              opacity: variant === "floating" ? 0 : 1,
+              scale: variant === "floating" ? 0.95 : 1,
+              transition: {
+                type: "spring",
+                damping: 24,
+                stiffness: 200,
+                mass: 0.8,
+              },
+            },
+          };
 
-  if (!mounted) return null;
+          if (!mounted) return null;
 
-  const target = container || document.body;
-  const positionClass = container ? "absolute" : "fixed";
+          const target = container || document.body;
+          const positionClass = container ? "absolute" : "fixed";
 
-  return createPortal(
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className={cn(`${positionClass} inset-0 z-50 bg-background/80 backdrop-blur-sm`)}
-            onClick={() => setIsOpen(false)}
-            aria-hidden="true"
-          />
+          return createPortal(
+            <AnimatePresence>
+              {isOpen && (
+                <>
+                  {/* Backdrop */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className={cn(`${positionClass} inset-0 z-50 bg-background/80 backdrop-blur-sm`)}
+                    onClick={() => setIsOpen(false)}
+                    aria-hidden="true"
+                  />
 
-          {/* Drawer Content */}
-          <motion.div
-            ref={contentRef}
-            variants={animationVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            role="dialog"
-            aria-modal="true"
-            tabIndex={-1}
-            className={cn(drawerVariants({ placement, variant }).replace("fixed", positionClass), className)}
-            {...(props as any)}
-          >
-            {children}
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>,
-    target
-  );
-});
+                  {/* Drawer Content */}
+                  <motion.div
+                    ref={contentRef}
+                    variants={animationVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    role="dialog"
+                    aria-modal="true"
+                    tabIndex={-1}
+                    className={cn(drawerVariants({ placement, variant }).replace("fixed", positionClass), className)}
+                    {...(props as any)}
+                  >
+                    {children}
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>,
+            target
+          );
+        }));
 DrawerContent.displayName = "DrawerContent";
 
-export const DrawerHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-6", className)}
-    {...props}
-  >
-    {children}
-  </div>
-));
+export const DrawerHeader = React.memo(React.forwardRef<
+          HTMLDivElement,
+          React.HTMLAttributes<HTMLDivElement>
+        >(({ className, children, ...props }, ref) => (
+          <div
+            ref={ref}
+            className={cn("flex flex-col space-y-1.5 p-6", className)}
+            {...props}
+          >
+            {children}
+          </div>
+        )));
 DrawerHeader.displayName = "DrawerHeader";
 
-export const DrawerTitle = React.forwardRef<
-  HTMLHeadingElement,
-  React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h2
-    ref={ref}
-    className={cn(
-      "text-lg font-semibold leading-none tracking-tight",
-      className
-    )}
-    {...props}
-  />
-));
+export const DrawerTitle = React.memo(React.forwardRef<
+          HTMLHeadingElement,
+          React.HTMLAttributes<HTMLHeadingElement>
+        >(({ className, ...props }, ref) => (
+          <h2
+            ref={ref}
+            className={cn(
+              "text-lg font-semibold leading-none tracking-tight",
+              className
+            )}
+            {...props}
+          />
+        )));
 DrawerTitle.displayName = "DrawerTitle";
 
-export const DrawerDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
-    {...props}
-  />
-));
+export const DrawerDescription = React.memo(React.forwardRef<
+          HTMLParagraphElement,
+          React.HTMLAttributes<HTMLParagraphElement>
+        >(({ className, ...props }, ref) => (
+          <p
+            ref={ref}
+            className={cn("text-sm text-muted-foreground", className)}
+            {...props}
+          />
+        )));
 DrawerDescription.displayName = "DrawerDescription";
 
-export const DrawerBody = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex-1 overflow-y-auto p-6 pt-0", className)}
-    {...props}
-  />
-));
+export const DrawerBody = React.memo(React.forwardRef<
+          HTMLDivElement,
+          React.HTMLAttributes<HTMLDivElement>
+        >(({ className, ...props }, ref) => (
+          <div
+            ref={ref}
+            className={cn("flex-1 overflow-y-auto p-6 pt-0", className)}
+            {...props}
+          />
+        )));
 DrawerBody.displayName = "DrawerBody";
 
-export const DrawerFooter = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("mt-auto flex flex-col gap-2 p-6", className)}
-    {...props}
-  />
-));
+export const DrawerFooter = React.memo(React.forwardRef<
+          HTMLDivElement,
+          React.HTMLAttributes<HTMLDivElement>
+        >(({ className, ...props }, ref) => (
+          <div
+            ref={ref}
+            className={cn("mt-auto flex flex-col gap-2 p-6", className)}
+            {...props}
+          />
+        )));
 DrawerFooter.displayName = "DrawerFooter";
 
-export const DrawerClose = React.forwardRef<
-  HTMLButtonElement,
-  React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }
->(({ className, asChild = false, ...props }, ref) => {
-  const { setIsOpen } = useDrawer();
+export const DrawerClose = React.memo(React.forwardRef<
+          HTMLButtonElement,
+          React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }
+        >(({ className, asChild = false, ...props }, ref) => {
+          const { setIsOpen } = useDrawer();
 
-  if (asChild) {
-    const Comp = Slot;
-    return (
-      <Comp
-        ref={ref}
-        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-          setIsOpen(false);
-          props.onClick?.(e);
-        }}
-        {...props}
-      />
-    );
-  }
+          if (asChild) {
+            const Comp = Slot;
+            return (
+              <Comp
+                ref={ref}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  setIsOpen(false);
+                  props.onClick?.(e);
+                }}
+                {...props}
+              />
+            );
+          }
 
-  return (
-    <motion.button
-      whileTap={{ scale: 0.9 }}
-      ref={ref}
-      type="button"
-      onClick={() => setIsOpen(false)}
-      className={cn(
-        "absolute right-4 top-4 rounded-full p-2 opacity-70 ring-offset-background transition-opacity hover:opacity-100 hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none",
-        className
-      )}
-      {...(props as any)}
-    >
-      <X className="h-4 w-4" />
-      <span className="sr-only">Close</span>
-    </motion.button>
-  );
-});
+          return (
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              ref={ref}
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className={cn(
+                "absolute right-4 top-4 rounded-full p-2 opacity-70 ring-offset-background transition-opacity hover:opacity-100 hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none",
+                className
+              )}
+              {...(props as any)}
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </motion.button>
+          );
+        }));
 DrawerClose.displayName = "DrawerClose";

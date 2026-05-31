@@ -49,42 +49,45 @@ export interface ModalProps extends React.ComponentPropsWithoutRef<typeof Dialog
   container?: HTMLElement | null; // Added for preview constraining
 }
 
-export const Modal: React.FC<ModalProps> = ({
-  open,
-  defaultOpen,
-  onOpenChange,
-  variant = "default",
-  size = "md",
-  position = "center",
-  children,
-  container, // Not used here, passed to context or Portal directly?
-  ...props
-}) => {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen || false);
-  const isControlled = open !== undefined;
-  const isOpen = isControlled ? open : internalOpen;
+export const Modal: React.FC<ModalProps> = React.memo(({
+          open,
+          defaultOpen,
+          onOpenChange,
+          variant = "default",
+          size = "md",
+          position = "center",
+          children,
+          container, // Not used here, passed to context or Portal directly?
+          ...props
+        }) => {
+          const [internalOpen, setInternalOpen] = React.useState(defaultOpen || false);
+          const isControlled = open !== undefined;
+          const isOpen = isControlled ? open : internalOpen;
 
-  const handleOpenChange = React.useCallback(
-    (newOpen: boolean) => {
-      if (!isControlled) {
-        setInternalOpen(newOpen);
-      }
-      onOpenChange?.(newOpen);
-    },
-    [isControlled, onOpenChange]
-  );
+          const handleOpenChange = React.useCallback(
+            (newOpen: boolean) => {
+              if (!isControlled) {
+                setInternalOpen(newOpen);
+              }
+              onOpenChange?.(newOpen);
+            },
+            [isControlled, onOpenChange]
+          );
 
-  return (
-    <DialogPrimitive.Root open={isOpen} onOpenChange={handleOpenChange} {...props}>
-      <ModalContext.Provider value={{ isOpen, setIsOpen: handleOpenChange, variant, size, position }}>
-        {children}
-      </ModalContext.Provider>
-    </DialogPrimitive.Root>
-  );
-};
+          return (
+            <DialogPrimitive.Root open={isOpen} onOpenChange={handleOpenChange} {...props}>
+              <ModalContext.Provider value={{ isOpen, setIsOpen: handleOpenChange, variant, size, position }}>
+                {children}
+              </ModalContext.Provider>
+            </DialogPrimitive.Root>
+          );
+        });
+Modal.displayName = "Modal";
 
-export const ModalTrigger = DialogPrimitive.Trigger;
-export const ModalClose = DialogPrimitive.Close;
+export const ModalTrigger = React.memo(DialogPrimitive.Trigger);
+ModalTrigger.displayName = "ModalTrigger";
+export const ModalClose = React.memo(DialogPrimitive.Close);
+ModalClose.displayName = "ModalClose";
 
 // --- Content & Variants ---
 
@@ -191,104 +194,104 @@ export interface ModalContentProps extends React.ComponentPropsWithoutRef<typeof
   container?: HTMLElement | null; // For local portal constraint
 }
 
-export const ModalContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Content>, ModalContentProps>(
-  ({ className, hideCloseButton = false, container, children, ...props }, ref) => {
-    const { isOpen, variant, size, position } = useModalContext();
-    const animConfig = animationConfigs[position];
+export const ModalContent = React.memo(React.forwardRef<React.ElementRef<typeof DialogPrimitive.Content>, ModalContentProps>(
+          ({ className, hideCloseButton = false, container, children, ...props }, ref) => {
+            const { isOpen, variant, size, position } = useModalContext();
+            const animConfig = animationConfigs[position];
 
-    const positionClass = container ? "absolute" : "fixed";
-    
-    const baseOverlayClass = cn(
-      modalOverlayVariants({ variant, position }),
-      size === "full-screen" && "p-0"
-    );
-    const overlayClass = container ? baseOverlayClass.replace("fixed", positionClass) : baseOverlayClass;
+            const positionClass = container ? "absolute" : "fixed";
+            
+            const baseOverlayClass = cn(
+              modalOverlayVariants({ variant, position }),
+              size === "full-screen" && "p-0"
+            );
+            const overlayClass = container ? baseOverlayClass.replace("fixed", positionClass) : baseOverlayClass;
 
-    const baseContentClass = cn(modalContentVariants({ variant, size, position }), className);
-    const contentClass = container 
-      ? baseContentClass.replace(/w-screen/g, "w-full").replace(/h-\[100dvh\]/g, "h-full").replace(/min-h-\[100dvh\]/g, "min-h-full")
-      : baseContentClass;
+            const baseContentClass = cn(modalContentVariants({ variant, size, position }), className);
+            const contentClass = container 
+              ? baseContentClass.replace(/w-screen/g, "w-full").replace(/h-\[100dvh\]/g, "h-full").replace(/min-h-\[100dvh\]/g, "min-h-full")
+              : baseContentClass;
 
-    return (
-      <AnimatePresence>
-        {isOpen && (
-          <DialogPrimitive.Portal forceMount container={container}>
-            <DialogPrimitive.Overlay asChild forceMount>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className={overlayClass}
-              >
-                <DialogPrimitive.Content
-                  ref={ref}
-                  forceMount
-                  asChild
-                  {...props}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <motion.div
-                    initial={animConfig.initial}
-                    animate={animConfig.animate}
-                    exit={animConfig.exit}
-                    transition={animConfig.transition as any}
-                    className={contentClass}
-                  >
-                    {children}
-                    {!hideCloseButton && (
-                      <DialogPrimitive.Close asChild>
-                        <motion.button whileTap={{ scale: 0.9 }} className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-full p-1.5 bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 z-10">
-                          <X className="h-4 w-4" />
-                          <span className="sr-only">Close</span>
-                        </motion.button>
-                      </DialogPrimitive.Close>
-                    )}
-                  </motion.div>
-                </DialogPrimitive.Content>
-              </motion.div>
-            </DialogPrimitive.Overlay>
-          </DialogPrimitive.Portal>
-        )}
-      </AnimatePresence>
-    );
-  }
-);
+            return (
+              <AnimatePresence>
+                {isOpen && (
+                  <DialogPrimitive.Portal forceMount container={container}>
+                    <DialogPrimitive.Overlay asChild forceMount>
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className={overlayClass}
+                      >
+                        <DialogPrimitive.Content
+                          ref={ref}
+                          forceMount
+                          asChild
+                          {...props}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <motion.div
+                            initial={animConfig.initial}
+                            animate={animConfig.animate}
+                            exit={animConfig.exit}
+                            transition={animConfig.transition as any}
+                            className={contentClass}
+                          >
+                            {children}
+                            {!hideCloseButton && (
+                              <DialogPrimitive.Close asChild>
+                                <motion.button whileTap={{ scale: 0.9 }} className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-full p-1.5 bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 z-10">
+                                  <X className="h-4 w-4" />
+                                  <span className="sr-only">Close</span>
+                                </motion.button>
+                              </DialogPrimitive.Close>
+                            )}
+                          </motion.div>
+                        </DialogPrimitive.Content>
+                      </motion.div>
+                    </DialogPrimitive.Overlay>
+                  </DialogPrimitive.Portal>
+                )}
+              </AnimatePresence>
+            );
+          }
+        ));
 ModalContent.displayName = "ModalContent";
 
-export const ModalHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col space-y-1.5 px-4 sm:px-6 pt-4 sm:pt-6 pb-4", className)} {...props} />
-);
+export const ModalHeader = React.memo(({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+          <div className={cn("flex flex-col space-y-1.5 px-4 sm:px-6 pt-4 sm:pt-6 pb-4", className)} {...props} />
+        ));
 ModalHeader.displayName = "ModalHeader";
 
-export const ModalTitle = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Title>, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>>(
-  ({ className, ...props }, ref) => (
-    <DialogPrimitive.Title
-      ref={ref}
-      className={cn("text-lg font-semibold leading-none tracking-tight", className)}
-      {...props}
-    />
-  )
-);
+export const ModalTitle = React.memo(React.forwardRef<React.ElementRef<typeof DialogPrimitive.Title>, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>>(
+          ({ className, ...props }, ref) => (
+            <DialogPrimitive.Title
+              ref={ref}
+              className={cn("text-lg font-semibold leading-none tracking-tight", className)}
+              {...props}
+            />
+          )
+        ));
 ModalTitle.displayName = "ModalTitle";
 
-export const ModalDescription = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Description>, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>>(
-  ({ className, ...props }, ref) => (
-    <DialogPrimitive.Description
-      ref={ref}
-      className={cn("text-sm text-muted-foreground", className)}
-      {...props}
-    />
-  )
-);
+export const ModalDescription = React.memo(React.forwardRef<React.ElementRef<typeof DialogPrimitive.Description>, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>>(
+          ({ className, ...props }, ref) => (
+            <DialogPrimitive.Description
+              ref={ref}
+              className={cn("text-sm text-muted-foreground", className)}
+              {...props}
+            />
+          )
+        ));
 ModalDescription.displayName = "ModalDescription";
 
-export const ModalBody = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("px-4 sm:px-6 py-2 overflow-y-auto min-h-0", className)} {...props} />
-);
+export const ModalBody = React.memo(({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+          <div className={cn("px-4 sm:px-6 py-2 overflow-y-auto min-h-0", className)} {...props} />
+        ));
 ModalBody.displayName = "ModalBody";
 
-export const ModalFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 px-4 sm:px-6 py-4 sm:py-6 mt-auto", className)} {...props} />
-);
+export const ModalFooter = React.memo(({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+          <div className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 px-4 sm:px-6 py-4 sm:py-6 mt-auto", className)} {...props} />
+        ));
 ModalFooter.displayName = "ModalFooter";

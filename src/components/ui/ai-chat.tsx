@@ -82,7 +82,7 @@ export interface AIChatProps {
   children: React.ReactNode;
 }
 
-export function AIChat({
+export const AIChat = React.memo(function AIChat({
   messages,
   isLoading = false,
   input,
@@ -118,13 +118,14 @@ export function AIChat({
       </motion.div>
     </AIChatContext.Provider>
   );
-}
+});
+AIChat.displayName = "AIChat";
 
 // ==========================================
 // CHAT MESSAGES CONTAINER
 // ==========================================
 
-export function ChatMessages({ className }: { className?: string }) {
+export const ChatMessages = React.memo(function ChatMessages({ className }: { className?: string }) {
   const { messages, layout } = useAIChat();
   const containerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -154,11 +155,11 @@ export function ChatMessages({ className }: { className?: string }) {
       <div
         className={cn(
           "flex flex-col gap-4 pb-4 w-full",
-          layout === "claude" && "mx-auto",
-          layout === "perplexity" && "mx-auto",
-          layout === "chatgpt" && "mx-auto",
-          layout === "enterprise" && "mx-auto",
-          layout === "minimal" && "mx-auto",
+          layout === "claude" && "mx-auto max-w-3xl",
+          layout === "perplexity" && "mx-auto max-w-3xl",
+          layout === "chatgpt" && "mx-auto max-w-3xl",
+          layout === "enterprise" && "mx-auto max-w-4xl",
+          layout === "minimal" && "mx-auto max-w-3xl",
         )}
       >
         <AnimatePresence initial={false}>
@@ -170,7 +171,8 @@ export function ChatMessages({ className }: { className?: string }) {
       </div>
     </motion.div>
   );
-}
+});
+ChatMessages.displayName = "ChatMessages";
 
 // ==========================================
 // INDIVIDUAL MESSAGE
@@ -195,7 +197,7 @@ const messageVariants = cva("flex w-full group", {
   compoundVariants: [],
 });
 
-const bubbleVariants = cva("relative flex flex-col", {
+const bubbleVariants = cva("relative flex flex-col min-w-0", {
   variants: {
     layout: {
       chatgpt: "rounded-2xl px-4 py-2.5 text-sm",
@@ -224,7 +226,7 @@ const bubbleVariants = cva("relative flex flex-col", {
   ],
 });
 
-export function ChatMessage({ message }: { message: Message }) {
+export const ChatMessage = React.memo(function ChatMessage({ message }: { message: Message }) {
   const { layout, onReload, onEdit } = useAIChat();
   const [isHovered, setIsHovered] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -313,7 +315,7 @@ export function ChatMessage({ message }: { message: Message }) {
                 code({ node, inline, className, children, ...props }: any) {
                   const match = /language-(\w+)/.exec(className || "");
                   return !inline && match ? (
-                    <div className="rounded-lg overflow-hidden my-3 border border-border/50 bg-[#1E1E1E] not-prose">
+                    <div className="rounded-lg overflow-hidden my-3 border border-border/50 bg-[#1E1E1E] not-prose w-full max-w-full">
                       <div className="flex items-center justify-between px-4 py-1.5 bg-black/40 border-b border-white/10 text-xs text-white/60">
                         <span className="font-mono">{match[1]}</span>
                         <button
@@ -376,7 +378,8 @@ export function ChatMessage({ message }: { message: Message }) {
       </div>
     </motion.div>
   );
-}
+});
+ChatMessage.displayName = "ChatMessage";
 
 function ActionButton({ icon, onClick, title }: { icon: React.ReactNode; onClick?: () => void; title: string }) {
   return (
@@ -411,7 +414,7 @@ export interface ChatInputProps {
   onImageUpload?: (files: File[]) => void;
 }
 
-export function ChatInput({ onFileUpload, onImageUpload }: ChatInputProps = {}) {
+export const ChatInput = React.memo(function ChatInput({ onFileUpload, onImageUpload }: ChatInputProps = {}) {
   const { input, setInput, onSubmit, isLoading, onStop, inputVariant, messages } = useAIChat();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -500,7 +503,7 @@ export function ChatInput({ onFileUpload, onImageUpload }: ChatInputProps = {}) 
       className={cn(
         inputContainerVariants({ variant: inputVariant }),
         !hasMessages && "max-w-2xl mx-auto border-transparent shadow-none bg-transparent",
-        hasMessages && inputVariant === "floating" && "absolute bottom-4 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:w-[720px] z-10"
+        hasMessages && inputVariant === "floating" && "absolute bottom-4 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-3xl z-10"
       )}
     >
       {/* Attached files preview */}
@@ -663,13 +666,14 @@ export function ChatInput({ onFileUpload, onImageUpload }: ChatInputProps = {}) 
       )}
     </motion.div>
   );
-}
+});
+ChatInput.displayName = "ChatInput";
 
 // ==========================================
 // PROMPT SUGGESTIONS
 // ==========================================
 
-export function ChatPromptSuggestions({ suggestions }: { suggestions: string[] }) {
+export const ChatPromptSuggestions = React.memo(function ChatPromptSuggestions({ suggestions }: { suggestions: string[] }) {
   const { setInput, onSubmit, messages } = useAIChat();
 
   const hasMessages = messages.length > 0;
@@ -696,4 +700,5 @@ export function ChatPromptSuggestions({ suggestions }: { suggestions: string[] }
       ))}
     </motion.div>
   );
-}
+});
+ChatPromptSuggestions.displayName = "ChatPromptSuggestions";

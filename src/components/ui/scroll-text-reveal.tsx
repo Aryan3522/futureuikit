@@ -8,38 +8,39 @@ export interface ScrollTextRevealProps extends React.HTMLAttributes<HTMLSpanElem
   container?: React.RefObject<HTMLElement | null>;
 }
 
-export const ScrollTextReveal: React.FC<ScrollTextRevealProps> = ({ children, className, container, ...props }) => {
-  const containerRef = useRef<HTMLSpanElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    container: container,
-    offset: ["start 80%", "start 20%"],
-  });
+export const ScrollTextReveal: React.FC<ScrollTextRevealProps> = React.memo(({ children, className, container, ...props }) => {
+          const containerRef = useRef<HTMLSpanElement>(null);
+          const { scrollYProgress } = useScroll({
+            target: containerRef,
+            container: container,
+            offset: ["start 80%", "start 20%"],
+          });
 
-  if (typeof children !== "string") {
-    return <span className={className} {...props}>{children}</span>;
-  }
+          if (typeof children !== "string") {
+            return <span className={className} {...props}>{children}</span>;
+          }
 
-  const characters = children.split("");
+          const characters = children.split("");
 
-  return (
-    <span 
-      ref={containerRef} 
-      className={cn("inline-flex flex-wrap", className)} 
-      {...props}
-    >
-      {characters.map((char, index) => {
-        const start = index / characters.length;
-        const end = start + (1 / characters.length);
-        return (
-          <Character key={index} progress={scrollYProgress} range={[start, end]}>
-            {char === " " ? "\u00A0" : char}
-          </Character>
-        );
-      })}
-    </span>
-  );
-};
+          return (
+            <span 
+              ref={containerRef} 
+              className={cn("inline-flex flex-wrap", className)} 
+              {...props}
+            >
+              {characters.map((char, index) => {
+                const start = index / characters.length;
+                const end = start + (1 / characters.length);
+                return (
+                  <Character key={index} progress={scrollYProgress} range={[start, end]}>
+                    {char === " " ? "\u00A0" : char}
+                  </Character>
+                );
+              })}
+            </span>
+          );
+        });
+ScrollTextReveal.displayName = "ScrollTextReveal";
 
 interface CharacterProps {
   children: React.ReactNode;

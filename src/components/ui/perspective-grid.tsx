@@ -12,7 +12,7 @@ export interface PerspectiveGridProps {
   fadeRadius?: number;
 }
 
-export function PerspectiveGrid({
+export const PerspectiveGrid = React.memo(function PerspectiveGrid({
   className,
   gridLineGap = 60,
   showOverlay = true,
@@ -68,6 +68,7 @@ export function PerspectiveGrid({
       )}
     </div>
   );
-}
+});
+PerspectiveGrid.displayName = "PerspectiveGrid";
 
 export default React.memo(PerspectiveGrid);

@@ -18,23 +18,23 @@ export interface NavMenuProps {
   className?: string;
 }
 
-export const NavMenu: React.FC<NavMenuProps> = ({ items = [], className }) => {
-  const [menuOpen, setMenuOpen] = useState(false);
+export const NavMenu: React.FC<NavMenuProps> = React.memo(({ items = [], className }) => {
+          const [menuOpen, setMenuOpen] = useState(false);
 
-  const defaultItems: NavMenuItem[] = [
-    { title: "Home", icon: <Home className="w-5 h-5" /> },
-    { title: "Profile", icon: <User className="w-5 h-5" /> },
-    { title: "Settings", icon: <Settings className="w-5 h-5" /> },
-    { title: "Messages", icon: <Mail className="w-5 h-5" /> },
-    { title: "Notifications", icon: <Bell className="w-5 h-5" /> },
-    { title: "Search", icon: <Search className="w-5 h-5" /> },
-  ];
+          const defaultItems: NavMenuItem[] = [
+            { title: "Home", icon: <Home className="w-5 h-5" /> },
+            { title: "Profile", icon: <User className="w-5 h-5" /> },
+            { title: "Settings", icon: <Settings className="w-5 h-5" /> },
+            { title: "Messages", icon: <Mail className="w-5 h-5" /> },
+            { title: "Notifications", icon: <Bell className="w-5 h-5" /> },
+            { title: "Search", icon: <Search className="w-5 h-5" /> },
+          ];
 
-  const displayItems = items.length > 0 ? items : defaultItems;
+          const displayItems = items.length > 0 ? items : defaultItems;
 
-  return (
-    <div className={cn("relative flex flex-col items-center justify-center min-h-75 w-full", className)}>
-      <style>{`
+          return (
+            <div className={cn("relative flex flex-col items-center justify-center min-h-75 w-full", className)}>
+              <style>{`
         .circular-nav {
           position: relative;
           width: 250px;
@@ -110,24 +110,25 @@ export const NavMenu: React.FC<NavMenuProps> = ({ items = [], className }) => {
           color: hsl(var(--accent-foreground));
         }
       `}</style>
-      <div className={cn("circular-nav", menuOpen && "open")}>
-        <div className="toggler-wrapper" onClick={() => setMenuOpen(!menuOpen)}>
-          <div className="nav-toggler"></div>
-        </div>
-        {displayItems.map((item, idx) => (
-          <div
-            key={idx}
-            className="circ-item shadow-md"
-            title={item.title}
-            onClick={() => {
-              setMenuOpen(false);
-              if (item.onClick) item.onClick();
-            }}
-          >
-            {item.icon}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
+              <div className={cn("circular-nav", menuOpen && "open")}>
+                <div className="toggler-wrapper" onClick={() => setMenuOpen(!menuOpen)}>
+                  <div className="nav-toggler"></div>
+                </div>
+                {displayItems.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="circ-item shadow-md"
+                    title={item.title}
+                    onClick={() => {
+                      setMenuOpen(false);
+                      if (item.onClick) item.onClick();
+                    }}
+                  >
+                    {item.icon}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        });
+NavMenu.displayName = "NavMenu";
