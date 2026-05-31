@@ -11,6 +11,7 @@ export interface ComponentItem {
   type: string;
   slug: string;
   category: string;
+  isNew?: boolean;
   heroImage?: string;
   previewImage?: string;
   previewVideo?: string;

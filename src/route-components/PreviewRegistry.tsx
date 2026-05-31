@@ -41,7 +41,6 @@ import { Calculator } from "@/components/ui/calculator";
 import { DynamicForm, FieldConfig } from "@/components/ui/dynamic-form";
 import { Sparkles, Terminal, Mail, Lock, User, Globe, Phone as PhoneIcon, Check as CheckIcon, X as XIcon, AlertCircle as AlertCircleIcon, Home, Search, Settings, Compass, MessageSquare, Plus, Monitor, Filter } from "lucide-react";
 import { ScrollTextReveal } from "@/components/ui/scroll-text-reveal";
-import { TextReveal } from "@/components/ui/text-reveal";
 import { BrowserWindow } from "@/components/ui/browser-window";
 import { CursorGlowButton } from "@/components/ui/cursor-glow-button";
 
