@@ -72,7 +72,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
       {slug === "scroll-progress" && <ScrollProgress />}
 
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full h-16 bg-background/80 backdrop-blur-md border-b border-border/10 flex items-center justify-between px-4">
+      <header className="fixed top-0 left-0 right-0 z-50 w-full h-16 bg-background/80 backdrop-blur-md border-b border-border/10 flex items-center justify-between px-4">
         <button
           onClick={() => router.back()}
           className="p-2 rounded-full border border-border/20 hover:bg-muted/50 transition-colors flex items-center justify-center"
@@ -105,7 +105,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
       </header>
 
       {/* Hero Section */}
-      <div className="h-[calc(100dvh-4rem)] w-full flex overflow-hidden border-b border-border/10">
+      <div className="min-h-[100dvh] pt-16 w-full flex border-b border-border/10">
         
         {/* Code Panel (Slides from left) */}
         <AnimatePresence initial={false}>
@@ -115,9 +115,9 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
               animate={{ width: "100%", opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
               transition={{ type: "spring", bounce: 0, duration: 0.8 }}
-              className="h-full border-r border-border/10 bg-background flex flex-col md:max-w-[45vw] overflow-hidden shrink-0"
+              className="border-r border-border/10 bg-background flex flex-col md:max-w-[45vw] shrink-0 min-h-[calc(100dvh-4rem)] self-stretch sticky top-16"
             >
-              <div className="flex-1 overflow-y-auto p-6 md:p-10 pt-24 custom-scrollbar flex flex-col gap-6">
+              <div className="flex-1 overflow-y-auto p-6 md:p-10 pt-8 custom-scrollbar flex flex-col gap-6 max-h-[calc(100dvh-4rem)]">
                 <h2 className="text-2xl font-light tracking-tight text-foreground/90">Manual Source</h2>
                 
                 <div className="relative group rounded-2xl border border-border/20 bg-muted/30 overflow-hidden flex-1 flex flex-col">
@@ -155,7 +155,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
         <motion.div 
           layout
           transition={{ type: "spring", bounce: 0, duration: 0.8 }}
-          className="flex-1 h-full relative bg-background flex items-center justify-center overflow-hidden mt-8"
+          className="flex-1 min-h-[calc(100dvh-4rem)] relative bg-background flex items-center justify-center mt-8"
         >
           {!component.type.toLowerCase().includes("background") && (
             <div className="absolute inset-0 opacity-30 pointer-events-none">

@@ -37,11 +37,11 @@ const commandDialogOverlayVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-black/40 backdrop-blur-sm",
-        compact: "bg-black/40 backdrop-blur-sm",
+        default: "bg-background/80 backdrop-blur-sm",
+        compact: "bg-background/80 backdrop-blur-sm",
         floating: "bg-transparent", // No backdrop for floating
-        glass: "bg-black/20 backdrop-blur-md",
-        spotlight: "bg-black/80 backdrop-blur-sm",
+        glass: "bg-background/40 backdrop-blur-md",
+        spotlight: "bg-background/90 backdrop-blur-sm",
       },
     },
     defaultVariants: {

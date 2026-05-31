@@ -1437,20 +1437,20 @@ function FilterBuilderPreview() {
         </div>
         
         {/* Output State Viewer */}
-        <div className="bg-[#0D0D12] rounded-2xl border border-white/10 p-5 overflow-hidden flex flex-col h-[500px] lg:h-auto shadow-2xl relative group">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-50" />
+        <div className="bg-background rounded-2xl border p-5 overflow-hidden flex flex-col h-[500px] lg:h-auto shadow-sm relative group">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-20" />
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Terminal className="w-4 h-4 text-indigo-400" />
-              <span className="text-xs font-semibold tracking-wider uppercase text-zinc-300">Output JSON</span>
+              <span className="text-xs font-semibold tracking-wider uppercase text-foreground">Output JSON</span>
             </div>
-            <div className="px-2 py-1 rounded bg-zinc-800 text-[10px] text-zinc-400 font-medium">
+            <div className="px-2 py-1 rounded bg-muted text-[10px] text-muted-foreground font-medium">
               Live State
             </div>
           </div>
-          <div className="flex-1 overflow-auto rounded-xl border border-white/5 bg-black/40 p-4 custom-scrollbar">
+          <div className="flex-1 overflow-auto rounded-xl border bg-muted/30 p-4 custom-scrollbar">
             <pre 
-              className="text-[11px] leading-relaxed text-zinc-300 font-mono whitespace-pre-wrap"
+              className="text-[11px] leading-relaxed text-foreground font-mono whitespace-pre-wrap"
               dangerouslySetInnerHTML={{
                 __html: JSON.stringify(data, null, 2).replace(/"([^"]+)":/g, '<span class="text-indigo-300">"$1"</span>:')
               }}
@@ -1988,10 +1988,10 @@ export const PreviewRegistry: Record<string, React.FC> = {
       <PreviewContainer 
         title="Cinematic Error" 
         description="A dramatic and immersive error page."
-        contentClassName="p-2 md:p-4 bg-transparent border-0 shadow-none"
+        contentClassName="p-0 bg-transparent border-0 shadow-none min-h-[100dvh]"
       >
-        <div className="w-full h-[600px] rounded-2xl overflow-hidden relative">
-          <CinematicError className="w-full h-full min-h-full" />
+        <div className="w-full h-full absolute inset-0 overflow-hidden">
+          <CinematicError />
         </div>
       </PreviewContainer>
     );
@@ -2009,24 +2009,26 @@ export const PreviewRegistry: Record<string, React.FC> = {
     );
   },
   "scroll-text-reveal": function ScrollTextRevealPreview() {
-    const scrollContainer = React.useRef<HTMLDivElement>(null);
     return (
-      <PreviewContainer title="Scroll Text Reveal" description="Text that reveals itself as you scroll down the container." contentClassName="p-0">
-        <div ref={scrollContainer} className="w-full h-[500px] overflow-y-auto custom-scrollbar relative bg-background rounded-xl">
-          <div className="min-h-[150vh] flex flex-col items-center">
-            <div className="h-[70vh] flex items-center justify-center text-muted-foreground w-full">
-              <span className="animate-pulse">Scroll down to reveal text ↓</span>
-            </div>
-            <div className="py-20 px-8 max-w-4xl flex items-center justify-center">
-              <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-center">
-                <ScrollTextReveal container={scrollContainer}>
-                  The future of UI design is here. Experience seamless, highly optimized animations that elevate your application&apos;s feel.
-                </ScrollTextReveal>
-              </h2>
-            </div>
-            <div className="h-[60vh] flex items-center justify-center text-muted-foreground w-full">
-              <span className="animate-pulse">Scroll up to reverse ↑</span>
-            </div>
+      <PreviewContainer 
+        title="Scroll Text Reveal" 
+        description="Text that reveals itself as you scroll down the page." 
+        className="h-auto overflow-visible"
+        contentClassName="p-0 min-h-[100dvh]"
+      >
+        <div className="w-full flex flex-col items-center">
+          <div className="h-[70vh] flex items-center justify-center text-muted-foreground w-full">
+            <span className="animate-pulse">Scroll down to reveal text ↓</span>
+          </div>
+          <div className="py-20 px-8 max-w-4xl flex items-center justify-center">
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-center">
+              <ScrollTextReveal>
+                The future of UI design is here. Experience seamless, highly optimized animations that elevate your application&apos;s feel.
+              </ScrollTextReveal>
+            </h2>
+          </div>
+          <div className="h-[60vh] flex items-center justify-center text-muted-foreground w-full">
+            <span className="animate-pulse">Scroll up to reverse ↑</span>
           </div>
         </div>
       </PreviewContainer>

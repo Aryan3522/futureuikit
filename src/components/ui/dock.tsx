@@ -85,9 +85,9 @@ export const Dock = React.forwardRef<HTMLDivElement, DockProps>(
           onMouseLeave={() => mouseX.set(Infinity)}
           className={cn(
             "mx-auto flex h-16 items-end gap-3 rounded-2xl px-3 pb-2 pt-2",
-            variant === "modern" && "bg-white/10 dark:bg-black/20 backdrop-blur-2xl border border-white/20 dark:border-white/10 dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]",
-            variant === "clean" && "bg-background border border-border shadow-none dark:shadow-sm",
-            variant === "interactive" && "bg-neutral-100/80 dark:bg-neutral-900/80 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 dark:shadow-xl",
+            variant === "modern" && "bg-background/40 backdrop-blur-2xl border border-border",
+            variant === "clean" && "bg-background border border-border shadow-none",
+            variant === "interactive" && "bg-muted/80 backdrop-blur-xl border border-border",
             className
           )}
           {...props}
@@ -160,7 +160,7 @@ export const DockItem = React.forwardRef<HTMLDivElement, DockItemProps>(
     });
 
     const content = (
-      <div className={cn("flex h-full w-full items-center justify-center transition-all duration-300", isHovered && "drop-shadow-md")}>
+      <div className={cn("flex h-full w-full items-center justify-center transition-all duration-300", isHovered && "")}>
         {children}
       </div>
     );
@@ -179,7 +179,7 @@ export const DockItem = React.forwardRef<HTMLDivElement, DockItemProps>(
               initial={{ opacity: 0, y: 10, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1, transition: { delay: 0.2, duration: 0.2 } }}
               exit={{ opacity: 0, y: 10, scale: 0.9, transition: { delay: 0, duration: 0.1 } }}
-              className="absolute -top-12 z-50 whitespace-nowrap rounded-lg bg-neutral-900/95 dark:bg-neutral-100/95 px-3 py-1.5 text-[11px] font-semibold text-white dark:text-black shadow-xl backdrop-blur-md pointer-events-none border border-white/10 dark:border-black/10 tracking-wide"
+              className="absolute -top-12 z-50 whitespace-nowrap rounded-lg bg-popover px-3 py-1.5 text-[11px] font-semibold text-popover-foreground border border-border tracking-wide pointer-events-none"
             >
               {label}
             </motion.div>
@@ -195,7 +195,7 @@ export const DockItem = React.forwardRef<HTMLDivElement, DockItemProps>(
             "relative flex aspect-square shrink-0 items-center justify-center rounded-full transition-all duration-300 ease-out",
             active ? "text-primary" : "text-muted-foreground hover:text-foreground",
             !active && variant === "clean" && "hover:bg-muted/80",
-            !active && variant === "interactive" && "hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_20px_rgba(var(--primary),0.2)]",
+            !active && variant === "interactive" && "hover:bg-primary/10 hover:text-primary",
             disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : "cursor-pointer",
             className
           )}
