@@ -196,6 +196,19 @@ export const ModalContent = React.forwardRef<React.ElementRef<typeof DialogPrimi
     const { isOpen, variant, size, position } = useModalContext();
     const animConfig = animationConfigs[position];
 
+    const positionClass = container ? "absolute" : "fixed";
+    
+    const baseOverlayClass = cn(
+      modalOverlayVariants({ variant, position }),
+      size === "full-screen" && "p-0"
+    );
+    const overlayClass = container ? baseOverlayClass.replace("fixed", positionClass) : baseOverlayClass;
+
+    const baseContentClass = cn(modalContentVariants({ variant, size, position }), className);
+    const contentClass = container 
+      ? baseContentClass.replace(/w-screen/g, "w-full").replace(/h-\[100dvh\]/g, "h-full").replace(/min-h-\[100dvh\]/g, "min-h-full")
+      : baseContentClass;
+
     return (
       <AnimatePresence>
         {isOpen && (
@@ -206,10 +219,7 @@ export const ModalContent = React.forwardRef<React.ElementRef<typeof DialogPrimi
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className={cn(
-                  modalOverlayVariants({ variant, position }),
-                  size === "full-screen" && "p-0"
-                )}
+                className={overlayClass}
               >
                 <DialogPrimitive.Content
                   ref={ref}
@@ -223,7 +233,7 @@ export const ModalContent = React.forwardRef<React.ElementRef<typeof DialogPrimi
                     animate={animConfig.animate}
                     exit={animConfig.exit}
                     transition={animConfig.transition as any}
-                    className={cn(modalContentVariants({ variant, size, position }), className)}
+                    className={contentClass}
                   >
                     {children}
                     {!hideCloseButton && (

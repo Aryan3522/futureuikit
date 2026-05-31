@@ -177,8 +177,8 @@ const drawerVariants = cva(
 
 export const DrawerContent = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & { container?: HTMLElement | null }
+>(({ className, children, container, ...props }, ref) => {
   const { isOpen, setIsOpen, placement, variant } = useDrawer();
   const contentRef = React.useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = React.useState(false);
@@ -224,9 +224,9 @@ export const DrawerContent = React.forwardRef<
 
     // Focus the first element on open
     if (firstElement) {
-      setTimeout(() => firstElement.focus(), 50); // slight delay to allow animation to start
+      setTimeout(() => firstElement.focus({ preventScroll: true }), 50); // slight delay to allow animation to start
     } else {
-      setTimeout(() => contentRef.current?.focus(), 50);
+      setTimeout(() => contentRef.current?.focus({ preventScroll: true }), 50);
     }
 
     const handleTabKey = (e: KeyboardEvent) => {
@@ -234,12 +234,12 @@ export const DrawerContent = React.forwardRef<
 
       if (e.shiftKey) {
         if (document.activeElement === firstElement) {
-          lastElement?.focus();
+          lastElement?.focus({ preventScroll: true });
           e.preventDefault();
         }
       } else {
         if (document.activeElement === lastElement) {
-          firstElement?.focus();
+          firstElement?.focus({ preventScroll: true });
           e.preventDefault();
         }
       }
@@ -284,6 +284,9 @@ export const DrawerContent = React.forwardRef<
 
   if (!mounted) return null;
 
+  const target = container || document.body;
+  const positionClass = container ? "absolute" : "fixed";
+
   return createPortal(
     <AnimatePresence>
       {isOpen && (
@@ -294,7 +297,7 @@ export const DrawerContent = React.forwardRef<
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm"
+            className={cn(`${positionClass} inset-0 z-50 bg-background/80 backdrop-blur-sm`)}
             onClick={() => setIsOpen(false)}
             aria-hidden="true"
           />
@@ -309,7 +312,7 @@ export const DrawerContent = React.forwardRef<
             role="dialog"
             aria-modal="true"
             tabIndex={-1}
-            className={cn(drawerVariants({ placement, variant }), className)}
+            className={cn(drawerVariants({ placement, variant }).replace("fixed", positionClass), className)}
             {...(props as any)}
           >
             {children}
@@ -317,7 +320,7 @@ export const DrawerContent = React.forwardRef<
         </>
       )}
     </AnimatePresence>,
-    document.body
+    target
   );
 });
 DrawerContent.displayName = "DrawerContent";

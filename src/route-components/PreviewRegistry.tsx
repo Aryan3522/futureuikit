@@ -148,6 +148,10 @@ interface PreviewContainerProps {
   children: React.ReactNode;
   className?: string;
   contentClassName?: string;
+  isVirtualScreen?: boolean;
+  scrollRef?: React.RefObject<HTMLDivElement | null>;
+  canvasClassName?: string;
+  extraControls?: React.ReactNode;
 }
 
 const PreviewContainer: React.FC<PreviewContainerProps> = ({
@@ -159,6 +163,10 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
   children,
   className,
   contentClassName,
+  isVirtualScreen = true,
+  scrollRef,
+  canvasClassName,
+  extraControls,
 }) => {
   return (
     <div className={cn("w-full h-full flex flex-col overflow-y-auto bg-background", className)}>
@@ -168,30 +176,52 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
           <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
           {description && <p className="text-sm text-muted-foreground mt-1">{description}</p>}
         </div>
-        
-        {variants && variants.length > 0 && onVariantChange && (
-          <div className="flex items-center gap-2 p-1 bg-muted/30 rounded-lg overflow-x-auto max-w-full">
-            {variants.map(v => (
-              <button
-                key={v}
-                onClick={() => onVariantChange(v)}
-                className={cn(
-                  "px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap",
-                  activeVariant === v 
-                    ? "bg-background shadow-sm text-foreground" 
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                )}
-              >
-                {v}
-              </button>
-            ))}
-          </div>
-        )}
+        <div className="flex flex-col items-start md:items-end gap-3 w-full md:w-auto mt-4 md:mt-0">
+          {variants && variants.length > 0 && onVariantChange && (
+            <div className="flex flex-col gap-1.5 w-full md:items-end">
+              <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground hidden md:block">Layout Variant</span>
+              <div className="flex items-center gap-2 p-1 bg-muted/30 rounded-lg overflow-x-auto max-w-full">
+                {variants.map(v => (
+                  <button
+                    key={v}
+                    onClick={() => onVariantChange(v)}
+                    className={cn(
+                      "px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap",
+                      activeVariant === v 
+                        ? "bg-background shadow-sm text-foreground" 
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    )}
+                  >
+                    {v}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {extraControls}
+        </div>
       </div>
 
       {/* Content Area */}
-      <div className={cn("flex items-center justify-center flex-1 w-full relative px-4 md:px-8 pb-8 pt-4 md:pt-8", contentClassName)}>
-        {children}
+      <div className={cn("flex items-center justify-center flex-1 w-full relative px-2 md:px-4 pb-4 md:pb-8 pt-2 md:pt-4", contentClassName)}>
+        {isVirtualScreen ? (
+          <div className="w-full md:w-[80%] aspect-[9/16] md:aspect-video relative overflow-hidden rounded-2xl border border-border/40 bg-background flex flex-col items-center justify-center">
+            {/* Mock Window Header */}
+            <div className="absolute top-0 left-0 w-full h-8 bg-muted border-b border-border/40 flex items-center px-4 gap-1.5 z-50">
+              <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
+              <div className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
+            </div>
+            
+            {/* Virtual Screen Canvas */}
+            <div ref={scrollRef} className={cn("relative w-full h-full pt-8 px-0 pb-0 flex flex-col items-center justify-center overflow-y-auto overflow-x-hidden custom-scrollbar", canvasClassName)}>
+              {children}
+            </div>
+          </div>
+        ) : (
+          children
+        )}
       </div>
     </div>
   );
@@ -659,6 +689,7 @@ const DockPreview: React.FC = () => {
 const DrawerPreview: React.FC = () => {
   const [placement, setPlacement] = React.useState<"left" | "right" | "top" | "bottom">("right");
   const [variant, setVariant] = React.useState<"default" | "compact" | "glass" | "elevated" | "floating">("default");
+  const [container, setContainer] = React.useState<HTMLDivElement | null>(null);
   
   return (
     <PreviewContainer
@@ -668,24 +699,23 @@ const DrawerPreview: React.FC = () => {
       activeVariant={variant}
       onVariantChange={setVariant}
       contentClassName="relative overflow-hidden"
-    >
-      <div className="flex flex-col gap-4 mb-8 z-10 p-4 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm self-start">
-        <div className="flex flex-col gap-2">
-          <span className="text-xs font-bold uppercase tracking-widest opacity-50">Placement</span>
-          <div className="flex gap-2">
+      extraControls={
+        <div className="flex flex-col gap-1.5 md:items-end">
+          <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Placement</span>
+          <div className="flex gap-1.5">
             {(["left", "right", "top", "bottom"] as const).map(p => (
-              <Button key={p} variant={placement === p ? "default" : "outline"} size="sm" onClick={() => setPlacement(p)}>{p}</Button>
+              <Button key={p} variant={placement === p ? "default" : "outline"} size="sm" onClick={() => setPlacement(p)} className="h-7 text-xs">{p}</Button>
             ))}
           </div>
         </div>
-      </div>
-      
-      <div className="flex-1 flex items-center justify-center w-full min-h-[300px]">
+      }
+    >
+      <div ref={setContainer} className="flex-1 flex items-center justify-center w-full h-full min-h-[300px] relative overflow-hidden" style={{ transform: 'translateZ(0)' }}>
         <Drawer placement={placement} variant={variant}>
           <DrawerTrigger asChild>
             <Button size="lg" className="rounded-full px-8 shadow-lg shadow-primary/20">Open Drawer</Button>
           </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent container={container}>
           <DrawerHeader>
             <DrawerTitle>Premium Drawer</DrawerTitle>
             <DrawerDescription>A native feeling interaction powered by Framer Motion.</DrawerDescription>
@@ -762,30 +792,31 @@ const ModalPreview: React.FC = () => {
       variants={["default", "floating", "glass", "elevated", "minimal", "spotlight"]}
       activeVariant={variant}
       onVariantChange={setVariant}
-    >
-      <div ref={setContainer} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-        <div className="flex flex-col gap-4 mb-8 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-4xl w-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col gap-2">
-              <span className="text-xs uppercase font-bold tracking-widest opacity-50">Size</span>
-              <div className="flex flex-wrap gap-2">
+      extraControls={
+        <div className="flex flex-col gap-1.5 md:items-end">
+          <div className="flex flex-wrap gap-4 md:justify-end">
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+              <div className="flex flex-wrap gap-1.5">
                 {(["xs", "sm", "md", "lg", "xl", "full-width", "full-screen"] as const).map(s => (
-                  <Button key={s} variant={size === s ? "default" : "outline"} size="sm" onClick={() => setSize(s)}>{s}</Button>
+                  <Button key={s} variant={size === s ? "default" : "outline"} size="sm" onClick={() => setSize(s)} className="h-7 text-xs">{s}</Button>
                 ))}
               </div>
             </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-xs uppercase font-bold tracking-widest opacity-50">Position</span>
-              <div className="flex flex-wrap gap-2">
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Position</span>
+              <div className="flex flex-wrap gap-1.5">
                 {(["center", "top-center", "bottom-sheet", "left-side", "right-side"] as const).map(p => (
-                  <Button key={p} variant={position === p ? "default" : "outline"} size="sm" onClick={() => setPosition(p)} className="capitalize">{p.replace("-", " ")}</Button>
+                  <Button key={p} variant={position === p ? "default" : "outline"} size="sm" onClick={() => setPosition(p)} className="capitalize h-7 text-xs">{p.replace("-", " ")}</Button>
                 ))}
               </div>
             </div>
           </div>
         </div>
-        
-        <div className="flex items-center justify-center w-full h-64 border border-dashed border-border/50 rounded-2xl relative">
+      }
+    >
+      <div ref={setContainer} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+        <div className="flex items-center justify-center w-full h-64 relative">
           <Button onClick={() => setOpen(true)} size="lg" className="rounded-full shadow-lg shadow-primary/20 px-8">Open Modal</Button>
         </div>
         
@@ -839,14 +870,13 @@ const CommandPalettePreview: React.FC = () => {
       variants={["default", "compact", "floating", "glass", "spotlight"]}
       activeVariant={variant}
       onVariantChange={setVariant}
+      extraControls={
+        <p className="text-xs text-muted-foreground md:text-right mt-1">
+          Press <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"><span className="text-xs">⌘</span>K</kbd> or <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"><span className="text-xs">Ctrl</span>K</kbd> to open.
+        </p>
+      }
     >
       <div ref={setContainer} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-        <div className="flex flex-col gap-4 mb-12 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 w-full max-w-2xl">
-          <p className="text-center text-xs text-muted-foreground mt-2">
-            Press <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"><span className="text-xs">⌘</span>K</kbd> or <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"><span className="text-xs">Ctrl</span>K</kbd> to open the command palette.
-          </p>
-        </div>
-
         <div className="flex items-center justify-center w-full h-32 border border-dashed border-border/50 rounded-2xl relative cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => setOpen(true)}>
           <p className="text-muted-foreground font-medium">Click here or press <CommandShortcut className="ml-2 inline-flex bg-background px-1.5 py-0.5 rounded-md border">Cmd+K</CommandShortcut> to open</p>
         </div>
@@ -919,28 +949,29 @@ const SelectPreview: React.FC = () => {
       variants={["default", "soft", "floating", "glass", "minimal"]}
       activeVariant={variant}
       onVariantChange={setVariant}
-    >
-      <div ref={setContainer} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-        <div className="flex flex-col gap-4 mb-8 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-4xl w-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col gap-2">
-              <span className="text-xs uppercase tracking-widest font-bold opacity-50">Size</span>
-              <div className="flex flex-wrap gap-2">
+      extraControls={
+        <div className="flex flex-col gap-1.5 md:items-end">
+          <div className="flex flex-wrap gap-4 md:justify-end">
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+              <div className="flex flex-wrap gap-1.5">
                 {(["sm", "md", "lg"] as const).map((s) => (
-                  <Button key={s} variant={size === s ? "default" : "outline"} size="sm" onClick={() => setSize(s)}>{s}</Button>
+                  <Button key={s} variant={size === s ? "default" : "outline"} size="sm" onClick={() => setSize(s)} className="h-7 text-xs">{s}</Button>
                 ))}
               </div>
             </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-xs uppercase tracking-widest font-bold opacity-50">Mode</span>
-              <div className="flex flex-wrap gap-2">
-                <Button variant={!isMulti ? "default" : "outline"} size="sm" onClick={() => setIsMulti(false)}>Single</Button>
-                <Button variant={isMulti ? "default" : "outline"} size="sm" onClick={() => setIsMulti(true)}>Multi-Select</Button>
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Mode</span>
+              <div className="flex flex-wrap gap-1.5">
+                <Button variant={!isMulti ? "default" : "outline"} size="sm" onClick={() => setIsMulti(false)} className="h-7 text-xs">Single</Button>
+                <Button variant={isMulti ? "default" : "outline"} size="sm" onClick={() => setIsMulti(true)} className="h-7 text-xs">Multi</Button>
               </div>
             </div>
           </div>
         </div>
-
+      }
+    >
+      <div ref={setContainer} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
         <div className="flex items-center justify-center w-full max-w-sm flex-1 mb-32">
           <Select 
             key={isMulti ? "multi" : "single"}
@@ -1116,21 +1147,18 @@ const FormBuilderPreview: React.FC = () => {
       variants={["default", "minimal", "enterprise", "compact"]}
       activeVariant={variant}
       onVariantChange={setVariant}
-    >
-      <div className="flex flex-col items-center justify-start w-full h-full p-4 md:p-8 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-        <div className="flex flex-col gap-4 mb-8 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-4xl w-full">
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-            <div className="flex flex-col gap-2">
-              <span className="text-xs uppercase tracking-widest font-bold opacity-50">Layout Mode</span>
-              <div className="flex flex-wrap gap-2">
-                {(["auto", "single", "two", "three"] as const).map((l) => (
-                  <Button key={l} variant={layout === l ? "default" : "outline"} size="sm" onClick={() => setLayout(l)}>{l}</Button>
-                ))}
-              </div>
-            </div>
+      extraControls={
+        <div className="flex flex-col gap-1.5 md:items-end">
+          <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Layout Mode</span>
+          <div className="flex flex-wrap gap-1.5">
+            {(["auto", "single", "two", "three"] as const).map((l) => (
+              <Button key={l} variant={layout === l ? "default" : "outline"} size="sm" onClick={() => setLayout(l)} className="h-7 text-xs">{l}</Button>
+            ))}
           </div>
         </div>
-
+      }
+    >
+      <div className="flex flex-col items-center justify-start w-full h-full p-4 md:p-8 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
         <div className="w-full max-w-4xl flex flex-col lg:flex-row gap-8">
           <div className="flex-1">
             <FormBuilder
@@ -1668,22 +1696,21 @@ export const PreviewRegistry: Record<string, React.FC> = {
     );
   },
   basic: function BasicLoaderPreview() {
+    const [variant, setVariant] = useState<"modern" | "clean" | "minimal">("modern");
     return (
-      <PreviewContainer title="Basic Loader" description="Versatile spinning or pulsing loaders.">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 w-full max-w-3xl items-center justify-items-center">
-          <div className="flex flex-col gap-4 items-center">
-            <BasicLoader
-              variant="modern"
-              color="#3b82f6"
-              text="Modern Rings..."
-            />
-          </div>
-          <div className="flex flex-col gap-4 items-center">
-            <BasicLoader variant="clean" color="#10b981" text="Clean Dots..." />
-          </div>
-          <div className="flex flex-col gap-4 items-center">
-            <BasicLoader variant="minimal" color="#f59e0b" text="Minimal..." />
-          </div>
+      <PreviewContainer 
+        title="Basic Loader" 
+        description="Versatile spinning or pulsing loaders."
+        variants={["modern", "clean", "minimal"]}
+        activeVariant={variant}
+        onVariantChange={setVariant}
+      >
+        <div className="flex flex-col gap-4 items-center justify-center min-h-[300px]">
+          <BasicLoader
+            variant={variant}
+            color={variant === "clean" ? "#10b981" : variant === "minimal" ? "#f59e0b" : "#3b82f6"}
+            text={variant === "clean" ? "Clean Dots..." : variant === "minimal" ? "Minimal..." : "Modern Rings..."}
+          />
         </div>
       </PreviewContainer>
     );
@@ -2009,25 +2036,26 @@ export const PreviewRegistry: Record<string, React.FC> = {
     );
   },
   "scroll-text-reveal": function ScrollTextRevealPreview() {
+    const scrollContainer = React.useRef<HTMLDivElement>(null);
     return (
       <PreviewContainer 
         title="Scroll Text Reveal" 
-        description="Text that reveals itself as you scroll down the page." 
-        className="h-auto overflow-visible"
-        contentClassName="p-0 min-h-[100dvh]"
+        description="Text that reveals itself as you scroll down the screen." 
+        scrollRef={scrollContainer}
+        canvasClassName="justify-start"
       >
-        <div className="w-full flex flex-col items-center">
-          <div className="h-[70vh] flex items-center justify-center text-muted-foreground w-full">
+        <div className="w-full flex flex-col items-center pb-[200px]">
+          <div className="min-h-[500px] md:min-h-[600px] pt-20 md:pt-32 flex items-center justify-center text-muted-foreground w-full shrink-0">
             <span className="animate-pulse">Scroll down to reveal text ↓</span>
           </div>
-          <div className="py-20 px-8 max-w-4xl flex items-center justify-center">
+          <div className="py-20 px-8 max-w-4xl flex items-center justify-center shrink-0">
             <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-center">
-              <ScrollTextReveal>
+              <ScrollTextReveal container={scrollContainer}>
                 The future of UI design is here. Experience seamless, highly optimized animations that elevate your application&apos;s feel.
               </ScrollTextReveal>
             </h2>
           </div>
-          <div className="h-[60vh] flex items-center justify-center text-muted-foreground w-full">
+          <div className="min-h-[500px] md:min-h-[600px] flex items-center justify-center text-muted-foreground w-full shrink-0">
             <span className="animate-pulse">Scroll up to reverse ↑</span>
           </div>
         </div>
@@ -2614,20 +2642,18 @@ ORDER BY department, salary_rank;`,
       activeVariant={layout}
       onVariantChange={setLayout}
       contentClassName="p-0 overflow-hidden"
-    >
-      <div className="flex flex-col w-full h-full min-h-[500px]">
-        {/* Controls bar — never scrolls */}
-        <div className="shrink-0 flex flex-wrap gap-x-6 gap-y-3 p-4 border-b border-border/50 bg-background/80 backdrop-blur-sm z-10 relative">
-          <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Input Variant</span>
-            <div className="flex flex-wrap gap-1.5">
-              {(["standard", "floating", "command", "multiline", "workspace"] as const).map((v) => (
-                <Button key={v} variant={inputVariant === v ? "default" : "outline"} size="sm" onClick={() => setInputVariant(v)} className="capitalize h-7 text-xs">{v}</Button>
-              ))}
-            </div>
+      extraControls={
+        <div className="flex flex-col gap-1.5 md:items-end">
+          <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Input Variant</span>
+          <div className="flex flex-wrap gap-1.5">
+            {(["standard", "floating", "command", "multiline", "workspace"] as const).map((v) => (
+              <Button key={v} variant={inputVariant === v ? "default" : "outline"} size="sm" onClick={() => setInputVariant(v)} className="capitalize h-7 text-xs">{v}</Button>
+            ))}
           </div>
         </div>
-
+      }
+    >
+      <div className="flex w-full h-full min-h-[500px]">
         {/* Chat panel — fills remaining height, no page scroll */}
         <div className="flex-1 min-h-[500px] overflow-hidden relative">
           <AIChat
