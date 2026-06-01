@@ -593,52 +593,44 @@ export const componentsList: ComponentItem[] = [
   },
   {
     id: 22,
-    title: "Github Icon",
+    title: "Icons",
     type: "Icons",
-    slug: "github-icon",
+    slug: "icons",
     category: "ui",
     description:
-      "A clean, reusable GitHub icon component built with SVG. Designed to be lightweight and easy to integrate into navigation menus, footers, or social links with full Tailwind CSS support.",
+      "A premium collection of brand and social icons with built-in micro-animations. Every icon is a pure SVG React component that can be used statically or with motion. Designed to give your project a professional, polished feel out of the box.",
     details: [
-      "Pure SVG implementation for maximum performance and clarity.",
-      "Lightweight with zero external dependencies.",
-      "Supports all standard SVG attributes and Tailwind CSS classes.",
-      "Designed for consistent scaling across different UI sections.",
-      "Perfect for social links, repository buttons, and footers.",
+      "Premium Motion: Built-in micro-animations powered by Framer Motion.",
+      "Toggleable: Enable or disable animations using the 'animate' prop (defaults to false).",
+      "Native Implementation: Pure SVG React components with zero external dependencies.",
+      "Ships with Package: Included in the main 'futureuikit' package for easy access.",
+      "Fully Responsive: Supports size, width, height, className, and custom styling.",
+      "Growing Library: Includes GitHub, LinkedIn, X (Twitter), Instagram, Discord, and YouTube.",
     ],
     codes: {
-      next: 'import { GithubIcon } from "@/components/ui/github-icon";\n\nexport default function Example() {\n  return (\n    <div className="flex gap-4">\n      <GithubIcon className="w-6 h-6 text-foreground" />\n      <GithubIcon className="w-8 h-8 text-primary" />\n    </div>\n  );\n}',
+      next: `import { GithubIcon, InstagramIcon, DiscordIcon } from 'futureuikit/icons';
+
+export default function Example() {
+  return (
+    <div className="flex gap-6 items-center">
+      {/* Animated Variant */}
+      <InstagramIcon animate size={32} className="text-primary" />
+      
+      {/* Static Variant */}
+      <GithubIcon size={32} className="text-foreground" />
+      
+      {/* Custom Interaction */}
+      <DiscordIcon animate size={40} className="text-[#5865F2]" />
+    </div>
+  );
+}`,
     },
     usage: [
-      "Install: Run 'npx futureuikit add github-icon'.",
-      "Import: 'import { GithubIcon } from \"@/components/ui/github-icon\";'",
-      "Styling: Control size and color directly via Tailwind classes ('w-6 h-6', 'text-primary').",
-      "Usage: Inherits all standard SVG attributes for full flexibility in headers or social sections.",
-    ],
-  },
-  {
-    id: 23,
-    title: "Linkedin Icon",
-    type: "Icons",
-    slug: "linkedin-icon",
-    category: "ui",
-    description:
-      "A professional LinkedIn icon component built with SVG. Lightweight, reusable, and fully customizable via Tailwind CSS for seamless integration into headers, footers, or contact pages.",
-    details: [
-      "High-fidelity SVG implementation for crisp rendering at any scale.",
-      "Pure React component with zero external dependencies.",
-      "Full support for Tailwind CSS color and sizing utilities.",
-      "Standardized props interface for consistent usage across the project.",
-      "Ideal for professional profiles, social link sections, and portfolios.",
-    ],
-    codes: {
-      next: 'import { LinkedinIcon } from "@/components/ui/linkedin-icon";\n\nexport default function Example() {\n  return (\n    <div className="flex gap-4">\n      <LinkedinIcon className="w-6 h-6 text-foreground" />\n      <LinkedinIcon className="w-8 h-8 text-primary" />\n    </div>\n  );\n}',
-    },
-    usage: [
-      "Install: Run 'npx futureuikit add linkedin-icon'.",
-      "Import: 'import { LinkedinIcon } from \"@/components/ui/linkedin-icon\";'",
-      "Customization: Fully customizable using Tailwind's 'text-', 'w-', and 'h-' utility classes.",
-      "Context: Best used alongside the GitHub icon for professional profile links.",
+      "Install: 'npm install futureuikit' to get the full icon suite.",
+      "Animation: Pass the 'animate' prop to enable premium hover and entry motions.",
+      "Static Mode: Omit the 'animate' prop (or pass false) to use icons as standard SVGs.",
+      "Import: 'import { XIcon, YoutubeIcon } from \"futureuikit/icons\";'",
+      "Style: Use Tailwind classes or the 'style' prop for custom colors and spacing.",
     ],
   },
   {

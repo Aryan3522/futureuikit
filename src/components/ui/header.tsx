@@ -7,17 +7,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 import Image from "next/image";
 import {
-  Sun,
-  Moon,
   Menu,
   X,
-  ChevronRight,
 } from "lucide-react";
 import { Button } from "./button";
 import { cn } from "@/lib/utils";
 import { SearchInput } from "./search-input";
-import { GithubIcon } from "./github-icon";
-import { LinkedinIcon } from "./linkedin-icon";
+import { GithubIcon, LinkedinIcon, SunIcon, MoonIcon, ChevronRightIcon } from "@/icons";
 import { componentsList } from "@/data/component-library-data";
 
 interface NavItem {
@@ -102,7 +98,7 @@ export const Header: React.FC = React.memo(() => {
                       size="icon"
                       className="rounded-full w-10 h-10 shrink-0 hover:bg-primary/10 transition-all duration-300 flex items-center justify-center p-0"
                     >
-                      <GithubIcon className="w-5 h-5" />
+                      <GithubIcon animate className="w-5 h-5" />
                     </Button>
                   </Link>
 
@@ -116,7 +112,7 @@ export const Header: React.FC = React.memo(() => {
                       size="icon"
                       className="rounded-full w-10 h-10 shrink-0 hover:bg-primary/10 transition-all duration-300 flex items-center justify-center p-0"
                     >
-                      <LinkedinIcon className="w-5 h-5" />
+                      <LinkedinIcon animate className="w-5 h-5" />
                     </Button>
                   </Link>
 
@@ -129,9 +125,9 @@ export const Header: React.FC = React.memo(() => {
                     {!mounted ? (
                       <div className="w-5 h-5" />
                     ) : theme === "dark" ? (
-                      <Sun className="w-5 h-5" />
+                      <SunIcon animate className="w-5 h-5" />
                     ) : (
-                      <Moon className="w-5 h-5" />
+                      <MoonIcon animate className="w-5 h-5" />
                     )}
                   </Button>
 
@@ -176,7 +172,7 @@ export const Header: React.FC = React.memo(() => {
                             )}
                           >
                             {item.label}
-                            <ChevronRight className="w-5 h-5" />
+                            <ChevronRightIcon className="w-5 h-5" />
                           </Link>
                         ))}
                       </div>
@@ -194,7 +190,7 @@ export const Header: React.FC = React.memo(() => {
                             size="sm"
                             className="rounded-full gap-2 font-bold italic"
                           >
-                            <GithubIcon className="w-4 h-4" /> GitHub
+                            <GithubIcon animate className="w-4 h-4" /> GitHub
                           </Button>
                         </Link>
                         <Link
@@ -206,7 +202,7 @@ export const Header: React.FC = React.memo(() => {
                             size="sm"
                             className="rounded-full gap-2 font-bold italic"
                           >
-                            <LinkedinIcon className="w-4 h-4" /> LinkedIn
+                            <LinkedinIcon animate className="w-4 h-4" /> LinkedIn
                           </Button>
                         </Link>
                       </div>

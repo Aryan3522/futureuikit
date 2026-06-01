@@ -5,6 +5,7 @@ import ExploreComponents from "@/components/ExploreComponents";
 import { Code2, Zap, Palette, ShieldCheck, Rocket, Layout, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { DotBackground } from "@/components/ui/dot-background";
+import { GithubIcon, LinkedinIcon, XIcon } from "@/icons";
 
 export default function Home() {
   return (
@@ -179,9 +180,9 @@ export default function Home() {
           </div>
           
           <div className="flex flex-wrap justify-center gap-6 md:gap-12 text-sm md:text-base">
-            <Link href="/components" className="text-muted-foreground hover:text-foreground transition-colors font-bold italic">Components</Link>
-            <Link href={process.env.NEXT_PUBLIC_GITHUB_PROFILE || "https://github.com/Aryan3522"} className="text-muted-foreground hover:text-foreground transition-colors font-bold italic">GitHub</Link>
-            <Link href={process.env.NEXT_PUBLIC_LINKEDIN_PROFILE || "https://www.linkedin.com/in/aryan-hooda-code/"} className="text-muted-foreground hover:text-foreground transition-colors font-bold italic">Connect</Link>
+            <Link href="/components" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-bold italic">Components</Link>
+            <Link href={process.env.NEXT_PUBLIC_GITHUB_PROFILE || "https://github.com/Aryan3522"} target="_blank" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-bold italic"><GithubIcon animate className="w-5 h-5" /> GitHub</Link>
+            <Link href={process.env.NEXT_PUBLIC_LINKEDIN_PROFILE || "https://www.linkedin.com/in/aryan-hooda-code/"} target="_blank" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-bold italic"><LinkedinIcon animate className="w-5 h-5" /> Connect</Link>
           </div>
           
           <p className="text-xs md:text-sm text-muted-foreground text-center">

@@ -15,8 +15,6 @@ import {
     ChevronLeft,
     ChevronRight,
     Home,
-    Moon,
-    Sun,
     GalleryHorizontal,
     Navigation,
     MessageSquare,
@@ -25,6 +23,7 @@ import {
     Layout,
     type LucideIcon,
 } from "lucide-react";
+import { SunIcon, MoonIcon } from "@/icons";
 
 interface SidebarItem {
   label: string;
@@ -89,9 +88,9 @@ const ComponentPageSidebar: React.FC<ComponentPageSidebarProps> = ({ open, setOp
                             className="w-9 h-9 p-0 hover:bg-transparent md:hover:bg-subtle"
                         >
                             {theme === "dark" ? (
-                                <Sun className="h-4 w-4" />
+                                <SunIcon animate className="h-4 w-4" />
                             ) : (
-                                <Moon className="h-4 w-4" />
+                                <MoonIcon animate className="h-4 w-4" />
                             )}
                         </Button>
                     </motion.div>

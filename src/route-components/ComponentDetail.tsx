@@ -5,7 +5,8 @@ import { notFound, useRouter } from "next/navigation";
 import { componentsList, registry } from "@/data/component-library-data";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus, vs } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { Check, Copy, Code, ChevronLeft, Moon, Sun, ArrowDown } from "lucide-react";
+import { Check, Copy, Code, ArrowDown } from "lucide-react";
+import { ChevronLeftIcon, SunIcon, MoonIcon } from "@/icons";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -79,7 +80,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
           className="p-2 rounded-full border border-border/20 hover:bg-muted/50 transition-colors flex items-center justify-center"
           title="Go Back"
         >
-          <ChevronLeft size={20} />
+          <ChevronLeftIcon animate size={20} />
         </button>
         
         <div className="flex items-center gap-2">
@@ -100,7 +101,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
             className="p-2 rounded-full border border-border/20 hover:bg-muted/50 transition-colors"
             title="Toggle Theme"
           >
-            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+            {isDark ? <SunIcon animate size={20} /> : <MoonIcon animate size={20} />}
           </button>
         </div>
       </header>

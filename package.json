@@ -1,6 +1,6 @@
 {
   "name": "futureuikit",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "A modern CLI-powered UI component library for Next.js — powered by Framer Motion, Tailwind CSS 4, and React 19.",
   "private": false,
   "license": "MIT",
@@ -44,8 +44,16 @@
   },
   "files": [
     "bin",
+    "dist",
     "README.md"
   ],
+  "exports": {
+    "./icons": {
+      "types": "./dist/icons/index.d.ts",
+      "import": "./dist/icons/index.mjs",
+      "require": "./dist/icons/index.js"
+    }
+  },
   "config": {
     "registryUrl": "https://futureuikit.vercel.app/api/registry"
   },
@@ -61,7 +69,8 @@
     "start": "next start",
     "lint": "eslint",
     "cli:version": "node ./bin/cli.mjs --version",
-    "prepack": "node ./bin/cli.mjs --version",
+    "build:icons": "tsup && tsc --project tsconfig.icons.json",
+    "prepack": "npm run build:icons",
     "sync": "node scripts/sync-registry.mjs"
   },
   "peerDependencies": {
@@ -109,6 +118,7 @@
     "react-syntax-highlighter": "^16.1.1",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4",
+    "tsup": "^8.5.1",
     "typescript": "^6.0.3"
   },
   "dependencies": {

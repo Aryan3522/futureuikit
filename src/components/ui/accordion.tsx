@@ -8,8 +8,8 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ChevronDownIcon } from "@/icons";
 
 export interface AccordionItemProps {
   title: string;
@@ -38,7 +38,7 @@ export const AccordionItem: React.FC<AccordionItemProps> = React.memo(({
                   animate={{ rotate: isOpen ? 180 : 0 }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  <ChevronDownIcon animate className="h-4 w-4 text-muted-foreground" />
                 </motion.div>
               </motion.button>
               <AnimatePresence initial={false}>
