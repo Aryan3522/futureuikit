@@ -18,7 +18,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Send, Bot, User, Copy, ThumbsUp, ThumbsDown,
   RefreshCcw, Paperclip, Mic, StopCircle,
-  Pencil, Check, ImagePlus, FileText, X, ChevronDown,
+  Pencil, Check, ImagePlus, FileText, X, ChevronDown, ArrowDown,
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -130,12 +130,42 @@ export const ChatMessages = React.memo(function ChatMessages({ className }: { cl
   const containerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
+  // Track if user is at the bottom of the chat
+  const isScrolledToBottomRef = useRef(true);
+  const prevMessageCountRef = useRef(messages.length);
+  const [showScrollButton, setShowScrollButton] = useState(false);
+
+  const handleScroll = () => {
+    const container = containerRef.current;
+    if (!container) return;
+    // Check if user is within 15px of the bottom (smaller threshold prevents sticky feeling)
+    const isAtBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 15;
+    isScrolledToBottomRef.current = isAtBottom;
+    setShowScrollButton(!isAtBottom);
+  };
+
+  const scrollToBottom = () => {
+    const container = containerRef.current;
+    if (!container) return;
+    container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
+    isScrolledToBottomRef.current = true;
+    setShowScrollButton(false);
+  };
+
   // Scroll ONLY within this container — never touches the page scroll
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    // Use scrollTop to scroll within the container instead of scrollIntoView
-    container.scrollTop = container.scrollHeight;
+
+    const isNewMessage = messages.length > prevMessageCountRef.current;
+    prevMessageCountRef.current = messages.length;
+
+    if (isScrolledToBottomRef.current || isNewMessage) {
+      // Use scrollTop to scroll within the container instead of scrollIntoView
+      container.scrollTop = container.scrollHeight;
+      isScrolledToBottomRef.current = true;
+      setShowScrollButton(false);
+    }
   }, [messages]);
 
   const hasMessages = messages.length > 0;
@@ -144,31 +174,54 @@ export const ChatMessages = React.memo(function ChatMessages({ className }: { cl
     <motion.div
       layout
       transition={{ type: "spring", bounce: 0, duration: 0.6 }}
-      ref={containerRef}
       className={cn(
-        "overflow-y-auto overscroll-contain",
+        "relative overflow-hidden",
         hasMessages ? "flex-1 opacity-100" : "flex-none h-0 opacity-0 pointer-events-none",
-        layout === "compact" ? "p-2" : "p-4 md:p-6",
         className
       )}
     >
       <div
+        ref={containerRef}
+        onScroll={handleScroll}
         className={cn(
-          "flex flex-col gap-4 pb-4 w-full",
-          layout === "claude" && "mx-auto max-w-3xl",
-          layout === "perplexity" && "mx-auto max-w-3xl",
-          layout === "chatgpt" && "mx-auto max-w-3xl",
-          layout === "enterprise" && "mx-auto max-w-4xl",
-          layout === "minimal" && "mx-auto max-w-3xl",
+          "w-full h-full overflow-y-auto overscroll-contain",
+          layout === "compact" ? "p-2" : "p-4 md:p-6"
         )}
       >
-        <AnimatePresence initial={false}>
-          {messages.map((msg, index) => (
-            <ChatMessage key={msg.id || index} message={msg} />
-          ))}
-        </AnimatePresence>
-        <div ref={bottomRef} />
+        <div
+          className={cn(
+            "flex flex-col gap-4 pb-4 w-full",
+            layout === "claude" && "mx-auto max-w-3xl",
+            layout === "perplexity" && "mx-auto max-w-3xl",
+            layout === "chatgpt" && "mx-auto max-w-3xl",
+            layout === "enterprise" && "mx-auto max-w-4xl",
+            layout === "minimal" && "mx-auto max-w-3xl",
+          )}
+        >
+          <AnimatePresence initial={false}>
+            {messages.map((msg, index) => (
+              <ChatMessage key={msg.id || index} message={msg} />
+            ))}
+          </AnimatePresence>
+          <div ref={bottomRef} />
+        </div>
       </div>
+
+      {/* Scroll to bottom button */}
+      <AnimatePresence>
+        {showScrollButton && (
+          <motion.button
+            initial={{ opacity: 0, y: 10, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.9 }}
+            onClick={scrollToBottom}
+            className="absolute bottom-4 right-4 md:bottom-6 md:right-8 p-2 bg-background/80 backdrop-blur-md border border-border/50 rounded-full shadow-lg text-foreground hover:bg-muted hover:shadow-xl transition-all z-10"
+            title="Scroll to bottom"
+          >
+            <ArrowDown className="w-4 h-4" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 });

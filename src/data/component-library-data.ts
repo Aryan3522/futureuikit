@@ -927,6 +927,7 @@ export default function AdvancedSearch() {
   },
   {
     id: 102,
+
     title: "Dynamic Form System",
     type: "Form",
     slug: "dynamic-form",
@@ -1148,9 +1149,31 @@ export default function AdvancedSearch() {
       "Variants: The <FileUpload> root accepts 'variant' with values: 'default', 'compact', 'card', 'glass', 'minimal'.",
       "Progress: In a real app, update the internal progress state via the 'onFilesChange' hook to visualize upload metrics.",
     ]
-  }
-
-  ,
+  },
+  {
+    id: 112,
+    title: "Automotive Carousel",
+    type: "Carousel",
+    slug: "automotive-carousel",
+    category: "ui",
+    description: "A high-end, cinematic 3D carousel specifically designed for automotive showcases. It features a responsive camera rig that navigates through the car's interior and exterior with premium damping and ultra-wide angles.",
+    details: [
+      "Dynamic 3D camera navigation between exterior and interior views.",
+      "Strict interior-to-interior pathing to prevent roof sweeping.",
+      "Responsive FOV (up to 110°) and fluid annotation scaling.",
+      "Anti-overlap pointer logic for clear detail labeling.",
+      "Supports GLB models (M4, Car, Bike, etc.) with auto-fitting.",
+    ],
+    codes: {
+      next: 'import { AutomotiveCarousel } from "@/components/ui/automotive-carousel";\n\nexport default function Example() {\n  const slides = [\n    { id: 1, title: "EXTERIOR", description: "Sleek aerodynamic design.", annotations: [] },\n    { id: 2, title: "INTERIOR", description: "Premium luxury dashboard.", annotations: [{ id: "gear", position: [0.1, 0.5, 0.2], label: "Gear Shift" }] },\n  ];\n\n  return (\n    <div className="w-full h-screen">\n      <AutomotiveCarousel slides={slides} objectVariant="m4" />\n    </div>\n  );\n}',
+    },
+    usage: [
+      "Install: Run \'npx futureuikit add automotive-carousel\'.",
+      "Ensure your .glb models are in the /public/models/ folder.",
+      "Import: \'import { AutomotiveCarousel } from \"@/components/ui/automotive-carousel\";\'",
+      "Pass an array of slides with optional 3D annotation coordinates.",
+    ],
+  },
   {
     id: 110,
     title: "Form Builder",

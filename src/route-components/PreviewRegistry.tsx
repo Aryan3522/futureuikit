@@ -42,9 +42,7 @@ import { Sparkles, Terminal, Mail, Lock, User, Globe, Phone as PhoneIcon, Check 
 import { ScrollTextReveal } from "@/components/ui/scroll-text-reveal";
 import { BrowserWindow } from "@/components/ui/browser-window";
 import { CursorGlowButton } from "@/components/ui/cursor-glow-button";
-
 import { Dock, DockItem, DockDivider } from "@/components/ui/dock";
-
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerBody, DrawerFooter, DrawerClose } from "@/components/ui/drawer";
 import { Toggle } from "@/components/ui/toggle";
 import { Modal, ModalTrigger, ModalContent, ModalHeader, ModalTitle, ModalDescription, ModalBody, ModalFooter, ModalClose } from "@/components/ui/modal";
@@ -56,7 +54,7 @@ import { KanbanBoard, KanbanColumn, KanbanCard, KanbanColumnData } from "@/compo
 import { WorkflowBuilder, WorkflowCanvas, WorkflowToolbar, WorkflowMiniMap } from "@/components/ui/workflow-builder";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { AIChat, ChatMessages, ChatInput, ChatPromptSuggestions } from "@/components/ui/ai-chat";
-
+import { AutomotiveCarousel } from "@/components/ui/automotive-carousel";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -171,16 +169,12 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
   return (
     <div className={cn("w-full h-full flex flex-col overflow-y-auto bg-background", className)}>
       {/* Header & Controls */}
-      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between w-full shrink-0 relative z-10 px-2 py-2 md:px-8 md:py-6 bg-transparent">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
-          {description && <p className="text-sm text-muted-foreground mt-1">{description}</p>}
-        </div>
-        <div className="flex flex-col items-start md:items-end gap-3 w-full md:w-auto mt-4 md:mt-0">
+      {((variants && variants.length > 0) || extraControls) && (
+        <div className="flex flex-col gap-3 w-full shrink-0 relative z-10 px-4 py-4 md:px-8 md:py-6 bg-transparent">
           {variants && variants.length > 0 && onVariantChange && (
-            <div className="flex flex-col gap-1.5 w-full md:items-end">
-              <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground hidden md:block">Layout Variant</span>
-              <div className="flex items-center flex-wrap gap-2 p-1 bg-muted/30 rounded-lg max-w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
+              <span className="text-[10px] md:text-xs uppercase tracking-widest font-bold text-muted-foreground">Layout Variant</span>
+              <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
                 {variants.map(v => (
                   <button
                     key={v}
@@ -199,14 +193,19 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
             </div>
           )}
           
-          {extraControls}
+          {extraControls && (
+            <div className="w-full flex flex-col gap-3">
+              {extraControls}
+            </div>
+          )}
         </div>
-      </div>
+      )}
 
       {/* Content Area */}
       <div className={cn("flex items-center justify-center flex-1 w-full relative px-2 md:px-4 pb-4 md:pb-8 pt-2 md:pt-4", contentClassName)}>
         {isVirtualScreen ? (
           <BrowserWindow 
+            title={title}
             className="md:w-[80%] aspect-[9/16] md:aspect-[3/4] lg:aspect-video max-h-[90vh]"
             contentClassName={canvasClassName}
             scrollRef={scrollRef}
@@ -695,11 +694,11 @@ const DrawerPreview: React.FC = () => {
       onVariantChange={setVariant}
       contentClassName="relative overflow-hidden"
       extraControls={
-        <div className="flex flex-col gap-1.5 md:items-end">
-          <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Placement</span>
-          <div className="flex flex-wrap gap-1.5">
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Placement</span>
+          <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
             {(["left", "right", "top", "bottom"] as const).map(p => (
-              <Button key={p} variant={placement === p ? "default" : "outline"} size="sm" onClick={() => setPlacement(p)} className="h-7 text-xs">{p}</Button>
+              <button key={p} onClick={() => setPlacement(p)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap", placement === p ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{p}</button>
             ))}
           </div>
         </div>
@@ -788,26 +787,24 @@ const ModalPreview: React.FC = () => {
       activeVariant={variant}
       onVariantChange={setVariant}
       extraControls={
-        <div className="flex flex-col gap-1.5 md:items-end">
-          <div className="flex flex-wrap gap-4 md:justify-end">
-            <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Size</span>
-              <div className="flex flex-wrap gap-1.5">
-                {(["xs", "sm", "md", "lg", "xl", "full-width", "full-screen"] as const).map(s => (
-                  <Button key={s} variant={size === s ? "default" : "outline"} size="sm" onClick={() => setSize(s)} className="h-7 text-xs">{s}</Button>
-                ))}
-              </div>
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Position</span>
-              <div className="flex flex-wrap gap-1.5">
-                {(["center", "top-center", "bottom-sheet", "left-side", "right-side"] as const).map(p => (
-                  <Button key={p} variant={position === p ? "default" : "outline"} size="sm" onClick={() => setPosition(p)} className="capitalize h-7 text-xs">{p.replace("-", " ")}</Button>
-                ))}
-              </div>
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+            <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
+              {(["xs", "sm", "md", "lg", "xl", "full-width", "full-screen"] as const).map(s => (
+                <button key={s} onClick={() => setSize(s)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap", size === s ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{s}</button>
+              ))}
             </div>
           </div>
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Position</span>
+            <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
+              {(["center", "top-center", "bottom-sheet", "left-side", "right-side"] as const).map(p => (
+                <button key={p} onClick={() => setPosition(p)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap", position === p ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{p.replace("-", " ")}</button>
+              ))}
+            </div>
+          </div>
+        </>
       }
     >
       <div ref={setContainer} className="flex-1 flex flex-col items-center justify-center w-full min-h-[400px] md:min-h-[500px] h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
@@ -865,11 +862,7 @@ const CommandPalettePreview: React.FC = () => {
       variants={["default", "compact", "floating", "glass", "spotlight"]}
       activeVariant={variant}
       onVariantChange={setVariant}
-      extraControls={
-        <p className="text-xs text-muted-foreground md:text-right mt-1">
-          Press <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"><span className="text-xs">⌘</span>K</kbd> or <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"><span className="text-xs">Ctrl</span>K</kbd> to open.
-        </p>
-      }
+      // Controls removed
     >
       <div ref={setContainer} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
         <div className="flex items-center justify-center w-full h-32 border border-dashed border-border/50 rounded-2xl relative cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => setOpen(true)}>
@@ -945,25 +938,23 @@ const SelectPreview: React.FC = () => {
       activeVariant={variant}
       onVariantChange={setVariant}
       extraControls={
-        <div className="flex flex-col gap-1.5 md:items-end">
-          <div className="flex flex-wrap gap-4 md:justify-end">
-            <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Size</span>
-              <div className="flex flex-wrap gap-1.5">
-                {(["sm", "md", "lg"] as const).map((s) => (
-                  <Button key={s} variant={size === s ? "default" : "outline"} size="sm" onClick={() => setSize(s)} className="h-7 text-xs">{s}</Button>
-                ))}
-              </div>
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Mode</span>
-              <div className="flex flex-wrap gap-1.5">
-                <Button variant={!isMulti ? "default" : "outline"} size="sm" onClick={() => setIsMulti(false)} className="h-7 text-xs">Single</Button>
-                <Button variant={isMulti ? "default" : "outline"} size="sm" onClick={() => setIsMulti(true)} className="h-7 text-xs">Multi</Button>
-              </div>
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+            <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
+              {(["sm", "md", "lg"] as const).map((s) => (
+                <button key={s} onClick={() => setSize(s)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap", size === s ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{s}</button>
+              ))}
             </div>
           </div>
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Mode</span>
+            <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
+              <button onClick={() => setIsMulti(false)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap", !isMulti ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>Single</button>
+              <button onClick={() => setIsMulti(true)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap", isMulti ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>Multi</button>
+            </div>
+          </div>
+        </>
       }
     >
       <div ref={setContainer} className="flex flex-col items-center justify-start w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
@@ -1143,11 +1134,11 @@ const FormBuilderPreview: React.FC = () => {
       activeVariant={variant}
       onVariantChange={setVariant}
       extraControls={
-        <div className="flex flex-col gap-1.5 md:items-end">
-          <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Layout Mode</span>
-          <div className="flex flex-wrap gap-1.5">
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Layout Mode</span>
+          <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
             {(["auto", "single", "two", "three"] as const).map((l) => (
-              <Button key={l} variant={layout === l ? "default" : "outline"} size="sm" onClick={() => setLayout(l)} className="h-7 text-xs">{l}</Button>
+              <button key={l} onClick={() => setLayout(l)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap", layout === l ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{l}</button>
             ))}
           </div>
         </div>
@@ -1979,15 +1970,18 @@ export const PreviewRegistry: Record<string, React.FC> = {
         description="Premium animated SVG icons — optimized for performance and aesthetic impact."
         isVirtualScreen={false}
         extraControls={
-          <div className="w-full md:w-72 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
-            <input
-              type="text"
-              placeholder="Search premium icons..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-sm bg-muted/30 border border-border/50 rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary/40 transition-all"
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Search Icons</span>
+            <div className="w-full relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Search premium icons..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="w-full max-w-sm pl-9 pr-3 py-2 text-sm bg-muted/30 border border-border/50 rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary/40 transition-all"
+              />
+            </div>
           </div>
         }
       >
@@ -2382,6 +2376,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
   "workflow-builder": WorkflowPreview,
   "ai-chat": AIChatPreview,
   "browser-window": BrowserWindowPreview,
+  "automotive-carousel": AutomotiveCarouselPreview,
 };
 
 function AIChatPreview() {
@@ -2903,11 +2898,11 @@ ORDER BY department, salary_rank;`,
       onVariantChange={setLayout}
       contentClassName="p-0 overflow-hidden"
       extraControls={
-        <div className="flex flex-col gap-1.5 md:items-end">
-          <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Input Variant</span>
-          <div className="flex flex-wrap gap-1.5">
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Input Variant</span>
+          <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
             {(["standard", "floating", "command", "multiline", "workspace"] as const).map((v) => (
-              <Button key={v} variant={inputVariant === v ? "default" : "outline"} size="sm" onClick={() => setInputVariant(v)} className="capitalize h-7 text-xs">{v}</Button>
+              <button key={v} onClick={() => setInputVariant(v)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap", inputVariant === v ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{v}</button>
             ))}
           </div>
         </div>
@@ -2950,6 +2945,51 @@ function BrowserWindowPreview() {
             <p className="max-w-md text-sm">The modern component library for ambitious engineering teams.</p>
           </div>
         </BrowserWindow>
+      </div>
+    </PreviewContainer>
+  );
+}
+
+function AutomotiveCarouselPreview() {
+  const [variant, setVariant] = useState<"bike" | "car" | "chair" | "m4">("m4");
+  const slides = [
+    { 
+      id: 1, 
+      title: "THE VISION", 
+      description: "A masterclass in automotive engineering.",
+      annotations: [] 
+    },
+    { 
+      id: 2, 
+      title: "", 
+      description: "",
+      annotations: [
+        { id: "dash-1", position: [0.17, 0.75, 0.65] as [number, number, number], label: "M-Sport Steering Handle" },
+        { id: "dash-2", position: [-0.4, 0.95, 0.65] as [number, number, number], label: "14.9-inch Curved Screen" },
+        { id: "dash-3", position: [-0.3, 0.65, 0.5] as [number, number, number], label: "Carbon Fiber Gear" },
+        { id: "dash-4", position: [-0.9, 0.88, 0.65] as [number, number, number], label: "Carbon Trim Dashboard" }
+      ]
+    },
+    { 
+      id: 3, 
+      title: "", 
+      description: "",
+      annotations: [
+        { id: "seat-1", position: [0.35, 0.65, -0.15] as [number, number, number], label: "Ergonomic Driver Seat" },
+        { id: "seat-2", position: [-0.35, 0.65, -0.15] as [number, number, number], label: "Ventilated Passenger Seat" }
+      ]
+    },
+    { 
+      id: 4, 
+      title: "Aerodynamic Perfection", 
+      description: "Aggressive rear stance featuring the signature LED Taillight Matrix, active aero spoiler, and performance-tuned sport exhaust.",
+      annotations: []
+    }
+  ];
+  return (
+    <PreviewContainer title="Automotive Carousel" isVirtualScreen={true} className="overflow-hidden pb-4">
+      <div className="relative w-full h-full overflow-hidden rounded-xl border border-border/50">
+        <AutomotiveCarousel slides={slides} objectVariant={variant} />
       </div>
     </PreviewContainer>
   );

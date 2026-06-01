@@ -176,6 +176,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
             </motion.h1>
           </div> */}
 
+
           <div className="relative z-10 w-full h-full flex items-center justify-center">
              <ComponentLivePreview id={id} slug={slug} />
           </div>

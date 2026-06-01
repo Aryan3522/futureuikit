@@ -18,7 +18,7 @@ import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 interface DocSectionProps {
   title: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
   children: React.ReactNode;
 }
 

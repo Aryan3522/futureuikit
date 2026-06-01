@@ -51,10 +51,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${poppins.variable}`}
     >
-      <body
-        className="antialiased bg-background text-foreground"
-        suppressHydrationWarning
-      >
+      <head>
         <script
           id="dark-mode"
           suppressHydrationWarning
@@ -83,6 +80,11 @@ export default function RootLayout({
             `,
           }}
         />
+      </head>
+      <body
+        className="antialiased bg-background text-foreground"
+        suppressHydrationWarning
+      >
         <AppProviders>
           {children}
         </AppProviders>
