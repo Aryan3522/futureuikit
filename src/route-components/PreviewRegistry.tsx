@@ -210,7 +210,7 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
           <BrowserWindow 
             title={title}
             className="md:w-[80%] aspect-[9/16] md:aspect-[3/4] lg:aspect-video max-h-[90vh]"
-            contentClassName={canvasClassName}
+            contentClassName={cn("flex flex-col items-center justify-center", canvasClassName)}
             scrollRef={scrollRef}
           >
             {children}
