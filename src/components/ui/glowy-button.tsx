@@ -74,6 +74,7 @@ export const GlowyButton = React.memo(React.forwardRef<HTMLButtonElement, GlowyB
                 className={cn(
                   "relative inline-flex items-center justify-center px-8 h-12 rounded-full font-bold overflow-hidden",
                   "bg-background text-foreground border-2",
+                  "w-full md:w-auto", // Responsive width
                   "whitespace-nowrap",
                   disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
                   className
@@ -90,9 +91,9 @@ export const GlowyButton = React.memo(React.forwardRef<HTMLButtonElement, GlowyB
                     hover: { x: -14 }
                   }}
                   transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  className="relative z-30 flex items-center justify-center pointer-events-none"
+                  className="relative z-30 flex items-center justify-center pointer-events-none truncate pr-4 md:pr-0 w-full"
                 >
-                  {children}
+                  <span className="truncate">{children as React.ReactNode}</span>
                 </motion.div>
 
                 <motion.div
@@ -130,14 +131,19 @@ export const GlowyButton = React.memo(React.forwardRef<HTMLButtonElement, GlowyB
                   </motion.div>
                 </motion.div>
 
-                <motion.div
-                  className="absolute inset-0 z-0 bg-linear-to-r from-transparent via-black/5 dark:via-white/10 to-transparent"
-                  variants={{
-                    initial: { x: "-100%" },
-                    hover: { x: "100%" }
-                  }}
-                  transition={{ duration: 1.2, ease: "easeInOut", repeat: Infinity, repeatDelay: 0.5 }}
-                />
+                <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-[inherit]">
+                  <motion.div
+                    className="absolute top-[-50%] left-[-50%] h-[200%] w-[200%] z-0"
+                    variants={{
+                      initial: { x: "-100%", y: "-100%", rotate: 45 },
+                      hover: { x: "100%", y: "100%", rotate: 45 }
+                    }}
+                    transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1], repeat: Infinity, repeatDelay: 0.4 }}
+                    style={{
+                      background: `linear-gradient(90deg, transparent 35%, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.15) 48%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.15) 52%, rgba(255, 255, 255, 0) 60%, transparent 65%)`,
+                    }}
+                  />
+                </div>
               </motion.button>
             );
           }

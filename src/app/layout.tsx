@@ -59,9 +59,8 @@ export default function RootLayout({
     >
       <head>
         <link href="https://cdn.jsdelivr.net/npm/geist@1.0.3/dist/fonts/geist-sans/Geist-Variable.woff2" rel="preload" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <Script
+        <script
           id="dark-mode"
-          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
@@ -72,9 +71,8 @@ export default function RootLayout({
             `,
           }}
         />
-        <Script
+        <script
           id="disable-zoom"
-          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function() {

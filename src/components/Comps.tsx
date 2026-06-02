@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { componentsList } from "@/data/component-library-data";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { Check, Copy, ArrowRight, Layers, Sparkles, Droplets, Grid, List, Link as LinkIcon, ChevronRight, PackageCheck, Code2 } from "lucide-react";
+import { Check, Copy, ArrowRight, Layers, Sparkles, Droplets, Grid, List, Link as LinkIcon, ChevronRight, PackageCheck, Code2, Search } from "lucide-react";
 
 const TOP_PICKS = ["nexus-card", "glass-panel", "glowy", "cinematic-error", "browser-window", "noir-hero-3d"];
 
@@ -48,6 +48,7 @@ export default function Comps() {
   const [mounted, setMounted] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>("components");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const initTimeout = setTimeout(() => {
@@ -100,10 +101,14 @@ export default function Comps() {
   const displayedComponents = useMemo(() => {
     let filtered = componentsList;
     if (selectedCategory) {
-      filtered = componentsList.filter(c => c.type === selectedCategory);
+      filtered = filtered.filter(c => c.type === selectedCategory);
+    }
+    if (searchQuery.trim() !== "") {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter(c => c.title.toLowerCase().includes(q) || c.description.toLowerCase().includes(q) || c.slug.toLowerCase().includes(q));
     }
     return [...filtered].sort((a, b) => a.title.localeCompare(b.title));
-  }, [selectedCategory]);
+  }, [selectedCategory, searchQuery]);
 
   return (
     <div className="min-h-screen bg-background text-foreground font-body-md overflow-clip pt-16 relative">
@@ -564,42 +569,72 @@ export default function Comps() {
 
           {/* Component List */}
           <section className="mb-32">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 border-b border-foreground/5 pb-4 gap-4">
-              <div>
-                <div className="flex items-center gap-3">
-                  <h2 className="font-display text-4xl font-light text-foreground uppercase">
-                    {selectedCategory ? selectedCategory : "Core Primitives"}
-                  </h2>
-                  <span className="px-2 py-1 bg-foreground/5 border border-foreground/10 rounded-full text-xs font-mono text-foreground/80">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 border-b border-foreground/5 pb-6 gap-6">
+              <div className="w-full md:w-auto">
+                <h2 className="font-display text-4xl font-light text-foreground uppercase tracking-tight mb-3">
+                  {selectedCategory ? selectedCategory : "Core Primitives"}
+                </h2>
+                <p className="text-muted-foreground max-w-lg leading-relaxed">The atomic building blocks of the Future UI ecosystem. Refined for extreme performance and aesthetics.</p>
+              </div>
+              
+              <div className="flex flex-col items-start sm:items-end gap-4 w-full md:w-auto shrink-0">
+                <div className="flex items-center justify-between sm:justify-end w-full gap-3 sm:self-end bg-foreground/5 sm:bg-transparent border border-foreground/10 sm:border-transparent p-3 sm:p-0 rounded-xl">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse"></div>
+                    <span className="font-mono text-[11px] font-bold tracking-widest text-muted-foreground uppercase">
+                      Total Components
+                    </span>
+                  </div>
+                  <span className="font-mono text-xs font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-1 rounded-md shadow-[0_0_15px_rgba(52,211,153,0.1)]">
                     {displayedComponents.length}
                   </span>
                 </div>
-                <p className="text-muted-foreground mt-2">The atomic building blocks of the Future UI ecosystem.</p>
-              </div>
-              <div className="flex gap-2 pb-1 bg-foreground/5 p-1 rounded-lg border border-foreground/10 shrink-0">
-                <button 
-                  onClick={() => handleViewModeChange("list")}
-                  className={cn("p-1.5 rounded transition-all", viewMode === "list" ? "bg-foreground/10 text-foreground" : "text-muted-foreground hover:text-foreground/80")}
-                  title="List View"
-                >
-                  <List size={16} />
-                </button>
-                <button 
-                  onClick={() => handleViewModeChange("grid")}
-                  className={cn("p-1.5 rounded transition-all", viewMode === "grid" ? "bg-foreground/10 text-foreground" : "text-muted-foreground hover:text-foreground/80")}
-                  title="Grid View"
-                >
-                  <Grid size={16} />
-                </button>
-                <button 
-                  onClick={() => handleViewModeChange("links")}
-                  className={cn("p-1.5 rounded transition-all", viewMode === "links" ? "bg-foreground/10 text-foreground" : "text-muted-foreground hover:text-foreground/80")}
-                  title="Links View"
-                >
-                  <LinkIcon size={16} />
-                </button>
+
+                <div className="flex flex-row items-center gap-2 sm:gap-3 w-full">
+                  <div className="relative group flex-1 sm:flex-none sm:w-[300px] min-w-0">
+                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none z-10">
+                      <Search className="w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-transform duration-300 group-focus-within:scale-110 group-hover:text-foreground/80" />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Search components..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full bg-foreground/[0.02] hover:bg-foreground/[0.04] focus:bg-foreground/[0.05] backdrop-blur-xl border border-foreground/10 text-foreground text-sm rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary block pl-9 pr-12 py-2.5 transition-all duration-300 placeholder:text-muted-foreground/60 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] focus:shadow-[0_0_20px_rgba(139,92,246,0.15)]"
+                    />
+                    <div className="absolute right-2.5 inset-y-0 hidden sm:flex items-center pointer-events-none">
+                      <kbd className="inline-flex h-5 items-center gap-1 rounded border border-foreground/10 bg-foreground/5 px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-70 group-hover:opacity-100 transition-opacity">
+                        <span className="text-xs">⌘</span>K
+                      </kbd>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-1 bg-foreground/[0.03] p-1 rounded-xl border border-foreground/10 shrink-0 backdrop-blur-md">
+                  <button 
+                    onClick={() => handleViewModeChange("list")}
+                    className={cn("p-1.5 rounded-md transition-all", viewMode === "list" ? "bg-foreground/10 text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground/80 hover:bg-foreground/5")}
+                    title="List View"
+                  >
+                    <List size={16} />
+                  </button>
+                  <button 
+                    onClick={() => handleViewModeChange("grid")}
+                    className={cn("p-1.5 rounded-md transition-all", viewMode === "grid" ? "bg-foreground/10 text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground/80 hover:bg-foreground/5")}
+                    title="Grid View"
+                  >
+                    <Grid size={16} />
+                  </button>
+                  <button 
+                    onClick={() => handleViewModeChange("links")}
+                    className={cn("p-1.5 rounded-md transition-all", viewMode === "links" ? "bg-foreground/10 text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground/80 hover:bg-foreground/5")}
+                    title="Links View"
+                  >
+                    <LinkIcon size={16} />
+                  </button>
+                </div>
               </div>
             </div>
+          </div>
 
             {/* Display Components Based on View Mode */}
             {mounted && (

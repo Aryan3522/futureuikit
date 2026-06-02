@@ -4,7 +4,8 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Header } from "@/components/ui/header";
-import { NoirHero3D } from "@/components/ui/noir-hero-3d";
+import dynamic from "next/dynamic";
+const NoirHero3D = dynamic(() => import('@/components/ui/noir-hero-3d').then(mod => mod.NoirHero3D), { ssr: false });
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { GlowyButton } from "@/components/ui/glowy-button";
 import { Target, Zap, Sparkles, Cpu, Shield, Activity, Terminal, Globe } from "lucide-react";
@@ -128,7 +129,7 @@ export default function Home() {
           </motion.div>
 
           {/* 3D Centerpiece */}
-          <div id="hero-3d-container" className="relative z-10 w-full max-w-[500px] mx-auto aspect-square mb-8 transition-transform duration-100 ease-out">
+          <div id="hero-3d-container" className="relative z-10 w-full max-w-[500px] mx-auto aspect-square mb-8 transition-transform duration-100 ease-out hidden md:block">
             <NoirHero3D className="w-full h-full drop-shadow-[0_0_50px_rgba(139,92,246,0.3)]" />
           </div>
 
@@ -150,14 +151,14 @@ export default function Home() {
               A modern, high-performance UI component library built for Next.js and React 19. Engineered with Framer Motion and Tailwind CSS for the next era of web design.
             </p>
             
-            <div className="flex flex-col md:flex-row gap-4 justify-center pt-8">
-              <Link href="/components">
-                <GlowyButton variant="primary" className="h-14 px-10 text-sm font-label-caps tracking-[0.1em] stellar-violet-glow">
+            <div className="flex flex-col md:flex-row gap-4 justify-center pt-8 w-full md:w-auto px-4 md:px-0">
+              <Link href="/components" className="w-full md:w-auto">
+                <GlowyButton variant="primary" className="h-14 px-10 text-sm font-label-caps tracking-[0.1em] stellar-violet-glow w-full">
                   BROWSE COMPONENTS
                 </GlowyButton>
               </Link>
-              <Link href="/docs">
-                <button className="h-14 bg-white/5 border border-white/10 backdrop-blur-md text-foreground font-label-caps text-sm tracking-[0.1em] px-10 rounded-full hover:bg-white/10 transition-all duration-300">
+              <Link href="/docs" className="w-full md:w-auto">
+                <button className="h-14 w-full bg-white/5 border border-white/10 backdrop-blur-md text-foreground font-label-caps text-sm tracking-[0.1em] px-10 rounded-full hover:bg-white/10 transition-all duration-300">
                   DOCUMENTATION
                 </button>
               </Link>

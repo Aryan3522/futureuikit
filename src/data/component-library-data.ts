@@ -49,6 +49,30 @@ export const componentsList: ComponentItem[] = [
     ],
   },
   {
+    id: 993,
+    title: "Hover Glare Card",
+    type: "Cards",
+    slug: "hover-glare-card",
+    category: "layout",
+    isNew: true,
+    description: "A premium card component with a sweeping diagonal CSS glare effect on hover. Includes multiple visual variants and luminous glow states.",
+    details: [
+      "Pure CSS-driven diagonal glare effect for maximum performance.",
+      "Supports Default, Glass, Solid, and Ghost variants.",
+      "Built-in luminous glow states for interactive feedback.",
+      "Clean, minimalist aesthetic suitable for modern dashboards.",
+    ],
+    codes: {
+      next: 'import { HoverGlareCard } from "@/components/ui/hover-glare-card";\n\nexport default function Example() {\n  return (\n    <HoverGlareCard variant="glass" glow="primary" className="p-6">\n      <h3 className="text-xl font-bold text-white mb-2">Premium Card</h3>\n      <p className="text-muted-foreground">Hover to see the glare effect.</p>\n    </HoverGlareCard>\n  );\n}',
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add hover-glare-card'.",
+      "Variants: Choose between 'default', 'glass', 'solid', or 'ghost'.",
+      "Glow: Add 'glow=\"primary\"', 'glow=\"secondary\"', or 'glow=\"white\"' for ambient shadows.",
+      "Glare Opacity: Adjust the intensity of the diagonal glare via the 'glareOpacity' prop.",
+    ],
+  },
+  {
     id: 999,
     title: "Browser Window",
     type: "Layout",
@@ -1370,6 +1394,231 @@ export default function AdvancedSearch() {
       "Install: Run 'npx futureuikit add header'.",
       "Dependencies: Requires framer-motion, lucide-react, and existing button/search-input components.",
       "Usage: Place at the top of your layout for persistent navigation.",
+    ],
+  },
+  {
+    id: 109,
+    title: "File Upload",
+    type: "Form",
+    slug: "file-upload",
+    category: "form",
+    description: "A fully reusable, premium file upload component with drag-and-drop, validation, and real-time upload progress previews.",
+    details: [
+      "Built natively using standard HTML5 drag-and-drop events.",
+      "Generates rich thumbnails for images and videos automatically.",
+      "Compound component architecture (FileUpload, Dropzone, Preview, Progress).",
+      "Handles validation rules like max files, size limits, and MIME type restrictions.",
+      "Smooth, physics-based state transitions powered by Framer Motion.",
+    ],
+    codes: {
+      next: 'import { FileUpload, UploadDropzone, UploadPreview, UploadProgress } from "@/components/ui/file-upload";\n\nexport default function Example() {\n  return (\n    <FileUpload\n      variant="default"\n      maxFiles={3}\n      maxSize={5 * 1024 * 1024} // 5MB\n      accept={{\n        "image/*": [".png", ".jpg", ".jpeg"],\n      }}\n      onUpload={(files) => console.log("Uploading:", files)}\n    >\n      <UploadDropzone title="Drag images here" />\n      <UploadPreview />\n      <UploadProgress />\n    </FileUpload>\n  );\n}'
+    },
+    usage: [
+      "Overview: A powerful compound File Upload component allowing users to drag and drop or browse for files.",
+      "Installation: Run 'npx futureuikit add file-upload' to add it to your project.",
+      "Validation: Pass 'maxSize' (in bytes), 'maxFiles', and an 'accept' map to restrict uploads.",
+      "Handling Uploads: Provide an 'onUpload' callback which fires automatically with a list of valid files ready for submission.",
+      "Variants: The <FileUpload> root accepts 'variant' with values: 'default', 'compact', 'card', 'glass', 'minimal'.",
+      "Progress: In a real app, update the internal progress state via the 'onFilesChange' hook to visualize upload metrics.",
+    ]
+  },
+  {
+    id: 112,
+    title: "Automotive Carousel",
+    type: "Carousel",
+    slug: "automotive-carousel",
+    category: "ui",
+    description: "A high-end, cinematic 3D carousel specifically designed for automotive showcases. It features a responsive camera rig that navigates through the car's interior and exterior with premium damping and ultra-wide angles.",
+    details: [
+      "Dynamic 3D camera navigation between exterior and interior views.",
+      "Strict interior-to-interior pathing to prevent roof sweeping.",
+      "Responsive FOV (up to 110°) and fluid annotation scaling.",
+      "Anti-overlap pointer logic for clear detail labeling.",
+      "Supports GLB models (M4, Car, Bike, etc.) with auto-fitting.",
+    ],
+    codes: {
+      next: 'import { AutomotiveCarousel } from "@/components/ui/automotive-carousel";\n\nexport default function Example() {\n  const slides = [\n    { id: 1, title: "EXTERIOR", description: "Sleek aerodynamic design.", annotations: [] },\n    { id: 2, title: "INTERIOR", description: "Premium luxury dashboard.", annotations: [{ id: "gear", position: [0.1, 0.5, 0.2], label: "Gear Shift" }] },\n  ];\n\n  return (\n    <div className="w-full h-screen">\n      <AutomotiveCarousel slides={slides} objectVariant="m4" />\n    </div>\n  );\n}',
+    },
+    usage: [
+      "Install: Run \'npx futureuikit add automotive-carousel\'.",
+      "Ensure your .glb models are in the /public/models/ folder.",
+      "Import: \'import { AutomotiveCarousel } from \"@/components/ui/automotive-carousel\";\'",
+      "Pass an array of slides with optional 3D annotation coordinates.",
+    ],
+  },
+  {
+    id: 110,
+    title: "Form Builder",
+    type: "Form",
+    slug: "form-builder",
+    category: "form",
+    description: "A highly advanced, fully declarative schema-driven Form Builder with support for conditional fields, arrays, and nested groups.",
+    details: [
+      "Powered by react-hook-form and Zod validation.",
+      "Dynamic field rendering based on strict schema typing.",
+      "Built-in support for nested groups and repeatable array items.",
+      "Includes Auto, Single, Two, and Three column responsive grid layouts.",
+      "Condition evaluation allowing fields to display dynamically based on sibling values.",
+    ],
+    codes: {
+      next: 'import { FormBuilder } from "@/components/ui/form-builder";\n\nexport default function Example() {\n  return (\n    <FormBuilder\n      schema={[\n        { name: "name", type: "text", label: "Name", required: true },\n        { name: "emails", type: "array", label: "Emails", fields: [\n           { name: "address", type: "email", label: "Email Address" }\n        ]}\n      ]}\n      onSubmit={(data) => console.log(data)}\n    />\n  );\n}'
+    },
+    usage: [
+      "Overview: The FormBuilder allows generating complex, validated forms strictly from a JSON-like schema array.",
+      "Installation: Run 'npx futureuikit add form-builder' to add it to your project.",
+      "Schema Configuration: Pass an array of 'SchemaField' objects to the 'schema' prop.",
+      "Validation: Zod schemas are automatically generated. Custom logic can be supplied via the 'validation.custom' callback.",
+      "Conditional Fields: Provide a 'showIf: (values) => boolean' callback on any schema field to handle dynamic visibility.",
+      "Arrays and Groups: Set type='array' or type='group' and supply a nested 'fields' array to deeply nest inputs.",
+    ]
+  }
+
+  ,
+  {
+    id: 111,
+    title: "Kanban Board",
+    type: "Board",
+    slug: "kanban",
+    category: "layout",
+    description: "A highly performant, zero-dependency Native HTML5 drag-and-drop Kanban Board inspired by modern project management tools like Linear.",
+    details: [
+      "Zero heavy dependencies, utilizes pure native HTML5 drag and drop events.",
+      "Smooth drop-zone animations using framer-motion principles.",
+      "Supports reordering columns horizontally and cards vertically between columns.",
+      "Compound architecture consisting of <KanbanBoard>, <KanbanColumn>, and <KanbanCard>.",
+      "Includes variants: Default, Compact, Enterprise, and Minimal.",
+    ],
+    codes: {
+      next: 'import { KanbanBoard, KanbanColumn, KanbanCard } from "@/components/ui/kanban";\n\nexport default function Example() {\n  return (\n    <KanbanBoard onDragEnd={({ type, activeId, overId }) => console.log(type, activeId, overId)}>\n      <KanbanColumn id="todo" title="To Do">\n        <KanbanCard id="card1" columnId="todo" title="Implement Drag & Drop" />\n      </KanbanColumn>\n      <KanbanColumn id="done" title="Done">\n        <KanbanCard id="card2" columnId="done" title="Setup project" />\n      </KanbanColumn>\n    </KanbanBoard>\n  );\n}'
+    },
+    usage: [
+      "Overview: A powerful layout component for managing workflow states via drag and drop.",
+      "Installation: Run 'npx futureuikit add kanban' to add it to your project.",
+      "Drag and Drop: Listen to the 'onDragEnd' event on the <KanbanBoard> to update your state.",
+      "Cards: The <KanbanCard> supports rich meta like assignees, due dates, labels, and priority indicators.",
+      "Columns: The <KanbanColumn> serves as both a droppable area for cards and a draggable entity itself.",
+    ]
+  },
+  {
+    id: 42,
+    title: 'Workflow Builder',
+    type: 'Board',
+    slug: 'workflow-builder',
+    category: 'data-display',
+    description: 'A fully reusable, highly customizable, production-ready Workflow Builder component inspired by n8n, Zapier, and Langflow. Features infinite canvas, zoom/pan, custom nodes, bezier edge rendering, and full drag-and-drop support out of the box with zero heavy third-party canvas dependencies.',
+    details: [
+      'Bespoke Infinite Canvas with native Zoom and Pan controls via CSS transforms.',
+      'SVG-based edge rendering using smooth bezier curves.',
+      'Framer Motion powered node dragging and interaction.',
+      'Integrated MiniMap and Toolbar components.',
+      'Out-of-the-box state management for adding nodes and connecting edges.',
+      'Support for custom node types via the nodeTypes prop.',
+      'Keyboard accessibility (Delete/Backspace to remove selected nodes/edges).',
+      'Multiple visual variants: Default, Enterprise, Minimal, Glass, Compact.'
+    ],
+    codes: {
+      next: 'import { WorkflowBuilder } from "@/components/ui/workflow-builder";\n\nexport default function Example() {\n  return (\n    <div className="w-full h-[600px]">\n      <WorkflowBuilder \n        variant="enterprise" \n        initialNodes={[\n          { id: "1", type: "trigger", position: { x: 100, y: 200 }, data: { label: "Webhook" } },\n          { id: "2", type: "agent", position: { x: 500, y: 200 }, data: { label: "AI Processor" } }\n        ]}\n        initialEdges={[\n          { id: "e1-2", source: "1", target: "2", animated: true }\n        ]}\n      />\n    </div>\n  );'
+    },
+    usage: [
+      'Installation: Run npx futureuikit add workflow-builder',
+      'Context: Wrap your custom nodes inside the builder. It automatically provides the Context for Zooming and Panning.',
+      'Custom Nodes: Pass an object mapping string types to React components via the nodeTypes prop.',
+      'Variants: Toggle between enterprise, minimal, glass, etc., via the variant prop.'
+    ]
+  },
+  {
+    id: 43,
+    title: 'Rich Text Editor',
+    type: 'Form',
+    slug: 'rich-text-editor',
+    category: 'data-input',
+    description: 'A fully reusable, highly customizable, production-ready Rich Text Editor component inspired by Notion and Linear. Features slash commands, markdown support, bubble menus, and rich formatting powered by Tiptap.',
+    details: [
+      'Slash Commands (type "/" to open formatting menu).',
+      'Bubble Menu for quick formatting of selected text.',
+      'Markdown shortcuts (e.g., "# " for H1, "- " for bullet list).',
+      'Support for Tables, Images, Task Lists, Quotes, and Code Blocks.',
+      'Fully customizable Toolbar and Extensions.',
+      'Multiple visual variants: Default, Minimal, Writing, Enterprise, Glass.'
+    ],
+    codes: {
+      next: 'import { RichTextEditor } from "@/components/ui/rich-text-editor";\n\nexport default function Example() {\n  return (\n    <div className="w-full max-w-3xl mx-auto h-[500px]">\n      <RichTextEditor \n        variant="default" \n        content="<h1>Welcome</h1><p>Type / for commands</p>"\n      />\n    </div>\n  );\n}'
+    },
+    usage: [
+      'Installation: Run npx futureuikit add rich-text-editor',
+      'Usage: Use the <RichTextEditor /> component as a drop-in replacement for standard textareas.',
+      'Customization: Pass custom Tiptap extensions via the extensions prop.'
+    ]
+  },
+  {
+    id: 44,
+    title: 'AI Chat Interface',
+    type: 'Application',
+    slug: 'ai-chat',
+    category: 'application-ui',
+    description: 'A fully reusable, highly customizable AI Chat Interface inspired by ChatGPT, Claude, and Perplexity. Features streaming responses, markdown rendering, syntax highlighting, and multiple premium layouts.',
+    details: [
+      'Multi-modal support with file and image uploads.',
+      'Supports streaming messages with typing indicators.',
+      'Markdown rendering powered by react-markdown and syntax highlighting.',
+      'Fully customizable layouts (ChatGPT, Claude, Perplexity, Compact, Enterprise).',
+      'Fully customizable input variants (Standard, Floating, Command, Multi-line).',
+      'Built-in message actions (Copy, Regenerate, Edit, Upvote/Downvote).',
+      'Prompt suggestions and workspace sidebars.'
+    ],
+    codes: {
+      next: 'import { AIChat, ChatMessages, ChatInput, ChatPromptSuggestions } from "@/components/ui/ai-chat";\n\nexport default function Example() {\n  return (\n    <AIChat messages={[]} input="" setInput={() => {}} onSubmit={() => {}}>\n      <ChatMessages />\n      <ChatPromptSuggestions suggestions={["Write a poem", "Explain quantum computing"]} />\n      <ChatInput />\n    </AIChat>\n  );\n}'
+    },
+    usage: [
+      'Installation: Run npx futureuikit add ai-chat',
+      'Usage: Use the <AIChat /> context provider to wrap chat subcomponents like <ChatMessages /> and <ChatInput />.',
+      'Customization: Switch layouts using the layout prop and input styles via inputVariant.'
+    ]
+  },
+  {
+    id: 993,
+    title: "Header",
+    type: "Navigation",
+    slug: "header",
+    category: "layout",
+    isNew: true,
+    description: "A premium, responsive navigation header built with Framer Motion, featuring a desktop navigation bar and a left-side sliding drawer for mobile devices.",
+    details: [
+      "Responsive design with a hidden mobile drawer.",
+      "Backdrop blur and premium styling.",
+      "Framer Motion animations for smooth transitions.",
+      "Built-in theme toggle and search input."
+    ],
+    codes: {
+      next: 'import { Header } from "@/components/ui/header";\n\nexport default function Layout({ children }) {\n  return (\n    <>\n      <Header />\n      <main>{children}</main>\n    </>\n  );\n}',
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add header'.",
+      "Dependencies: Requires framer-motion, lucide-react, and existing button/search-input components.",
+      "Usage: Place at the top of your layout for persistent navigation.",
+    ],
+  },
+  {
+    id: 1001,
+    title: "Search",
+    type: "Forms",
+    slug: "search",
+    category: "ui",
+    isNew: true,
+    description: "A premium, fully reusable Search component primitive with smooth animations, advanced variants, and highly configurable API.",
+    details: [
+      "Cinematic width expansion and focus ring animations using Framer Motion.",
+      "Multiple premium variants: standard, compact, floating, command, and icon-only.",
+      "Highly configurable API (sizes, states, loading, clearable).",
+      "Proper ARIA accessibility and keyboard shortcut management (Escape, Enter).",
+    ],
+    codes: {
+      next: 'import { Search } from "@/components/ui/search";\n\nexport default function Example() {\n  return (\n    <div className="w-full max-w-sm">\n      <Search variant="floating" size="md" placeholder="Search..." clearable animated />\n    </div>\n  );\n}',
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add search'.",
+      "Dependencies: Requires framer-motion and lucide-react.",
+      "Usage: Use as a generic UI primitive anywhere you need search inputs.",
     ],
   }
 ];

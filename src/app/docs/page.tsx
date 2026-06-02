@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Header } from "@/components/ui/header";
+import { GlassPanel } from "@/components/ui/glass-panel";
 import { motion } from "framer-motion";
 import { 
   BookOpen, 
@@ -11,10 +12,13 @@ import {
   Zap, 
   Package, 
   Cpu, 
-  CheckCircle2
+  CheckCircle2,
+  Globe
 } from "lucide-react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import Link from "next/link";
+import Image from "next/image";
 
 interface DocSectionProps {
   title: string;
@@ -23,17 +27,18 @@ interface DocSectionProps {
 }
 
 const DocSection: React.FC<DocSectionProps> = ({ title, icon: Icon, children }) => (
-  <section className="mb-12">
-    <div className="flex items-center gap-3 mb-6 border-b border-border/40 pb-4">
-      <div className="p-2 rounded-lg bg-primary/10 text-primary">
+  <GlassPanel variant="heavy" className="p-8 md:p-10 mb-8 relative overflow-hidden group">
+    <div className="absolute -right-20 -top-20 w-64 h-64 bg-secondary/5 rounded-full blur-3xl group-hover:bg-secondary/10 transition-all duration-1000 pointer-events-none"></div>
+    <div className="flex items-center gap-4 mb-8 pb-6 border-b border-white/5 relative z-10">
+      <div className="p-3 rounded-xl glass-mantle text-primary border border-white/10">
         <Icon size={24} />
       </div>
-      <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
+      <h2 className="font-display text-2xl md:text-3xl font-light">{title}</h2>
     </div>
-    <div className="space-y-4 text-muted-foreground leading-relaxed">
+    <div className="space-y-6 text-muted-foreground leading-relaxed relative z-10">
       {children}
     </div>
-  </section>
+  </GlassPanel>
 );
 
 interface CodeBlockProps {
@@ -51,14 +56,15 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = "bash" }) => {
   };
 
   return (
-    <div className="relative group rounded-xl overflow-hidden border border-zinc-800 bg-[#1e1e1e] my-4">
-      <div className="flex justify-between items-center px-4 py-2 bg-zinc-900/50 border-b border-zinc-800">
-        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{language}</span>
+    <div className="relative group rounded-xl overflow-hidden border border-white/10 bg-black/40 backdrop-blur-md my-6">
+      <div className="flex justify-between items-center px-4 py-3 bg-white/5 border-b border-white/10">
+        <span className="font-mono-label text-[10px] text-muted-foreground uppercase tracking-widest">{language}</span>
         <button 
           onClick={handleCopy}
-          className="text-zinc-400 hover:text-white transition-colors"
+          className="text-muted-foreground hover:text-white transition-colors"
+          title="Copy code"
         >
-          {copied ? <CheckCircle2 size={14} className="text-green-500" /> : <Copy size={14} />}
+          {copied ? <CheckCircle2 size={16} className="text-[#00ffcc]" /> : <Copy size={16} />}
         </button>
       </div>
       <SyntaxHighlighter
@@ -66,9 +72,15 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = "bash" }) => {
         style={vscDarkPlus}
         customStyle={{
           background: "transparent",
-          padding: "1.25rem",
-          fontSize: "0.9rem",
-          lineHeight: "1.5",
+          padding: "1.5rem",
+          fontSize: "0.85rem",
+          lineHeight: "1.6",
+          margin: 0,
+        }}
+        codeTagProps={{
+          style: {
+            fontFamily: "var(--font-jetbrains-mono), monospace",
+          }
         }}
       >
         {code}
@@ -79,24 +91,28 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = "bash" }) => {
 
 export default function DocsPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground font-body-md overflow-x-hidden selection:bg-secondary/30 relative">
       <Header />
       
-      <main className="max-w-4xl mx-auto px-6 pt-32 pb-24">
+      {/* Background glow similar to homepage */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-secondary/10 rounded-full blur-[150px] opacity-40 mix-blend-screen pointer-events-none" />
+
+      <main className="relative z-10 max-w-4xl mx-auto px-6 pt-40 pb-32">
         {/* Header */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-16 text-center"
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="mb-20 text-center md:text-left flex flex-col items-center md:items-start"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4">
-            <BookOpen size={14} /> Documentation
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 font-mono-label text-[10px] text-foreground/70 mb-6 uppercase tracking-[0.2em]">
+            <BookOpen size={12} className="text-primary" /> Documentation
           </div>
-          <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-6">
-            Future UI <span className="text-primary">System</span>
+          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-light tracking-tight leading-[1.05] luminous-text mb-6">
+            FUTURE UI <br className="hidden md:block" /> <span className="text-primary">SYSTEM.</span>
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Everything you need to build high-end, animated interfaces with React and Next.js.
+          <p className="font-display text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+            Everything you need to build high-end, animated interfaces with React and Next.js. Engineered for the next era of web design.
           </p>
         </motion.div>
 
@@ -104,10 +120,10 @@ export default function DocsPage() {
         <DocSection title="Introduction" icon={Zap}>
           <p>
             Future UI is a collection of high-end, reusable components designed for modern web applications. 
-            Built with <strong>React</strong>, <strong>Tailwind CSS</strong>, and <strong>Framer Motion</strong>, 
+            Built with <span className="text-foreground">React 19</span>, <span className="text-foreground">Tailwind CSS 4</span>, and <span className="text-foreground">Framer Motion</span>, 
             our components are engineered for smooth performance and a premium aesthetic.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
             {[
               "Copy-paste or CLI installation",
               "Modern, Clean, and Minimal variants",
@@ -116,9 +132,9 @@ export default function DocsPage() {
               "Smooth Framer Motion animations",
               "Zero external heavy dependencies"
             ].map((feature, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-card/40 border border-border/50">
-                <CheckCircle2 size={18} className="text-green-500 shrink-0" />
-                <span className="text-sm font-medium">{feature}</span>
+              <div key={i} className="flex items-center gap-3 p-4 rounded-xl glass-mantle border border-white/5 hover:border-white/10 transition-colors">
+                <CheckCircle2 size={16} className="text-[#00ffcc] shrink-0" />
+                <span className="text-sm font-display tracking-wide">{feature}</span>
               </div>
             ))}
           </div>
@@ -131,22 +147,25 @@ export default function DocsPage() {
             It handles the heavy lifting, creating the necessary files and utilities for you.
           </p>
           
-          <h3 className="text-lg font-bold text-foreground mt-8 mb-2">1. Initialize the CLI</h3>
+          <h3 className="font-display text-xl text-foreground mt-10 mb-3">1. Initialize the CLI</h3>
           <p className="text-sm mb-4">Run the following command in your project root to prepare your workspace:</p>
           <CodeBlock code="npx futureuikit init" />
 
-          <h3 className="text-lg font-bold text-foreground mt-8 mb-2">2. Add Components</h3>
+          <h3 className="font-display text-xl text-foreground mt-10 mb-3">2. Add Components</h3>
           <p className="text-sm mb-4">Install specific components by their slug. For example, to add the Primary Button:</p>
           <CodeBlock code="npx futureuikit add primary" />
           
-          <div className="mt-8 p-4 rounded-xl bg-blue-500/5 border border-blue-500/20">
-            <h4 className="flex items-center gap-2 text-blue-400 font-bold text-sm mb-2">
-              <Package size={16} /> Manual Installation
-            </h4>
-            <p className="text-sm">
-              Prefer manual control? You can click the <strong>Manual</strong> tab on any component page 
-              to see the full source code. Simply copy it into your components directory.
-            </p>
+          <div className="mt-8 p-5 rounded-xl bg-secondary/5 border border-secondary/20 flex flex-col sm:flex-row gap-4 items-start">
+            <div className="p-2 rounded-lg bg-secondary/10 shrink-0">
+              <Package size={20} className="text-secondary" />
+            </div>
+            <div>
+              <h4 className="font-display text-lg text-secondary mb-2">Manual Installation</h4>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                Prefer manual control? You can click the <span className="text-foreground">Manual</span> tab on any component page 
+                to see the full source code. Simply copy it into your components directory.
+              </p>
+            </div>
           </div>
         </DocSection>
 
@@ -157,8 +176,8 @@ export default function DocsPage() {
             the library to your brand identity with zero effort.
           </p>
           
-          <h3 className="text-lg font-bold text-foreground mt-8 mb-2">Using Variants</h3>
-          <p className="text-sm mb-4">Pass the <code>variant</code> prop to switch between Modern, Clean, or Minimal styles:</p>
+          <h3 className="font-display text-xl text-foreground mt-10 mb-3">Using Variants</h3>
+          <p className="text-sm mb-4">Pass the <code className="px-1.5 py-0.5 rounded bg-white/10 font-mono text-[11px] text-foreground">variant</code> prop to switch between Modern, Clean, or Minimal styles:</p>
           <CodeBlock 
             language="javascript"
             code={`<PrimaryButton variant="modern">Modern Style</PrimaryButton>
@@ -166,8 +185,8 @@ export default function DocsPage() {
 <PrimaryButton variant="minimal">Minimal Style</PrimaryButton>`} 
           />
 
-          <h3 className="text-lg font-bold text-foreground mt-8 mb-2">Custom Colors</h3>
-          <p className="text-sm mb-4">Define any hex, RGB, or HSL color via the <code>color</code> prop:</p>
+          <h3 className="font-display text-xl text-foreground mt-10 mb-3">Custom Colors</h3>
+          <p className="text-sm mb-4">Define any hex, RGB, or HSL color via the <code className="px-1.5 py-0.5 rounded bg-white/10 font-mono text-[11px] text-foreground">color</code> prop:</p>
           <CodeBlock 
             language="javascript"
             code={`<PrimaryButton color="#6366f1">Indigo</PrimaryButton>
@@ -182,8 +201,8 @@ export default function DocsPage() {
             It supports multiple positions, auto-dismissal, and custom actions.
           </p>
           
-          <h3 className="text-lg font-bold text-foreground mt-8 mb-2">1. Add the Toaster to your Layout</h3>
-          <p className="text-sm mb-4">To use toasts, you must first add the <code>Toaster</code> component to your root layout (or app entry point):</p>
+          <h3 className="font-display text-xl text-foreground mt-10 mb-3">1. Add the Toaster to your Layout</h3>
+          <p className="text-sm mb-4">To use toasts, you must first add the <code className="px-1.5 py-0.5 rounded bg-white/10 font-mono text-[11px] text-foreground">Toaster</code> component to your root layout (or app entry point):</p>
           <CodeBlock 
             language="javascript"
             code={`// app/layout.tsx
@@ -201,8 +220,8 @@ export default function RootLayout({ children }) {
 }`} 
           />
 
-          <h3 className="text-lg font-bold text-foreground mt-8 mb-2">2. Use the hook</h3>
-          <p className="text-sm mb-4">Trigger toasts from any component using the <code>useToast</code> hook:</p>
+          <h3 className="font-display text-xl text-foreground mt-10 mb-3">2. Use the hook</h3>
+          <p className="text-sm mb-4">Trigger toasts from any component using the <code className="px-1.5 py-0.5 rounded bg-white/10 font-mono text-[11px] text-foreground">useToast</code> hook:</p>
           <CodeBlock 
             language="javascript"
             code={`import { useToast } from "@/hooks/use-toast";
@@ -230,17 +249,17 @@ export default function MyComponent() {
         {/* License & Privacy */}
         <DocSection title="License & Privacy" icon={ShieldCheck}>
           <div className="space-y-6">
-            <div className="p-6 rounded-2xl bg-green-500/5 border border-green-500/20">
-              <h4 className="text-green-500 font-bold mb-2 uppercase tracking-widest text-xs">Completely Free</h4>
-              <p className="text-foreground font-medium mb-2">Future UI is 100% free for everyone.</p>
+            <div className="p-6 rounded-xl bg-emerald-500/5 border border-emerald-500/10 hover:border-emerald-500/20 transition-colors">
+              <h4 className="font-mono-label text-[10px] text-emerald-500 mb-3 uppercase tracking-widest">Completely Free</h4>
+              <p className="font-display text-xl text-foreground mb-3">Future UI is 100% free for everyone.</p>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 All components in this library are released under the MIT License. You are free to use them 
                 in personal, educational, or commercial projects without any restrictions or attribution requirements.
               </p>
             </div>
 
-            <div>
-              <h4 className="text-foreground font-bold mb-2">Privacy Policy</h4>
+            <div className="p-6">
+              <h4 className="font-display text-xl text-foreground mb-3">Privacy Policy</h4>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 We believe in a &quot;Privacy by Design&quot; philosophy. Future UI does not track you, collect your data, 
                 or use cookies. When you use the CLI, we only fetch the necessary component code from our public 
@@ -249,14 +268,38 @@ export default function MyComponent() {
             </div>
           </div>
         </DocSection>
-
-        {/* Footer */}
-        <div className="mt-24 pt-12 border-t border-border/40 text-center">
-          <p className="text-sm text-muted-foreground">
-            Built for the future of the web. © 2026 Future UI.
-          </p>
-        </div>
       </main>
+
+      {/* FOOTER */}
+      <footer className="relative z-10 w-full py-16 px-6 border-t border-white/5 bg-background mt-20">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+          <div className="flex flex-col items-center md:items-start gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 rounded flex items-center justify-center overflow-hidden">
+                <Image src="/Logo.webp" alt="Future UI" width={24} height={24} className="w-full h-full object-cover" />
+              </div>
+              <span className="font-display text-sm font-bold tracking-widest text-foreground">FUTURE_UI</span>
+            </div>
+            <p className="font-mono-label text-[10px] text-muted-foreground">© 2026 FUTURE_UI PRECISION SYSTEMS</p>
+          </div>
+          
+          <div className="flex flex-wrap justify-center gap-8">
+            <Link href="/components" className="font-mono-label text-xs text-muted-foreground hover:text-primary transition-colors">Components</Link>
+            <Link href="/docs" className="font-mono-label text-xs text-muted-foreground hover:text-primary transition-colors">Laboratory</Link>
+            <Link href="/docs" className="font-mono-label text-xs text-muted-foreground hover:text-primary transition-colors">Telemetry</Link>
+            <Link href="https://github.com/Aryan3522/future-ui" target="_blank" className="font-mono-label text-xs text-muted-foreground hover:text-primary transition-colors">GitHub</Link>
+          </div>
+          
+          <div className="flex gap-4">
+            <div className="w-10 h-10 rounded-full glass-mantle flex items-center justify-center hover:text-secondary transition-colors cursor-pointer border border-white/5">
+              <Terminal className="w-4 h-4" />
+            </div>
+            <div className="w-10 h-10 rounded-full glass-mantle flex items-center justify-center hover:text-secondary transition-colors cursor-pointer border border-white/5">
+              <Globe className="w-4 h-4" />
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

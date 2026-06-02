@@ -21,7 +21,7 @@ import Link from "next/link";
 import { cva, type VariantProps } from "class-variance-authority";
 
 const searchInputVariants = cva(
-  "w-full pl-10 pr-4 py-2 text-sm font-medium focus:outline-hidden focus:ring-2 focus:ring-primary/20 transition-all",
+  "w-full pl-10 pr-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all",
   {
     variants: {
       variant: {
@@ -29,6 +29,23 @@ const searchInputVariants = cva(
         minimal: "bg-transparent border-b border-border/50 rounded-none focus:border-primary focus:bg-transparent shadow-none",
         glass: "bg-background/30 backdrop-blur-md border border-border/50 rounded-xl shadow-sm focus:border-primary",
         pill: "bg-card border border-border rounded-full shadow-sm focus:border-primary",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+);
+
+const dropdownVariants = cva(
+  "absolute top-full left-0 z-50 overflow-hidden",
+  {
+    variants: {
+      variant: {
+        default: "bg-popover border border-border/50 rounded-2xl shadow-xl mt-2",
+        minimal: "bg-background border border-border/50 rounded-none shadow-md mt-1",
+        glass: "bg-background/40 backdrop-blur-2xl border border-border/50 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)] mt-2",
+        pill: "bg-card border border-border rounded-[2rem] shadow-xl mt-2 p-1",
       },
     },
     defaultVariants: {
@@ -149,7 +166,7 @@ export const SearchInput: React.FC<SearchInputProps> = React.memo(({
           return (
             <div className={cn("relative w-full", !activeMobile && "min-w-40 lg:min-w-60", className)}>
               <div className="relative group">
-                <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
+                <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground transition-colors group-focus-within:text-primary z-10 pointer-events-none" />
                 <input
                   ref={inputRef}
                   type="text"
@@ -162,7 +179,9 @@ export const SearchInput: React.FC<SearchInputProps> = React.memo(({
                   placeholder={placeholder || (activeMobile ? "Search..." : "Search... (Ctrl+K)")}
                   className={cn(
                     searchInputVariants({ variant }),
-                    activeMobile && "py-2 bg-muted/50",
+                    "pl-10", // Ensure consistent padding left
+                    variant === "glass" && "py-2.5 px-4 pl-10", // Slightly more breathing room for glass variant
+                    activeMobile && "py-2.5 bg-muted/50",
                   )}
                 />
                 {!activeMobile && (
@@ -184,8 +203,8 @@ export const SearchInput: React.FC<SearchInputProps> = React.memo(({
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.98 }}
                       className={cn(
-                        "absolute top-full mt-2 left-0 z-50 bg-popover border border-border rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl",
-                        activeMobile ? "-right-25 w-70 sm:right-0 sm:w-full" : "w-75 lg:w-100",
+                        dropdownVariants({ variant }),
+                        "w-full"
                       )}
                     >
                       <div className="p-2 flex flex-col">

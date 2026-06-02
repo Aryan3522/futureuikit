@@ -17,6 +17,7 @@ import { FilterBuilder, FilterGroup, FilterField, createEmptyGroup, FilterRule }
 import { ExpandingFlexCard } from "@/components/ui/expanding-flex-card";
 import { NexusCard } from "@/components/ui/nexus-card";
 import { GlassPanel } from "@/components/ui/glass-panel";
+import { HoverGlareCard } from "@/components/ui/hover-glare-card";
 import { NoirHero3D } from "@/components/ui/noir-hero-3d";
 import { Header } from "@/components/ui/header";
 import { useToast } from "@/hooks/use-toast";
@@ -35,6 +36,8 @@ import { SidebarButton } from "@/components/ui/sidebar-button";
 import { Particles } from "@/components/ui/particles";
 import { PerspectiveGrid } from "@/components/ui/perspective-grid";
 import { SearchInput } from "@/components/ui/search-input";
+import { Search as SearchComponent } from "@/components/ui/search";
+import { componentsList } from "@/data/component-library-data";
 import { GithubIcon, LinkedinIcon, TwitterIcon, InstagramIcon, DiscordIcon, YoutubeIcon, XIcon, ChevronUpIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, SunIcon, MoonIcon } from "@/icons";
 import { PointCursor } from "@/components/ui/PointCursor";
 import { Accordion } from "@/components/ui/accordion";
@@ -210,13 +213,17 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
           <BrowserWindow 
             title={title}
             className="md:w-[80%] aspect-[9/16] md:aspect-[3/4] lg:aspect-video max-h-[90vh]"
-            contentClassName={cn("flex flex-col items-center justify-center", canvasClassName)}
+            contentClassName={cn("flex flex-col", canvasClassName)}
             scrollRef={scrollRef}
           >
-            {children}
+            <div className="flex-1 w-full h-full flex flex-col items-center justify-center relative" style={{ transform: "translateZ(0)" }}>
+              {children}
+            </div>
           </BrowserWindow>
         ) : (
-          children
+          <div className="flex-1 w-full h-full flex flex-col items-center justify-center relative" style={{ transform: "translateZ(0)" }}>
+            {children}
+          </div>
         )}
       </div>
     </div>
@@ -878,7 +885,7 @@ const CommandPalettePreview: React.FC = () => {
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup heading="Suggestions">
               <CommandItem>
-                <Search className="mr-2 h-4 w-4" />
+                <SearchComponent className="mr-2 h-4 w-4" />
                 <span>Search Projects</span>
               </CommandItem>
               <CommandItem>
@@ -1512,6 +1519,46 @@ export const PreviewRegistry: Record<string, React.FC> = {
       </PreviewContainer>
     );
   },
+  "hover-glare-card": function HoverGlareCardPreview() {
+    const [layout, setLayout] = React.useState<"default" | "media" | "content" | "stats" | "compact" | "feature">("default");
+    const [styleVariant, setStyleVariant] = React.useState<"default" | "glass" | "solid" | "ghost">("glass");
+    const [glow, setGlow] = React.useState<"none" | "primary" | "secondary" | "white">("primary");
+    return (
+      <PreviewContainer 
+        title="Hover Glare Card" 
+        description="A highly composable premium card with a signature diagonal glare sweep. Supports multiple real-world layouts."
+        variants={["default", "media", "content", "stats", "compact", "feature"]}
+        activeVariant={layout}
+        onVariantChange={setLayout as any}
+        extraControls={
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full mt-2">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Style & Glow</span>
+            <div className="flex flex-wrap gap-2">
+              <div className="flex items-center gap-1 p-1 bg-muted/30 rounded-lg">
+                {(["default", "glass", "solid", "ghost"] as const).map(v => (
+                  <button key={v} onClick={() => setStyleVariant(v)} className={cn("px-3 py-1 text-xs font-medium rounded-md capitalize transition-all", styleVariant === v ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{v}</button>
+                ))}
+              </div>
+              <div className="flex items-center gap-1 p-1 bg-muted/30 rounded-lg">
+                <span className="text-[10px] uppercase font-bold text-muted-foreground mx-2">Glow:</span>
+                {(["none", "primary", "secondary", "white"] as const).map(g => (
+                  <button key={g} onClick={() => setGlow(g)} className={cn("px-2 py-1 text-xs font-medium rounded-md capitalize transition-all", glow === g ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{g}</button>
+                ))}
+              </div>
+            </div>
+          </div>
+        }
+      >
+        <div className="flex items-center justify-center w-full h-full p-4 sm:p-8 min-h-[400px]">
+          <HoverGlareCard 
+            layout={layout} 
+            variant={styleVariant} 
+            glow={glow} 
+          />
+        </div>
+      </PreviewContainer>
+    );
+  },
   "noir-hero-3d": function NoirHero3DPreview() {
     return (
       <PreviewContainer title="Noir Hero 3D" description="A premium 3D geometric centerpiece built with React Three Fiber.">
@@ -1876,6 +1923,150 @@ export const PreviewRegistry: Record<string, React.FC> = {
       </PreviewContainer>
     );
   },
+
+  "search": function SearchPreview() {
+    const [variant, setVariant] = React.useState<"standard" | "compact" | "floating" | "command" | "icon">("standard");
+    const [inputVariant, setInputVariant] = React.useState<"standard" | "compact" | "floating" | "command">("floating");
+    const [size, setSize] = React.useState<"sm" | "md" | "lg">("md");
+    const [loading, setLoading] = React.useState(false);
+    const [disabled, setDisabled] = React.useState(false);
+    const [clearable, setClearable] = React.useState(true);
+    const [fullWidth, setFullWidth] = React.useState(true);
+    const [searchQuery, setSearchQuery] = React.useState("");
+
+    const filteredComponents = React.useMemo(() => {
+      if (!searchQuery.trim()) return [];
+      const q = searchQuery.toLowerCase();
+      return componentsList.filter(c => 
+        c.title.toLowerCase().includes(q) || 
+        c.category.toLowerCase().includes(q) ||
+        c.description.toLowerCase().includes(q)
+      ).slice(0, 5);
+    }, [searchQuery]);
+
+    const controls = (
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase tracking-widest font-bold text-muted-foreground hidden sm:block">Size & State</span>
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
+            {(["sm", "md", "lg"] as const).map(s => (
+              <button 
+                key={s} 
+                onClick={() => setSize(s)} 
+                className={cn(
+                  "px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap",
+                  size === s ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                )}
+              >
+                {s.toUpperCase()}
+              </button>
+            ))}
+          </div>
+          
+          <div className="w-px h-6 bg-border hidden sm:block"></div>
+          
+          <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
+            <button onClick={() => setLoading(!loading)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200", loading ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>Loading</button>
+            <button onClick={() => setDisabled(!disabled)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200", disabled ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>Disabled</button>
+            <button onClick={() => setClearable(!clearable)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200", clearable ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>Clearable</button>
+            <button onClick={() => setFullWidth(!fullWidth)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200", fullWidth ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>Full Width</button>
+          </div>
+        </div>
+        
+
+      </div>
+    );
+
+    return (
+      <PreviewContainer
+        title="Search"
+        description="A premium, modern, and highly configurable generic search input primitive."
+        variants={["standard", "compact", "floating", "command", "icon"]}
+        activeVariant={variant}
+        onVariantChange={setVariant as any}
+        extraControls={controls}
+      >
+        <div className="w-full h-full flex flex-col items-center justify-center min-h-[400px] relative overflow-hidden">
+           <div className="w-full max-w-2xl mx-auto relative flex justify-center">
+             <SearchComponent
+               variant={variant}
+               inputVariant={inputVariant}
+               size={size}
+               loading={loading}
+               disabled={disabled}
+               clearable={clearable}
+               fullWidth={fullWidth}
+               value={searchQuery}
+               onChange={e => setSearchQuery(e.target.value)}
+               placeholder="Search components (e.g., 'button')..."
+             >
+               {searchQuery && (
+                 <div className={cn(
+                   "absolute top-full left-0 w-full overflow-hidden z-50",
+                   // Dynamic styles based on effective variant
+                   (variant === "icon" ? inputVariant : variant) === "command" 
+                     ? "bg-muted/30 border border-border/50 shadow-xl rounded-xl backdrop-blur-md mt-2"
+                     : (variant === "icon" ? inputVariant : variant) === "floating"
+                     ? "bg-background/80 backdrop-blur-xl border border-border/40 shadow-2xl rounded-2xl mt-3"
+                     : (variant === "icon" ? inputVariant : variant) === "compact"
+                     ? "bg-muted/40 border border-transparent shadow-sm rounded-lg backdrop-blur-sm mt-2"
+                     : "bg-background border border-border/60 shadow-lg rounded-xl mt-2"
+                 )}>
+                   <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest px-4 py-3 border-b border-border/30">Live Search Results</div>
+                   {filteredComponents.length > 0 ? (
+                     <div className="p-2">
+                       {filteredComponents.map(comp => (
+                         <div key={comp.slug} className="flex items-center gap-4 p-3 rounded-xl hover:bg-muted/60 transition-colors cursor-pointer group">
+                           <div className="flex-1 min-w-0">
+                             <h4 className="text-sm font-semibold truncate group-hover:text-primary transition-colors">{comp.title}</h4>
+                             <p className="text-xs text-muted-foreground truncate">{comp.description}</p>
+                           </div>
+                           <div className="text-[10px] font-mono px-2 py-1 rounded-full bg-muted group-hover:bg-background text-muted-foreground capitalize shrink-0">{comp.category}</div>
+                         </div>
+                       ))}
+                     </div>
+                   ) : (
+                     <div className="text-center py-8 text-sm text-muted-foreground italic">No components found for "{searchQuery}"</div>
+                   )}
+                 </div>
+               )}
+             </SearchComponent>
+           </div>
+           
+           <AnimatePresence>
+             {variant === "icon" && (
+               <motion.div 
+                 initial={{ opacity: 0, y: 20 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 exit={{ opacity: 0, y: 10 }}
+                 transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                 className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-[40]"
+               >
+                 <div className="flex items-center gap-2 p-1.5 bg-background/80 backdrop-blur-xl border border-border/50 shadow-2xl rounded-2xl pointer-events-auto">
+                   <div className="px-3 text-[10px] font-bold tracking-widest uppercase text-muted-foreground hidden sm:block">Overlay Style</div>
+                   <div className="w-px h-6 bg-border/50 hidden sm:block"></div>
+                   {(["standard", "compact", "floating", "command"] as const).map(v => (
+                     <button 
+                       key={v} 
+                       onClick={() => setInputVariant(v)} 
+                       className={cn(
+                         "px-4 py-2 text-xs font-semibold rounded-xl capitalize transition-all duration-300",
+                         inputVariant === v 
+                           ? "bg-primary text-primary-foreground shadow-md scale-105" 
+                           : "text-muted-foreground hover:text-foreground hover:bg-muted/80"
+                       )}
+                     >
+                       {v}
+                     </button>
+                   ))}
+                 </div>
+               </motion.div>
+             )}
+           </AnimatePresence>
+        </div>
+      </PreviewContainer>
+    );
+  },
   "search-input": function SearchInputPreview() {
     const [variant, setVariant] = React.useState<"default" | "minimal" | "glass" | "pill">("default");
     return (
@@ -1887,7 +2078,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
         onVariantChange={setVariant as any}
       >
         <div className="w-full max-w-sm">
-          <SearchInput placeholder="Try searching 'button'..." variant={variant} />
+          <SearchInput placeholder="Try searching 'button'..." variant={variant} data={componentsList} />
         </div>
       </PreviewContainer>
     );
@@ -2020,7 +2211,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
           <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
             <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Search Icons</span>
             <div className="w-full relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+              <SearchComponent className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
               <input
                 type="text"
                 placeholder="Search premium icons..."
@@ -2061,7 +2252,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
             </div>
           ) : (
             <div className="w-full py-20 flex flex-col items-center justify-center gap-3 text-muted-foreground bg-muted/10 rounded-3xl border border-dashed border-border">
-              <Search className="w-8 h-8 opacity-20" />
+              <SearchComponent className="w-8 h-8 opacity-20" />
               <div className="text-center">
                 <p className="font-medium">No native icons found</p>
                 <p className="text-xs opacity-60">Try searching for something else</p>
