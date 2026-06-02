@@ -207,7 +207,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
 
           <AnimatePresence>
             {isExpanded && (
-              <div className={cn("fixed inset-0 z-[100] flex justify-center", inputVariant === "command" ? "items-start pt-[10vh]" : "items-start pt-[20vh]")}>
+              <div className={cn("fixed inset-0 z-100 flex justify-center", inputVariant === "command" ? "items-start pt-[10vh]" : "items-start pt-[20vh]")}>
                 <motion.div 
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}

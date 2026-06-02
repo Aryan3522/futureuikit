@@ -16,17 +16,7 @@ import { Environment, ContactShadows, useGLTF, Html, OrbitControls } from "@reac
 import * as THREE from "three";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-// ─────────────────────────────────────────────────────────────────────────────
-// SILENCE DEPRECATION WARNINGS
-// ─────────────────────────────────────────────────────────────────────────────
-if (typeof window !== "undefined") {
-  const originalWarn = console.warn;
-  console.warn = (...args: unknown[]) => {
-    if (typeof args[0] === "string" && args[0].includes("THREE.Clock")) return;
-    originalWarn(...args);
-  };
-}
+import { BasicLoader } from "@/components/ui/basic-loader";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PRELOAD MODELS
@@ -36,7 +26,7 @@ try {
   useGLTF.preload("/models/bike.glb");
   useGLTF.preload("/models/chair.glb");
   useGLTF.preload("/models/m4.glb");
-} catch (_) {}
+} catch (_) { }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -61,17 +51,17 @@ interface SlideTarget {
 //   the sphere radius stays the same. So the object never suddenly
 //   shrinks or grows when it turns — it stays massive.
 // ─────────────────────────────────────────────────────────────────────────────
-function AutoFitModel({ 
-  url, 
-  annotations = [], 
-  isMobile 
-}: { 
-  url: string; 
-  annotations?: Annotation[]; 
+const AutoFitModel = React.memo(function AutoFitModel({
+  url,
+  annotations = [],
+  isMobile
+}: {
+  url: string;
+  annotations?: Annotation[];
   isMobile: boolean;
 }) {
   const { scene } = useGLTF(url);
-  
+
   const { mesh, scaleFactor } = useMemo(() => {
     const cloned = scene.clone(true);
     const box = new THREE.Box3();
@@ -96,7 +86,7 @@ function AutoFitModel({
     // Trust native X symmetry
     rCenter.x = 0;
     cloned.position.sub(rCenter);
-    
+
     // Ground it perfectly on Y=0
     cloned.position.y += rSize.y / 2;
 
@@ -112,18 +102,18 @@ function AutoFitModel({
       <group scale={scaleFactor}>
         <primitive object={mesh} />
       </group>
-      
+
       {/* Annotations rendered OUTSIDE the scaled group so they position correctly in world space! */}
       {annotations.map((ann, i) => {
         // Shorter stalk heights to keep labels from obscuring interior screens
         const stalkHeight = isMobile ? (15 + (i % 3) * 10) : (25 + (i % 3) * 15);
 
         return (
-          <Html 
-            key={ann.id || i} 
-            position={[ann.position[0], ann.position[1], ann.position[2]]} 
+          <Html
+            key={ann.id || i}
+            position={[ann.position[0], ann.position[1], ann.position[2]]}
             center
-            // Remove distanceFactor to rely purely on CSS for consistent sizing control
+          // Remove distanceFactor to rely purely on CSS for consistent sizing control
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.5 }}
@@ -133,28 +123,28 @@ function AutoFitModel({
               style={{ paddingBottom: stalkHeight }}
             >
               {/* Fluid Label - Scales between 10px and 14px based on viewport */}
-              <div 
+              <div
                 className="px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-600/95 backdrop-blur-md border border-blue-400/50 rounded-full text-white whitespace-nowrap shadow-[0_4px_20px_rgba(0,0,0,0.4)] font-bold tracking-wide transition-all duration-500"
-                style={{ 
+                style={{
                   fontSize: 'clamp(10px, 1.2vw, 14px)',
                   lineHeight: '1.2'
                 }}
               >
                 {ann.label}
               </div>
-              
+
               {/* Original Stalk Style - Vertical and Clean (Shortened) */}
-              <div 
+              <div
                 className="w-px bg-gradient-to-b from-blue-400/80 to-transparent mt-1 origin-bottom"
-                style={{ height: stalkHeight }} 
+                style={{ height: stalkHeight }}
               />
-              
+
               {/* Original Point (Dot) - Responsive Size */}
-              <div 
+              <div
                 className="rounded-full bg-blue-400 animate-pulse shadow-[0_0_15px_rgba(59,130,246,1)]"
-                style={{ 
-                  width: 'clamp(6px, 0.8vw, 10px)', 
-                  height: 'clamp(6px, 0.8vw, 10px)' 
+                style={{
+                  width: 'clamp(6px, 0.8vw, 10px)',
+                  height: 'clamp(6px, 0.8vw, 10px)'
                 }}
               />
             </motion.div>
@@ -163,7 +153,7 @@ function AutoFitModel({
       })}
     </>
   );
-}
+});
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CameraRig
@@ -185,8 +175,8 @@ function CameraRig({ target, layout, isMobile }: { target: SlideTarget; layout: 
     const k = 3.2; // Faster, punchier damping for a more premium feel
 
     // Target FOV: Wide enough for dashboard on desktop (75), ultra-wide for mobile interior
-    const targetFov = isMobile 
-      ? (layout === 1 ? 95 : layout === 2 ? 110 : 75) 
+    const targetFov = isMobile
+      ? (layout === 1 ? 95 : layout === 2 ? 110 : 75)
       : (layout === 1 ? 75 : 65);
 
     if (camera instanceof THREE.PerspectiveCamera) {
@@ -219,7 +209,7 @@ function CameraRig({ target, layout, isMobile }: { target: SlideTarget; layout: 
       // Normalize shortest path for rotation to prevent wild spinning
       while (dTheta > Math.PI) dTheta -= Math.PI * 2;
       while (dTheta < -Math.PI) dTheta += Math.PI * 2;
-      
+
       currentSpherical.radius = THREE.MathUtils.damp(currentSpherical.radius, targetSpherical.radius, k, delta);
       currentSpherical.phi = THREE.MathUtils.damp(currentSpherical.phi, targetSpherical.phi, k, delta);
       currentSpherical.theta = THREE.MathUtils.damp(currentSpherical.theta, currentSpherical.theta + dTheta, k, delta);
@@ -230,36 +220,50 @@ function CameraRig({ target, layout, isMobile }: { target: SlideTarget; layout: 
     controlsRef.current.target.x = THREE.MathUtils.damp(controlsRef.current.target.x, target.camTarget[0], k, delta);
     controlsRef.current.target.y = THREE.MathUtils.damp(controlsRef.current.target.y, target.camTarget[1], k, delta);
     controlsRef.current.target.z = THREE.MathUtils.damp(controlsRef.current.target.z, target.camTarget[2], k, delta);
-    
+
     controlsRef.current.update();
   });
 
   return (
-    <OrbitControls 
+    <OrbitControls
       ref={controlsRef}
-      onStart={() => { userInteracted.current = true; }} 
-      makeDefault 
+      makeDefault
       enablePan={false}
-      minDistance={1.0}
-      maxDistance={8}
+      enableZoom
       enableDamping
+      dampingFactor={0.08}
+      minDistance={1}
+      maxDistance={8}
+      onStart={() => {
+        userInteracted.current = true;
+      }}
     />
+  );
+}
+
+function CanvasLoader() {
+  return (
+    <Html center>
+      <div className="pointer-events-none">
+        <BasicLoader />
+      </div>
+    </Html>
   );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Scene
 // ─────────────────────────────────────────────────────────────────────────────
-function Scene({ 
-  url, 
-  target, 
-  annotations, 
-  layout, 
-  isMobile 
-}: { 
-  url: string; 
-  target: SlideTarget; 
-  annotations?: Annotation[]; 
+function Scene({
+  url,
+  target,
+  annotations,
+  layout,
+  isMobile
+}: {
+  url: string;
+  target: SlideTarget;
+  annotations?: Annotation[];
   layout: number;
   isMobile: boolean;
 }) {
@@ -272,15 +276,18 @@ function Scene({
       <directionalLight position={[-15, 10, -15]} intensity={1.0} color="#aaccff" />
       <directionalLight position={[0, 30, -10]} intensity={1.5} color="#ffffff" />
 
-      {/* Ultra-Realistic Ground-Projected HDR Environment */}
-      <Environment 
-        files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kloppenheim_06_1k.hdr" 
-        background 
-        ground={{ height: 1.5, radius: 20, scale: 20 }} 
+      <Environment
+        files="/hdr/kloppenheim_06_1k.hdr"
+        background
+        ground={{ height: 1.5, radius: 20, scale: 20 }}
       />
 
-      <Suspense fallback={null}>
-        <AutoFitModel url={url} annotations={annotations} isMobile={isMobile} />
+      <Suspense fallback={<CanvasLoader />}>
+        <AutoFitModel
+          url={url}
+          annotations={annotations}
+          isMobile={isMobile}
+        />
       </Suspense>
 
       <ContactShadows
@@ -321,7 +328,7 @@ export interface AutomotiveCarouselProps {
 // ─────────────────────────────────────────────────────────────────────────────
 export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: AutomotiveCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAnimating,  setIsAnimating]  = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -351,16 +358,16 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
     // 1: Exterior 3/4 Front
     { camPos: [3.5, 1.2, 4.0], camTarget: [0, 0.5, 0], align: "center" },
     // 2: Dashboard (Interior view, ultra-wide angle, shifted right)
-    { 
-      camPos: isMobile ? [0.35, 0.85, -0.35] : [0.15, 0.8, 0.05], 
-      camTarget: isMobile ? [-0.25, 0.6, 0.8] : [-0.1, 0.65, 0.8], 
-      align: "right" 
+    {
+      camPos: isMobile ? [0.35, 0.85, -0.35] : [0.15, 0.8, 0.05],
+      camTarget: isMobile ? [-0.25, 0.6, 0.8] : [-0.1, 0.65, 0.8],
+      align: "right"
     },
     // 3: Seats (Interior view looking back - Reverted to Original)
-    { 
-      camPos: [-0.4, 1.0, 0.4], 
-      camTarget: [0.1, 0.75, -0.2], 
-      align: "left" 
+    {
+      camPos: [-0.4, 1.0, 0.4],
+      camTarget: [0.1, 0.75, -0.2],
+      align: "left"
     },
     // 4: Rear 3/4 Low Angle
     { camPos: [-3.0, 0.8, -4.5], camTarget: [0, 0.5, -2], align: "right" },
@@ -372,16 +379,16 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
     return align === "left"
       ? "items-center sm:items-end justify-end sm:justify-center text-center sm:text-right px-4 sm:pr-20 sm:pl-0 pb-32 sm:pb-0 sm:pt-12"
       : align === "right"
-      ? "items-center sm:items-start justify-end sm:justify-center text-center sm:text-left px-4 sm:pl-20 sm:pr-0 pb-32 sm:pb-0 sm:pt-12"
-      : "items-center justify-end text-center px-4 pb-32 sm:pb-36";
+        ? "items-center sm:items-start justify-end sm:justify-center text-center sm:text-left px-4 sm:pl-20 sm:pr-0 pb-32 sm:pb-0 sm:pt-12"
+        : "items-center justify-end text-center px-4 pb-32 sm:pb-36";
   };
 
   const getOverlayGradient = (align?: string) => {
     return align === "right"
       ? "bg-gradient-to-t sm:bg-gradient-to-l from-black/90 via-black/40 to-transparent w-full sm:w-3/4 h-[65%] sm:h-full absolute bottom-0 sm:right-0 sm:inset-y-0"
       : align === "left"
-      ? "bg-gradient-to-t sm:bg-gradient-to-r from-black/90 via-black/40 to-transparent w-full sm:w-3/4 h-[65%] sm:h-full absolute bottom-0 sm:left-0 sm:inset-y-0"
-      : "bg-gradient-to-t from-black/95 via-black/50 to-transparent h-[65%] sm:h-[70%] absolute bottom-0 inset-x-0";
+        ? "bg-gradient-to-t sm:bg-gradient-to-r from-black/90 via-black/40 to-transparent w-full sm:w-3/4 h-[65%] sm:h-full absolute bottom-0 sm:left-0 sm:inset-y-0"
+        : "bg-gradient-to-t from-black/95 via-black/50 to-transparent h-[65%] sm:h-[70%] absolute bottom-0 inset-x-0";
   };
 
   return (
@@ -402,8 +409,8 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
             key={currentIndex}
             className={cn("absolute inset-0 flex flex-col", getTextAlign(currentTarget.align))}
             initial={{ opacity: 0, y: 30, filter: "blur(12px)" }}
-            animate={{ opacity: 1, y: 0,  filter: "blur(0px)"  }}
-            exit   ={{ opacity: 0, y: -20, filter: "blur(12px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -20, filter: "blur(12px)" }}
             transition={{ duration: 0.9, ease: [0.25, 1, 0.5, 1] }}
           >
             {/* Premium Dark Gradient Overlay behind text */}
@@ -428,9 +435,11 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
       {/* ── WebGL Canvas (z-20 — ON TOP of text) ─────────────────────────── */}
       <div className="absolute inset-0 z-20" style={{ pointerEvents: "none" }}>
         <Canvas
+          dpr={[1, 1.5]}
           gl={{
             alpha: true,
             antialias: true,
+            powerPreference: "high-performance",
             toneMapping: THREE.ACESFilmicToneMapping,
             toneMappingExposure: 1.2,
           }}
@@ -438,10 +447,10 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
           camera={{ position: [0, 1.2, 4], fov: isMobile ? 70 : 65 }}
           style={{ width: "100%", height: "100%", background: "transparent" }}
         >
-          <Scene 
-            url={`/models/${objectVariant}.glb`} 
-            target={currentTarget} 
-            annotations={slides[currentIndex].annotations} 
+          <Scene
+            url={`/models/${objectVariant}.glb`}
+            target={currentTarget}
+            annotations={slides[currentIndex].annotations}
             layout={layout}
             isMobile={isMobile}
           />

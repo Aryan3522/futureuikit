@@ -1,0 +1,66 @@
+{
+  "name": "Future UI — React 19 Component Library",
+  "short_name": "Future UI",
+  "description": "A free, open-source React 19 component library built with Tailwind CSS 4 and Framer Motion. Ship stunning, accessible, high-performance UIs in seconds.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "lang": "en-US",
+  "dir": "ltr",
+  "categories": ["developer tools", "utilities", "productivity"],
+  "icons": [
+    {
+      "src": "/FUI.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Components",
+      "short_name": "Components",
+      "description": "Browse all UI components",
+      "url": "/components",
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Documentation",
+      "short_name": "Docs",
+      "description": "Read the documentation",
+      "url": "/docs",
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Get Started",
+      "short_name": "Get Started",
+      "description": "Quick start guide",
+      "url": "/docs/getting-started",
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

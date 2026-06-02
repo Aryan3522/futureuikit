@@ -105,7 +105,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
       </header>
 
       {/* Hero Section */}
-      <div className="min-h-[100dvh] pt-16 w-full flex border-b border-border/10">
+      <div className="min-h-dvh pt-16 w-full flex border-b border-border/10">
         
         {/* Code Panel (Slides from left) */}
         <AnimatePresence initial={false}>
@@ -203,7 +203,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
           className="space-y-6"
         >
           <div className="flex items-center gap-4 text-primary">
-            <div className="h-[1px] w-12 bg-primary/50" />
+            <div className="h-px w-12 bg-primary/50" />
             <span className="text-sm uppercase tracking-widest font-medium">Overview</span>
           </div>
           <h2 className="text-4xl md:text-6xl font-light tracking-tight">
@@ -223,7 +223,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
           className="space-y-6"
         >
           <div className="flex items-center gap-4 text-primary">
-            <div className="h-[1px] w-12 bg-primary/50" />
+            <div className="h-px w-12 bg-primary/50" />
             <span className="text-sm uppercase tracking-widest font-medium">Quick Install via CLI</span>
           </div>
           <div className="relative group rounded-2xl border border-border/20 bg-muted/5 p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 overflow-hidden backdrop-blur-sm">
@@ -254,7 +254,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="flex items-center gap-4 text-primary"
           >
-            <div className="h-[1px] w-12 bg-primary/50" />
+            <div className="h-px w-12 bg-primary/50" />
             <span className="text-sm uppercase tracking-widest font-medium">Implementation Steps</span>
           </motion.div>
 
@@ -283,7 +283,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
                   className="relative group"
                 >
                   {/* Glowing Timeline Node */}
-                  <div className="absolute -left-[37px] md:-left-[53px] top-3 w-3 h-3 rounded-full bg-background border-2 border-primary/40 group-hover:border-primary group-hover:scale-150 transition-all duration-500 z-10" />
+                  <div className="absolute -left-9.25 md:-left-13.25 top-3 w-3 h-3 rounded-full bg-background border-2 border-primary/40 group-hover:border-primary group-hover:scale-150 transition-all duration-500 z-10" />
                   
                   {/* Step Number Watermark */}
                   <div className="absolute -top-12 -left-8 md:-left-12 text-7xl md:text-9xl font-black text-foreground opacity-10 dark:opacity-5 pointer-events-none select-none transition-opacity duration-500 group-hover:opacity-20 dark:group-hover:opacity-10">
