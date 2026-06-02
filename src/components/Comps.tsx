@@ -115,16 +115,16 @@ export default function Comps() {
     <div className="min-h-screen bg-background text-foreground font-body-md overflow-clip pt-16 relative">
       {/* Noise Background */}
       <div 
-        className="fixed inset-0 z-[1] pointer-events-none opacity-5"
+        className="fixed inset-0 z-1 pointer-events-none opacity-5"
         style={{
           backgroundImage: 'url("https://www.transparenttextures.com/patterns/asfalt-dark.png")',
           transform: `translate(${mousePos.x}px, ${mousePos.y}px)`
         }}
       />
 
-      <div className="max-w-[1440px] mx-auto flex items-start gap-6 pt-16 pb-32 px-4 md:px-16 relative z-10">
+      <div className="max-w-360 mx-auto flex items-start gap-6 pt-16 pb-32 px-4 md:px-16 relative z-10">
         {/* Sidebar Navigation */}
-        <aside className="hidden lg:block w-[240px] shrink-0 sticky top-32 h-[calc(100vh-160px)] overflow-y-auto overflow-x-hidden scrollbar-hide">
+        <aside className="hidden lg:block w-60 shrink-0 sticky top-32 h-[calc(100vh-160px)] overflow-y-auto overflow-x-hidden scrollbar-hide">
           <div className="space-y-8 pr-4">
             {SIDEBAR_NAV.map((section, idx) => (
               <div key={idx}>
@@ -220,7 +220,7 @@ export default function Comps() {
               </section>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-8 rounded-xl group hover:border-[#8b5cf6]/50 transition-all duration-300">
+                <div className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-8 rounded-xl group hover:border-[#8b5cf6]/50 transition-all duration-300">
                   <div className="flex items-center gap-3 text-foreground font-bold uppercase tracking-tight text-lg mb-4">
                     <Layers size={20} className="text-primary" /> Ownership First
                   </div>
@@ -228,7 +228,7 @@ export default function Comps() {
                     We believe in full ownership. Unlike traditional UI libraries that ship as bloated npm packages, Future UI utilizes a CLI-first architecture. You download the source code, allowing for infinite customization without versioning conflicts.
                   </p>
                 </div>
-                <div className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-8 rounded-xl group hover:border-[#8b5cf6]/50 transition-all duration-300">
+                <div className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-8 rounded-xl group hover:border-[#8b5cf6]/50 transition-all duration-300">
                   <div className="flex items-center gap-3 text-foreground font-bold uppercase tracking-tight text-lg mb-4">
                     <Droplets size={20} className="text-primary" /> Modern Tech Stack
                   </div>
@@ -530,7 +530,7 @@ export default function Comps() {
 
           {/* Quick Start */}
           <section className="mb-32">
-            <div className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-8 rounded-xl relative overflow-hidden group">
+            <div className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-8 rounded-xl relative overflow-hidden group">
               <div className="flex justify-between items-center mb-4">
                 <span className="font-mono text-[13px] text-muted-foreground">Quick Installation</span>
                 <div className="flex gap-2">
@@ -548,7 +548,7 @@ export default function Comps() {
                   {copiedId === "comp-init" ? <Check size={20} /> : <Copy size={20} />}
                 </button>
               </div>
-              <div className="absolute inset-0 bg-gradient-to-r from-[#571bc1]/0 via-[#571bc1]/5 to-[#571bc1]/0 transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+              <div className="absolute inset-0 bg-linear-to-r from-[#571bc1]/0 via-[#571bc1]/5 to-[#571bc1]/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
             </div>
           </section>
 
@@ -557,8 +557,8 @@ export default function Comps() {
             {CATEGORIES_SECTION.map((cat, i) => {
               const Icon = cat.icon;
               return (
-                <div key={i} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-8 rounded-xl group transition-all duration-300 hover:border-[#8b5cf6]/50 hover:shadow-[0_0_30px_rgba(139,92,246,0.15)]">
-                  <div className="w-12 h-12 flex items-center justify-center rounded-full bg-[#2a2a2a] border border-foreground/10 mb-8 group-hover:shadow-[0_0_30px_rgba(139,92,246,0.15)] transition-all">
+                <div key={i} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-8 rounded-xl group transition-all duration-300 hover:border-[#8b5cf6]/50 hover:shadow-[0_0_30px_rgba(139,92,246,0.15)]">
+                  <div className="w-12 h-12 flex items-center justify-center rounded-full bg-background border border-foreground/10 mb-8 group-hover:shadow-[0_0_30px_rgba(139,92,246,0.15)]">
                     <Icon className="w-6 h-6 text-foreground/80" />
                   </div>
                   <h3 className="font-display text-2xl mb-4 text-foreground">{cat.label}</h3>
@@ -592,7 +592,7 @@ export default function Comps() {
                 </div>
 
                 <div className="flex flex-row items-center gap-2 sm:gap-3 w-full">
-                  <div className="relative group flex-1 sm:flex-none sm:w-[300px] min-w-0">
+                  <div className="relative group flex-1 sm:flex-none sm:w-75 min-w-0">
                     <Search
                       variant="standard"
                       size="md"
@@ -601,7 +601,7 @@ export default function Comps() {
                       onChange={(e) => setSearchQuery(e.target.value)}
                       clearable
                       fullWidth
-                      className="bg-foreground/[0.02] hover:bg-foreground/[0.04] focus-within:bg-foreground/[0.05] backdrop-blur-xl border-foreground/10 rounded-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] focus-within:shadow-[0_0_20px_rgba(139,92,246,0.15)]"
+                      className="bg-foreground/2 hover:bg-foreground/4 focus-within:bg-foreground/5 backdrop-blur-xl border-foreground/10 rounded-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] focus-within:shadow-[0_0_20px_rgba(139,92,246,0.15)]"
                     />
                     <div className="absolute right-2.5 inset-y-0 hidden sm:flex items-center pointer-events-none">
                       <kbd className="inline-flex h-5 items-center gap-1 rounded border border-foreground/10 bg-foreground/5 px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-70 group-hover:opacity-100 transition-opacity">
@@ -610,7 +610,7 @@ export default function Comps() {
                     </div>
                   </div>
 
-                  <div className="flex gap-1 bg-foreground/[0.03] p-1 rounded-xl border border-foreground/10 shrink-0 backdrop-blur-md">
+                  <div className="flex gap-1 bg-foreground/3 p-1 rounded-xl border border-foreground/10 shrink-0 backdrop-blur-md">
                   <button 
                     onClick={() => handleViewModeChange("list")}
                     className={cn("p-1.5 rounded-md transition-all", viewMode === "list" ? "bg-foreground/10 text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground/80 hover:bg-foreground/5")}
@@ -646,7 +646,7 @@ export default function Comps() {
                       <Link 
                         key={idx}
                         href={`/components/${item.type.toLowerCase()}/${item.slug}/${item.id}`}
-                        className="block bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-6 rounded-xl hover:bg-foreground/5 transition-all cursor-pointer group"
+                        className="block bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-6 rounded-xl hover:bg-foreground/5 transition-all cursor-pointer group"
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-6">
@@ -678,7 +678,7 @@ export default function Comps() {
                       <Link 
                         key={idx}
                         href={`/components/${item.type.toLowerCase()}/${item.slug}/${item.id}`}
-                        className="flex flex-col justify-between bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-6 rounded-xl hover:bg-foreground/5 transition-all cursor-pointer group h-[200px]"
+                        className="flex flex-col justify-between bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-6 rounded-xl hover:bg-foreground/5 transition-all cursor-pointer group h-50"
                       >
                         <div>
                           <div className="flex items-start justify-between mb-4">
@@ -725,7 +725,7 @@ export default function Comps() {
                 )}
 
                 {displayedComponents.length === 0 && (
-                  <div className="py-20 text-center border rounded-3xl border-dashed border-foreground/10 bg-foreground/[0.01]">
+                  <div className="py-20 text-center border rounded-3xl border-dashed border-foreground/10 bg-foreground/1">
                     <p className="text-muted-foreground italic uppercase tracking-widest text-sm font-bold opacity-30">No components found in this category.</p>
                   </div>
                 )}
@@ -739,7 +739,7 @@ export default function Comps() {
 
       {/* Footer */}
       <footer className="w-full border-t border-foreground/5 bg-[#131313] relative z-10">
-        <div className="max-w-[1200px] mx-auto py-12 px-8 md:px-16 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div className="max-w-300 mx-auto py-12 px-8 md:px-16 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex flex-col items-center md:items-start gap-2">
             <span className="font-display text-xl font-bold tracking-tighter text-foreground">FUTURE_UI</span>
             <span className="font-mono text-[13px] text-[#c6c6c7]">© {new Date().getFullYear()} FUTURE UI. PRECISION ENGINEERED.</span>

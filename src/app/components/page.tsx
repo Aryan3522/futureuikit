@@ -1,7 +1,7 @@
 "use client"
+import React from "react";
 import Comps from "@/components/Comps";
 import { Header } from "@/components/ui/header";
-import React from "react";
 
 export default function Page() {
   return (

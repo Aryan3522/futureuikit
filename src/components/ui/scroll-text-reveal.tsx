@@ -1,4 +1,14 @@
 "use client";
+
+/**
+ * @registry-slug scroll-text-reveal
+ * @registry-name Scroll Text Reveal
+ * @registry-description A text reveal animation on scroll.
+ * @registry-category ui
+ * @registry-dependency framer-motion
+ * @registry-dependency clsx
+ * @registry-dependency tailwind-merge
+ */
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";

@@ -1,7 +1,7 @@
 import { registry } from "./registryData";
 import { ComponentItem } from "@/types";
 
-export const componentsList: ComponentItem[] = [
+export const rawComponentsList: ComponentItem[] = [
   {
     id: 991,
     title: "Noir Hero 3D",
@@ -1622,5 +1622,27 @@ export default function AdvancedSearch() {
     ],
   }
 ];
+
+// Deduplicate manual components by slug
+const dedupedManual = Array.from(new Map(rawComponentsList.map(item => [item.slug, item])).values());
+
+// Auto-generate missing components from registry
+const missingFromList = Object.keys(registry).filter(slug => !dedupedManual.some(c => c.slug === slug));
+
+const generatedComponents: ComponentItem[] = missingFromList.map((slug, index) => {
+  return {
+    id: 10000 + index,
+    title: slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+    type: "Uncategorized",
+    slug: slug,
+    category: "ui",
+    description: `A dynamically discovered component.`,
+    details: ["Generated metadata"],
+    codes: { next: `import { ${slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('')} } from "@/components/ui/${slug}";` },
+    usage: [`npx futureuikit add ${slug}`]
+  };
+});
+
+export const componentsList: ComponentItem[] = [...dedupedManual, ...generatedComponents];
 
 export { registry };

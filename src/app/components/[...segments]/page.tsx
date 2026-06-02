@@ -5,12 +5,13 @@ import React from "react";
 
 interface PageProps {
   params: Promise<{
-    segments?: string[];
+    segments: string[];
   }>;
 }
 
-export default async function Page({ params }: PageProps) {
-  const { segments = [] } = await params;
+export default async function Page(props: PageProps) {
+  const params = await props.params;
+  const segments = params?.segments ?? [];
 
   if (segments.length === 1) {
     return <ComponentsCategoryPage category={segments[0]} />;
@@ -18,8 +19,15 @@ export default async function Page({ params }: PageProps) {
 
   if (segments.length === 3) {
     const [type, slug, id] = segments;
-    return <ComponentDetail type={type} slug={slug} id={id} />;
+
+    return (
+      <ComponentDetail
+        type={type}
+        slug={slug}
+        id={id}
+      />
+    );
   }
 
-  notFound();
+  return notFound();
 }

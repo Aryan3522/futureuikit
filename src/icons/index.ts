@@ -11,3 +11,14 @@ export * from "./ChevronLeftIcon";
 export * from "./ChevronRightIcon";
 export * from "./SunIcon";
 export * from "./MoonIcon";
+
+export * from "./SearchIcon";
+export * from "./LoaderIcon";
+export * from "./ArrowUpIcon";
+export * from "./ArrowDownIcon";
+export * from "./ArrowLeftIcon";
+export * from "./ArrowRightIcon";
+export * from "./ArrowUpRightIcon";
+export * from "./ArrowUpLeftIcon";
+export * from "./ArrowDownRightIcon";
+export * from "./ArrowDownLeftIcon";
