@@ -50,11 +50,13 @@ export default function Comps() {
   const [activeTab, setActiveTab] = useState<string>("components");
 
   useEffect(() => {
-    setMounted(true);
-    const savedMode = localStorage.getItem("future-ui-view-mode") as ViewMode;
-    if (savedMode && ["list", "grid", "links"].includes(savedMode)) {
-      setViewMode(savedMode);
-    }
+    const initTimeout = setTimeout(() => {
+      setMounted(true);
+      const savedMode = localStorage.getItem("future-ui-view-mode") as ViewMode;
+      if (savedMode && ["list", "grid", "links"].includes(savedMode)) {
+        setViewMode(savedMode);
+      }
+    }, 0);
 
     const handleMouseMove = (e: MouseEvent) => {
       setMousePos({
@@ -63,7 +65,11 @@ export default function Comps() {
       });
     };
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    
+    return () => {
+      clearTimeout(initTimeout);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
   }, []);
 
   const handleViewModeChange = (mode: ViewMode) => {
@@ -433,7 +439,7 @@ export default function Comps() {
                   <h3 className="font-display text-4xl text-foreground mb-4">Display</h3>
                   <p className="text-muted-foreground text-sm mb-6">Used for large headers, hero sections, and cinematic impact. (e.g., Geist or Inter)</p>
                   <div className="p-4 bg-foreground/5 rounded border border-foreground/10 font-mono text-xs text-muted-foreground flex justify-between items-center">
-                    <span>className="font-display"</span>
+                    <span className="font-display"></span>
                     <button 
                       onClick={() => copyText('className="font-display"', "typo-1")}
                       className="shrink-0 text-muted-foreground hover:text-foreground transition-colors cursor-pointer select-none ml-4"
@@ -446,7 +452,7 @@ export default function Comps() {
                   <h3 className="font-mono text-xl text-foreground tracking-widest uppercase mb-4">Monospace</h3>
                   <p className="text-muted-foreground text-sm mb-6">Used for code snippets, tags, version numbers, and technical labels. (e.g., JetBrains Mono)</p>
                   <div className="p-4 bg-foreground/5 rounded border border-foreground/10 font-mono text-xs text-muted-foreground flex justify-between items-center">
-                    <span>className="font-mono uppercase tracking-widest"</span>
+                    <span className="font-mono uppercase tracking-widest"></span>
                     <button 
                       onClick={() => copyText('className="font-mono uppercase tracking-widest"', "typo-2")}
                       className="shrink-0 text-muted-foreground hover:text-foreground transition-colors cursor-pointer select-none ml-4"
