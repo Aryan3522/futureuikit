@@ -1,6 +1,8 @@
 /**
  * @registry-slug boxy-bounce
  * @registry-name Bouncy Loader
+ * @registry-description A Future UI Bouncy Loader component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  */
 "use client";

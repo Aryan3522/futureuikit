@@ -1,12 +1,8 @@
 /**
  * @registry-slug search-input
  * @registry-name Search Input
- * @registry-dependency framer-motion
- * @registry-dependency lucide-react
- */
-/**
- * @registry-slug search-input
- * @registry-name Search Input
+ * @registry-description A Future UI Search Input component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency lucide-react
  */

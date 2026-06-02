@@ -3,6 +3,8 @@
 /**
  * @registry-slug toggle
  * @registry-name Toggle
+ * @registry-description A Future UI Toggle component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency class-variance-authority
  * @registry-dependency lucide-react

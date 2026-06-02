@@ -3,6 +3,8 @@
 /**
  * @registry-slug ai-chat
  * @registry-name AI Chat Interface
+ * @registry-description A Future UI AI Chat Interface component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency lucide-react
  * @registry-dependency react-markdown

@@ -1,6 +1,8 @@
 /**
  * @registry-slug menu
  * @registry-name Circle Navigation Menu
+ * @registry-description A Future UI Circle Navigation Menu component.
+ * @registry-category ui
  */
 "use client";
 import React, { useState } from "react";

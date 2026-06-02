@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.resolve(__dirname, "..");
 const UI_DIR = path.join(ROOT_DIR, "src", "components", "ui");
+const ICONS_DIR = path.join(ROOT_DIR, "src", "icons");
 const REGISTRY_PATH = path.join(ROOT_DIR, "src", "data", "registryData.ts");
 
 /**
@@ -13,15 +14,23 @@ const REGISTRY_PATH = path.join(ROOT_DIR, "src", "data", "registryData.ts");
 async function parseComponent(filePath) {
   const content = await fs.readFile(filePath, "utf-8");
   const fileName = path.basename(filePath);
-  
+
   const slugMatch = content.match(/@registry-slug\s+([^\n]+)/);
   if (!slugMatch) return null;
 
   const slug = slugMatch[1].trim();
   const name = (content.match(/@registry-name\s+([^\n]+)/)?.[1] || slug).trim();
+  const description = (content.match(/@registry-description\s+([^\n]+)/)?.[1] || "").trim();
+  const category = (content.match(/@registry-category\s+([^\n]+)/)?.[1] || "ui").trim();
   const type = (content.match(/@registry-type\s+([^\n]+)/)?.[1] || "components:ui").trim();
-  
-  const dependencies = [...content.matchAll(/@registry-dependency\s+([^\n]+)/g)].map(m => m[1].trim());
+
+  const dependencies = [
+    ...new Set(
+      [...content.matchAll(/@registry-dependency\s+([^\n]+)/g)]
+        .flatMap((m) => m[1].trim().split(/\s+/))
+        .filter(Boolean)
+    ),
+  ];
   const extraFilesPaths = [...content.matchAll(/@registry-file\s+([^\n]+)/g)].map(m => m[1].trim());
 
   const files = [
@@ -47,9 +56,37 @@ async function parseComponent(filePath) {
     data: {
       name,
       type,
+      description,
+      category,
       dependencies,
       files
     }
+  };
+}
+
+async function parseIcons() {
+  const files = await fs.readdir(ICONS_DIR);
+  const iconFiles = files
+    .filter((file) => /\.(tsx|ts)$/.test(file))
+    .sort((a, b) => (a === "index.ts" ? 1 : b === "index.ts" ? -1 : a.localeCompare(b)));
+
+  const registryFiles = [];
+  for (const file of iconFiles) {
+    const content = await fs.readFile(path.join(ICONS_DIR, file), "utf-8");
+    registryFiles.push({
+      name: file,
+      content: content.trim(),
+      targetPath: `components/ui/icons/${file}`,
+    });
+  }
+
+  return {
+    name: "Icons",
+    type: "components:ui",
+    description: "A premium collection of animated SVG React icons.",
+    category: "icons",
+    dependencies: ["framer-motion"],
+    files: registryFiles,
   };
 }
 
@@ -67,6 +104,9 @@ async function sync() {
       }
     }
   }
+
+  registry.icons = await parseIcons();
+  console.log(`Found component: icons (${registry.icons.files.length} files)`);
 
   const output = `import { Registry } from '@/types';
 

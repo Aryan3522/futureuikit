@@ -1,6 +1,8 @@
 /**
  * @registry-slug badge
  * @registry-name Badge
+ * @registry-description A Future UI Badge component.
+ * @registry-category ui
  * @registry-dependency class-variance-authority
  */
 import * as React from "react"

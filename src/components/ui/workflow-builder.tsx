@@ -3,6 +3,8 @@
 /**
  * @registry-slug workflow-builder
  * @registry-name Workflow Builder
+ * @registry-description A Future UI Workflow Builder component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency lucide-react
  * @registry-dependency class-variance-authority

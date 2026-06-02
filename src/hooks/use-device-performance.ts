@@ -24,7 +24,11 @@ export function useDevicePerformance() {
       return cores < 4 || memory < 4 || isSlowConnection;
     };
 
-    setIsLowEnd(getDevicePerformance());
+    const frame = requestAnimationFrame(() => {
+      setIsLowEnd(getDevicePerformance());
+    });
+
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   return { isLowEnd };

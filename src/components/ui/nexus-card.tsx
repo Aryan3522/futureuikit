@@ -1,6 +1,8 @@
 /**
  * @registry-slug nexus-card
  * @registry-name Nexus Card
+ * @registry-description A Future UI Nexus Card component.
+ * @registry-category ui
  * @registry-type Cards
  * @registry-dependency framer-motion
  */

@@ -1,6 +1,8 @@
 /**
  * @registry-slug expanding-card
  * @registry-name Expanding Flex Card
+ * @registry-description A Future UI Expanding Flex Card component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  */
 "use client";

@@ -1,6 +1,8 @@
 /**
  * @registry-slug header
  * @registry-name Header
+ * @registry-description A Future UI Header component.
+ * @registry-category ui
  * @registry-dependency framer-motion lucide-react
  */
 "use client";

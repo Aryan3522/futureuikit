@@ -1,6 +1,8 @@
 /**
  * @registry-slug basic
  * @registry-name Basic Loader
+ * @registry-description A Future UI Basic Loader component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  */
 "use client";

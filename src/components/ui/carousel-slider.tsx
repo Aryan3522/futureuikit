@@ -1,6 +1,8 @@
 /**
  * @registry-slug infinite-slider
  * @registry-name Infinite Carousel Slider
+ * @registry-description A Future UI Infinite Carousel Slider component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency lucide-react
  */

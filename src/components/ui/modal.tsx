@@ -3,6 +3,8 @@
 /**
  * @registry-slug modal
  * @registry-name Modal
+ * @registry-description A Future UI Modal component.
+ * @registry-category ui
  * @registry-dependency @radix-ui/react-dialog
  * @registry-dependency framer-motion
  * @registry-dependency class-variance-authority

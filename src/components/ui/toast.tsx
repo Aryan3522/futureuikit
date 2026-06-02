@@ -1,6 +1,8 @@
 /**
  * @registry-slug toast
  * @registry-name Toast Notification
+ * @registry-description A Future UI Toast Notification component.
+ * @registry-category ui
  * @registry-dependency @radix-ui/react-toast
  * @registry-dependency class-variance-authority
  * @registry-dependency lucide-react

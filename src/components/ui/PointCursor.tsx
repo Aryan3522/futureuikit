@@ -1,6 +1,8 @@
 /**
  * @registry-slug point-cursor
  * @registry-name Point Cursor
+ * @registry-description A Future UI Point Cursor component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency clsx
  * @registry-dependency tailwind-merge

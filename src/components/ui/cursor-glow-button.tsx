@@ -3,6 +3,8 @@
 /**
  * @registry-slug cursor-glow-button
  * @registry-name Cursor Glow Button
+ * @registry-description A Future UI Cursor Glow Button component.
+ * @registry-category ui
  * @registry-type components:ui
  * @registry-dependency framer-motion
  */

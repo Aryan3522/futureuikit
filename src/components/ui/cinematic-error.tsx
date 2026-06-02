@@ -1,6 +1,8 @@
 /**
  * @registry-slug cinematic-error
  * @registry-name Cinematic Error
+ * @registry-description A Future UI Cinematic Error component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency lucide-react
  */

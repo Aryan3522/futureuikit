@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, Eye } from "lucide-react";
 import { ComponentItem } from "@/types";
-import { PreviewRegistry } from "@/route-components/PreviewRegistry";
+import { getRegistryPreview } from "@/registry/ComponentRenderer";
 import { DotBackground } from "./dot-background";
 import { Card, CardContent, CardHeader, CardTitle } from "./card";
 import { Badge } from "./badge";
@@ -25,7 +25,7 @@ const ComponentsGrid: React.FC<ComponentsGridProps> = ({ items }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 w-full">
       {sortedItems.map((item, idx) => {
-        const Preview = PreviewRegistry[item.slug];
+        const Preview = getRegistryPreview(item.slug);
 
         return (
           <motion.div

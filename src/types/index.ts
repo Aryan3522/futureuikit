@@ -30,6 +30,9 @@ export interface RegistryFile {
 export interface RegistryItem {
   name: string;
   type: string;
+  description?: string;
+  category?: string;
+  tags?: string[];
   dependencies?: string[];
   files: RegistryFile[];
 }

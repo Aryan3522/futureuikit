@@ -4,6 +4,8 @@
 /**
  * @registry-slug form-builder
  * @registry-name FormBuilder
+ * @registry-description A Future UI FormBuilder component.
+ * @registry-category ui
  * @registry-dependency react-hook-form
  * @registry-dependency zod
  * @registry-dependency @hookform/resolvers

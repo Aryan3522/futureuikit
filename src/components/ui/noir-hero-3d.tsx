@@ -1,6 +1,8 @@
 /**
  * @registry-slug noir-hero-3d
  * @registry-name Noir Hero 3D
+ * @registry-description A Future UI Noir Hero 3D component.
+ * @registry-category ui
  * @registry-dependency @react-three/fiber @react-three/drei three
  */
 "use client"

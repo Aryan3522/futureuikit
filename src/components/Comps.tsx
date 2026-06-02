@@ -4,7 +4,8 @@ import React, { useState, useMemo, useEffect } from "react";
 import { componentsList } from "@/data/component-library-data";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { Check, Copy, ArrowRight, Layers, Sparkles, Droplets, Grid, List, Link as LinkIcon, ChevronRight, PackageCheck, Code2, Search } from "lucide-react";
+import { Check, Copy, ArrowRight, Layers, Sparkles, Droplets, Grid, List, Link as LinkIcon, ChevronRight, PackageCheck, Code2 } from "lucide-react";
+import { Search } from "@/components/ui/search";
 
 const TOP_PICKS = ["nexus-card", "glass-panel", "glowy", "cinematic-error", "browser-window", "noir-hero-3d"];
 
@@ -592,15 +593,15 @@ export default function Comps() {
 
                 <div className="flex flex-row items-center gap-2 sm:gap-3 w-full">
                   <div className="relative group flex-1 sm:flex-none sm:w-[300px] min-w-0">
-                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none z-10">
-                      <Search className="w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-transform duration-300 group-focus-within:scale-110 group-hover:text-foreground/80" />
-                    </div>
-                    <input
-                      type="text"
+                    <Search
+                      variant="standard"
+                      size="md"
                       placeholder="Search components..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full bg-foreground/[0.02] hover:bg-foreground/[0.04] focus:bg-foreground/[0.05] backdrop-blur-xl border border-foreground/10 text-foreground text-sm rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary block pl-9 pr-12 py-2.5 transition-all duration-300 placeholder:text-muted-foreground/60 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] focus:shadow-[0_0_20px_rgba(139,92,246,0.15)]"
+                      clearable
+                      fullWidth
+                      className="bg-foreground/[0.02] hover:bg-foreground/[0.04] focus-within:bg-foreground/[0.05] backdrop-blur-xl border-foreground/10 rounded-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] focus-within:shadow-[0_0_20px_rgba(139,92,246,0.15)]"
                     />
                     <div className="absolute right-2.5 inset-y-0 hidden sm:flex items-center pointer-events-none">
                       <kbd className="inline-flex h-5 items-center gap-1 rounded border border-foreground/10 bg-foreground/5 px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-70 group-hover:opacity-100 transition-opacity">

@@ -1,6 +1,8 @@
 /**
  * @registry-slug hover-glare-card
  * @registry-name Hover Glare Card
+ * @registry-description A Future UI Hover Glare Card component.
+ * @registry-category ui
  * @registry-dependency class-variance-authority
  * @registry-dependency framer-motion
  * @registry-dependency lucide-react

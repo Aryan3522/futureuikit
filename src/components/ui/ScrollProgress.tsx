@@ -10,6 +10,8 @@
 /**
  * @registry-slug scroll-progress
  * @registry-name Scroll Progress
+ * @registry-description A Future UI Scroll Progress component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  */
 "use client"

@@ -1,6 +1,8 @@
 /**
  * @registry-slug accordion
  * @registry-name Accordion
+ * @registry-description A Future UI Accordion component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency lucide-react
  */

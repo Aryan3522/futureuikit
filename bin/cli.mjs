@@ -40,6 +40,7 @@ Usage:
 
 Examples:
   npx futureuikit add boxy-bounce
+  npx futureuikit add icons
   npx futureuikit add boxy-bounce --registry https://futureuikit.vercel.app/api/registry
 
 Environment:
@@ -320,6 +321,11 @@ async function addComponent(componentSlug) {
 
       await fs.writeFile(absolutePath, file.content, "utf-8");
       console.log(`Added ${relativePath}`);
+    }
+
+    if (componentSlug === "icons") {
+      console.log("\nIcons are ready for named imports:");
+      console.log('  import { GithubIcon, SunIcon } from "@/components/ui/icons";');
     }
 
     console.log(`\nSUCCESS: Component '${componentSlug}' installed successfully.`);

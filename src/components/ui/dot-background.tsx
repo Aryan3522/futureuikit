@@ -1,6 +1,8 @@
 /**
  * @registry-slug dot-background
  * @registry-name Dot Background
+ * @registry-description A Future UI Dot Background component.
+ * @registry-category ui
  */
 "use client";
 

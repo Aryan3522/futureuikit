@@ -3,6 +3,8 @@
 /**
  * @registry-slug filter-builder
  * @registry-name Filter Builder
+ * @registry-description A Future UI Filter Builder component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency lucide-react
  * @registry-dependency class-variance-authority

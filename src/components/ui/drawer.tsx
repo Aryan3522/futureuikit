@@ -3,6 +3,8 @@
 /**
  * @registry-slug drawer
  * @registry-name Drawer
+ * @registry-description A Future UI Drawer component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency class-variance-authority
  * @registry-dependency lucide-react

@@ -1,6 +1,8 @@
 /**
  * @registry-slug button
  * @registry-name Button
+ * @registry-description A Future UI Button component.
+ * @registry-category ui
  * @registry-dependency class-variance-authority
  * @registry-dependency @radix-ui/react-slot
  */

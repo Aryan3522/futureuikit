@@ -1,6 +1,8 @@
 /**
  * @registry-slug error-page
  * @registry-name Error Page
+ * @registry-description A Future UI Error Page component.
+ * @registry-category ui
  */
 "use client";
 import React from "react";

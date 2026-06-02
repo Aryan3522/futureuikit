@@ -2,6 +2,8 @@
 /**
  * @registry-slug dynamic-form
  * @registry-name Dynamic Form System
+ * @registry-description A Future UI Dynamic Form System component.
+ * @registry-category ui
  * @registry-dependency react-hook-form
  * @registry-dependency zod
  * @registry-dependency @hookform/resolvers

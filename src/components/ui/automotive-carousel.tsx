@@ -3,6 +3,8 @@
 /**
  * @registry-slug automotive-carousel
  * @registry-name Automotive Carousel
+ * @registry-description A Future UI Automotive Carousel component.
+ * @registry-category ui
  * @registry-type components:ui
  * @registry-dependency framer-motion three @react-three/fiber @react-three/drei
  */

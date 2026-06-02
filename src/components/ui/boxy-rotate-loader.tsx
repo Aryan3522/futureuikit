@@ -1,6 +1,8 @@
 /**
  * @registry-slug boxy-rotate
  * @registry-name Rotating Loader
+ * @registry-description A Future UI Rotating Loader component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  */
 "use client";

@@ -187,8 +187,8 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
                     onClick={() => onVariantChange(v)}
                     className={cn(
                       "px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap",
-                      activeVariant === v 
-                        ? "bg-background shadow-sm text-foreground" 
+                      activeVariant === v
+                        ? "bg-background shadow-sm text-foreground"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                     )}
                   >
@@ -198,7 +198,7 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
               </div>
             </div>
           )}
-          
+
           {extraControls && (
             <div className="w-full flex flex-col gap-3">
               {extraControls}
@@ -210,7 +210,7 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
       {/* Content Area */}
       <div className={cn("flex items-center justify-center flex-1 w-full relative px-2 md:px-4 pb-4 md:pb-8 pt-2 md:pt-4", contentClassName)}>
         {isVirtualScreen ? (
-          <BrowserWindow 
+          <BrowserWindow
             title={title}
             className="md:w-[80%] aspect-[9/16] md:aspect-[3/4] lg:aspect-video max-h-[90vh]"
             contentClassName={cn("flex flex-col", canvasClassName)}
@@ -308,8 +308,8 @@ const CalendarPreview: React.FC = () => {
   };
 
   return (
-    <PreviewContainer 
-      title="Calendar" 
+    <PreviewContainer
+      title="Calendar"
       description="A beautiful, interactive calendar with selection and highlighting."
       variants={["modern", "clean"]}
       activeVariant={variant}
@@ -668,7 +668,7 @@ const DockPreview: React.FC = () => {
           {variant !== "clean" && <DockDivider />}
           <DockItem label="Settings" onClick={() => {}}><Settings size={20} /></DockItem>
         </Dock>
-        
+
         <div className="mt-12 text-sm text-center max-w-sm h-16 flex items-center justify-center">
           <AnimatePresence mode="wait">
             <motion.p
@@ -694,7 +694,7 @@ const DrawerPreview: React.FC = () => {
   const [placement, setPlacement] = React.useState<"left" | "right" | "top" | "bottom">("right");
   const [variant, setVariant] = React.useState<"default" | "compact" | "glass" | "elevated" | "floating">("default");
   const [container, setContainer] = React.useState<HTMLDivElement | null>(null);
-  
+
   return (
     <PreviewContainer
       title="Drawer"
@@ -766,9 +766,9 @@ const TogglePreview: React.FC = () => {
             <Toggle size="md" variant="neon" defaultChecked />
           </div>
         </div>
-        
+
         <div className="w-full h-px bg-border/40" />
-        
+
         <div className="flex flex-col items-center gap-4">
           <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Sizes</span>
           <div className="flex items-center gap-8">
@@ -821,7 +821,7 @@ const ModalPreview: React.FC = () => {
         <div className="flex items-center justify-center w-full h-64 relative">
           <Button onClick={() => setOpen(true)} size="lg" className="rounded-full shadow-lg shadow-primary/20 px-8">Open Modal</Button>
         </div>
-        
+
         <Modal open={open} onOpenChange={setOpen} variant={variant} size={size} position={position} container={container}>
           <ModalContent container={container}>
             <ModalHeader>
@@ -884,10 +884,6 @@ const CommandPalettePreview: React.FC = () => {
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup heading="Suggestions">
-              <CommandItem>
-                <SearchComponent className="mr-2 h-4 w-4" />
-                <span>Search Projects</span>
-              </CommandItem>
               <CommandItem>
                 <Plus className="mr-2 h-4 w-4" />
                 <span>Create New Project</span>
@@ -969,12 +965,12 @@ const SelectPreview: React.FC = () => {
     >
       <div ref={setContainer} className="flex flex-col items-center justify-start w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
         <div className="flex items-start justify-center w-full h-full flex-1 pt-12">
-          <Select 
+          <Select
             key={isMulti ? "multi" : "single"}
-            variant={variant} 
-            size={size} 
-            multiSelect={isMulti} 
-            searchable={searchable} 
+            variant={variant}
+            size={size}
+            multiSelect={isMulti}
+            searchable={searchable}
             container={container}
           >
             <SelectTrigger placeholder={isMulti ? "Select frameworks..." : "Select a framework..."} />
@@ -1024,7 +1020,7 @@ const FileUploadPreview: React.FC = () => {
         let progress = 0;
         const interval = setInterval(() => {
           progress += Math.random() * 15 + 5;
-          
+
           if (progress >= 100) {
             progress = 100;
             clearInterval(interval);
@@ -1238,7 +1234,7 @@ const WorkflowPreview: React.FC = () => {
     >
       <div className="w-full h-full min-h-[600px] p-4 md:p-8 flex items-center justify-center relative z-10">
         <div className="w-full h-[600px] max-w-5xl bg-background/20 rounded-xl overflow-hidden p-0 border border-border/50 relative shadow-xl">
-          <WorkflowBuilder 
+          <WorkflowBuilder
             variant={variant}
             initialNodes={[
               { id: "trigger-1", type: "trigger", position: { x: 100, y: 150 }, data: { label: "Schedule Trigger", description: "Runs every 1 hour" } },
@@ -1285,15 +1281,15 @@ const DEMO_TASKS = [
 const evaluateRule = (task: any, rule: FilterRule) => {
   const taskValue = task[rule.fieldId];
   const filterValue = rule.value;
-  
+
   if (rule.operatorId === "is_empty") return !taskValue;
   if (rule.operatorId === "is_not_empty") return !!taskValue;
-  
+
   if (taskValue === undefined) return false;
-  
+
   const valString = String(taskValue).toLowerCase();
   const filterString = String(filterValue).toLowerCase();
-  
+
   switch (rule.operatorId) {
     case "eq": return valString === filterString;
     case "neq": return valString !== filterString;
@@ -1309,13 +1305,13 @@ const evaluateRule = (task: any, rule: FilterRule) => {
 
 const evaluateGroup = (task: any, group: FilterGroup): boolean => {
   if (!group.children || group.children.length === 0) return true;
-  
+
   if (group.logicalOperator === "AND") {
-    return group.children.every(child => 
+    return group.children.every(child =>
       child.type === "group" ? evaluateGroup(task, child as FilterGroup) : evaluateRule(task, child as FilterRule)
     );
   } else {
-    return group.children.some(child => 
+    return group.children.some(child =>
       child.type === "group" ? evaluateGroup(task, child as FilterGroup) : evaluateRule(task, child as FilterRule)
     );
   }
@@ -1323,7 +1319,7 @@ const evaluateGroup = (task: any, group: FilterGroup): boolean => {
 
 function FilterBuilderPreview() {
   const [variant, setVariant] = useState<"default" | "minimal" | "enterprise" | "compact" | "glass">("default");
-  
+
   const fields: FilterField[] = [
     { id: "status", label: "Status", type: "select", options: [
       { value: "todo", label: "To Do" },
@@ -1354,10 +1350,10 @@ function FilterBuilderPreview() {
     };
     root.children = [
       { type: "rule", id: "r1", fieldId: "status", operatorId: "eq", value: "in_progress" },
-      { 
-        type: "group", 
-        id: "g1", 
-        logicalOperator: "OR", 
+      {
+        type: "group",
+        id: "g1",
+        logicalOperator: "OR",
         children: [
           { type: "rule", id: "r2", fieldId: "priority", operatorId: "eq", value: "high" },
           { type: "rule", id: "r3", fieldId: "priority", operatorId: "eq", value: "critical" },
@@ -1378,7 +1374,7 @@ function FilterBuilderPreview() {
     >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
         <div className="lg:col-span-2 space-y-6">
-          
+
           {/* The Component Itself */}
           <div className={cn(
             "rounded-2xl transition-all duration-500",
@@ -1390,9 +1386,9 @@ function FilterBuilderPreview() {
               <Filter className="w-4 h-4" />
               Filter Rules
             </div>
-            <FilterBuilder 
-              initialData={data} 
-              onChange={setData} 
+            <FilterBuilder
+              initialData={data}
+              onChange={setData}
               fields={fields}
               variant={variant}
             />
@@ -1409,9 +1405,9 @@ function FilterBuilderPreview() {
             <div className="flex-1 overflow-y-auto p-2 custom-scrollbar">
               <AnimatePresence mode="popLayout">
                 {DEMO_TASKS.filter(t => evaluateGroup(t, data)).length === 0 ? (
-                  <motion.div 
-                    initial={{ opacity: 0 }} 
-                    animate={{ opacity: 1 }} 
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     className="flex flex-col items-center justify-center h-full text-center p-8 opacity-60"
                   >
@@ -1421,12 +1417,12 @@ function FilterBuilderPreview() {
                   </motion.div>
                 ) : (
                   DEMO_TASKS.filter(t => evaluateGroup(t, data)).map(task => (
-                    <motion.div 
+                    <motion.div
                       layout
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.95 }}
-                      key={task.id} 
+                      key={task.id}
                       className="grid grid-cols-4 sm:grid-cols-5 gap-4 p-3 rounded-xl hover:bg-muted/50 items-center text-sm transition-colors border border-transparent hover:border-border/50 mb-1"
                     >
                       <div className="col-span-2 font-medium truncate">{task.title}</div>
@@ -1458,9 +1454,9 @@ function FilterBuilderPreview() {
               </AnimatePresence>
             </div>
           </div>
-          
+
         </div>
-        
+
         {/* Output State Viewer */}
         <div className="bg-background rounded-2xl border p-5 overflow-hidden flex flex-col h-[500px] lg:h-auto shadow-sm relative group">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-20" />
@@ -1474,7 +1470,7 @@ function FilterBuilderPreview() {
             </div>
           </div>
           <div className="flex-1 overflow-auto rounded-xl border bg-muted/30 p-4 custom-scrollbar">
-            <pre 
+            <pre
               className="text-[11px] leading-relaxed text-foreground font-mono whitespace-pre-wrap"
               dangerouslySetInnerHTML={{
                 __html: JSON.stringify(data, null, 2).replace(/"([^"]+)":/g, '<span class="text-indigo-300">"$1"</span>:')
@@ -1524,8 +1520,8 @@ export const PreviewRegistry: Record<string, React.FC> = {
     const [styleVariant, setStyleVariant] = React.useState<"default" | "glass" | "solid" | "ghost">("glass");
     const [glow, setGlow] = React.useState<"none" | "primary" | "secondary" | "white">("primary");
     return (
-      <PreviewContainer 
-        title="Hover Glare Card" 
+      <PreviewContainer
+        title="Hover Glare Card"
         description="A highly composable premium card with a signature diagonal glare sweep. Supports multiple real-world layouts."
         variants={["default", "media", "content", "stats", "compact", "feature"]}
         activeVariant={layout}
@@ -1550,10 +1546,10 @@ export const PreviewRegistry: Record<string, React.FC> = {
         }
       >
         <div className="flex items-center justify-center w-full h-full p-4 sm:p-8 min-h-[400px]">
-          <HoverGlareCard 
-            layout={layout} 
-            variant={styleVariant} 
-            glow={glow} 
+          <HoverGlareCard
+            layout={layout}
+            variant={styleVariant}
+            glow={glow}
           />
         </div>
       </PreviewContainer>
@@ -1571,7 +1567,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
   header: function HeaderPreview() {
     return (
       <PreviewContainer title="Header" description="A premium navigation header with a left-side drawer for mobile.">
-        <div 
+        <div
           className="w-full h-full min-h-[500px] relative bg-muted/10 border border-border/20 rounded-xl overflow-hidden shadow-inner"
           style={{ transform: "translateZ(0)" }}
         >
@@ -1779,8 +1775,8 @@ export const PreviewRegistry: Record<string, React.FC> = {
   basic: function BasicLoaderPreview() {
     const [variant, setVariant] = useState<"modern" | "clean" | "minimal">("modern");
     return (
-      <PreviewContainer 
-        title="Basic Loader" 
+      <PreviewContainer
+        title="Basic Loader"
         description="Versatile spinning or pulsing loaders."
         variants={["modern", "clean", "minimal"]}
         activeVariant={variant}
@@ -1853,10 +1849,10 @@ export const PreviewRegistry: Record<string, React.FC> = {
   },
   card: function StandardCardPreview() {
     const [variant, setVariant] = React.useState<"default" | "outline" | "ghost" | "glass">("default");
-    
+
     return (
-      <PreviewContainer 
-        title="Standard Card" 
+      <PreviewContainer
+        title="Standard Card"
         description="A base structural card component."
         variants={["default", "outline", "ghost", "glass"]}
         activeVariant={variant}
@@ -1937,8 +1933,8 @@ export const PreviewRegistry: Record<string, React.FC> = {
     const filteredComponents = React.useMemo(() => {
       if (!searchQuery.trim()) return [];
       const q = searchQuery.toLowerCase();
-      return componentsList.filter(c => 
-        c.title.toLowerCase().includes(q) || 
+      return componentsList.filter(c =>
+        c.title.toLowerCase().includes(q) ||
         c.category.toLowerCase().includes(q) ||
         c.description.toLowerCase().includes(q)
       ).slice(0, 5);
@@ -1950,9 +1946,9 @@ export const PreviewRegistry: Record<string, React.FC> = {
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
             {(["sm", "md", "lg"] as const).map(s => (
-              <button 
-                key={s} 
-                onClick={() => setSize(s)} 
+              <button
+                key={s}
+                onClick={() => setSize(s)}
                 className={cn(
                   "px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap",
                   size === s ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -1962,9 +1958,9 @@ export const PreviewRegistry: Record<string, React.FC> = {
               </button>
             ))}
           </div>
-          
+
           <div className="w-px h-6 bg-border hidden sm:block"></div>
-          
+
           <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
             <button onClick={() => setLoading(!loading)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200", loading ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>Loading</button>
             <button onClick={() => setDisabled(!disabled)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200", disabled ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>Disabled</button>
@@ -1972,7 +1968,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
             <button onClick={() => setFullWidth(!fullWidth)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200", fullWidth ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>Full Width</button>
           </div>
         </div>
-        
+
 
       </div>
     );
@@ -2004,7 +2000,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
                  <div className={cn(
                    "absolute top-full left-0 w-full overflow-hidden z-50",
                    // Dynamic styles based on effective variant
-                   (variant === "icon" ? inputVariant : variant) === "command" 
+                   (variant === "icon" ? inputVariant : variant) === "command"
                      ? "bg-muted/30 border border-border/50 shadow-xl rounded-xl backdrop-blur-md mt-2"
                      : (variant === "icon" ? inputVariant : variant) === "floating"
                      ? "bg-background/80 backdrop-blur-xl border border-border/40 shadow-2xl rounded-2xl mt-3"
@@ -2026,16 +2022,16 @@ export const PreviewRegistry: Record<string, React.FC> = {
                        ))}
                      </div>
                    ) : (
-                     <div className="text-center py-8 text-sm text-muted-foreground italic">No components found for "{searchQuery}"</div>
+                     <div className="text-center py-8 text-sm text-muted-foreground italic">No components found for &quot;{searchQuery}&quot;</div>
                    )}
                  </div>
                )}
              </SearchComponent>
            </div>
-           
+
            <AnimatePresence>
              {variant === "icon" && (
-               <motion.div 
+               <motion.div
                  initial={{ opacity: 0, y: 20 }}
                  animate={{ opacity: 1, y: 0 }}
                  exit={{ opacity: 0, y: 10 }}
@@ -2046,13 +2042,13 @@ export const PreviewRegistry: Record<string, React.FC> = {
                    <div className="px-3 text-[10px] font-bold tracking-widest uppercase text-muted-foreground hidden sm:block">Overlay Style</div>
                    <div className="w-px h-6 bg-border/50 hidden sm:block"></div>
                    {(["standard", "compact", "floating", "command"] as const).map(v => (
-                     <button 
-                       key={v} 
-                       onClick={() => setInputVariant(v)} 
+                     <button
+                       key={v}
+                       onClick={() => setInputVariant(v)}
                        className={cn(
                          "px-4 py-2 text-xs font-semibold rounded-xl capitalize transition-all duration-300",
-                         inputVariant === v 
-                           ? "bg-primary text-primary-foreground shadow-md scale-105" 
+                         inputVariant === v
+                           ? "bg-primary text-primary-foreground shadow-md scale-105"
                            : "text-muted-foreground hover:text-foreground hover:bg-muted/80"
                        )}
                      >
@@ -2070,8 +2066,8 @@ export const PreviewRegistry: Record<string, React.FC> = {
   "search-input": function SearchInputPreview() {
     const [variant, setVariant] = React.useState<"default" | "minimal" | "glass" | "pill">("default");
     return (
-      <PreviewContainer 
-        title="Search Input" 
+      <PreviewContainer
+        title="Search Input"
         description="A highly styled, interactive search input component with micro-animations."
         variants={["default", "minimal", "glass", "pill"]}
         activeVariant={variant}
@@ -2199,7 +2195,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
       });
     };
 
-    const importLine = `import { ${selected?.name} } from 'futureuikit/icons'`;
+    const importLine = `import { ${selected?.name} } from "@/components/ui/icons"`;
     const usageCode = `<${selected?.name} animate={${animate}} size={24} className="text-foreground" />`;
 
     return (
@@ -2210,16 +2206,15 @@ export const PreviewRegistry: Record<string, React.FC> = {
         extraControls={
           <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
             <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Search Icons</span>
-            <div className="w-full relative">
-              <SearchComponent className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
-              <input
-                type="text"
-                placeholder="Search premium icons..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="w-full max-w-sm pl-9 pr-3 py-2 text-sm bg-muted/30 border border-border/50 rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary/40 transition-all"
-              />
-            </div>
+            <SearchComponent
+              variant="standard"
+              size="sm"
+              placeholder="Search premium icons..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              clearable
+              className="w-full max-w-sm bg-muted/30 border-border/50 rounded-xl focus-within:ring-primary/30 focus-within:border-primary/40"
+            />
           </div>
         }
       >
@@ -2252,7 +2247,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
             </div>
           ) : (
             <div className="w-full py-20 flex flex-col items-center justify-center gap-3 text-muted-foreground bg-muted/10 rounded-3xl border border-dashed border-border">
-              <SearchComponent className="w-8 h-8 opacity-20" />
+              <Search className="w-8 h-8 opacity-20" />
               <div className="text-center">
                 <p className="font-medium">No native icons found</p>
                 <p className="text-xs opacity-60">Try searching for something else</p>
@@ -2486,8 +2481,8 @@ export const PreviewRegistry: Record<string, React.FC> = {
   calculator: CalculatorPreview,
   "cinematic-error": function CinematicErrorPreview() {
     return (
-      <PreviewContainer 
-        title="Cinematic Error" 
+      <PreviewContainer
+        title="Cinematic Error"
         description="A dramatic and immersive error page."
         contentClassName="p-0 bg-transparent border-0 shadow-none min-h-[100dvh]"
       >
@@ -2499,10 +2494,10 @@ export const PreviewRegistry: Record<string, React.FC> = {
   },
   "nexus-card": function NexusCardPreview() {
     const [variant, setVariant] = React.useState<"default" | "glass" | "solid" | "neon">("default");
-    
+
     return (
-      <PreviewContainer 
-        title="Nexus Card" 
+      <PreviewContainer
+        title="Nexus Card"
         description="A premium 3D parallax card with reactive spotlight."
         variants={["default", "glass", "solid", "neon"]}
         activeVariant={variant}
@@ -2529,9 +2524,9 @@ export const PreviewRegistry: Record<string, React.FC> = {
     }, []);
 
     return (
-      <PreviewContainer 
-        title="Scroll Text Reveal" 
-        description="Text that reveals itself as you scroll down the screen." 
+      <PreviewContainer
+        title="Scroll Text Reveal"
+        description="Text that reveals itself as you scroll down the screen."
         scrollRef={scrollContainer}
         canvasClassName="justify-start"
       >
@@ -2556,15 +2551,15 @@ export const PreviewRegistry: Record<string, React.FC> = {
   "rich-text-editor": function RichTextEditorPreviewWrapper() {
     const [variant, setVariant] = useState<"default" | "minimal" | "writing" | "enterprise" | "glass">("default");
     return (
-      <PreviewContainer 
-        title="Rich Text Editor" 
+      <PreviewContainer
+        title="Rich Text Editor"
         description="A powerful Notion-style rich text editor built with Tiptap."
         variants={["default", "minimal", "writing", "enterprise", "glass"]}
         activeVariant={variant}
         onVariantChange={setVariant}
       >
         <div className="w-full max-w-4xl mx-auto min-h-[500px]">
-          <RichTextEditor 
+          <RichTextEditor
             variant={variant}
             content={`
               <h1>Welcome to the Rich Text Editor ✨</h1>
@@ -2795,7 +2790,7 @@ console.log(stack.pop());  // 2`,
         return []
     if n == 1:
         return [0]
-    
+
     seq = [0, 1]
     while len(seq) < n:
         seq.append(seq[-1] + seq[-2])
@@ -3191,15 +3186,15 @@ function BrowserWindowPreview() {
 function AutomotiveCarouselPreview() {
   const [variant, setVariant] = useState<"bike" | "car" | "chair" | "m4">("m4");
   const slides = [
-    { 
-      id: 1, 
-      title: "THE VISION", 
+    {
+      id: 1,
+      title: "THE VISION",
       description: "A masterclass in automotive engineering.",
-      annotations: [] 
+      annotations: []
     },
-    { 
-      id: 2, 
-      title: "", 
+    {
+      id: 2,
+      title: "",
       description: "",
       annotations: [
         { id: "dash-1", position: [0.17, 0.75, 0.65] as [number, number, number], label: "M-Sport Steering Handle" },
@@ -3208,18 +3203,18 @@ function AutomotiveCarouselPreview() {
         { id: "dash-4", position: [-0.9, 0.88, 0.65] as [number, number, number], label: "Carbon Trim Dashboard" }
       ]
     },
-    { 
-      id: 3, 
-      title: "", 
+    {
+      id: 3,
+      title: "",
       description: "",
       annotations: [
         { id: "seat-1", position: [0.35, 0.65, -0.15] as [number, number, number], label: "Ergonomic Driver Seat" },
         { id: "seat-2", position: [-0.35, 0.65, -0.15] as [number, number, number], label: "Ventilated Passenger Seat" }
       ]
     },
-    { 
-      id: 4, 
-      title: "Aerodynamic Perfection", 
+    {
+      id: 4,
+      title: "Aerodynamic Perfection",
       description: "Aggressive rear stance featuring the signature LED Taillight Matrix, active aero spoiler, and performance-tuned sport exhaust.",
       annotations: []
     }

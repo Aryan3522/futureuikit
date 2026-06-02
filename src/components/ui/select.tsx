@@ -4,6 +4,8 @@
 /**
  * @registry-slug select
  * @registry-name Select
+ * @registry-description A Future UI Select component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency class-variance-authority
  * @registry-dependency lucide-react

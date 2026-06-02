@@ -2,6 +2,8 @@
 /**
  * @registry-slug particles
  * @registry-name Particles
+ * @registry-description A Future UI Particles component.
+ * @registry-category ui
  */
 "use client";
 

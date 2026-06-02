@@ -1,6 +1,8 @@
 /**
  * @registry-slug basic-card
  * @registry-name Basic Card
+ * @registry-description A Future UI Basic Card component.
+ * @registry-category ui
  * @registry-dependency class-variance-authority
  */
 "use client";

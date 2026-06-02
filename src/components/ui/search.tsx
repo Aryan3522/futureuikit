@@ -1,6 +1,8 @@
 /**
  * @registry-slug search
  * @registry-name Search
+ * @registry-description A Future UI Search component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency lucide-react
  */

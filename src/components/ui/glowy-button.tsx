@@ -1,6 +1,8 @@
 /**
  * @registry-slug glowy
  * @registry-name Glowy Button
+ * @registry-description A Future UI Glowy Button component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency lucide-react
  */

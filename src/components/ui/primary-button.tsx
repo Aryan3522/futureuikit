@@ -1,6 +1,8 @@
 /**
  * @registry-slug primary
  * @registry-name Primary Button
+ * @registry-description A Future UI Primary Button component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  */
 "use client";

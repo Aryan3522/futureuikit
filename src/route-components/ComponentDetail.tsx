@@ -10,13 +10,11 @@ import { ChevronLeftIcon, SunIcon, MoonIcon } from "@/icons";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { PreviewRegistry } from "./PreviewRegistry";
 import { DotBackground } from "@/components/ui/dot-background";
+import { ComponentRenderer } from "@/registry/ComponentRenderer";
 
 const ComponentLivePreview: React.FC<{ id: string | number; slug: string }> = ({ slug }) => {
-  const Preview = PreviewRegistry[slug];
-  if (!Preview) return <div className="text-center select-text opacity-50">Live Preview for {slug}</div>;
-  return <Preview />;
+  return <ComponentRenderer slug={slug} />;
 };
 
 export default function ComponentDetail({ type, slug, id }: { type: string; slug: string; id: string }) {

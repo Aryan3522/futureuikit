@@ -1,6 +1,8 @@
 /**
  * @registry-slug text-system
  * @registry-name Typography System
+ * @registry-description A Future UI Typography System component.
+ * @registry-category ui
  * @registry-dependency class-variance-authority
  */
 "use client";

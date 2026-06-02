@@ -4,6 +4,8 @@
 /**
  * @registry-slug rich-text-editor
  * @registry-name Rich Text Editor
+ * @registry-description A Future UI Rich Text Editor component.
+ * @registry-category ui
  * @registry-dependency @tiptap/react
  * @registry-dependency @tiptap/pm
  * @registry-dependency @tiptap/starter-kit

@@ -1,6 +1,8 @@
 /**
  * @registry-slug boxy-shift
  * @registry-name Boxy Loader
+ * @registry-description A Future UI Boxy Loader component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  */
 "use client";

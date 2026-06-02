@@ -4,6 +4,8 @@
 /**
  * @registry-slug kanban
  * @registry-name Kanban Board
+ * @registry-description A Future UI Kanban Board component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency lucide-react
  * @registry-dependency class-variance-authority

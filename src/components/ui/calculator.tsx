@@ -2,6 +2,8 @@
 /**
  * @registry-slug calculator
  * @registry-name Calculator
+ * @registry-description A Future UI Calculator component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency lucide-react
  */

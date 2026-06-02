@@ -1,6 +1,8 @@
 /**
  * @registry-slug card
  * @registry-name Card
+ * @registry-description A Future UI Card component.
+ * @registry-category ui
  */
 import * as React from "react"
 

@@ -3,6 +3,8 @@
 /**
  * @registry-slug browser-window
  * @registry-name Browser Window
+ * @registry-description A Future UI Browser Window component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  */
 

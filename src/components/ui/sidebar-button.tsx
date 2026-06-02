@@ -1,6 +1,8 @@
 /**
  * @registry-slug sidebar-button
  * @registry-name Sidebar Button
+ * @registry-description A Future UI Sidebar Button component.
+ * @registry-category ui
  */
 "use client";
 

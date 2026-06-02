@@ -3,6 +3,8 @@
 /**
  * @registry-slug command-palette
  * @registry-name Command Palette
+ * @registry-description A Future UI Command Palette component.
+ * @registry-category ui
  * @registry-dependency cmdk
  * @registry-dependency @radix-ui/react-dialog
  * @registry-dependency lucide-react

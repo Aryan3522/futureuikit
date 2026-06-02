@@ -1,6 +1,8 @@
 /**
  * @registry-slug calendar
  * @registry-name Calendar
+ * @registry-description A Future UI Calendar component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency lucide-react
  */

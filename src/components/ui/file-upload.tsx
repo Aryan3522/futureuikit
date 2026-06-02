@@ -3,6 +3,8 @@
 /**
  * @registry-slug file-upload
  * @registry-name FileUpload
+ * @registry-description A Future UI FileUpload component.
+ * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency class-variance-authority
  * @registry-dependency lucide-react

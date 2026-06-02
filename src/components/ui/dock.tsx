@@ -1,6 +1,8 @@
 /**
  * @registry-slug dock
  * @registry-name Dock
+ * @registry-description A Future UI Dock component.
+ * @registry-category ui
  * @registry-type components:ui
  * @registry-dependency framer-motion
  * @registry-dependency lucide-react
