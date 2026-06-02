@@ -3,6 +3,52 @@ import { ComponentItem } from "@/types";
 
 export const componentsList: ComponentItem[] = [
   {
+    id: 991,
+    title: "Noir Hero 3D",
+    type: "Background",
+    slug: "noir-hero-3d",
+    category: "ui",
+    isNew: true,
+    description: "A premium 3D geometric centerpiece built with React Three Fiber, featuring interactive rotation, hover physics, and luminous rendering designed for the NOIR_OS aesthetic.",
+    details: [
+      "Premium 3D rendering with @react-three/fiber and drei.",
+      "Mouse interaction with floating physics.",
+      "Luminous materials with glass-like refraction.",
+      "Perfect for high-end hero sections.",
+    ],
+    codes: {
+      next: 'import { NoirHero3D } from "@/components/ui/noir-hero-3d";\n\nexport default function Example() {\n  return (\n    <div className="w-full h-[500px]">\n      <NoirHero3D className="w-full h-full" />\n    </div>\n  );\n}',
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add noir-hero-3d'.",
+      "Dependencies: Installs three, @react-three/fiber, and @react-three/drei automatically.",
+      "Wrap it in a container with defined width and height.",
+    ],
+  },
+  {
+    id: 992,
+    title: "Glass Panel",
+    type: "Cards",
+    slug: "glass-panel",
+    category: "layout",
+    isNew: true,
+    description: "A premium glassmorphic panel with heavy blur, luminous shadows, and Framer Motion integration. Built for the NOIR_OS aesthetic.",
+    details: [
+      "Mantle and Heavy blur variants.",
+      "Built-in luminous glow states.",
+      "Integrated with Framer Motion.",
+      "Subtle 1px border highlights.",
+    ],
+    codes: {
+      next: 'import { GlassPanel } from "@/components/ui/glass-panel";\n\nexport default function Example() {\n  return (\n    <GlassPanel variant="heavy" glow="subtle" className="p-8">\n      <h2 className="text-white">Premium Glass</h2>\n    </GlassPanel>\n  );\n}',
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add glass-panel'.",
+      "Variants: 'mantle' for lighter blur, 'heavy' for thick frosted glass.",
+      "Glow: Add 'glow=\"subtle\"' or 'glow=\"luminous\"' for ambient shadows.",
+    ],
+  },
+  {
     id: 999,
     title: "Browser Window",
     type: "Layout",
@@ -855,7 +901,7 @@ export default function AdvancedSearch() {
     ],
   },
   {
-    id: 99,
+    id: 1001,
     title: "Nexus Card",
     type: "Cards",
     slug: "nexus-card",
@@ -927,6 +973,7 @@ export default function AdvancedSearch() {
   },
   {
     id: 102,
+
     title: "Dynamic Form System",
     type: "Form",
     slug: "dynamic-form",
@@ -1148,9 +1195,31 @@ export default function AdvancedSearch() {
       "Variants: The <FileUpload> root accepts 'variant' with values: 'default', 'compact', 'card', 'glass', 'minimal'.",
       "Progress: In a real app, update the internal progress state via the 'onFilesChange' hook to visualize upload metrics.",
     ]
-  }
-
-  ,
+  },
+  {
+    id: 112,
+    title: "Automotive Carousel",
+    type: "Carousel",
+    slug: "automotive-carousel",
+    category: "ui",
+    description: "A high-end, cinematic 3D carousel specifically designed for automotive showcases. It features a responsive camera rig that navigates through the car's interior and exterior with premium damping and ultra-wide angles.",
+    details: [
+      "Dynamic 3D camera navigation between exterior and interior views.",
+      "Strict interior-to-interior pathing to prevent roof sweeping.",
+      "Responsive FOV (up to 110°) and fluid annotation scaling.",
+      "Anti-overlap pointer logic for clear detail labeling.",
+      "Supports GLB models (M4, Car, Bike, etc.) with auto-fitting.",
+    ],
+    codes: {
+      next: 'import { AutomotiveCarousel } from "@/components/ui/automotive-carousel";\n\nexport default function Example() {\n  const slides = [\n    { id: 1, title: "EXTERIOR", description: "Sleek aerodynamic design.", annotations: [] },\n    { id: 2, title: "INTERIOR", description: "Premium luxury dashboard.", annotations: [{ id: "gear", position: [0.1, 0.5, 0.2], label: "Gear Shift" }] },\n  ];\n\n  return (\n    <div className="w-full h-screen">\n      <AutomotiveCarousel slides={slides} objectVariant="m4" />\n    </div>\n  );\n}',
+    },
+    usage: [
+      "Install: Run \'npx futureuikit add automotive-carousel\'.",
+      "Ensure your .glb models are in the /public/models/ folder.",
+      "Import: \'import { AutomotiveCarousel } from \"@/components/ui/automotive-carousel\";\'",
+      "Pass an array of slides with optional 3D annotation coordinates.",
+    ],
+  },
   {
     id: 110,
     title: "Form Builder",
@@ -1280,6 +1349,29 @@ export default function AdvancedSearch() {
       'Customization: Switch layouts using the layout prop and input styles via inputVariant.'
     ]
   },
+  {
+    id: 993,
+    title: "Header",
+    type: "Navigation",
+    slug: "header",
+    category: "layout",
+    isNew: true,
+    description: "A premium, responsive navigation header built with Framer Motion, featuring a desktop navigation bar and a left-side sliding drawer for mobile devices.",
+    details: [
+      "Responsive design with a hidden mobile drawer.",
+      "Backdrop blur and premium styling.",
+      "Framer Motion animations for smooth transitions.",
+      "Built-in theme toggle and search input."
+    ],
+    codes: {
+      next: 'import { Header } from "@/components/ui/header";\n\nexport default function Layout({ children }) {\n  return (\n    <>\n      <Header />\n      <main>{children}</main>\n    </>\n  );\n}',
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add header'.",
+      "Dependencies: Requires framer-motion, lucide-react, and existing button/search-input components.",
+      "Usage: Place at the top of your layout for persistent navigation.",
+    ],
+  }
 ];
 
 export { registry };

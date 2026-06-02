@@ -1,3 +1,8 @@
+/**
+ * @registry-slug header
+ * @registry-name Header
+ * @registry-dependency framer-motion lucide-react
+ */
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -42,175 +47,160 @@ export const Header: React.FC = React.memo(() => {
           }, []);
 
           return (
+            <>
             <header
               className={cn(
-                "fixed top-0 left-0 right-0 z-100 w-full h-16 border-b duration-300",
-                "bg-background/80 backdrop-blur-xl border-border/80 shadow-sm",
+                "fixed top-4 left-1/2 -translate-x-1/2 w-[90%] max-w-7xl z-50 transition-all duration-300",
+                "bg-[#131313]/10 backdrop-blur-[60px] rounded-full border border-white/10 flex justify-between items-center px-6 py-3 shadow-[0_0_30px_rgba(139,92,246,0.15)]",
               )}
             >
-              <div className="container mx-auto h-full px-4 md:px-6 flex items-center justify-between gap-4">
-                {/* Left: Logo & Search */}
-                <div className="flex items-center gap-3 md:gap-6 lg:w-[30%] shrink-0">
-                  <Link href="/" className="flex items-center shrink-0 group">
-                    <div className="w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center overflow-hidden transition-transform group-hover:scale-110">
-                      <Image
-                        src="/Logo.webp"
-                        alt="Future UI Logo"
-                        width={36}
-                        height={36}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  </Link>
-                  <SearchInput data={componentsList} className="w-full max-w-30 sm:max-w-50 lg:max-w-70" />
-                </div>
-
-                {/* Center: Links (Desktop) */}
-                <nav className="hidden lg:flex flex-1 justify-center items-center gap-2">
-                  {navItems.map((item) => {
-                    const isActive = mounted && pathname === item.href;
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className={cn(
-                          "px-4 py-2 text-[13px] font-bold italic uppercase tracking-widest transition-all duration-300",
-                          isActive
-                            ? "text-primary scale-105"
-                            : "text-muted-foreground hover:text-foreground",
-                        )}
-                      >
-                        {item.label}
-                      </Link>
-                    );
-                  })}
-                </nav>
-
-                {/* Right: Actions & Mobile Toggle */}
-                <div className="flex items-center gap-3 md:gap-6 lg:w-[30%] justify-end shrink-0">
-                  <Link
-                    href="https://github.com/Aryan3522/future-ui"
-                    target="_blank"
-                    className="hidden sm:block shrink-0"
-                  >
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="rounded-full w-10 h-10 shrink-0 hover:bg-primary/10 transition-all duration-300 flex items-center justify-center p-0"
-                    >
-                      <GithubIcon animate className="w-5 h-5" />
-                    </Button>
-                  </Link>
-
-                  <Link
-                    href="https://www.linkedin.com/in/aryan-hooda-code/"
-                    target="_blank"
-                    className="hidden sm:block shrink-0"
-                  >
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="rounded-full w-10 h-10 shrink-0 hover:bg-primary/10 transition-all duration-300 flex items-center justify-center p-0"
-                    >
-                      <LinkedinIcon animate className="w-5 h-5" />
-                    </Button>
-                  </Link>
-
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={toggleTheme}
-                    className="rounded-full w-10 h-10 shrink-0 hover:bg-primary/10 transition-all duration-300 flex items-center justify-center p-0"
-                  >
-                    {!mounted ? (
-                      <div className="w-5 h-5" />
-                    ) : theme === "dark" ? (
-                      <SunIcon animate className="w-5 h-5" />
-                    ) : (
-                      <MoonIcon animate className="w-5 h-5" />
-                    )}
-                  </Button>
-
-                  {/* Mobile Menu Toggle */}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setIsOpen(!isOpen)}
-                    className="lg:hidden rounded-full w-10 h-10 shrink-0 hover:bg-primary/10 transition-all duration-300 flex items-center justify-center p-0"
-                  >
-                    {isOpen ? (
-                      <X className="w-5 h-5" />
-                    ) : (
-                      <Menu className="w-5 h-5" />
-                    )}
-                  </Button>
-                </div>
+              {/* Left: Logo */}
+              <div className="flex items-center gap-2 flex-1">
+                <Link href="/" className="flex items-center shrink-0 group gap-2">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden transition-transform group-hover:scale-110">
+                    <Image
+                      src="/Logo.webp"
+                      alt="Future UI Logo"
+                      width={32}
+                      height={32}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="font-display text-xl font-bold tracking-tighter text-foreground hidden sm:block">FUTURE_UI</span>
+                </Link>
               </div>
 
-              {/* Mobile Nav Overlay */}
-              <AnimatePresence>
-                {isOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="absolute top-full left-0 right-0 bg-background border-b border-border lg:hidden overflow-hidden"
-                  >
-                    <div className="container mx-auto px-4 py-8 flex flex-col gap-6">
-                      {/* Mobile Links */}
-                      <div className="flex flex-col gap-2">
-                        {navItems.map((item) => (
-                          <Link
-                            key={item.href}
-                            href={item.href}
-                            onClick={() => setIsOpen(false)}
-                            className={cn(
-                              "flex items-center justify-between px-4 py-4 rounded-xl text-lg font-black italic uppercase transition-all",
-                              pathname === item.href
-                                ? "bg-primary/10 text-primary"
-                                : "hover:bg-muted text-muted-foreground hover:text-foreground",
-                            )}
-                          >
-                            {item.label}
-                            <ChevronRightIcon className="w-5 h-5" />
-                          </Link>
-                        ))}
-                      </div>
+              {/* Center: Links (Desktop) */}
+              <nav className="hidden lg:flex justify-center items-center gap-8">
+                {navItems.map((item) => {
+                  const isActive = mounted && pathname === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={cn(
+                        "font-display text-base transition-all duration-300",
+                        isActive
+                          ? "text-primary border-b border-primary py-1"
+                          : "text-muted-foreground hover:text-foreground",
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </nav>
 
-                      <div className="flex items-center justify-between px-4 pt-4 border-t border-border/50">
-                        <span className="text-sm font-bold text-muted-foreground uppercase italic tracking-widest">
-                          Socials
-                        </span>
+              {/* Right: Actions & Mobile Toggle */}
+              <div className="flex items-center gap-3 justify-end shrink-0 flex-1">
+                <div className="hidden sm:block">
+                  <SearchInput data={componentsList} className="w-full max-w-30 sm:max-w-40 lg:max-w-50 bg-white/5 border-white/10 rounded-full" />
+                </div>
+
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleTheme}
+                  className="rounded-full w-10 h-10 shrink-0 hover:bg-white/10 transition-all duration-300 flex items-center justify-center p-0 text-foreground"
+                >
+                  {!mounted ? (
+                    <div className="w-5 h-5" />
+                  ) : theme === "dark" ? (
+                    <SunIcon animate className="w-5 h-5" />
+                  ) : (
+                    <MoonIcon animate className="w-5 h-5" />
+                  )}
+                </Button>
+
+                {/* Mobile Menu Toggle */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsOpen(!isOpen)}
+                  className="lg:hidden rounded-full w-10 h-10 shrink-0 hover:bg-white/10 transition-all duration-300 flex items-center justify-center p-0 text-foreground"
+                >
+                  {isOpen ? (
+                    <X className="w-5 h-5" />
+                  ) : (
+                    <Menu className="w-5 h-5" />
+                  )}
+                </Button>
+              </div>
+
+            </header>
+            
+            {/* Mobile Nav Overlay */}
+            <AnimatePresence>
+              {isOpen && (
+                <>
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={() => setIsOpen(false)}
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55] lg:hidden"
+                  />
+                  <motion.div
+                    initial={{ x: "-100%" }}
+                    animate={{ x: 0 }}
+                    exit={{ x: "-100%" }}
+                    transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                    className="fixed inset-y-0 left-0 w-72 bg-[#131313]/95 backdrop-blur-[60px] border-r border-white/10 z-[60] lg:hidden flex flex-col p-6 shadow-[30px_0_60px_rgba(0,0,0,0.5)]"
+                  >
+                    <div className="flex justify-between items-center mb-8">
+                      <Link href="/" className="flex items-center shrink-0 group gap-2" onClick={() => setIsOpen(false)}>
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
+                          <Image src="/Logo.webp" alt="Future UI Logo" width={32} height={32} className="w-full h-full object-cover" />
+                        </div>
+                        <span className="font-display text-xl font-bold tracking-tighter text-foreground">FUTURE_UI</span>
+                      </Link>
+                      <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="rounded-full text-foreground hover:bg-white/10 w-10 h-10">
+                        <X className="w-5 h-5" />
+                      </Button>
+                    </div>
+
+                    {/* Mobile Links */}
+                    <div className="flex flex-col gap-2 flex-1">
+                      {navItems.map((item) => (
                         <Link
-                          href="https://github.com/Aryan3522/future-ui"
-                          target="_blank"
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setIsOpen(false)}
+                          className={cn(
+                            "flex items-center justify-between px-4 py-4 rounded-xl text-lg font-black italic uppercase transition-all",
+                            pathname === item.href
+                              ? "bg-primary/10 text-primary"
+                              : "hover:bg-white/5 text-muted-foreground hover:text-foreground",
+                          )}
                         >
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="rounded-full gap-2 font-bold italic"
-                          >
-                            <GithubIcon animate className="w-4 h-4" /> GitHub
+                          {item.label}
+                          <ChevronRightIcon className="w-5 h-5" />
+                        </Link>
+                      ))}
+                    </div>
+
+                    <div className="flex flex-col gap-4 pt-4 border-t border-border/50">
+                      <span className="text-sm font-bold text-muted-foreground uppercase italic tracking-widest text-center">
+                        Socials
+                      </span>
+                      <div className="flex items-center justify-center gap-4">
+                        <Link href="https://github.com/Aryan3522/future-ui" target="_blank">
+                          <Button variant="outline" size="icon" className="rounded-full">
+                            <GithubIcon animate className="w-4 h-4" />
                           </Button>
                         </Link>
-                        <Link
-                          href="https://www.linkedin.com/in/aryan-hooda-code/"
-                          target="_blank"
-                        >
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="rounded-full gap-2 font-bold italic"
-                          >
-                            <LinkedinIcon animate className="w-4 h-4" /> LinkedIn
+                        <Link href="https://www.linkedin.com/in/aryan-hooda-code/" target="_blank">
+                          <Button variant="outline" size="icon" className="rounded-full">
+                            <LinkedinIcon animate className="w-4 h-4" />
                           </Button>
                         </Link>
                       </div>
                     </div>
                   </motion.div>
-                )}
-              </AnimatePresence>
-            </header>
+                </>
+              )}
+            </AnimatePresence>
+            </>
           );
         });
 Header.displayName = "Header";

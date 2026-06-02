@@ -31,6 +31,24 @@ export const GlowyButton = React.memo(React.forwardRef<HTMLButtonElement, GlowyB
             disabled,
             ...props 
           }, ref) => {
+            const internalRef = React.useRef<HTMLButtonElement>(null);
+            
+            // Expose internal ref to the forwarded ref
+            React.useImperativeHandle(ref, () => internalRef.current as HTMLButtonElement);
+
+            const [circleSize, setCircleSize] = React.useState(44);
+
+            React.useEffect(() => {
+              if (!internalRef.current) return;
+              const observer = new ResizeObserver((entries) => {
+                for (const entry of entries) {
+                  // clientHeight accurately measures the inner height inside the borders
+                  setCircleSize(entry.target.clientHeight);
+                }
+              });
+              observer.observe(internalRef.current);
+              return () => observer.disconnect();
+            }, []);
             
             const intentColors: Record<GlowyButtonVariant, { base: string; glow: string; glass: string }> = {
               primary: { base: "#00afaf", glow: "rgba(0, 175, 175, 0.5)", glass: "rgba(0, 175, 175, 0.35)" },
@@ -48,15 +66,15 @@ export const GlowyButton = React.memo(React.forwardRef<HTMLButtonElement, GlowyB
 
             return (
               <motion.button
-                ref={ref}
+                ref={internalRef}
                 disabled={disabled}
                 initial="initial"
                 whileHover={!disabled ? "hover" : "initial"}
                 whileTap={!disabled ? "hover" : "initial"}
                 className={cn(
-                  "relative inline-flex items-center justify-center sm:min-w-42.5 h-12 rounded-full font-bold overflow-hidden",
+                  "relative inline-flex items-center justify-center px-8 h-12 rounded-full font-bold overflow-hidden",
                   "bg-background text-foreground border-2",
-                  "w-full sm:w-auto",
+                  "whitespace-nowrap",
                   disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
                   className
                 )}
@@ -69,7 +87,7 @@ export const GlowyButton = React.memo(React.forwardRef<HTMLButtonElement, GlowyB
                 <motion.div
                   variants={{
                     initial: { x: 0 },
-                    hover: { x: -18 }
+                    hover: { x: -14 }
                   }}
                   transition={{ type: "spring", stiffness: 400, damping: 25 }}
                   className="relative z-30 flex items-center justify-center pointer-events-none"
@@ -82,33 +100,33 @@ export const GlowyButton = React.memo(React.forwardRef<HTMLButtonElement, GlowyB
                     initial: { 
                       width: "100%", 
                       height: "100%", 
-                      right: 0, 
-                      top: 0,
-                      borderRadius: "999px",
+                      right: "0px", 
+                      top: "0px",
+                      borderRadius: "9999px",
                     },
                     hover: { 
-                      width: "40px", 
-                      height: "40px", 
-                      right: "2px", 
-                      top: "2px",
-                      borderRadius: "999px",
+                      width: circleSize, 
+                      height: "100%", 
+                      right: "0px", 
+                      top: "0px",
+                      borderRadius: "9999px",
                     }
                   }}
-                  transition={{ type: "spring", stiffness: 250, damping: 25 }}
-                  className="absolute z-20 flex items-center justify-center backdrop-blur-xl border border-black/10 dark:border-white/30 shadow-2xl pointer-events-none m-0 p-0"
+                  transition={{ type: "spring", stiffness: 300, damping: 24, mass: 0.8 }}
+                  className="absolute z-20 flex items-center justify-center backdrop-blur-md border border-black/10 dark:border-white/30 shadow-2xl pointer-events-none m-0 p-0 transform-gpu"
                   style={{
                     backgroundColor: finalGlass,
                   }}
                 >
                   <motion.div
                     variants={{
-                      initial: { opacity: 0, scale: 0, x: 0, rotate: -45 },
+                      initial: { opacity: 0, scale: 0.8, x: -10, rotate: -45 },
                       hover: { opacity: 1, scale: 1, x: 0, rotate: 0 }
                     }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 25, delay: 0.05 }}
                     className="flex items-center justify-center text-foreground"
                   >
-                    <Icon size={20} />
+                    <Icon size={18} />
                   </motion.div>
                 </motion.div>
 

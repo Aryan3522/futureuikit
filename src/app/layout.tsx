@@ -1,10 +1,16 @@
-import { Inter, Poppins } from "next/font/google";
+import { Inter, Poppins, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import AppProviders from "@/next/AppProviders";
 import { PointCursor } from "@/components/ui/PointCursor";
 import Script from "next/script";
 import React from "react";
 import { Metadata, Viewport } from "next";
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -49,15 +55,13 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${poppins.variable}`}
+      className={`${inter.variable} ${poppins.variable} ${jetbrainsMono.variable}`}
     >
-      <body
-        className="antialiased bg-background text-foreground"
-        suppressHydrationWarning
-      >
-        <script
+      <head>
+        <link href="https://cdn.jsdelivr.net/npm/geist@1.0.3/dist/fonts/geist-sans/Geist-Variable.woff2" rel="preload" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <Script
           id="dark-mode"
-          suppressHydrationWarning
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
@@ -68,9 +72,9 @@ export default function RootLayout({
             `,
           }}
         />
-        <script
+        <Script
           id="disable-zoom"
-          suppressHydrationWarning
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
@@ -83,6 +87,12 @@ export default function RootLayout({
             `,
           }}
         />
+      </head>
+      <body
+        className="antialiased bg-background text-foreground overflow-x-hidden selection:bg-secondary/30"
+        suppressHydrationWarning
+      >
+        <div className="fixed inset-0 noise-overlay z-[100]"></div>
         <AppProviders>
           {children}
         </AppProviders>

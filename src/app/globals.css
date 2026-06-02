@@ -75,25 +75,25 @@
 }
 
 .dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --primary: 239 84% 67%;
-  --primary-foreground: 240 5.9% 10%;
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
+  --background: 0 0% 0%;
+  --foreground: 20 6% 90%;
+  --card: 0 0% 0%;
+  --card-foreground: 20 6% 90%;
+  --popover: 0 0% 0%;
+  --popover-foreground: 20 6% 90%;
+  --primary: 0 0% 78%;
+  --primary-foreground: 0 0% 19%;
+  --secondary: 258 100% 87%;
+  --secondary-foreground: 258 100% 20%;
+  --muted: 0 0% 8%;
+  --muted-foreground: 20 5% 65%;
+  --accent: 0 0% 8%;
+  --accent-foreground: 20 6% 90%;
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 0 0% 98%;
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --ring: 239 84% 67%;
+  --border: 0 0% 20%;
+  --input: 0 0% 20%;
+  --ring: 258 90% 66%;
 }
 
 @layer base {
@@ -143,6 +143,44 @@
       -ms-overflow-style: none;
     }
   }
+
+  /* NOIR_OS Utility Classes */
+  .glass-mantle {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .glass-heavy {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .luminous-glow {
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
+  }
+  .stellar-violet-glow {
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
+  }
+  .noise-overlay {
+    background-image: url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+    opacity: 0.03;
+    pointer-events: none;
+  }
+  /* Typography */
+  .font-display, .font-headline-lg, .font-body-md, .font-body-lg, .font-label-caps, .font-headline-md, .font-headline-lg-mobile {
+    font-family: "Geist", var(--font-inter), sans-serif;
+  }
+  .font-mono-label {
+    font-family: var(--font-jetbrains-mono), monospace;
+  }
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('https://cdn.jsdelivr.net/npm/geist@1.0.3/dist/fonts/geist-sans/Geist-Variable.woff2') format('woff2-variations');
+  font-display: swap;
 }
 
 .font-inter { font-family: var(--font-inter); }

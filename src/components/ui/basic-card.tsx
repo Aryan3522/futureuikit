@@ -6,6 +6,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
@@ -291,14 +292,14 @@ export const CardAvatar = React.memo(React.forwardRef<HTMLDivElement, CardAvatar
             <div
               ref={ref}
               className={cn(
-                "shrink-0 rounded-full flex items-center justify-center font-semibold bg-muted text-muted-foreground overflow-hidden",
+                "relative shrink-0 rounded-full flex items-center justify-center font-semibold bg-muted text-muted-foreground overflow-hidden",
                 avatarSizes[size],
                 className
               )}
               {...props}
             >
               {src ? (
-                <img src={src} alt={initials} className="w-full h-full object-cover" />
+                <Image src={src} alt={initials} fill className="object-cover" unoptimized />
               ) : (
                 initials
               )}
@@ -328,14 +329,14 @@ export const CardMedia = React.memo(React.forwardRef<HTMLDivElement, CardMediaPr
             <div
               ref={ref}
               className={cn(
-                "w-full bg-muted overflow-hidden",
+                "relative w-full bg-muted overflow-hidden",
                 aspectMap[aspectRatio],
                 className
               )}
               {...props}
             >
               {src ? (
-                <img src={src} alt={alt} className="w-full h-full object-cover" />
+                <Image src={src} alt={alt} fill className="object-cover" unoptimized />
               ) : (
                 children
               )}
