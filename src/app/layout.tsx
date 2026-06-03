@@ -1,4 +1,5 @@
 import { Inter, Poppins, JetBrains_Mono } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import AppProviders from "@/next/AppProviders";
 import Script from "next/script";
@@ -189,33 +190,19 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${poppins.variable} ${jetbrainsMono.variable}`}
+      className={`${GeistSans.variable} ${inter.variable} ${poppins.variable} ${jetbrainsMono.variable}`}
     >
       <head>
-        {/* Preload critical font */}
-        <link
-          href="https://cdn.jsdelivr.net/npm/geist@1.0.3/dist/fonts/geist-sans/Geist-Variable.woff2"
-          rel="preload"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-
-        {/* JSON-LD Structured Data — boosts rich results in Google */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-
-        {/* Force dark mode before paint — prevents flash */}
         <script
           id="dark-mode"
           dangerouslySetInnerHTML={{
             __html: `(function(){try{document.documentElement.classList.add('dark');}catch(_){}})();`,
           }}
         />
-
-        {/* Disable ctrl+scroll zoom */}
         <script
           id="disable-zoom"
           dangerouslySetInnerHTML={{

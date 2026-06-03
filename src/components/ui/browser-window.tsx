@@ -228,7 +228,7 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
               left: 0,
               width: "100%",
               // Escapes all local stacking contexts effectively 
-              zIndex: isMaximized ? 2147483647 : 2147483646,
+              zIndex: isMaximized ? 2147483647 : 10,
               isolation: "isolate"
             }}
           >

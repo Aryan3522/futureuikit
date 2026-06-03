@@ -3,6 +3,44 @@ import { ComponentItem } from "@/types";
 
 export const rawComponentsList: ComponentItem[] = [
   {
+    id: 1000,
+    title: "Terminal Window",
+    type: "Components",
+    slug: "terminal",
+    category: "ui",
+    isNew: true,
+    description: "A highly customizable, authentic-looking terminal component. Supports 8 OS variants (macOS, Windows, Ubuntu, Bash, ZSH, etc) with built-in typing animations, copy-to-clipboard functionality, premium framer-motion physics, and interactive command execution.",
+    details: [
+      "8 distinct authentic variants: Windows, PowerShell, CMD, Bash, Ubuntu, Linux, macOS, and ZSH.",
+      "Interactive typing mode: Allow users to type and execute commands.",
+      "Built-in framer-motion typing and cursor animations for static modes.",
+      "Auto-adapts to your application's font-mono family.",
+      "Intelligent copy-to-clipboard handling.",
+      "Responsive wrapping and no horizontal overflow issues.",
+    ],
+    codes: {
+      next: `import { Terminal } from "@/components/ui/terminal";
+
+export default function Example() {
+  return (
+    <Terminal 
+      variant="macos" 
+      commands={["npm install futureuikit", "npx futureuikit add terminal"]} 
+      animated 
+    />
+  );
+}`,
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add terminal'.",
+      "Variants: Pass the 'variant' prop with one of the 8 supported OS environments.",
+      "Animation: Pass the 'animated' prop to automatically type out the commands sequentially.",
+      "Interactive: Pass 'interactive={true}' and 'onCommand={(cmd) => handleCommand(cmd)}' to let users type their own commands.",
+      "Content: Use 'commands' (array of strings) to show terminal commands, and 'output' (array of strings) for terminal responses.",
+      "Custom Wrapper: You can pass custom 'children' to render your own complex terminal content instead of standard commands.",
+    ],
+  },
+  {
     id: 991,
     title: "Noir Hero 3D",
     type: "Background",
@@ -696,7 +734,7 @@ export default function Example() {
 }`,
     },
     usage: [
-      "Install: 'npm install futureuikit' to get the full icon suite.",
+      "Install: Run 'npx futureuikit add icons' to install the icons.",
       "Animation: Pass the 'animate' prop to enable premium hover and entry motions.",
       "Static Mode: Omit the 'animate' prop (or pass false) to use icons as standard SVGs.",
       "Import: 'import { XIcon, YoutubeIcon } from \"futureuikit/icons\";'",
@@ -1166,10 +1204,10 @@ export default function AdvancedSearch() {
       next: 'import { \n  CommandPalette, \n  CommandInput, \n  CommandList, \n  CommandEmpty, \n  CommandGroup, \n  CommandItem, \n  CommandSeparator, \n  CommandShortcut \n} from "@/components/ui/command-palette";\nimport { Calculator, Calendar, CreditCard, Settings, Smile, User } from "lucide-react";\nimport React from "react";\n\nexport default function Example() {\n  const [open, setOpen] = React.useState(false);\n\n  React.useEffect(() => {\n    const down = (e: KeyboardEvent) => {\n      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {\n        e.preventDefault();\n        setOpen((open) => !open);\n      }\n    };\n    document.addEventListener("keydown", down);\n    return () => document.removeEventListener("keydown", down);\n  }, []);\n\n  return (\n    <CommandPalette open={open} onOpenChange={setOpen} variant="spotlight">\n      <CommandInput placeholder="Type a command or search..." />\n      <CommandList>\n        <CommandEmpty>No results found.</CommandEmpty>\n        <CommandGroup heading="Suggestions">\n          <CommandItem>\n            <Calendar className="mr-2 h-4 w-4" />\n            <span>Calendar</span>\n          </CommandItem>\n          <CommandItem>\n            <Smile className="mr-2 h-4 w-4" />\n            <span>Search Emoji</span>\n          </CommandItem>\n          <CommandItem>\n            <Calculator className="mr-2 h-4 w-4" />\n            <span>Calculator</span>\n          </CommandItem>\n        </CommandGroup>\n        <CommandSeparator />\n        <CommandGroup heading="Settings">\n          <CommandItem>\n            <User className="mr-2 h-4 w-4" />\n            <span>Profile</span>\n            <CommandShortcut>⌘P</CommandShortcut>\n          </CommandItem>\n          <CommandItem>\n            <CreditCard className="mr-2 h-4 w-4" />\n            <span>Billing</span>\n            <CommandShortcut>⌘B</CommandShortcut>\n          </CommandItem>\n          <CommandItem>\n            <Settings className="mr-2 h-4 w-4" />\n            <span>Settings</span>\n            <CommandShortcut>⌘S</CommandShortcut>\n          </CommandItem>\n        </CommandGroup>\n      </CommandList>\n    </CommandPalette>\n  );\n}'
     },
     usage: [
+      "Install: Run 'npx futureuikit add command-palette'.",
       "Overview: The Command Palette is built on top of 'cmdk' (the industry standard headless command menu library). It provides extremely fast, fuzzy search navigation.",
     ],
   },
-
   {
     id: 108,
     title: "Select / Combobox",

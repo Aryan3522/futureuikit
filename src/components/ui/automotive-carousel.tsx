@@ -135,7 +135,7 @@ const AutoFitModel = React.memo(function AutoFitModel({
 
               {/* Original Stalk Style - Vertical and Clean (Shortened) */}
               <div
-                className="w-px bg-gradient-to-b from-blue-400/80 to-transparent mt-1 origin-bottom"
+                className="w-px bg-linear-to-b from-blue-400/80 to-transparent mt-1 origin-bottom"
                 style={{ height: stalkHeight }}
               />
 
@@ -399,7 +399,7 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
       )}
     >
       {/* ── Background ────────────────────────────────────────────────────── */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f] via-[#050508] to-[#000000]" />
+      <div className="absolute inset-0 bg-linear-to-b from-[#0a0a0f] via-[#050508] to-[#000000]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_30%,rgba(30,30,60,0.2),transparent)]" />
 
       {/* ── Text (z-30 — ON TOP of the 3D model) ──────── */}
@@ -479,14 +479,14 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
       <div className="absolute bottom-6 sm:bottom-8 right-6 sm:right-8 z-50 flex items-center gap-3 sm:gap-4">
         <button
           onClick={() => go(-1)}
-          className="p-3 sm:p-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:bg-white/20 backdrop-blur-md text-white transition-all active:scale-95"
+          className="p-3 sm:p-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/20 backdrop-blur-md text-white transition-all active:scale-95"
           aria-label="Previous slide"
         >
           <ChevronLeft size={isMobile ? 20 : 24} />
         </button>
         <button
           onClick={() => go(1)}
-          className="p-3 sm:p-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:bg-white/20 backdrop-blur-md text-white transition-all active:scale-95"
+          className="p-3 sm:p-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/20 backdrop-blur-md text-white transition-all active:scale-95"
           aria-label="Next slide"
         >
           <ChevronRight size={isMobile ? 20 : 24} />

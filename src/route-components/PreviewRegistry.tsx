@@ -47,6 +47,7 @@ import { DynamicForm, FieldConfig } from "@/components/ui/dynamic-form";
 import { Sparkles, Terminal, Mail, Lock, User, Globe, Phone as PhoneIcon, Check as CheckIcon, AlertCircle as AlertCircleIcon, Home, Search, Settings, Compass, MessageSquare, Plus, Monitor, Filter, Check, Copy, X } from "lucide-react";
 import { ScrollTextReveal } from "@/components/ui/scroll-text-reveal";
 import { BrowserWindow } from "@/components/ui/browser-window";
+import { Terminal as UITerminal, type TerminalVariant } from "@/components/ui/terminal";
 import { CursorGlowButton } from "@/components/ui/cursor-glow-button";
 import { Dock, DockItem, DockDivider } from "@/components/ui/dock";
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerBody, DrawerFooter, DrawerClose } from "@/components/ui/drawer";
@@ -156,6 +157,7 @@ interface PreviewContainerProps {
   scrollRef?: React.RefObject<HTMLDivElement | null>;
   canvasClassName?: string;
   extraControls?: React.ReactNode;
+  align?: "center" | "start";
 }
 
 const PreviewContainer: React.FC<PreviewContainerProps> = ({
@@ -171,6 +173,7 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
   scrollRef,
   canvasClassName,
   extraControls,
+  align = "center",
 }) => {
   return (
     <div className={cn("w-full h-full flex flex-col overflow-y-auto bg-background", className)}>
@@ -208,7 +211,7 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
       )}
 
       {/* Content Area */}
-      <div className={cn("flex items-start justify-center flex-1 w-full relative px-2 sm:px-4 pb-4 sm:pb-8 pt-2 sm:pt-4 overflow-y-auto", contentClassName)}>
+      <div className={cn("flex justify-center flex-1 w-full relative px-2 sm:px-4 pb-4 sm:pb-8 pt-2 sm:pt-4 overflow-y-auto", align === "center" ? "items-center" : "items-start", contentClassName)}>
         {isVirtualScreen ? (
           <BrowserWindow
             title={title}
@@ -216,12 +219,12 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
             contentClassName={cn("flex flex-col", canvasClassName)}
             scrollRef={scrollRef}
           >
-            <div className="w-full h-full flex flex-col relative items-start justify-start">
+            <div className={cn("w-full h-full flex flex-col relative", align === "center" ? "items-center justify-center" : "items-start justify-start")}>
               {children}
             </div>
           </BrowserWindow>
         ) : (
-          <div className="w-full h-full flex flex-col relative items-start justify-start">
+          <div className={cn("w-full h-full flex flex-col relative", align === "center" ? "items-center justify-center" : "items-start justify-start")}>
             {children}
           </div>
         )}
@@ -533,6 +536,7 @@ const DynamicFormPreview: React.FC = () => {
       variants={["contact", "wizard", "login"]}
       activeVariant={activeDemo}
       contentClassName="items-start py-8"
+      align="start"
       onVariantChange={(v) => {
         setActiveDemo(v);
         setSubmittedData(null);
@@ -1138,6 +1142,7 @@ const FormBuilderPreview: React.FC = () => {
       description="A schema-driven form builder for rapid layout construction."
       variants={["default", "minimal", "enterprise", "compact"]}
       activeVariant={variant}
+      align="start"
       onVariantChange={setVariant}
       extraControls={
         <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
@@ -1150,7 +1155,7 @@ const FormBuilderPreview: React.FC = () => {
         </div>
       }
     >
-      <div className="flex flex-col items-center justify-start w-full h-full p-4 md:p-8 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+      <div className="flex flex-col items-center justify-start w-full min-h-full p-4 md:p-8 relative z-10" style={{ transform: 'translateZ(0)' }}>
         <div className="w-full max-w-4xl flex flex-col lg:flex-row gap-8">
           <div className="flex-1">
             <FormBuilder
@@ -1212,6 +1217,7 @@ const KanbanPreview: React.FC = () => {
       description="A highly interactive, drag-and-drop Kanban board."
       variants={["default", "compact", "enterprise", "minimal"]}
       activeVariant={variant}
+      align="start"
       onVariantChange={setVariant}
     >
       <div className="w-full flex justify-center self-start">
@@ -1230,6 +1236,7 @@ const WorkflowPreview: React.FC = () => {
       description="A node-based visual workflow editor for powerful automation pipelines."
       variants={["default", "enterprise", "minimal", "glass", "compact"]}
       activeVariant={variant}
+      align="start"
       onVariantChange={setVariant}
     >
       <div className="w-full h-full min-h-150 p-4 md:p-8 flex items-center justify-center relative z-10">
@@ -1369,6 +1376,7 @@ function FilterBuilderPreview() {
       description="Manage and filter your project tasks with advanced query logic."
       variants={["default", "minimal", "enterprise", "compact", "glass"]}
       activeVariant={variant}
+      align="start"
       onVariantChange={setVariant}
       contentClassName="bg-transparent border-none p-4 md:p-8 shadow-none min-h-0 items-start overflow-y-auto custom-scrollbar"
     >
@@ -1639,7 +1647,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
   },
   "text-system": function TextSystemPreview() {
     return (
-      <PreviewContainer title="Text System" description="A robust and fully responsive typography system.">
+      <PreviewContainer title="Text System" description="A robust and fully responsive typography system." align="start">
         <div className="max-w-2xl w-full flex flex-col gap-8 select-text text-left">
           <div className="space-y-2">
             <Label className="text-xs uppercase tracking-widest text-blue-500">
@@ -2680,7 +2688,49 @@ export const PreviewRegistry: Record<string, React.FC> = {
   "ai-chat": AIChatPreview,
   "browser-window": BrowserWindowPreview,
   "automotive-carousel": AutomotiveCarouselPreview,
+  terminal: TerminalPreview,
 };
+
+function TerminalPreview() {
+  const [activeVariant, setActiveVariant] = useState<TerminalVariant>("macos");
+
+  const handleCommand = async (cmd: string) => {
+    // Artificial delay to simulate network/processing
+    await new Promise(resolve => setTimeout(resolve, 800));
+    return [
+      `Preview mode: Command execution is disabled.`,
+      `Download the component to define custom logic for: ${cmd}`
+    ];
+  };
+
+  const variants: TerminalVariant[] = [
+    "macos", "windows", "ubuntu", "powershell", "cmd", "bash", "linux", "zsh"
+  ];
+
+  return (
+    <PreviewContainer 
+      title="Terminal Window" 
+      description="Authentic, animated terminal components for multiple OS variants."
+      variants={variants}
+      activeVariant={activeVariant}
+      onVariantChange={setActiveVariant}
+      isVirtualScreen={true}
+      canvasClassName="bg-zinc-100 dark:bg-zinc-900/50"
+    >
+      <div className="w-full h-full flex items-center justify-center p-4 sm:p-8 md:p-12">
+        <UITerminal 
+          key={activeVariant} // Force remount on variant change to reset history
+          variant={activeVariant}
+          className="w-full max-w-3xl aspect-[4/5] sm:aspect-video shadow-2xl"
+          interactive={true}
+          onCommand={handleCommand}
+          commands={[`Welcome to the ${activeVariant} terminal preview!`, "Type any command and press Enter."]}
+          output={[]}
+        />
+      </div>
+    </PreviewContainer>
+  );
+}
 
 function AIChatPreview() {
   const [messages, setMessages] = useState<any[]>([]);
@@ -3198,6 +3248,7 @@ ORDER BY department, salary_rank;`,
       description="A highly customizable AI chat interface with markdown and code support."
       variants={["chatgpt", "claude", "perplexity", "compact", "enterprise", "minimal"]}
       activeVariant={layout}
+      align="start"
       onVariantChange={setLayout}
       contentClassName="p-0 overflow-hidden"
       extraControls={

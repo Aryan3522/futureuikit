@@ -17,6 +17,24 @@ const ComponentLivePreview: React.FC<{ id: string | number; slug: string }> = ({
   return <ComponentRenderer slug={slug} />;
 };
 
+const HighlightText: React.FC<{ text: string }> = ({ text }) => {
+  const parts = text.split(/(`[^`]+`)/g);
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (part.startsWith('`') && part.endsWith('`')) {
+          return (
+            <code key={index} className="font-mono bg-primary/10 text-primary px-1.5 py-0.5 rounded-md text-sm mx-0.5">
+              {part.slice(1, -1)}
+            </code>
+          );
+        }
+        return <span key={index}>{part}</span>;
+      })}
+    </>
+  );
+};
+
 export default function ComponentDetail({ type, slug, id }: { type: string; slug: string; id: string }) {
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedCli, setCopiedCli] = useState(false);
@@ -226,22 +244,37 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
             <div className="h-px w-12 bg-primary/50" />
             <span className="text-sm uppercase tracking-widest font-medium">Quick Install via CLI</span>
           </div>
-          <div className="relative group rounded-2xl border border-border/20 bg-muted/5 p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 overflow-hidden backdrop-blur-sm">
-            <div className="flex items-center gap-4 font-mono text-base md:text-xl text-foreground/90">
-              <span className="text-primary/60 font-bold select-none">$</span>
-              <span className="selection:bg-primary/30">{cliCommand}</span>
+          <div className="relative group rounded-xl border border-border/20 bg-[#1e1e1e] overflow-hidden shadow-2xl flex flex-col">
+            {/* macOS Window Controls */}
+            <div className="flex items-center gap-2 px-4 py-3 bg-[#2d2d2d] border-b border-white/5">
+              <div className="flex gap-2">
+                <div className="w-3 h-3 rounded-full bg-[#ff5f56]" />
+                <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
+                <div className="w-3 h-3 rounded-full bg-[#27c93f]" />
+              </div>
+              <div className="flex-1 text-center text-xs text-white/40 font-medium font-sans select-none pr-12">
+                Terminal
+              </div>
             </div>
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(cliCommand);
-                setCopiedCli(true);
-                setTimeout(() => setCopiedCli(false), 1500);
-              }}
-              className="p-3 rounded-xl bg-background border border-border/20 hover:bg-muted/30 transition-all flex items-center justify-center gap-2 shrink-0"
-            >
-              {copiedCli ? <Check size={18} className="text-emerald-500" /> : <Copy size={18} />}
-              <span className="text-sm font-medium">{copiedCli ? "Copied" : "Copy Command"}</span>
-            </button>
+            {/* Terminal Body */}
+            <div className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#1e1e1e]">
+              <div className="flex items-center gap-4 font-mono text-base md:text-lg text-white/90">
+                <span className="text-emerald-500 font-bold select-none">~</span>
+                <span className="text-white/40 select-none">$</span>
+                <span className="selection:bg-white/20">{cliCommand}</span>
+              </div>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(cliCommand);
+                  setCopiedCli(true);
+                  setTimeout(() => setCopiedCli(false), 1500);
+                }}
+                className="p-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all flex items-center justify-center gap-2 shrink-0 text-white/80"
+              >
+                {copiedCli ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
+                <span className="text-sm font-medium">{copiedCli ? "Copied" : "Copy"}</span>
+              </button>
+            </div>
           </div>
         </motion.section>
 
@@ -270,7 +303,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
               // Parse step assuming format "Action: description"
               const splitIndex = step.indexOf(":");
               const hasColon = splitIndex !== -1;
-              const action = hasColon ? step.slice(0, splitIndex).trim() : `Step 0${i + 1}`;
+              const action = hasColon ? step.slice(0, splitIndex).trim() : `Step ${(i + 1).toString().padStart(2, '0')}`;
               const description = hasColon ? step.slice(splitIndex + 1).trim() : step;
 
               return (
@@ -287,7 +320,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
                   
                   {/* Step Number Watermark */}
                   <div className="absolute -top-12 -left-8 md:-left-12 text-7xl md:text-9xl font-black text-foreground opacity-10 dark:opacity-5 pointer-events-none select-none transition-opacity duration-500 group-hover:opacity-20 dark:group-hover:opacity-10">
-                    0{i + 1}
+                    {(i + 1).toString().padStart(2, '0')}
                   </div>
 
                   <div className="space-y-3 relative z-10 pt-1">
@@ -295,7 +328,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
                       {action}
                     </h4>
                     <p className="text-base md:text-lg text-muted-foreground/80 leading-relaxed font-light">
-                      {description}
+                      <HighlightText text={description} />
                     </p>
                   </div>
                 </motion.div>
