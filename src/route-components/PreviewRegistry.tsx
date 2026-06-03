@@ -208,20 +208,20 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
       )}
 
       {/* Content Area */}
-      <div className={cn("flex items-center justify-center flex-1 w-full relative px-2 md:px-4 pb-4 md:pb-8 pt-2 md:pt-4", contentClassName)}>
+      <div className={cn("flex items-start justify-center flex-1 w-full relative px-2 sm:px-4 pb-4 sm:pb-8 pt-2 sm:pt-4 overflow-y-auto", contentClassName)}>
         {isVirtualScreen ? (
           <BrowserWindow
             title={title}
-            className="md:w-[80%] aspect-9/16 md:aspect-3/4 lg:aspect-video max-h-[90vh]"
+            className="w-full sm:w-[90%] md:w-[80%] aspect-[9/16] sm:aspect-[4/5] md:aspect-[3/4] lg:aspect-video min-h-[500px] max-h-[85vh] sm:max-h-[90vh] mx-auto"
             contentClassName={cn("flex flex-col", canvasClassName)}
             scrollRef={scrollRef}
           >
-            <div className="flex-1 w-full h-full flex flex-col items-center justify-center relative" style={{ transform: "translateZ(0)" }}>
+            <div className="w-full h-full flex flex-col relative items-start justify-start">
               {children}
             </div>
           </BrowserWindow>
         ) : (
-          <div className="flex-1 w-full h-full flex flex-col items-center justify-center relative" style={{ transform: "translateZ(0)" }}>
+          <div className="w-full h-full flex flex-col relative items-start justify-start">
             {children}
           </div>
         )}
@@ -1214,7 +1214,7 @@ const KanbanPreview: React.FC = () => {
       activeVariant={variant}
       onVariantChange={setVariant}
     >
-      <div className="w-full flex justify-center self-start p-2 sm:p-8" style={{ transform: 'translateZ(0)' }}>
+      <div className="w-full flex justify-center self-start">
         <KanbanBoard variant={variant} initialColumns={initialKanbanData} />
       </div>
     </PreviewContainer>
@@ -2346,13 +2346,13 @@ export const PreviewRegistry: Record<string, React.FC> = {
               >
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-5 border-b border-border/50 bg-muted/10">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 flex items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20">
+                  <div className="flex items-center gap-4 min-w-0">
+                    <div className="w-12 h-12 flex shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20">
                       {selected.render({ width: 24, height: 24 })}
                     </div>
-                    <div>
-                      <p className="text-base font-bold text-foreground">{selected.name}</p>
-                      <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">{selected.label} Icon</p>
+                    <div className="min-w-0">
+                      <p className="text-base font-bold text-foreground truncate">{selected.name}</p>
+                      <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider truncate">{selected.label} Icon</p>
                     </div>
                   </div>
                   <button
@@ -2373,7 +2373,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
                   {/* Sizes */}
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3">Responsive Variants</p>
-                    <div className="flex items-end justify-between gap-4 px-6 py-5 rounded-2xl bg-muted/20 border border-border/50">
+                    <div className="flex flex-wrap items-end justify-center sm:justify-between gap-4 px-6 py-5 rounded-2xl bg-muted/20 border border-border/50">
                       {[{ size: 16, label: "16px" }, { size: 24, label: "24px" }, { size: 32, label: "32px" }, { size: 48, label: "48px" }, { size: 64, label: "64px" }].map(({ size, label }) => (
                         <div key={size} className="flex flex-col items-center gap-2">
                           <div className="flex items-center justify-center p-2 rounded-lg bg-background border border-border/50">

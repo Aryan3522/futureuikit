@@ -1136,14 +1136,12 @@ export const DynamicForm: React.FC<DynamicFormProps> = React.memo(({
             isError: false
           });
 
-          // Resolve validation schema
-          const resolvedSchema = useMemo(() => {
-            if (validationSchema) return validationSchema;
-            return buildDynamicSchema(fields);
-          }, [fields, validationSchema]);
-
           const methods = useForm({
-            resolver: zodResolver(resolvedSchema),
+            resolver: async (data, context, options) => {
+              const activeFields = fields.filter((f) => !f.condition || f.condition(data));
+              const schema = validationSchema || buildDynamicSchema(activeFields);
+              return zodResolver(schema)(data, context, options);
+            },
             defaultValues
           });
 
