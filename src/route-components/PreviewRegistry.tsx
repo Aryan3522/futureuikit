@@ -543,7 +543,7 @@ const DynamicFormPreview: React.FC = () => {
         setSubmittedData(null);
       }}
     >
-      <div className="flex flex-col lg:flex-row gap-8 items-stretch justify-center w-full max-w-5xl">
+      <div className="flex flex-col lg:flex-row gap-8 items-stretch justify-center w-full max-w-5xl m-auto">
         <div className="flex-1 flex flex-col justify-center min-w-0">
           <AnimatePresence mode="wait">
             {activeDemo === "contact" && (
@@ -2609,36 +2609,39 @@ export const PreviewRegistry: Record<string, React.FC> = {
   },
   "scroll-text-reveal": function ScrollTextRevealPreview() {
     const scrollContainer = React.useRef<HTMLDivElement>(null);
-    const [screenHeight, setScreenHeight] = React.useState<string | number>("100vh");
-
-    React.useEffect(() => {
-      if (scrollContainer.current) {
-        // Measure the virtual screen height to perfectly center the text
-        setScreenHeight(scrollContainer.current.clientHeight);
-      }
-    }, []);
 
     return (
       <PreviewContainer
         title="Scroll Text Reveal"
         description="Text that reveals itself as you scroll down the screen."
         scrollRef={scrollContainer}
-        canvasClassName="justify-start"
+        canvasClassName="block p-0 sm:p-0 md:p-0"
       >
-        <div className="w-full flex flex-col items-center pb-20">
-          <div style={{ height: screenHeight }} className="flex flex-col items-center justify-center text-muted-foreground w-full shrink-0">
-            <span className="animate-pulse">Scroll down to reveal text ↓</span>
-          </div>
-          <div className="py-32 px-8 max-w-4xl flex items-center justify-center shrink-0">
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-center">
+        <div className="w-full h-full">
+          
+          {/* Section 1 */}
+          <section className="w-full h-full flex flex-col items-center justify-center shrink-0">
+            <span className="text-sm font-medium tracking-[0.25em] uppercase text-muted-foreground/50 select-none">
+              Scroll Down To Reveal
+            </span>
+          </section>
+          
+          {/* Section 2 */}
+          <section className="w-full h-full flex flex-col items-center justify-center shrink-0 px-6 md:px-12">
+            <h2 className="text-3xl md:text-5xl lg:text-7xl font-bold tracking-tight text-center leading-[1.2] max-w-5xl">
               <ScrollTextReveal container={scrollContainer}>
                 The future of UI design is here. Experience seamless, highly optimized animations that elevate your application&apos;s feel.
               </ScrollTextReveal>
             </h2>
-          </div>
-          <div style={{ height: screenHeight }} className="flex flex-col items-center justify-center text-muted-foreground w-full shrink-0">
-            <span className="animate-pulse">Scroll up to reverse ↑</span>
-          </div>
+          </section>
+          
+          {/* Section 3 */}
+          <section className="w-full h-full flex flex-col items-center justify-center shrink-0">
+            <span className="text-sm font-medium tracking-[0.25em] uppercase text-muted-foreground/50 select-none">
+              Scroll Up To Reverse
+            </span>
+          </section>
+
         </div>
       </PreviewContainer>
     );
