@@ -61,9 +61,9 @@ export function HeroSection() {
           </Link>
           <Link
             href="/docs"
-            className="h-14 w-full sm:w-auto inline-flex items-center justify-center bg-white/5 border border-white/10 backdrop-blur-md text-foreground font-label-caps text-sm tracking-widest px-10 rounded-full hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors duration-200"
+            className="h-14 w-full sm:w-auto inline-flex items-center justify-center bg-transparent border border-white/20 text-foreground font-label-caps text-sm tracking-widest px-10 rounded-full hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all duration-300"
           >
-            DOCUMENTATION
+            <span className="pl-[0.1em]">DOCUMENTATION</span>
           </Link>
         </div>
 

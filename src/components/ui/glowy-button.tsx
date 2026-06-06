@@ -94,11 +94,11 @@ export const GlowyButton = React.memo(
       const inner = (
         <>
           <motion.div
-            variants={{ initial: { x: 0 }, hover: { x: -14 } }}
+            variants={{ initial: { x: 0 }, hover: { x: -8 } }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
-            className="relative z-30 flex items-center justify-center pointer-events-none truncate pr-4 md:pr-0 w-full"
+            className="relative z-30 flex items-center justify-center pointer-events-none truncate w-full"
           >
-            <span className="truncate">{children as React.ReactNode}</span>
+            <span className="truncate pl-[0.1em]">{children as React.ReactNode}</span>
           </motion.div>
 
           <motion.div
@@ -107,7 +107,7 @@ export const GlowyButton = React.memo(
               hover:   { width: circleSize, height: "100%", right: "0px", top: "0px", borderRadius: "9999px" },
             }}
             transition={{ type: "spring", stiffness: 300, damping: 24, mass: 0.8 }}
-            className="absolute z-20 flex items-center justify-center backdrop-blur-md border border-black/10 dark:border-white/30 shadow-2xl pointer-events-none m-0 p-0 transform-gpu"
+            className="absolute z-20 flex items-center justify-center backdrop-blur-md pointer-events-none m-0 p-0"
             style={{ backgroundColor: finalGlass }}
           >
             <motion.div

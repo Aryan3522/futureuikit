@@ -2,6 +2,7 @@ import { registry } from "./registryData";
 import { ComponentItem } from "@/types";
 
 export const rawComponentsList: ComponentItem[] = [
+
   {
     id: 1001,
     title: "Sci-Fi Helmet",
@@ -153,10 +154,33 @@ export default function Example() {
     codes: {
       next: 'import { BrowserWindow } from "@/components/ui/browser-window";\n\nexport default function Example() {\n  return (\n    <BrowserWindow className="max-w-2xl aspect-video">\n      <div className="flex items-center justify-center h-full">\n        Your Content Here\n      </div>\n    </BrowserWindow>\n  );\n}',
     },
-    usage: [
+        usage: [
       "Install: Run 'npx futureuikit add browser-window'.",
       "Wrap any content in <BrowserWindow> to mock a browser view.",
       "Use 'contentClassName' to style the internal canvas.",
+    ],
+  },
+  {
+    id: 1000,
+    title: "macOS Browser",
+    type: "Layout",
+    slug: "macos-browser",
+    category: "layout",
+    isNew: true,
+    description: "A premium, highly interactive macOS Safari-style browser window component with a functional Home Screen and Favourites.",
+    details: [
+      "Authentic macOS Safari UI with traffic lights, tabs, and layout.",
+      "Interactive Home Screen featuring customizable Favourites.",
+      "Native-feeling dragging, maximizing, and minimizing mechanics.",
+      "Fluid premium animations powered by Framer Motion."
+    ],
+    codes: {
+      next: 'import { MacOsBrowser } from "@/components/ui/macos-browser";\n\nexport default function Example() {\n  return (\n    <div className="w-full h-[600px] flex items-center justify-center p-4">\n      <MacOsBrowser \n        inline \n        url="https://futureuikit.com" \n        title="Future UI"\n      />\n    </div>\n  );\n}',
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add macos-browser'.",
+      "Render <MacOsBrowser /> to spawn an OS-level detached window.",
+      "Use 'inline' prop to render it constrained within your layout instead.",
     ],
   },
   {

@@ -1,15 +1,11 @@
 "use client"
-import React from "react";
+import React, { Suspense } from "react";
 import Comps from "@/components/Comps";
-import { Header } from "@/components/ui/header";
 
 export default function Page() {
   return (
-    <div className="min-h-screen bg-transparent text-foreground">
-      <Header />
-      <main>
-        <Comps />
-      </main>
-    </div>
+    <Suspense fallback={<div className="h-full w-full flex items-center justify-center min-h-[50vh]">Loading...</div>}>
+      <Comps />
+    </Suspense>
   );
 }

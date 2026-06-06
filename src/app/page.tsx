@@ -129,44 +129,7 @@ export default function Home() {
         </section>
       </main>
 
-      {/* FOOTER */}
-      <footer className="relative z-10 w-full py-16 px-6 border-t border-white/5 bg-background">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
-          <div className="flex flex-col items-center md:items-start gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded flex items-center justify-center overflow-hidden">
-                <Image src="/Logo.webp" alt="Future UI" width={24} height={24} className="w-full h-full object-cover" />
-              </div>
-              <span className="font-display text-sm font-bold tracking-widest text-foreground">FUTURE_UI</span>
-            </div>
-            <p className="font-mono-label text-[10px] text-muted-foreground">© 2026 FUTURE_UI PRECISION SYSTEMS</p>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-8">
-            <Link href="/components" className="font-mono-label text-xs text-muted-foreground hover:text-primary transition-colors">Components</Link>
-            <Link href="/docs" className="font-mono-label text-xs text-muted-foreground hover:text-primary transition-colors">Laboratory</Link>
-            <Link href="/docs" className="font-mono-label text-xs text-muted-foreground hover:text-primary transition-colors">Telemetry</Link>
-            <Link href="https://github.com/Aryan3522/future-ui" target="_blank" className="font-mono-label text-xs text-muted-foreground hover:text-primary transition-colors">GitHub</Link>
-          </div>
-
-          <div className="flex gap-4">
-            <Link
-              href="/docs"
-              aria-label="Documentation"
-              className="w-10 h-10 rounded-full glass-mantle flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors border border-white/5"
-            >
-              <Terminal className="w-4 h-4" />
-            </Link>
-            <Link
-              href="/components"
-              aria-label="Components"
-              className="w-10 h-10 rounded-full glass-mantle flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors border border-white/5"
-            >
-              <Globe className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </footer>
+      
     </div>
   );
 }

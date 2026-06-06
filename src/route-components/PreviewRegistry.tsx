@@ -218,7 +218,7 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
         {isVirtualScreen ? (
           <BrowserWindow
             title={title}
-            className="w-full sm:w-[90%] md:w-[80%] aspect-[9/16] sm:aspect-[4/5] md:aspect-[3/4] lg:aspect-video min-h-[500px] max-h-[85vh] sm:max-h-[90vh] mx-auto"
+            className="w-full h-full mx-auto"
             contentClassName={cn("flex flex-col", canvasClassName)}
             scrollRef={scrollRef}
           >
@@ -2581,7 +2581,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
       <PreviewContainer
         title="Cinematic Error"
         description="A dramatic and immersive error page."
-        contentClassName="p-0 bg-transparent border-0 shadow-none min-h-[100dvh]"
+        contentClassName="p-0 bg-transparent border-0 shadow-none"
       >
         <div className="w-full h-full absolute inset-0 overflow-hidden">
           <CinematicError />
@@ -3317,7 +3317,7 @@ function BrowserWindowPreview() {
       isVirtualScreen={false}
     >
       <div className="flex flex-col items-center justify-center w-full h-full p-0 relative z-10 overflow-hidden">
-        <BrowserWindow className="w-full md:w-[80%] aspect-9/16 md:aspect-3/4 lg:aspect-video max-h-[90vh]">
+        <BrowserWindow className="w-full h-full">
           <div className="flex flex-col items-center justify-center w-full h-full bg-muted/10 text-muted-foreground p-8 text-center space-y-4">
             <h3 className="text-xl font-medium text-foreground">Welcome to Future UI</h3>
             <p className="max-w-md text-sm">The modern component library for ambitious engineering teams.</p>
