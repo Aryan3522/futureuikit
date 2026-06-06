@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { componentsList } from "@/data/component-library-data";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Check, Copy, ArrowRight, Layers, Sparkles, Droplets, Grid, List, Link as LinkIcon, ChevronRight, PackageCheck, Code2 } from "lucide-react";
 import { Search } from "@/components/ui/search";
@@ -111,8 +112,18 @@ export default function Comps() {
     return [...filtered].sort((a, b) => a.title.localeCompare(b.title));
   }, [selectedCategory, searchQuery]);
 
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    const category = searchParams.get("category");
+    if (tab) setActiveTab(tab);
+    if (category) setSelectedCategory(category);
+    else setSelectedCategory(null);
+  }, [searchParams]);
+
   return (
-    <div className="min-h-screen bg-background text-foreground font-body-md overflow-clip pt-16 relative">
+    <>
       {/* Noise Background */}
       <div 
         className="fixed inset-0 z-1 pointer-events-none opacity-5"
@@ -122,92 +133,12 @@ export default function Comps() {
         }}
       />
 
-      <div className="max-w-360 mx-auto flex items-start gap-6 pt-16 pb-32 px-4 md:px-16 relative z-10">
-        {/* Sidebar Navigation */}
-        <aside className="hidden lg:block w-60 shrink-0 sticky top-32 h-[calc(100vh-160px)] overflow-y-auto overflow-x-hidden scrollbar-hide">
-          <div className="space-y-8 pr-4">
-            {SIDEBAR_NAV.map((section, idx) => (
-              <div key={idx}>
-                <h4 className="font-label-caps text-[12px] font-bold tracking-[0.2em] text-muted-foreground mb-4 uppercase">{section.title}</h4>
-                <ul className="space-y-2">
-                  {section.links.map((link, lIdx) => (
-                    <li key={lIdx}>
-                      <button 
-                        onClick={() => { setActiveTab(link.id); setSelectedCategory(null); }} 
-                        className={cn(
-                          "transition-colors py-1 block text-sm text-left w-full",
-                          activeTab === link.id ? "text-foreground/80 font-bold" : "text-muted-foreground hover:text-foreground/80"
-                        )}
-                      >
-                        {link.label}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-
-            {/* Top Picks */}
-            <div>
-              <h4 className="font-label-caps text-[12px] font-bold tracking-[0.2em] text-muted-foreground mb-4 uppercase">TOP PICKS ✨</h4>
-              <ul className="space-y-2">
-                {topPicksComponents.map((item, idx) => (
-                  <li key={idx}>
-                    <Link 
-                      href={`/components/${item.type.toLowerCase()}/${item.slug}/${item.id}`}
-                      className="transition-colors py-1 block text-sm text-muted-foreground hover:text-foreground/80"
-                    >
-                      {item.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* New Arrivals */}
-            <div>
-              <h4 className="font-label-caps text-[12px] font-bold tracking-[0.2em] text-muted-foreground mb-4 uppercase">NEW ARRIVALS 🚀</h4>
-              <ul className="space-y-2">
-                {newArrivalsComponents.map((item, idx) => (
-                  <li key={idx}>
-                    <Link 
-                      href={`/components/${item.type.toLowerCase()}/${item.slug}/${item.id}`}
-                      className="transition-colors py-1 block text-sm text-muted-foreground hover:text-foreground/80"
-                    >
-                      {item.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Dynamic Categories */}
-            <div>
-              <h4 className="font-label-caps text-[12px] font-bold tracking-[0.2em] text-muted-foreground mb-4 uppercase">CATEGORIES</h4>
-              <ul className="space-y-2">
-                {componentCategories.map((cat, cIdx) => (
-                  <li key={cIdx}>
-                    <button 
-                      onClick={() => { setActiveTab("components"); setSelectedCategory(cat); }}
-                      className={cn(
-                        "transition-colors py-1 block text-sm text-left w-full",
-                        selectedCategory === cat && activeTab === "components" ? "text-foreground/80 font-bold" : "text-muted-foreground hover:text-foreground/80"
-                      )}
-                    >
-                      {cat}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </aside>
-
+      <div className="w-full relative z-10">
         {/* Main Content Canvas */}
-        <main className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 w-full">
           
           {activeTab === "getting-started" && (
-            <div className="max-w-4xl space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-32">
+            <div className="max-w-4xl space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <section className="relative">
                 <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary/20 rounded-full blur-[120px] pointer-events-none" />
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-foreground/5 text-foreground/80 text-[10px] font-bold uppercase tracking-widest border border-foreground/10 mb-6">
@@ -275,7 +206,7 @@ export default function Comps() {
           )}
 
           {activeTab === "installation" && (
-            <div className="max-w-4xl space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-32">
+            <div className="max-w-4xl space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <section className="relative">
                 <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary/20 rounded-full blur-[120px] pointer-events-none" />
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-foreground/5 text-foreground/80 text-[10px] font-bold uppercase tracking-widest border border-foreground/10 mb-6">
@@ -359,7 +290,7 @@ export default function Comps() {
           )}
 
           {activeTab === "philosophy" && (
-            <div className="max-w-4xl space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-32">
+            <div className="max-w-4xl space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <section className="relative">
                 <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary/20 rounded-full blur-[120px] pointer-events-none" />
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-foreground/5 text-foreground/80 text-[10px] font-bold uppercase tracking-widest border border-foreground/10 mb-6">
@@ -393,7 +324,7 @@ export default function Comps() {
           )}
 
           {activeTab === "theming" && (
-            <div className="max-w-4xl space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-32">
+            <div className="max-w-4xl space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <section className="relative">
                 <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary/20 rounded-full blur-[120px] pointer-events-none" />
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-foreground/5 text-foreground/80 text-[10px] font-bold uppercase tracking-widest border border-foreground/10 mb-6">
@@ -428,7 +359,7 @@ export default function Comps() {
           )}
 
           {activeTab === "typography" && (
-            <div className="max-w-4xl space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-32">
+            <div className="max-w-4xl space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <section className="relative">
                 <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary/20 rounded-full blur-[120px] pointer-events-none" />
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-foreground/5 text-foreground/80 text-[10px] font-bold uppercase tracking-widest border border-foreground/10 mb-6">
@@ -472,7 +403,7 @@ export default function Comps() {
           )}
 
           {activeTab === "colors" && (
-            <div className="max-w-4xl space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-32">
+            <div className="max-w-4xl space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <section className="relative">
                 <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary/20 rounded-full blur-[120px] pointer-events-none" />
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-foreground/5 text-foreground/80 text-[10px] font-bold uppercase tracking-widest border border-foreground/10 mb-6">
@@ -569,7 +500,7 @@ export default function Comps() {
           </section>
 
           {/* Component List */}
-          <section className="mb-32">
+          <section>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 border-b border-foreground/5 pb-6 gap-6">
               <div className="w-full md:w-auto">
                 <h2 className="font-display text-4xl font-light text-foreground uppercase tracking-tight mb-3">
@@ -734,24 +665,8 @@ export default function Comps() {
           </section>
             </>
           )}
-        </main>
-      </div>
-
-      {/* Footer */}
-      <footer className="w-full border-t border-foreground/5 bg-[#131313] relative z-10">
-        <div className="max-w-300 mx-auto py-12 px-8 md:px-16 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex flex-col items-center md:items-start gap-2">
-            <span className="font-display text-xl font-bold tracking-tighter text-foreground">FUTURE_UI</span>
-            <span className="font-mono text-[13px] text-[#c6c6c7]">© {new Date().getFullYear()} FUTURE UI. PRECISION ENGINEERED.</span>
-          </div>
-          <div className="flex items-center gap-8">
-            <a className="font-mono text-[13px] text-[#988e90] hover:text-foreground/80 transition-colors opacity-80 hover:opacity-100" href="#">Privacy</a>
-            <a className="font-mono text-[13px] text-[#988e90] hover:text-foreground/80 transition-colors opacity-80 hover:opacity-100" href="#">Terms</a>
-            <a className="font-mono text-[13px] text-[#988e90] hover:text-foreground/80 transition-colors opacity-80 hover:opacity-100" href="#">Github</a>
-            <a className="font-mono text-[13px] text-[#988e90] hover:text-foreground/80 transition-colors opacity-80 hover:opacity-100" href="#">Discord</a>
-          </div>
         </div>
-      </footer>
-    </div>
+      </div>
+    </>
   );
 }

@@ -9,6 +9,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
+ * Generates the unified URL for filtering by a specific component category.
+ */
+export function getCategoryUrl(categoryName: string) {
+    return `/components?tab=components&category=${encodeURIComponent(categoryName)}`;
+}
+
+/**
  * Utility function to format a number with currency
  */
 export function formatCurrency(

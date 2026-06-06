@@ -5,11 +5,10 @@ import { notFound } from "next/navigation";
 import { componentsList, registry } from "@/data/component-library-data";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus, vs } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { Check, Copy, ChevronRight, Sparkles, Box, Menu, X, Terminal } from "lucide-react";
+import { Check, Copy, ChevronRight, Sparkles, Box, Menu, X, Terminal, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ComponentRenderer } from "@/registry/ComponentRenderer";
 import Link from "next/link";
-import { Header } from "@/components/ui/header";
 
 const ComponentLivePreview: React.FC<{ id: string | number; slug: string }> = ({ slug }) => {
   return <ComponentRenderer slug={slug} />;
@@ -116,61 +115,11 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans relative selection:bg-primary/30 pt-32 md:pt-40 lg:pt-48 pb-32">
-      <Header />
-
-      <div className="max-w-[1440px] mx-auto flex items-start gap-8 lg:gap-12 px-4 md:px-8 lg:px-12 relative z-10 min-w-0">
+    <div className="w-full relative selection:bg-primary/30 min-h-screen">
+      
+      <div className="flex items-start gap-8 lg:gap-12 relative z-10 min-w-0">
         
-        {/* Mobile/Tablet Sidebar Toggle */}
-        <button 
-          className="lg:hidden fixed bottom-6 right-6 z-[60] p-4 bg-primary text-primary-foreground rounded-full shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          aria-label="Toggle Table of Contents"
-        >
-          {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-
-        {/* Overlay for mobile sidebar */}
-        {sidebarOpen && (
-          <div 
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[50] lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-            aria-hidden="true"
-          />
-        )}
-
-        {/* Sticky Sidebar - TOC */}
-        <aside className={cn(
-          "shrink-0 overflow-y-auto overflow-x-hidden scrollbar-hide z-[55] transition-transform duration-300 ease-in-out",
-          "fixed lg:sticky lg:top-48 left-0 top-0 h-[100dvh] lg:h-[calc(100vh-220px)] w-[280px] lg:w-[220px] bg-background lg:bg-transparent border-r border-border/40 lg:border-none p-6 pt-24 lg:p-0 lg:pt-0 shadow-2xl lg:shadow-none",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        )}>
-          <div className="space-y-6 pr-4">
-            <div>
-              <h4 className="font-mono text-xs font-semibold tracking-wider text-foreground mb-4 uppercase">On This Page</h4>
-              <ul className="space-y-2.5 relative border-l border-border/40 ml-2 pl-4">
-                {sections.map((sec, idx) => (
-                  <li key={idx}>
-                    <button 
-                      onClick={() => scrollToSection(sec.id)}
-                      className={cn(
-                        "transition-all py-0.5 block text-[13px] text-left w-full relative",
-                        activeSection === sec.id 
-                          ? "text-foreground font-semibold" 
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      {activeSection === sec.id && (
-                        <span className="absolute -left-[17px] top-1/2 -translate-y-1/2 w-[2px] h-4 bg-foreground rounded-full" />
-                      )}
-                      {sec.label}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </aside>
+        
 
         {/* Main Content Area */}
         <main className="flex-1 min-w-0 max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-500 overflow-hidden">
@@ -183,13 +132,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
               {/* Left Column (Metadata) */}
               <div className="space-y-10 min-w-0 pt-2">
                 <div className="space-y-6">
-                  <div className="flex items-center gap-2">
-                    <Link href="/components" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium flex items-center gap-1">
-                      Components
-                    </Link>
-                    <ChevronRight size={14} className="text-muted-foreground/50" />
-                    <span className="text-sm font-medium text-foreground">{component.type}</span>
-                  </div>
+
                   
                   <div className="space-y-4">
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
@@ -256,6 +199,8 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
                       </div>
                     </div>
                   </div>
+
+
                 </div>
               </div>
 

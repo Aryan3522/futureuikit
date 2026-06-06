@@ -50,28 +50,31 @@ export const Header: React.FC = React.memo(() => {
 
   return (
     <>
+      {/* Spacer to prevent content jump due to fixed header */}
+      <div className="h-14 w-full shrink-0" />
       <header
         className={cn(
-          "fixed top-4 left-1/2 -translate-x-1/2 w-[90%] max-w-7xl z-50 transition-all duration-300",
-          "bg-[#131313]/10 backdrop-blur-[60px] rounded-full border border-white/10 flex justify-between items-center px-6 py-3",
+          "fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300",
+          "bg-background/80 backdrop-blur-md border-b border-border/40 flex justify-center h-14",
         )}
       >
-        {/* Left: Logo */}
-        <div className="flex items-center gap-2 flex-1">
-          <Link href="/" className="flex items-center shrink-0 group gap-2">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden transition-transform group-hover:scale-110">
-              <Image
-                src="/Logo.webp"
-                alt="Future UI Logo"
-                width={32}
-                height={32}
-                priority
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <span className="font-display text-xl font-bold tracking-tighter text-foreground hidden sm:block">FUTURE_UI</span>
-          </Link>
-        </div>
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center h-full">
+          {/* Left: Logo */}
+          <div className="flex items-center gap-2 flex-1">
+            <Link href="/" className="flex items-center shrink-0 group gap-2">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden transition-transform group-hover:scale-110">
+                <Image
+                  src="/Logo.webp"
+                  alt="Future UI Logo"
+                  width={32}
+                  height={32}
+                  priority
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <span className="font-display text-xl font-bold tracking-tighter text-foreground hidden sm:block">FUTURE_UI</span>
+            </Link>
+          </div>
 
         {/* Center: Links (Desktop) */}
         <nav className="hidden lg:flex justify-center items-center gap-8">
@@ -128,6 +131,7 @@ export const Header: React.FC = React.memo(() => {
               <Menu className="w-5 h-5" />
             )}
           </Button>
+        </div>
         </div>
       </header>
       

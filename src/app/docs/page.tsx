@@ -91,18 +91,14 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = "bash" }) => {
 
 export default function DocsPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground font-body-md overflow-x-hidden selection:bg-secondary/30 relative">
-      <Header />
-      
+    <div className="w-full relative selection:bg-primary/30">
       {/* Background glow similar to homepage */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-secondary/10 rounded-full blur-[150px] opacity-40 mix-blend-screen pointer-events-none" />
 
-      <main className="relative z-10 max-w-4xl mx-auto px-6 pt-40 pb-32">
+      <main className="w-full relative z-10">
         {/* Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1 }}
+        {/* Header */}
+        <div 
           className="mb-20 text-center md:text-left flex flex-col items-center md:items-start"
         >
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 font-mono-label text-[10px] text-foreground/70 mb-6 uppercase tracking-[0.2em]">
@@ -114,7 +110,7 @@ export default function DocsPage() {
           <p className="font-display text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
             Everything you need to build high-end, animated interfaces with React and Next.js. Engineered for the next era of web design.
           </p>
-        </motion.div>
+        </div>
 
         {/* Introduction */}
         <DocSection title="Introduction" icon={Zap}>
@@ -270,36 +266,7 @@ export default function MyComponent() {
         </DocSection>
       </main>
 
-      {/* FOOTER */}
-      <footer className="relative z-10 w-full py-16 px-6 border-t border-white/5 bg-background mt-20">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
-          <div className="flex flex-col items-center md:items-start gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded flex items-center justify-center overflow-hidden">
-                <Image src="/Logo.webp" alt="Future UI" width={24} height={24} className="w-full h-full object-cover" />
-              </div>
-              <span className="font-display text-sm font-bold tracking-widest text-foreground">FUTURE_UI</span>
-            </div>
-            <p className="font-mono-label text-[10px] text-muted-foreground">© 2026 FUTURE_UI PRECISION SYSTEMS</p>
-          </div>
-          
-          <div className="flex flex-wrap justify-center gap-8">
-            <Link href="/components" className="font-mono-label text-xs text-muted-foreground hover:text-primary transition-colors">Components</Link>
-            <Link href="/docs" className="font-mono-label text-xs text-muted-foreground hover:text-primary transition-colors">Laboratory</Link>
-            <Link href="/docs" className="font-mono-label text-xs text-muted-foreground hover:text-primary transition-colors">Telemetry</Link>
-            <Link href="https://github.com/Aryan3522/future-ui" target="_blank" className="font-mono-label text-xs text-muted-foreground hover:text-primary transition-colors">GitHub</Link>
-          </div>
-          
-          <div className="flex gap-4">
-            <div className="w-10 h-10 rounded-full glass-mantle flex items-center justify-center hover:text-secondary transition-colors cursor-pointer border border-white/5">
-              <Terminal className="w-4 h-4" />
-            </div>
-            <div className="w-10 h-10 rounded-full glass-mantle flex items-center justify-center hover:text-secondary transition-colors cursor-pointer border border-white/5">
-              <Globe className="w-4 h-4" />
-            </div>
-          </div>
-        </div>
-      </footer>
+      
     </div>
   );
 }
