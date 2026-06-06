@@ -7,6 +7,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus, vs } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Check, Copy, ChevronRight, Sparkles, Box, Menu, X, Terminal, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/contexts/ThemeContext";
 import { ComponentRenderer } from "@/registry/ComponentRenderer";
 import Link from "next/link";
 
@@ -37,25 +38,24 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
   const [copiedCli, setCopiedCli] = useState(false);
   const [copiedImport, setCopiedImport] = useState(false);
   const [copiedManual, setCopiedManual] = useState(false);
-  const [isDark, setIsDark] = useState(true);
+  const { theme } = useTheme() as { theme: string };
   const [activeSection, setActiveSection] = useState("overview");
   const [previewTab, setPreviewTab] = useState<"preview" | "code">("preview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const activeSyntaxStyle = React.useMemo(() => {
-    const theme = JSON.parse(JSON.stringify(isDark ? vscDarkPlus : vs));
+    const syntaxTheme = JSON.parse(JSON.stringify(theme === "dark" ? vscDarkPlus : vs));
     const keysToClean = ['pre[class*="language-"]', 'code[class*="language-"]'];
     keysToClean.forEach(key => {
-      if (theme[key]) {
-        delete theme[key].background;
-        delete theme[key].backgroundColor;
+      if (syntaxTheme[key]) {
+        delete syntaxTheme[key].background;
+        delete syntaxTheme[key].backgroundColor;
       }
     });
-    return theme;
-  }, [isDark]);
+    return syntaxTheme;
+  }, [theme]);
 
   useEffect(() => {
-    setIsDark(document.documentElement.classList.contains("dark"));
 
     const handleScroll = () => {
       const sections = document.querySelectorAll("section[id], div[id]");
@@ -261,10 +261,10 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
                       <ComponentLivePreview id={id} slug={slug} />
                     </div>
                   ) : (
-                    <div className="relative group rounded-xl border border-border/50 bg-zinc-950 overflow-hidden flex flex-col h-full shadow-sm w-full">
-                      <div className="flex items-center gap-2 px-4 py-3 bg-zinc-900 border-b border-white/5">
-                        <Terminal size={14} className="text-zinc-400" />
-                        <div className="flex-1 text-xs text-zinc-400 font-medium font-sans select-none truncate">
+                    <div className="relative group rounded-xl border border-border/50 bg-zinc-50 dark:bg-zinc-950 overflow-hidden flex flex-col h-full shadow-sm w-full">
+                      <div className="flex items-center gap-2 px-4 py-3 bg-zinc-100 dark:bg-zinc-900 border-b border-black/5 dark:border-white/5">
+                        <Terminal size={14} className="text-zinc-500 dark:text-zinc-400" />
+                        <div className="flex-1 text-xs text-zinc-500 dark:text-zinc-400 font-medium font-sans select-none truncate">
                           {slug}.tsx
                         </div>
                         <button
@@ -273,14 +273,14 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
                             setCopiedManual(true);
                             setTimeout(() => setCopiedManual(false), 1500);
                           }}
-                          className="p-1.5 rounded-md bg-white/5 hover:bg-white/10 text-white transition-all shadow-sm border border-white/10 flex items-center gap-1.5 text-xs font-medium"
+                          className="p-1.5 rounded-md bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 text-zinc-900 dark:text-white transition-all shadow-sm border border-black/10 dark:border-white/10 flex items-center gap-1.5 text-xs font-medium"
                         >
-                          {copiedManual ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                          {copiedManual ? <Check size={12} className="text-emerald-500 dark:text-emerald-400" /> : <Copy size={12} />}
                           {copiedManual ? "Copied" : "Copy"}
                         </button>
                       </div>
                       
-                      <div className="overflow-auto flex-1 scrollbar-hide w-full bg-zinc-950">
+                      <div className="overflow-auto flex-1 scrollbar-hide w-full bg-white dark:bg-zinc-950">
                         <SyntaxHighlighter
                           language="tsx"
                           style={activeSyntaxStyle}
@@ -307,11 +307,11 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
                 <h2 className="text-2xl font-bold tracking-tight text-foreground">Usage</h2>
                 <p className="text-muted-foreground">Implement the component in your project.</p>
               </div>
-              <div className="relative group rounded-xl border border-border/50 bg-zinc-950 overflow-hidden flex flex-col w-full min-w-0 shadow-sm">
-                <div className="flex items-center gap-2 px-4 py-3 bg-zinc-900 border-b border-white/5 justify-between">
+              <div className="relative group rounded-xl border border-border/50 bg-zinc-50 dark:bg-zinc-950 overflow-hidden flex flex-col w-full min-w-0 shadow-sm">
+                <div className="flex items-center gap-2 px-4 py-3 bg-zinc-100 dark:bg-zinc-900 border-b border-black/5 dark:border-white/5 justify-between">
                   <div className="flex items-center gap-2">
-                    <Terminal size={14} className="text-zinc-400" />
-                    <span className="text-xs text-zinc-400 font-medium font-sans select-none">Example Implementation</span>
+                    <Terminal size={14} className="text-zinc-500 dark:text-zinc-400" />
+                    <span className="text-xs text-zinc-500 dark:text-zinc-400 font-medium font-sans select-none">Example Implementation</span>
                   </div>
                   <button
                     onClick={() => {
@@ -319,13 +319,13 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
                       setCopiedCode(true);
                       setTimeout(() => setCopiedCode(false), 1500);
                     }}
-                    className="p-1.5 rounded-md bg-white/5 hover:bg-white/10 text-white transition-all shadow-sm border border-white/10 flex items-center gap-1.5 text-xs font-medium opacity-0 group-hover:opacity-100 focus:opacity-100"
+                    className="p-1.5 rounded-md bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 text-zinc-900 dark:text-white transition-all shadow-sm border border-black/10 dark:border-white/10 flex items-center gap-1.5 text-xs font-medium opacity-0 group-hover:opacity-100 focus:opacity-100"
                   >
-                    {copiedCode ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                    {copiedCode ? <Check size={12} className="text-emerald-500 dark:text-emerald-400" /> : <Copy size={12} />}
                     {copiedCode ? "Copied" : "Copy"}
                   </button>
                 </div>
-                <div className="overflow-x-auto w-full bg-zinc-950">
+                <div className="overflow-x-auto w-full bg-white dark:bg-zinc-950">
                   <SyntaxHighlighter
                     language="tsx"
                     style={activeSyntaxStyle}

@@ -2,6 +2,28 @@ import { registry } from "./registryData";
 import { ComponentItem } from "@/types";
 
 export const rawComponentsList: ComponentItem[] = [
+  {
+    id: 1002,
+    title: "Premium Upload Button",
+    slug: "premium-upload-button",
+    category: "ui",
+    description: "A premium, highly interactive file upload button with various design variants, success states, and robust error handling.",
+    type: "UI",
+    details: [
+      "Framer Motion driven animations.",
+      "Beautiful light and dark mode support.",
+      "Multiple design variants."
+    ],
+    codes: {
+      next: 'import { PremiumUploadButton } from "@/components/ui/premium-upload-button";\n\nexport default function Example() {\n  return <PremiumUploadButton />;\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add premium-upload-button'.",
+      "Import: 'import { PremiumUploadButton } from \"@/components/ui/premium-upload-button\";'",
+      "Variants: Use it anywhere you need a high-quality upload trigger."
+    ]
+  }
+,
 
   {
     id: 1001,

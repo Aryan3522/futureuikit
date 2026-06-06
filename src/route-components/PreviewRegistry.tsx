@@ -66,6 +66,7 @@ import { AutomotiveCarousel } from "@/components/ui/automotive-carousel";
 import { ScifiHelmet } from "@/components/ui/scifi-helmet";
 import { BmwM4 } from "@/components/ui/bmw-m4";
 import { OTPVerification } from "@/components/ui/otp-verification";
+import { PremiumUploadButton } from "@/components/ui/premium-upload-button";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -1497,6 +1498,23 @@ function FilterBuilderPreview() {
 }
 
 export const PreviewRegistry: Record<string, React.FC> = {
+  "premium-upload-button": function PremiumUploadButtonPreview() {
+    const [variant, setVariant] = React.useState<"clean" | "modern" | "minimal" | "enterprise" | "windows" | "futuristic" | "apple" | "ai">("modern");
+    return (
+      <PreviewContainer 
+        title="Premium Upload Button" 
+        description="A premium, highly interactive file upload button with various design variants." 
+        isVirtualScreen={true}
+        variants={["clean", "modern", "minimal", "enterprise", "windows", "futuristic", "apple", "ai"]}
+        activeVariant={variant}
+        onVariantChange={setVariant}
+      >
+        <div className="w-full flex items-center justify-center p-4 min-h-[400px]">
+          <PremiumUploadButton variant={variant} />
+        </div>
+      </PreviewContainer>
+    );
+  },
   primary: function PrimaryPreview() {
     return (
       <PreviewContainer title="Primary Button" description="Semantic primary buttons with micro-interactions.">
