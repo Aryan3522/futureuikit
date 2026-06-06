@@ -1708,6 +1708,30 @@ export default function AdvancedSearch() {
       "Dependencies: Requires framer-motion and lucide-react.",
       "Usage: Use as a generic UI primitive anywhere you need search inputs.",
     ],
+  },
+  {
+    id: 1002,
+    title: "OTP Verification",
+    type: "Forms",
+    slug: "otp-verification",
+    category: "ui",
+    isNew: true,
+    description: "A smooth, animated OTP (One-Time Password) input component with auto-focus, backspace support, and customizable length.",
+    details: [
+      "Automatic focus shifting to the next input upon entry.",
+      "Backspace handling to move focus back to the previous input.",
+      "Arrow key navigation for seamless editing.",
+      "Customizable length (defaults to 6 digits).",
+      "Sleek visual design with smooth transitions."
+    ],
+    codes: {
+      next: 'import { OTPVerification } from "@/components/ui/otp-verification";\n\nexport default function Example() {\n  return (\n    <OTPVerification \n      length={6} \n      onVerify={(code) => console.log(code)} \n    />\n  );\n}',
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add otp-verification'.",
+      "Dependencies: Requires framer-motion and lucide-react.",
+      "Usage: Drop into your verification or authentication flows.",
+    ],
   }
 ];
 

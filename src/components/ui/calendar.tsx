@@ -133,7 +133,7 @@ export const Calendar: React.FC<CalendarProps> = React.memo(({
             <LayoutGroup id={calendarId}>
               <div 
                 className={cn(
-                  "w-full max-w-[340px] rounded-[2.5rem] border p-7 select-none",
+                  "w-full max-w-sm rounded-3xl sm:rounded-[2.5rem] border p-4 sm:p-7 select-none overflow-hidden shrink-0",
                   getVariantStyles(),
                   className
                 )}
@@ -183,7 +183,7 @@ export const Calendar: React.FC<CalendarProps> = React.memo(({
                 </div>
 
                 {/* Calendar Grid */}
-                <div className="relative min-h-[260px]">
+                <div className="relative w-full">
                   <AnimatePresence mode="popLayout" custom={direction} initial={false}>
                     <motion.div
                       key={`${month}-${year}`}
@@ -206,7 +206,7 @@ export const Calendar: React.FC<CalendarProps> = React.memo(({
                         const isToday = isSameDay(date, today);
 
                         return (
-                          <div key={idx} className="relative aspect-square flex items-center justify-center p-1">
+                          <div key={idx} className="relative aspect-square flex items-center justify-center p-0.5 sm:p-1">
                             {selected && (
                               <motion.div
                                 layoutId="selected-indicator"
@@ -235,7 +235,7 @@ export const Calendar: React.FC<CalendarProps> = React.memo(({
                                 disabled && "opacity-5 cursor-not-allowed grayscale"
                               )}
                             >
-                              <span className="text-sm font-semibold tabular-nums">{date.getDate()}</span>
+                              <span className="text-xs sm:text-sm font-semibold tabular-nums">{date.getDate()}</span>
                               {isToday && !selected && (
                                 <div className="absolute bottom-1.5 w-1 h-1 rounded-full bg-primary/60" />
                               )}

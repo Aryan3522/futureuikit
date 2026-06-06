@@ -71,15 +71,15 @@ const commandDialogContentVariants = cva(
 );
 
 const commandInputVariants = cva(
-  "flex h-12 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+  "flex w-full rounded-md bg-transparent py-4 outline-none placeholder:text-muted-foreground/60 disabled:cursor-not-allowed disabled:opacity-50 font-medium tracking-tight",
   {
     variants: {
       variant: {
-        default: "h-14 px-4 text-base",
-        compact: "h-10 px-3 text-sm",
-        floating: "h-16 px-6 text-lg",
-        glass: "h-14 px-5 text-base",
-        spotlight: "h-16 px-6 text-lg font-medium tracking-tight",
+        default: "h-14 px-5 text-base sm:text-lg",
+        compact: "h-12 px-4 text-sm sm:text-base",
+        floating: "h-16 px-6 text-lg sm:text-xl",
+        glass: "h-14 px-5 text-base sm:text-lg",
+        spotlight: "h-16 px-8 text-lg sm:text-xl font-semibold",
       },
     },
     defaultVariants: {
@@ -89,15 +89,15 @@ const commandInputVariants = cva(
 );
 
 const commandItemVariants = cva(
-  "relative flex cursor-default select-none items-center rounded-sm outline-none data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+  "relative flex cursor-default select-none items-center outline-none data-[selected=true]:bg-accent/60 data-[selected=true]:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 transition-colors duration-200",
   {
     variants: {
       variant: {
-        default: "px-2 py-2.5 text-sm mx-2 my-1",
-        compact: "px-2 py-1.5 text-xs mx-1.5 my-0.5",
-        floating: "px-3 py-3 text-sm mx-3 my-1.5 rounded-md",
-        glass: "px-3 py-2.5 text-sm mx-2 my-1 rounded-md",
-        spotlight: "px-3 py-3 text-sm mx-2 my-1 rounded-md data-[selected=true]:bg-primary/10 data-[selected=true]:text-primary",
+        default: "px-3 py-3 text-sm sm:text-base mx-2 my-1 rounded-xl",
+        compact: "px-2.5 py-2 text-xs sm:text-sm mx-1.5 my-0.5 rounded-lg",
+        floating: "px-4 py-3.5 text-sm sm:text-base mx-3 my-1.5 rounded-xl",
+        glass: "px-3 py-3 text-sm sm:text-base mx-2 my-1 rounded-xl",
+        spotlight: "px-4 py-3.5 text-sm sm:text-base mx-2 my-1.5 rounded-xl data-[selected=true]:bg-primary/10 data-[selected=true]:text-primary font-medium",
       },
     },
     defaultVariants: {
@@ -173,11 +173,11 @@ export const CommandInput = React.memo(React.forwardRef<
   const { variant } = useCommandContext();
 
   return (
-    <div className="flex items-center border-b border-border/40 px-3" cmdk-input-wrapper="">
-      <Search className="mr-2 h-5 w-5 shrink-0 text-muted-foreground opacity-70" />
+    <div className="flex items-center border-b border-border/40 px-4 sm:px-5" cmdk-input-wrapper="">
+      <Search className="mr-1 h-5 w-5 shrink-0 text-muted-foreground/50" />
       <CommandPrimitive.Input
         ref={ref}
-        className={cn(commandInputVariants({ variant }), className)}
+        className={cn(commandInputVariants({ variant }), "px-2 sm:px-3", className)}
         {...props}
       />
     </div>
@@ -221,19 +221,20 @@ export const CommandGroup = React.memo(React.forwardRef<
       className={cn(
         "overflow-hidden text-foreground",
 
-        "[& [cmdk-group-heading]]:px-4",
-        "[& [cmdk-group-heading]]:py-2",
-        "[& [cmdk-group-heading]]:text-xs",
-        "[& [cmdk-group-heading]]:font-semibold",
-        "[& [cmdk-group-heading]]:tracking-wider",
-        "[& [cmdk-group-heading]]:text-muted-foreground",
+        "[& [cmdk-group-heading]]:px-5",
+        "[& [cmdk-group-heading]]:py-3",
+        "[& [cmdk-group-heading]]:text-[11px]",
+        "[& [cmdk-group-heading]]:font-bold",
+        "[& [cmdk-group-heading]]:uppercase",
+        "[& [cmdk-group-heading]]:tracking-[0.2em]",
+        "[& [cmdk-group-heading]]:text-muted-foreground/60",
 
         variant === "compact" && (
-          "[& [cmdk-group-heading]]:px-3 [& [cmdk-group-heading]]:py-1"
+          "[& [cmdk-group-heading]]:px-4 [& [cmdk-group-heading]]:py-2"
         ),
 
         variant === "floating" && (
-          "[& [cmdk-group-heading]]:px-5"
+          "[& [cmdk-group-heading]]:px-6"
         ),
 
         className

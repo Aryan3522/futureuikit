@@ -65,6 +65,7 @@ import { AIChat, ChatMessages, ChatInput, ChatPromptSuggestions } from "@/compon
 import { AutomotiveCarousel } from "@/components/ui/automotive-carousel";
 import { ScifiHelmet } from "@/components/ui/scifi-helmet";
 import { BmwM4 } from "@/components/ui/bmw-m4";
+import { OTPVerification } from "@/components/ui/otp-verification";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -320,8 +321,9 @@ const CalendarPreview: React.FC = () => {
       variants={["modern", "clean"]}
       activeVariant={variant}
       onVariantChange={setVariant}
+      align="start"
     >
-      <div className="flex flex-col items-center justify-center w-full h-full p-6 gap-8">
+      <div className="flex flex-col items-center justify-start w-full min-h-full p-6 gap-8 py-12">
         <Calendar
           value={date}
           onChange={setDate}
@@ -2713,6 +2715,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
   "scifi-helmet": ScifiHelmetPreview,
   "bmw-m4": BmwM4Preview,
   terminal: TerminalPreview,
+  "otp-verification": OTPVerificationPreview,
 };
 
 function TerminalPreview() {
@@ -3399,3 +3402,45 @@ function AutomotiveCarouselPreview() {
   );
 }
 
+function OTPVerificationPreview() {
+  const [status, setStatus] = useState<string>("Waiting for code...");
+
+  return (
+    <PreviewContainer 
+      title="OTP Verification" 
+      description="A smooth, animated OTP input component with auto-focus and backspace support."
+      isVirtualScreen={true}
+    >
+      <div className="w-full h-full flex flex-col items-center justify-center p-4 sm:p-8">
+        <div className="w-full max-w-2xl flex flex-col items-center gap-8 md:gap-12">
+          <div className="text-center space-y-2 md:space-y-4">
+            <h3 className="text-2xl md:text-3xl font-display font-semibold text-foreground">Verification Code</h3>
+            <p className="text-sm md:text-base text-muted-foreground">Enter the 6-digit code sent to your device</p>
+          </div>
+          
+          <div className="w-full flex justify-center scale-[0.8] sm:scale-90 md:scale-100 origin-center">
+            <OTPVerification 
+              length={6} 
+              onVerify={async (code) => {
+                setStatus("Verifying...");
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                if (code === "123456") {
+                  setStatus("Verification successful!");
+                  return true;
+                }
+                setStatus("Invalid code. Try 123456.");
+                return false;
+              }} 
+            />
+          </div>
+
+          <div className="text-sm md:text-base font-medium h-6">
+            <span className={status.includes("successful") ? "text-emerald-500" : status.includes("Invalid") ? "text-red-500" : "text-muted-foreground"}>
+              {status}
+            </span>
+          </div>
+        </div>
+      </div>
+    </PreviewContainer>
+  );
+}
