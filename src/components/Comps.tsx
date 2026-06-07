@@ -8,49 +8,24 @@ import { cn } from "@/lib/utils";
 import { Check, Copy, ArrowRight, Layers, Sparkles, Droplets, Grid, List, Link as LinkIcon, ChevronRight, PackageCheck, Code2 } from "lucide-react";
 import { Search } from "@/components/ui/search";
 
-const TOP_PICKS = ["nexus-card", "glass-panel", "glowy", "cinematic-error", "browser-window", "noir-hero-3d"];
-
 const CATEGORIES_SECTION = [
   { id: "layout", label: "Layout", icon: Layers, description: "Structural foundations built for responsive fluidity and cinematic compositions. 12-column precision." },
   { id: "interactions", label: "Interactions", icon: Sparkles, description: "200ms easing curves and gesture-first logic for weightless feedback and natural state transitions." },
   { id: "visuals", label: "Visuals", icon: Droplets, description: "Refractive shaders and frosted layers that interact with light and depth in real-time environments." }
 ];
 
-const SIDEBAR_NAV = [
-  {
-    title: "LIBRARY",
-    links: [
-      { id: "components", label: "Components Directory" }
-    ]
-  },
-  {
-    title: "INTRODUCTION",
-    links: [
-      { id: "getting-started", label: "Getting Started" },
-      { id: "installation", label: "Installation" },
-      { id: "philosophy", label: "Core Philosophy" },
-    ]
-  },
-  {
-    title: "SYSTEM",
-    links: [
-      { id: "theming", label: "Theming" },
-      { id: "typography", label: "Typography" },
-      { id: "colors", label: "Color Palette" },
-    ]
-  }
-];
-
 type ViewMode = "list" | "grid" | "links";
 
 export default function Comps() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [mounted, setMounted] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<string>("components");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const searchParams = useSearchParams();
+  const activeTab = searchParams.get("tab") ?? "components";
+
+const selectedCategory = searchParams.get("category");
 
   useEffect(() => {
     const initTimeout = setTimeout(() => {
@@ -60,19 +35,6 @@ export default function Comps() {
         setViewMode(savedMode);
       }
     }, 0);
-
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX - window.innerWidth / 2) * 0.01,
-        y: (e.clientY - window.innerHeight / 2) * 0.01
-      });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    
-    return () => {
-      clearTimeout(initTimeout);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
   }, []);
 
   const handleViewModeChange = (mode: ViewMode) => {
@@ -85,19 +47,6 @@ export default function Comps() {
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
-
-  // Extract unique categories from componentsList
-  const componentCategories = useMemo(() => {
-    return Array.from(new Set(componentsList.map((l) => l.type))).sort();
-  }, []);
-
-  const topPicksComponents = useMemo(() => {
-    return componentsList.filter(c => TOP_PICKS.includes(c.slug));
-  }, []);
-
-  const newArrivalsComponents = useMemo(() => {
-    return componentsList.filter(c => c.isNew);
-  }, []);
 
   // Filter components by selected category (or show all)
   const displayedComponents = useMemo(() => {
@@ -112,16 +61,6 @@ export default function Comps() {
     return [...filtered].sort((a, b) => a.title.localeCompare(b.title));
   }, [selectedCategory, searchQuery]);
 
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    const tab = searchParams.get("tab");
-    const category = searchParams.get("category");
-    if (tab) setActiveTab(tab);
-    if (category) setSelectedCategory(category);
-    else setSelectedCategory(null);
-  }, [searchParams]);
-
   return (
     <>
       {/* Noise Background */}
@@ -129,7 +68,6 @@ export default function Comps() {
         className="fixed inset-0 z-1 pointer-events-none opacity-5"
         style={{
           backgroundImage: 'url("https://www.transparenttextures.com/patterns/asfalt-dark.png")',
-          transform: `translate(${mousePos.x}px, ${mousePos.y}px)`
         }}
       />
 
