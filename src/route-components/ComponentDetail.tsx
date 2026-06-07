@@ -3,13 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { notFound } from "next/navigation";
 import { componentsList, registry } from "@/data/component-library-data";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus, vs } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { Check, Copy, ChevronRight, Sparkles, Box, Menu, X, Terminal, Download } from "lucide-react";
+import { Check, Copy, Sparkles, Box, Terminal } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useTheme } from "@/contexts/ThemeContext";
 import { ComponentRenderer } from "@/registry/ComponentRenderer";
-import Link from "next/link";
+import { CodeBlock } from "@/components/shared/codeBlock";
 
 const ComponentLivePreview: React.FC<{ id: string | number; slug: string }> = ({ slug }) => {
   return <ComponentRenderer slug={slug} />;
@@ -34,40 +31,25 @@ const HighlightText: React.FC<{ text: string }> = ({ text }) => {
 };
 
 export default function ComponentDetail({ type, slug, id }: { type: string; slug: string; id: string }) {
-  const [copiedCode, setCopiedCode] = useState(false);
   const [copiedCli, setCopiedCli] = useState(false);
   const [copiedImport, setCopiedImport] = useState(false);
-  const [copiedManual, setCopiedManual] = useState(false);
-  const { theme } = useTheme() as { theme: string };
   const [activeSection, setActiveSection] = useState("overview");
   const [previewTab, setPreviewTab] = useState<"preview" | "code">("preview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  const activeSyntaxStyle = React.useMemo(() => {
-    const syntaxTheme = JSON.parse(JSON.stringify(theme === "dark" ? vscDarkPlus : vs));
-    const keysToClean = ['pre[class*="language-"]', 'code[class*="language-"]'];
-    keysToClean.forEach(key => {
-      if (syntaxTheme[key]) {
-        delete syntaxTheme[key].background;
-        delete syntaxTheme[key].backgroundColor;
-      }
-    });
-    return syntaxTheme;
-  }, [theme]);
 
   useEffect(() => {
 
     const handleScroll = () => {
       const sections = document.querySelectorAll("section[id], div[id]");
       let currentSection = "overview";
-      
+
       sections.forEach((section) => {
         const sectionTop = section.getBoundingClientRect().top;
         if (sectionTop <= 150) {
           currentSection = section.getAttribute("id") || currentSection;
         }
       });
-      
+
       setActiveSection(currentSection);
     };
 
@@ -96,54 +78,31 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
   const cliCommand = `npx futureuikit add ${slug}`;
   const importCommand = `import { ${component.title.replace(/[^a-zA-Z]/g, '')} } from "@/components/ui/${slug}"`;
 
-  const sections = [
-    { id: "overview", label: "Overview" },
-    { id: "installation", label: "Installation" },
-    { id: "import", label: "Import" },
-    { id: "usage", label: "Usage" },
-    ...(component.details?.length ? [{ id: "features", label: "Features" }] : []),
-    ...(component.usage?.length ? [{ id: "notes", label: "Notes" }] : []),
-  ];
-
-  const scrollToSection = (sectionId: string) => {
-    const el = document.getElementById(sectionId);
-    if (el) {
-      const y = el.getBoundingClientRect().top + window.scrollY - 100;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-      setSidebarOpen(false);
-    }
-  };
-
   return (
     <div className="w-full relative selection:bg-primary/30 min-h-screen">
-      
-      <div className="flex items-start gap-8 lg:gap-12 relative z-10 min-w-0">
-        
-        
 
+      <div className="flex items-start gap-8 lg:gap-12 relative z-10 min-w-0">
         {/* Main Content Area */}
         <main className="flex-1 min-w-0 max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-500 overflow-hidden">
-          
+
           <div className="space-y-20 min-w-0">
-            
+
             {/* Component Hero & Preview (Side by Side) */}
             <section id="overview" className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] xl:grid-cols-[400px_1fr] gap-10 xl:gap-14 min-w-0">
-              
+
               {/* Left Column (Metadata) */}
               <div className="space-y-10 min-w-0 pt-2">
                 <div className="space-y-6">
-
-                  
                   <div className="space-y-4">
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
                       {component.title}
                     </h1>
-                    
+
                     <p className="text-lg text-muted-foreground leading-relaxed">
                       {component.description}
                     </p>
                   </div>
-                  
+
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="px-2.5 py-1 bg-muted border border-border/50 rounded-md font-mono text-[11px] font-semibold tracking-wide text-foreground uppercase">
                       {component.category}
@@ -205,32 +164,32 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
               </div>
 
               {/* Right Column (Live Component Preview & Code Tab) */}
-              <div className="lg:sticky lg:top-48 h-[500px] lg:h-[calc(100vh-220px)] lg:max-h-[700px] flex flex-col min-w-0">
-                
+              <div className="lg:sticky lg:top-48 h-125 lg:h-[calc(100vh-220px)] lg:max-h-175 flex flex-col min-w-0">
+
                 {/* Tabs Header */}
                 <div className="flex items-center gap-6 border-b border-border/40 mb-4 px-2">
                   <button
                     onClick={() => setPreviewTab("preview")}
                     className={cn(
-                      "text-sm font-semibold transition-colors relative pb-3 -mb-[1px]",
+                      "text-sm font-semibold transition-colors relative pb-3 -mb-px",
                       previewTab === "preview" ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                     )}
                   >
                     Preview
                     {previewTab === "preview" && (
-                      <span className="absolute left-0 right-0 bottom-0 h-[2px] bg-foreground rounded-t-full" />
+                      <span className="absolute left-0 right-0 bottom-0 h-0.5 bg-foreground rounded-t-full" />
                     )}
                   </button>
                   <button
                     onClick={() => setPreviewTab("code")}
                     className={cn(
-                      "text-sm font-semibold transition-colors relative pb-3 -mb-[1px]",
+                      "text-sm font-semibold transition-colors relative pb-3 -mb-px",
                       previewTab === "code" ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                     )}
                   >
                     Code
                     {previewTab === "code" && (
-                      <span className="absolute left-0 right-0 bottom-0 h-[2px] bg-foreground rounded-t-full" />
+                      <span className="absolute left-0 right-0 bottom-0 h-0.5 bg-foreground rounded-t-full" />
                     )}
                   </button>
                 </div>
@@ -239,7 +198,8 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
                 <div className="w-full flex-1 flex flex-col overflow-hidden">
                   {previewTab === "preview" ? (
                     <div className="w-full h-full max-w-full relative flex virtual-screen-wrapper">
-                      <style dangerouslySetInnerHTML={{ __html: `
+                      <style dangerouslySetInnerHTML={{
+                        __html: `
                         .virtual-screen-wrapper > div {
                           background: transparent !important;
                         }
@@ -261,92 +221,31 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
                       <ComponentLivePreview id={id} slug={slug} />
                     </div>
                   ) : (
-                    <div className="relative group rounded-xl border border-border/50 bg-zinc-50 dark:bg-zinc-950 overflow-hidden flex flex-col h-full shadow-sm w-full">
-                      <div className="flex items-center gap-2 px-4 py-3 bg-zinc-100 dark:bg-zinc-900 border-b border-black/5 dark:border-white/5">
-                        <Terminal size={14} className="text-zinc-500 dark:text-zinc-400" />
-                        <div className="flex-1 text-xs text-zinc-500 dark:text-zinc-400 font-medium font-sans select-none truncate">
-                          {slug}.tsx
-                        </div>
-                        <button
-                          onClick={() => {
-                            navigator.clipboard.writeText(reusableCode);
-                            setCopiedManual(true);
-                            setTimeout(() => setCopiedManual(false), 1500);
-                          }}
-                          className="p-1.5 rounded-md bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 text-zinc-900 dark:text-white transition-all shadow-sm border border-black/10 dark:border-white/10 flex items-center gap-1.5 text-xs font-medium"
-                        >
-                          {copiedManual ? <Check size={12} className="text-emerald-500 dark:text-emerald-400" /> : <Copy size={12} />}
-                          {copiedManual ? "Copied" : "Copy"}
-                        </button>
-                      </div>
-                      
-                      <div className="overflow-auto flex-1 scrollbar-hide w-full bg-white dark:bg-zinc-950">
-                        <SyntaxHighlighter
-                          language="tsx"
-                          style={activeSyntaxStyle}
-                          customStyle={{
-                            margin: 0,
-                            padding: "1.5rem",
-                            backgroundColor: "transparent",
-                            fontSize: "0.85rem",
-                            lineHeight: "1.6",
-                          }}
-                        >
-                          {reusableCode}
-                        </SyntaxHighlighter>
-                      </div>
-                    </div>
+                    <CodeBlock
+                      language="tsx"
+                      filename={`${slug}.tsx`}
+                      code={reusableCode}
+                    />
                   )}
                 </div>
               </div>
             </section>
 
             {/* Usage Section */}
-            <section id="usage" className="space-y-6 min-w-0 pt-8 border-t border-border/40">
-              <div className="space-y-1">
-                <h2 className="text-2xl font-bold tracking-tight text-foreground">Usage</h2>
-                <p className="text-muted-foreground">Implement the component in your project.</p>
-              </div>
-              <div className="relative group rounded-xl border border-border/50 bg-zinc-50 dark:bg-zinc-950 overflow-hidden flex flex-col w-full min-w-0 shadow-sm">
-                <div className="flex items-center gap-2 px-4 py-3 bg-zinc-100 dark:bg-zinc-900 border-b border-black/5 dark:border-white/5 justify-between">
-                  <div className="flex items-center gap-2">
-                    <Terminal size={14} className="text-zinc-500 dark:text-zinc-400" />
-                    <span className="text-xs text-zinc-500 dark:text-zinc-400 font-medium font-sans select-none">Example Implementation</span>
-                  </div>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(component.codes?.next || reusableCode);
-                      setCopiedCode(true);
-                      setTimeout(() => setCopiedCode(false), 1500);
-                    }}
-                    className="p-1.5 rounded-md bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 text-zinc-900 dark:text-white transition-all shadow-sm border border-black/10 dark:border-white/10 flex items-center gap-1.5 text-xs font-medium opacity-0 group-hover:opacity-100 focus:opacity-100"
-                  >
-                    {copiedCode ? <Check size={12} className="text-emerald-500 dark:text-emerald-400" /> : <Copy size={12} />}
-                    {copiedCode ? "Copied" : "Copy"}
-                  </button>
-                </div>
-                <div className="overflow-x-auto w-full bg-white dark:bg-zinc-950">
-                  <SyntaxHighlighter
-                    language="tsx"
-                    style={activeSyntaxStyle}
-                    customStyle={{
-                      margin: 0,
-                      padding: "1.5rem",
-                      backgroundColor: "transparent",
-                      fontSize: "0.85rem",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    {component.codes?.next || reusableCode || "No example provided."}
-                  </SyntaxHighlighter>
-                </div>
-              </div>
-            </section>
+            <CodeBlock
+              language="tsx"
+              filename="Example Implementation"
+              code={
+                component.codes?.next ||
+                reusableCode ||
+                "No example provided."
+              }
+            />
 
             {/* Features & Notes */}
             {(component.details?.length > 0 || component.usage?.length > 0) && (
               <section className="space-y-10 min-w-0 pt-8 border-t border-border/40">
-                
+
                 {component.details?.length > 0 && (
                   <div id="features" className="space-y-6 min-w-0">
                     <div className="space-y-1">

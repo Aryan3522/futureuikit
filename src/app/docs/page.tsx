@@ -1,9 +1,7 @@
 "use client";
 
 import React from "react";
-import { Header } from "@/components/ui/header";
 import { GlassPanel } from "@/components/ui/glass-panel";
-import { motion } from "framer-motion";
 import { 
   BookOpen, 
   Terminal, 
@@ -13,13 +11,8 @@ import {
   Package, 
   Cpu, 
   CheckCircle2,
-  Globe
 } from "lucide-react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus, vs } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { useTheme } from "@/contexts/ThemeContext";
-import Link from "next/link";
-import Image from "next/image";
+import { CodeBlock } from "@/components/shared/codeBlock";
 
 interface DocSectionProps {
   title: string;
@@ -42,64 +35,13 @@ const DocSection: React.FC<DocSectionProps> = ({ title, icon: Icon, children }) 
   </GlassPanel>
 );
 
-interface CodeBlockProps {
-  code: string;
-  language?: string;
-}
-
-const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = "bash" }) => {
-  const [copied, setCopied] = React.useState(false);
-  const { theme } = useTheme() as { theme: string };
-  const activeSyntaxStyle = theme === "dark" ? vscDarkPlus : vs;
-  
-  const handleCopy = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <div className="relative group rounded-xl overflow-hidden border border-black/10 dark:border-white/10 bg-white dark:bg-black/40 shadow-sm dark:shadow-none my-6">
-      <div className="flex justify-between items-center px-4 py-3 bg-zinc-100 dark:bg-white/5 border-b border-black/10 dark:border-white/10">
-        <span className="font-mono-label text-[10px] text-zinc-500 dark:text-muted-foreground uppercase tracking-widest">{language}</span>
-        <button 
-          onClick={handleCopy}
-          className="text-zinc-500 hover:text-zinc-900 dark:text-muted-foreground dark:hover:text-white transition-colors"
-          title="Copy code"
-        >
-          {copied ? <CheckCircle2 size={16} className="text-emerald-500 dark:text-[#00ffcc]" /> : <Copy size={16} />}
-        </button>
-      </div>
-      <SyntaxHighlighter
-        language={language}
-        style={activeSyntaxStyle}
-        customStyle={{
-          background: "transparent",
-          padding: "1.5rem",
-          fontSize: "0.85rem",
-          lineHeight: "1.6",
-          margin: 0,
-        }}
-        codeTagProps={{
-          style: {
-            fontFamily: "var(--font-jetbrains-mono), monospace",
-          }
-        }}
-      >
-        {code}
-      </SyntaxHighlighter>
-    </div>
-  );
-};
-
 export default function DocsPage() {
   return (
     <div className="w-full relative selection:bg-primary/30">
       {/* Background glow similar to homepage */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-secondary/10 rounded-full blur-[150px] opacity-40 mix-blend-screen pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[80vw] max-w-200 max-h-200 bg-secondary/10 rounded-full blur-[150px] opacity-40 mix-blend-screen pointer-events-none" />
 
       <main className="w-full relative z-10">
-        {/* Header */}
         {/* Header */}
         <div 
           className="mb-20 text-center md:text-left flex flex-col items-center md:items-start"
