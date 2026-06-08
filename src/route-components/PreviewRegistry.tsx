@@ -2282,12 +2282,13 @@ export const PreviewRegistry: Record<string, React.FC> = {
       premiumIconKeys.map(key => {
         const Comp = (PremiumIcons as any)[key];
         const isCircular = key.includes("Ring") || key.includes("Dial") || key.includes("Orbit") || key.includes("Halo");
+        const isAnimatedIcon = /^(Quantum|Cyber|Neural|Data|Holo|Flux|Neon|Pulse|Orbit|Plasma|Stellar|Aero|Solar|Animated)/.test(key);
         return {
           name: key,
           label: key.replace("Icon", ""),
-          description: `Premium ${isCircular ? "Circular" : "Abstract"} animated SVG icon.`,
-          tags: ["premium", "animated", isCircular ? "circular" : "abstract"],
-          render: (props: any) => <Comp {...props} animate={animate} animated={animate} />
+          description: isAnimatedIcon ? `Premium ${isCircular ? "Circular" : "Abstract"} animated SVG icon.` : "Standard clean SVG icon.",
+          tags: isAnimatedIcon ? ["premium", "animated", isCircular ? "circular" : "abstract"] : ["standard", "icon"],
+          render: (props: any) => isAnimatedIcon ? <Comp {...props} animate={animate} animated={animate} /> : <Comp {...props} />
         };
       })
     );
@@ -2319,36 +2320,37 @@ export const PreviewRegistry: Record<string, React.FC> = {
       <PreviewContainer
         title="Icons"
         description="Premium animated SVG icons — optimized for performance and aesthetic impact."
-        isVirtualScreen={false}
-        extraControls={
-          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
-            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Search Icons</span>
-            <SearchComponent
-              variant="standard"
-              size="sm"
-              placeholder="Search premium icons..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              clearable
-              className="w-full max-w-sm bg-muted/30 border-border/50 rounded-xl focus-within:ring-primary/30 focus-within:border-primary/40"
-            />
-          </div>
-        }
+        isVirtualScreen={true}
+        align="start"
       >
-        <div className="flex flex-col gap-8 w-full">
-          {/* Header info */}
-          <div className="flex flex-col gap-1">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
-              Motion-Ready Library
-            </p>
-            <p className="text-sm text-foreground">
-              Showing <span className="font-bold text-primary">{filtered.length}</span> high-performance native icons.
-            </p>
+        <div className="flex flex-col w-full p-4 md:p-10">
+          {/* Search Header */}
+          <div className="flex flex-col gap-6 w-full max-w-2xl mx-auto text-center mb-10 mt-4">
+            <div className="space-y-3">
+              <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Icon Library</h3>
+              <p className="text-sm md:text-base text-muted-foreground">
+                Showing <span className="text-primary font-bold">{filtered.length}</span> native icons. Search to find exactly what you need.
+              </p>
+            </div>
+            
+            <div className="w-full relative px-2 sm:px-0">
+              <SearchComponent
+                variant="floating"
+                size="lg"
+                placeholder="Search icons (e.g., 'Aero', 'Arrow', 'Github')..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                clearable
+                className="w-full shadow-xl"
+              />
+            </div>
           </div>
+
+          <div className="w-full h-px bg-border/40 mb-10" />
 
           {/* Icons flex wrap */}
           {filtered.length > 0 ? (
-            <div className="flex flex-wrap justify-center md:justify-start gap-4 md:gap-6 w-full">
+            <div className="flex flex-wrap justify-center gap-4 md:gap-6 w-full">
               {filtered.map((icon) => (
                 <button
                   key={icon.name}
