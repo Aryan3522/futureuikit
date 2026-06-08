@@ -1,39 +1,39 @@
-import { NextResponse } from "next/server";
-import { registry } from "@/data/component-library-data";
+import { NextResponse } from"next/server";
+import { registry } from"@/data/component-library-data";
 
-export const dynamic = "force-static";
+export const dynamic ="force-static";
 
 export function generateStaticParams() {
-  return Object.keys(registry).map((slug) => ({
-    slug,
-  }));
+ return Object.keys(registry).map((slug) => ({
+ slug,
+ }));
 }
 
 export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ slug: string }> }
+ _req: Request,
+ { params }: { params: Promise<{ slug: string }> }
 ) {
-  const { slug } = await params;
-  const component = registry[slug];
+ const { slug } = await params;
+ const component = registry[slug];
 
-  if (!component) {
-    return NextResponse.json(
-      { error: "Component not found" },
-      { status: 404 }
-    );
-  }
+ if (!component) {
+ return NextResponse.json(
+ { error:"Component not found"},
+ { status: 404 }
+ );
+ }
 
-  // Deep clone to avoid mutating the original registry object
-  const cleanComponent = JSON.parse(JSON.stringify(component));
+ // Deep clone to avoid mutating the original registry object
+ const cleanComponent = JSON.parse(JSON.stringify(component));
 
-  // Strip comments from all files
-  cleanComponent.files = cleanComponent.files.map((file: any) => ({
-    ...file,
-    content: file.content
-      .replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm, '$1')
-      .replace(/\n\s*\n/g, '\n\n')
-      .trim()
-  }));
+ // Strip comments from all files
+ cleanComponent.files = cleanComponent.files.map((file: any) => ({
+ ...file,
+ content: file.content
+ .replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm,'$1')
+ .replace(/\n\s*\n/g,'\n\n')
+ .trim()
+ }));
 
-  return NextResponse.json(cleanComponent);
+ return NextResponse.json(cleanComponent);
 }

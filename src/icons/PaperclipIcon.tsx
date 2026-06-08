@@ -1,8 +1,8 @@
 "use client";
-import React, { forwardRef } from "react";
-import { Paperclip as LucideIcon, LucideProps } from "lucide-react";
+import React, { forwardRef } from"react";
+import { Paperclip as LucideIcon, LucideProps } from"lucide-react";
 
 export const PaperclipIcon = forwardRef<SVGSVGElement, LucideProps>((props, ref) => {
-  return <LucideIcon ref={ref} {...props} />;
+ return <LucideIcon ref={ref} {...props} />;
 });
-PaperclipIcon.displayName = "PaperclipIcon";
+PaperclipIcon.displayName ="PaperclipIcon";

@@ -319,7 +319,8 @@ async function addComponent(componentSlug) {
         if (err.code !== "ENOENT") throw err;
       }
 
-      await fs.writeFile(absolutePath, file.content, "utf-8");
+      const finalContentToWrite = file.content.replace(/@(sm|md|lg|xl|2xl):/g, '$1:');
+      await fs.writeFile(absolutePath, finalContentToWrite, "utf-8");
       console.log(`Added ${relativePath}`);
     }
 

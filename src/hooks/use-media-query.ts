@@ -1,27 +1,27 @@
-import * as React from "react"
+import * as React from"react"
 
 export function useMediaQuery(query: string) {
-  const [value, setValue] = React.useState(false)
+ const [value, setValue] = React.useState(false)
 
-  React.useEffect(() => {
-    if (typeof window === "undefined") return
+ React.useEffect(() => {
+ if (typeof window ==="undefined") return
 
-    function onChange(event: MediaQueryListEvent) {
-      setValue(event.matches)
-    }
+ function onChange(event: MediaQueryListEvent) {
+ setValue(event.matches)
+ }
 
-    const result = window.matchMedia(query)
-    const frame = requestAnimationFrame(() => {
-      setValue(result.matches)
-    })
+ const result = window.matchMedia(query)
+ const frame = requestAnimationFrame(() => {
+ setValue(result.matches)
+ })
 
-    result.addEventListener("change", onChange)
+ result.addEventListener("change", onChange)
 
-    return () => {
-      cancelAnimationFrame(frame)
-      result.removeEventListener("change", onChange)
-    }
-  }, [query])
+ return () => {
+ cancelAnimationFrame(frame)
+ result.removeEventListener("change", onChange)
+ }
+ }, [query])
 
-  return value
+ return value
 }

@@ -1,54 +1,54 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import ComponentPageSidebar from "@/components/ui/ComponentPageSidebar";
-import ComponentsGrid from "@/components/ui/ComponentsGrid";
-import { componentsList } from "@/data/component-library-data";
+import React, { useState, useEffect } from"react";
+import ComponentPageSidebar from"@/components/ui/ComponentPageSidebar";
+import ComponentsGrid from"@/components/ui/ComponentsGrid";
+import { componentsList } from"@/data/component-library-data";
 
 const CompsCards: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+ const [open, setOpen] = useState(false);
+ const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsMounted(true);
-      const savedValue = localStorage.getItem("isOpen");
-      if (savedValue !== null) {
-        setOpen(JSON.parse(savedValue));
-      }
-    }, 0);
-  }, []);
+ useEffect(() => {
+ setTimeout(() => {
+ setIsMounted(true);
+ const savedValue = localStorage.getItem("isOpen");
+ if (savedValue !== null) {
+ setOpen(JSON.parse(savedValue));
+ }
+ }, 0);
+ }, []);
 
-  useEffect(() => {
-    if (isMounted) {
-      localStorage.setItem("isOpen", JSON.stringify(open));
-    }
-  }, [open, isMounted]);
+ useEffect(() => {
+ if (isMounted) {
+ localStorage.setItem("isOpen", JSON.stringify(open));
+ }
+ }, [open, isMounted]);
 
-  const filteredComponents = componentsList.filter(
-    (item) => item.type === "Cards"
-  );
+ const filteredComponents = componentsList.filter(
+ (item) => item.type ==="Cards"
+ );
 
-  return (
-    <div className="select-none min-h-screen flex">
-      <ComponentPageSidebar open={open} setOpen={setOpen} />
+ return (
+ <div className="select-none min-h-screen flex">
+ <ComponentPageSidebar open={open} setOpen={setOpen} />
 
-      <main
-        className={`relative flex-1 w-full p-2 md:p-8 transition-all duration-300 ml-16 ${
-          open ? "md:ml-64" : "md:ml-16"
-        }`}
-      >
-        <h1 className="text-3xl font-bold mb-2">Cards</h1>
-        <p className="text-muted-foreground">
-          Explore modern and reusable Card components!
-        </p>
+ <main
+ className={`relative flex-1 w-full p-2 md:p-8 transition-all duration-300 ml-16 ${
+ open ?"md:ml-64":"md:ml-16"
+ }`}
+ >
+ <h1 className="text-3xl font-bold mb-2">Cards</h1>
+ <p className="text-muted-foreground">
+ Explore modern and reusable Card components!
+ </p>
 
-        <div className="mt-4">
-          <ComponentsGrid items={filteredComponents} />
-        </div>
-      </main>
-    </div>
-  );
+ <div className="mt-4">
+ <ComponentsGrid items={filteredComponents} />
+ </div>
+ </main>
+ </div>
+ );
 };
 
 export default CompsCards;

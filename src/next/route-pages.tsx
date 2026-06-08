@@ -1,7 +1,7 @@
 "use client";
 
-import { Header } from "@/components/ui/header";
-import React from "react";
+import { Header } from"@/components/ui/header";
+import React from"react";
 
 // Note: These components were missing in the workspace.
 // Placeholders provided to ensure TypeScript compilation.
@@ -15,53 +15,53 @@ const GlassPortfolioCard = () => <div>GlassPortfolioCard Placeholder</div>;
 const HeroWithScales = ({ children }: { children: React.ReactNode }) => <div>{children}</div>;
 
 export function HomePage() {
-  return (
-    <div className="min-h-screen bg-transparent text-foreground pt-24">
-      <Header />
-      <main>
-        <Hero />
-        <HeroWithScales>
-          <HomePageLayout />
-          <GlassPortfolioCard />
-        </HeroWithScales>
-      </main>
-      <Footer />
-    </div>
-  );
+ return (
+ <div className="min-h-screen bg-transparent text-foreground pt-24">
+ <Header />
+ <main>
+ <Hero />
+ <HeroWithScales>
+ <HomePageLayout />
+ <GlassPortfolioCard />
+ </HeroWithScales>
+ </main>
+ <Footer />
+ </div>
+ );
 }
 
 export function ComponentPage() {
-  return (
-    <div className="min-h-screen bg-transparent text-foreground pt-24">
-      <Header />
-      <main>
-        <Comps />
-      </main>
-    </div>
-  );
+ return (
+ <div className="min-h-screen bg-transparent text-foreground pt-24">
+ <Header />
+ <main>
+ <Comps />
+ </main>
+ </div>
+ );
 }
 
 export function BlogsPage() {
-  return (
-    <div className="flex flex-col min-h-screen bg-transparent text-foreground pt-24">
-      <Header />
-      <HeroWithScales>
-        <Blogs />
-        <GlassPortfolioCard />
-      </HeroWithScales>
-      <Footer />
-    </div>
-  );
+ return (
+ <div className="flex flex-col min-h-screen bg-transparent text-foreground pt-24">
+ <Header />
+ <HeroWithScales>
+ <Blogs />
+ <GlassPortfolioCard />
+ </HeroWithScales>
+ <Footer />
+ </div>
+ );
 }
 
 export function CreditsPage() {
-  return (
-    <div className="flex flex-col min-h-screen bg-transparent text-foreground pt-24">
-      <Header />
-      <main className="flex-1">
-        <Credits />
-      </main>
-      <Footer />
-    </div>
-  );
+ return (
+ <div className="flex flex-col min-h-screen bg-transparent text-foreground pt-24">
+ <Header />
+ <main className="flex-1">
+ <Credits />
+ </main>
+ <Footer />
+ </div>
+ );
 }
