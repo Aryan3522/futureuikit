@@ -125,26 +125,30 @@
     -webkit-user-select: text !important;
   }
 
-  /* Global Minimal Scrollbar */
+  /* Global Premium Scrollbar */
   ::-webkit-scrollbar {
-    width: 2px;
-    height: 2px;
+    width: 6px;
+    height: 6px;
+    background-color: transparent;
   }
   ::-webkit-scrollbar-track {
-    background: rgba(128, 128, 128, 0.1);
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-corner {
+    background-color: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(128, 128, 128, 0.1);
-    border-radius: 10px;
+    background-color: hsl(var(--foreground) / 0.15);
+    border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(128, 128, 128, 0.2);
+    background-color: hsl(var(--foreground) / 0.3);
   }
 
   /* Firefox Support */
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(128, 128, 128, 0.1) transparent;
+    scrollbar-color: hsl(var(--foreground) / 0.15) transparent;
   }
 
   /* Hide scrollbar on mobile and tablets (up to 1024px) */

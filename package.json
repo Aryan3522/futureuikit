@@ -70,8 +70,7 @@
     "lint": "eslint",
     "cli:version": "node ./bin/cli.mjs --version",
     "build:icons": "tsup && tsc --project tsconfig.icons.json",
-    "prepack": "npm run build:icons",
-    "sync": "node scripts/sync-registry.mjs"
+    "prepack": "npm run build:icons"
   },
   "peerDependencies": {
     "clsx": ">=2.0.0",

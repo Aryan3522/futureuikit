@@ -70,6 +70,8 @@ import { PremiumUploadButton } from "@/components/ui/premium-upload-button";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { Footer } from "@/components/ui/footer";
+import { ScrollProgress } from "@/components/ui/ScrollProgress";
 
 // Typography helper components for the preview
 const headingVariants = cva("font-bold tracking-tight text-foreground", {
@@ -1498,6 +1500,20 @@ function FilterBuilderPreview() {
 }
 
 export const PreviewRegistry: Record<string, React.FC> = {
+  footer: function FooterPreview() {
+    return (
+      <PreviewContainer 
+        title="Footer" 
+        description="A minimal, modern footer component for Future UI." 
+        isVirtualScreen={true}
+        align="start"
+      >
+        <div className="w-full flex items-end min-h-[400px] mt-auto">
+          <Footer />
+        </div>
+      </PreviewContainer>
+    );
+  },
   "premium-upload-button": function PremiumUploadButtonPreview() {
     const [variant, setVariant] = React.useState<"clean" | "modern" | "minimal" | "enterprise" | "windows" | "futuristic" | "apple" | "ai">("modern");
     return (
@@ -2496,11 +2512,14 @@ export const PreviewRegistry: Record<string, React.FC> = {
   },
   "scroll-progress": function ScrollProgressPreview() {
     return (
-      <PreviewContainer title="Scroll Progress" description="A minimal scroll progress indicator.">
-        <div className="flex items-center justify-center w-full h-full p-8 text-center">
+      <PreviewContainer 
+        title="Scroll Progress" 
+        description="A minimal scroll progress indicator."
+        isVirtualScreen={true}
+      >
+        <div className="flex flex-col items-center justify-center w-full h-full p-8 text-center relative min-h-[300px]">
           <p className="text-muted-foreground font-medium">
-            The scroll progress will be shown on top of the viewport right above
-            header
+            Scroll down the main page to see the global scroll progress bar in action!
           </p>
         </div>
       </PreviewContainer>

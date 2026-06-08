@@ -1,8 +1,8 @@
 "use client";
-import React, { forwardRef } from "react";
-import { Plus as LucideIcon, LucideProps } from "lucide-react";
+import React, { forwardRef } from"react";
+import { Plus as LucideIcon, LucideProps } from"lucide-react";
 
 export const PlusIcon = forwardRef<SVGSVGElement, LucideProps>((props, ref) => {
-  return <LucideIcon ref={ref} {...props} />;
+ return <LucideIcon ref={ref} {...props} />;
 });
-PlusIcon.displayName = "PlusIcon";
+PlusIcon.displayName ="PlusIcon";

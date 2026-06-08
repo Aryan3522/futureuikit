@@ -19,8 +19,12 @@
 import { motion, useScroll, useSpring } from "framer-motion"
 import React from "react";
 
-export const ScrollProgress = React.memo(function ScrollProgress() {
-  const { scrollYProgress } = useScroll()
+export interface ScrollProgressProps {
+  container?: React.RefObject<HTMLElement | null>;
+}
+
+export const ScrollProgress = React.memo(function ScrollProgress({ container }: ScrollProgressProps = {}) {
+  const { scrollYProgress } = useScroll({ container })
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
@@ -29,7 +33,7 @@ export const ScrollProgress = React.memo(function ScrollProgress() {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 right-0 h-1 bg-foreground origin-left z-120"
+      className="fixed top-0 left-0 right-0 h-1 bg-foreground origin-left z-[9999]"
       style={{ scaleX }}
     />
   )
