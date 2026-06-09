@@ -94,7 +94,7 @@ ModalClose.displayName = "ModalClose";
 // --- Content & Variants ---
 
 const modalOverlayVariants = cva(
-  "fixed inset-0 z-50 overflow-y-auto flex",
+  "fixed inset-0 z-[2147483647] overflow-y-auto flex",
   {
     variants: {
       variant: {
@@ -121,7 +121,7 @@ const modalOverlayVariants = cva(
 );
 
 const modalContentVariants = cva(
-  "relative z-50 flex flex-col focus:outline-none overflow-hidden",
+  "relative z-[2147483647] flex flex-col focus:outline-none overflow-hidden",
   {
     variants: {
       variant: {
