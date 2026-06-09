@@ -102,7 +102,7 @@ export const DrawerTrigger = React.memo(React.forwardRef<
 DrawerTrigger.displayName = "DrawerTrigger";
 
 const drawerVariants = cva(
-  "fixed z-50 flex flex-col focus:outline-none",
+  "fixed z-[2147483647] flex flex-col focus:outline-none",
   {
     variants: {
       placement: {
@@ -301,7 +301,7 @@ export const DrawerContent = React.memo(React.forwardRef<
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className={cn(`${positionClass} inset-0 z-50 bg-background/80 backdrop-blur-sm`)}
+                    className={cn(`${positionClass} inset-0 z-[2147483647] bg-background/80 backdrop-blur-sm`)}
                     onClick={() => setIsOpen(false)}
                     aria-hidden="true"
                   />

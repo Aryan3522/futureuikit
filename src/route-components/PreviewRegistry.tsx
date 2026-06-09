@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { GlowyButton } from "@/components/ui/glowy-button";
 import { BasicCard } from "@/components/ui/basic-card";
@@ -705,7 +706,6 @@ const DockPreview: React.FC = () => {
 const DrawerPreview: React.FC = () => {
   const [placement, setPlacement] = React.useState<"left" | "right" | "top" | "bottom">("right");
   const [variant, setVariant] = React.useState<"default" | "compact" | "glass" | "elevated" | "floating">("default");
-  const [container, setContainer] = React.useState<HTMLDivElement | null>(null);
 
   return (
     <PreviewContainer
@@ -726,12 +726,12 @@ const DrawerPreview: React.FC = () => {
         </div>
       }
     >
-      <div ref={setContainer} className="flex-1 flex items-center justify-center w-full h-full min-h-75 relative overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+      <div className="flex-1 flex items-center justify-center w-full h-full min-h-75">
         <Drawer placement={placement} variant={variant}>
           <DrawerTrigger asChild>
             <Button size="lg" className="rounded-full px-8 shadow-lg shadow-primary/20">Open Drawer</Button>
           </DrawerTrigger>
-        <DrawerContent container={container}>
+        <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Premium Drawer</DrawerTitle>
             <DrawerDescription>A native feeling interaction powered by Framer Motion.</DrawerDescription>
@@ -799,7 +799,6 @@ const ModalPreview: React.FC = () => {
   const [variant, setVariant] = React.useState<"default" | "floating" | "glass" | "elevated" | "minimal" | "spotlight">("default");
   const [size, setSize] = React.useState<"xs" | "sm" | "md" | "lg" | "xl" | "full-width" | "full-screen">("md");
   const [position, setPosition] = React.useState<"center" | "top-center" | "bottom-sheet" | "left-side" | "right-side">("center");
-  const [container, setContainer] = React.useState<HTMLDivElement | null>(null);
 
   return (
     <PreviewContainer
@@ -829,13 +828,13 @@ const ModalPreview: React.FC = () => {
         </>
       }
     >
-      <div ref={setContainer} className="flex-1 flex flex-col items-center justify-center w-full min-h-100 md:min-h-125 h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+      <div className="flex-1 flex flex-col items-center justify-center w-full min-h-100 md:min-h-125 h-full p-4">
         <div className="flex items-center justify-center w-full h-64 relative">
           <Button onClick={() => setOpen(true)} size="lg" className="rounded-full shadow-lg shadow-primary/20 px-8">Open Modal</Button>
         </div>
 
-        <Modal open={open} onOpenChange={setOpen} variant={variant} size={size} position={position} container={container}>
-          <ModalContent container={container}>
+        <Modal open={open} onOpenChange={setOpen} variant={variant} size={size} position={position}>
+          <ModalContent>
             <ModalHeader>
               <ModalTitle>Premium Modal Interface</ModalTitle>
               <ModalDescription>Configure variants, sizes, and positions effortlessly.</ModalDescription>
@@ -2128,6 +2127,12 @@ export const PreviewRegistry: Record<string, React.FC> = {
   },
   "icons": function IconsPreview() {
     const [animate, setAnimate] = useState(true);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+      setMounted(true);
+    }, []);
+
     const _STATIC_ICONS = [
       {
         name: "GithubIcon",
@@ -2391,122 +2396,124 @@ export const PreviewRegistry: Record<string, React.FC> = {
           )}
         </div>
 
-        {/* Detail modal */}
-        <AnimatePresence>
-          {selected && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-200 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md"
-              onClick={() => setSelected(null)}
-            >
+        {mounted && createPortal(
+          <AnimatePresence>
+            {selected && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 12 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 12 }}
-                transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                onClick={(e) => e.stopPropagation()}
-                className="w-full max-w-lg bg-background border border-border rounded-3xl shadow-2xl overflow-hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[2147483647] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md"
+                onClick={() => setSelected(null)}
               >
-                {/* Header */}
-                <div className="flex items-center justify-between px-6 py-5 border-b border-border/50 bg-muted/10">
-                  <div className="flex items-center gap-4 min-w-0">
-                    <div className="w-12 h-12 flex shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20">
-                      {selected.render({ width: 24, height: 24 })}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-base font-bold text-foreground truncate">{selected.name}</p>
-                      <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider truncate">{selected.label} Icon</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setSelected(null)}
-                    className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-
-                <div className="px-6 py-6 space-y-6 overflow-y-auto max-h-[75vh]">
-                  {/* Description */}
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3">About Icon</p>
-                    <p className="text-sm text-muted-foreground leading-relaxed bg-muted/30 p-4 rounded-2xl border border-border/50">{selected.description}</p>
-                  </div>
-
-                  {/* Sizes */}
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3">Responsive Variants</p>
-                    <div className="flex flex-wrap items-end justify-center sm:justify-between gap-4 px-6 py-5 rounded-2xl bg-muted/20 border border-border/50">
-                      {[{ size: 16, label: "16px" }, { size: 24, label: "24px" }, { size: 32, label: "32px" }, { size: 48, label: "48px" }, { size: 64, label: "64px" }].map(({ size, label }) => (
-                        <div key={size} className="flex flex-col items-center gap-2">
-                          <div className="flex items-center justify-center p-2 rounded-lg bg-background border border-border/50">
-                            {selected.render({ width: size, height: size, className: "text-foreground" })}
-                          </div>
-                          <span className="text-[10px] font-medium text-muted-foreground/60">{label}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Colors */}
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3">Theme Compatibility</p>
-                    <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
-                      {[
-                        { color: "currentColor", label: "Default", bg: "bg-foreground" },
-                        { color: "#6366f1", label: "Indigo", bg: "bg-indigo-500" },
-                        { color: "#10b981", label: "Emerald", bg: "bg-emerald-500" },
-                        { color: "#f59e0b", label: "Amber", bg: "bg-amber-500" },
-                        { color: "#ef4444", label: "Red", bg: "bg-red-500" },
-                        { color: "#8b5cf6", label: "Violet", bg: "bg-violet-500" },
-                      ].map(({ color, label, bg }) => (
-                        <div key={label} className="flex flex-col items-center gap-2 group cursor-help" title={label}>
-                          <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-muted/30 border border-border/50 transition-all group-hover:scale-110">
-                            {selected.render({ width: 20, height: 20, style: { color } })}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Implementation */}
-                  <div className="space-y-3">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Quick Implementation</p>
-                    <div className="space-y-2">
-                      <div className="relative group">
-                        <div className="absolute -top-2 left-3 px-1.5 bg-background text-[9px] font-bold text-primary uppercase tracking-wider z-10 border border-border rounded">Import</div>
-                        <div className="flex items-center gap-3 bg-muted/30 border border-border/50 rounded-2xl px-4 py-3.5 group-hover:border-primary/30 transition-colors">
-                          <code className="text-[11px] font-mono text-foreground flex-1 truncate">{importLine}</code>
-                          <button
-                            onClick={() => copy(importLine, "import")}
-                            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-primary"
-                          >
-                            {copied === "import" ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
-                          </button>
-                        </div>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 12 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 12 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="w-full max-w-lg bg-background border border-border rounded-3xl shadow-2xl overflow-hidden"
+                >
+                  {/* Header */}
+                  <div className="flex items-center justify-between px-6 py-5 border-b border-border/50 bg-muted/10">
+                    <div className="flex items-center gap-4 min-w-0">
+                      <div className="w-12 h-12 flex shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20">
+                        {selected.render({ width: 24, height: 24 })}
                       </div>
-
-                      <div className="relative group">
-                        <div className="absolute -top-2 left-3 px-1.5 bg-background text-[9px] font-bold text-primary uppercase tracking-wider z-10 border border-border rounded">Usage</div>
-                        <div className="flex items-center gap-3 bg-muted/30 border border-border/50 rounded-2xl px-4 py-3.5 group-hover:border-primary/30 transition-colors">
-                          <code className="text-[11px] font-mono text-foreground flex-1 truncate">{usageCode}</code>
-                          <button
-                            onClick={() => copy(usageCode, "usage")}
-                            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-primary"
-                          >
-                            {copied === "usage" ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
-                          </button>
-                        </div>
+                      <div className="min-w-0">
+                        <p className="text-base font-bold text-foreground truncate">{selected.name}</p>
+                        <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider truncate">{selected.label} Icon</p>
                       </div>
                     </div>
+                    <button
+                      onClick={() => setSelected(null)}
+                      className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
                   </div>
-                </div>
+
+                  <div className="px-6 py-6 space-y-6 overflow-y-auto max-h-[75vh]">
+                    {/* Description */}
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3">About Icon</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed bg-muted/30 p-4 rounded-2xl border border-border/50">{selected.description}</p>
+                    </div>
+
+                    {/* Sizes */}
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3">Responsive Variants</p>
+                      <div className="flex flex-wrap items-end justify-center sm:justify-between gap-4 px-6 py-5 rounded-2xl bg-muted/20 border border-border/50">
+                        {[{ size: 16, label: "16px" }, { size: 24, label: "24px" }, { size: 32, label: "32px" }, { size: 48, label: "48px" }, { size: 64, label: "64px" }].map(({ size, label }) => (
+                          <div key={size} className="flex flex-col items-center gap-2">
+                            <div className="flex items-center justify-center p-2 rounded-lg bg-background border border-border/50">
+                              {selected.render({ width: size, height: size, className: "text-foreground" })}
+                            </div>
+                            <span className="text-[10px] font-medium text-muted-foreground/60">{label}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Colors */}
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3">Theme Compatibility</p>
+                      <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                        {[
+                          { color: "currentColor", label: "Default", bg: "bg-foreground" },
+                          { color: "#6366f1", label: "Indigo", bg: "bg-indigo-500" },
+                          { color: "#10b981", label: "Emerald", bg: "bg-emerald-500" },
+                          { color: "#f59e0b", label: "Amber", bg: "bg-amber-500" },
+                          { color: "#ef4444", label: "Red", bg: "bg-red-500" },
+                          { color: "#8b5cf6", label: "Violet", bg: "bg-violet-500" },
+                        ].map(({ color, label, bg }) => (
+                          <div key={label} className="flex flex-col items-center gap-2 group cursor-help" title={label}>
+                            <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-muted/30 border border-border/50 transition-all group-hover:scale-110">
+                              {selected.render({ width: 20, height: 20, style: { color } })}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Implementation */}
+                    <div className="space-y-3">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Quick Implementation</p>
+                      <div className="space-y-2">
+                        <div className="relative group">
+                          <div className="absolute -top-2 left-3 px-1.5 bg-background text-[9px] font-bold text-primary uppercase tracking-wider z-10 border border-border rounded">Import</div>
+                          <div className="flex items-center gap-3 bg-muted/30 border border-border/50 rounded-2xl px-4 py-3.5 group-hover:border-primary/30 transition-colors">
+                            <code className="text-[11px] font-mono text-foreground flex-1 truncate">{importLine}</code>
+                            <button
+                              onClick={() => copy(importLine, "import")}
+                              className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-primary"
+                            >
+                              {copied === "import" ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="relative group">
+                          <div className="absolute -top-2 left-3 px-1.5 bg-background text-[9px] font-bold text-primary uppercase tracking-wider z-10 border border-border rounded">Usage</div>
+                          <div className="flex items-center gap-3 bg-muted/30 border border-border/50 rounded-2xl px-4 py-3.5 group-hover:border-primary/30 transition-colors">
+                            <code className="text-[11px] font-mono text-foreground flex-1 truncate">{usageCode}</code>
+                            <button
+                              onClick={() => copy(usageCode, "usage")}
+                              className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-primary"
+                            >
+                              {copied === "usage" ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
               </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            )}
+          </AnimatePresence>,
+          document.body
+        )}
       </PreviewContainer>
     );
   },
