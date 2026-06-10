@@ -1,3 +1,12 @@
+/**
+ * @registry-slug global-breadcrumb
+ * @registry-name Global Breadcrumb
+ * @registry-description A dynamic breadcrumb navigation component that generates navigation paths based on the current route, category, and component hierarchy.
+ * @registry-category ui
+ * @registry-dependency lucide-react
+ * @registry-dependency next/navigation
+ * @registry-dependency next/link
+ */
 "use client";
 
 import React, { Suspense } from "react";

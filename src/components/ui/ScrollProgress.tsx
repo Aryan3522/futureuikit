@@ -1,16 +1,7 @@
 /**
- * ScrollProgress Component
- * 
- * A high-performance scroll progress indicator that tracks the user's 
- * scroll position and displays a progress bar at the top of the viewport.
- * Built with Framer Motion for smooth, spring-based animations.
- * 
- * @returns {JSX.Element} A motion-enhanced progress bar.
- */
-/**
  * @registry-slug scroll-progress
  * @registry-name Scroll Progress
- * @registry-description A Future UI Scroll Progress component.
+ * @registry-description A high-performance scroll progress indicator with smooth spring-based animations powered by Framer Motion.
  * @registry-category ui
  * @registry-dependency framer-motion
  */
