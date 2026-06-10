@@ -22,7 +22,6 @@ import { HoverGlareCard } from "@/components/ui/hover-glare-card";
 import { NoirHero3D } from "@/components/ui/noir-hero-3d";
 import { Header } from "@/components/ui/header";
 import { useToast } from "@/hooks/use-toast";
-import { Toaster } from "@/components/ui/toaster";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -72,7 +71,6 @@ import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Footer } from "@/components/ui/footer";
-import { ScrollProgress } from "@/components/ui/ScrollProgress";
 
 // Typography helper components for the preview
 const headingVariants = cva("font-bold tracking-tight text-foreground", {
@@ -1507,7 +1505,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
         isVirtualScreen={true}
         align="start"
       >
-        <div className="w-full flex items-end min-h-[400px] mt-auto">
+        <div className="w-full flex items-end min-h-100 mt-auto">
           <Footer />
         </div>
       </PreviewContainer>
@@ -1524,7 +1522,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
         activeVariant={variant}
         onVariantChange={setVariant}
       >
-        <div className="w-full flex items-center justify-center p-4 min-h-[400px]">
+        <div className="w-full flex items-center justify-center p-4 min-h-100">
           <PremiumUploadButton variant={variant} />
         </div>
       </PreviewContainer>
@@ -2403,7 +2401,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[2147483647] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md"
+                className="fixed inset-0 z-2147483647 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md"
                 onClick={() => setSelected(null)}
               >
                 <motion.div
@@ -2524,7 +2522,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
         description="A minimal scroll progress indicator."
         isVirtualScreen={true}
       >
-        <div className="flex flex-col items-center justify-center w-full h-full p-8 text-center relative min-h-[300px]">
+        <div className="flex flex-col items-center justify-center w-full h-full p-8 text-center relative min-h-75">
           <p className="text-muted-foreground font-medium">
             Scroll down the main page to see the global scroll progress bar in action!
           </p>
@@ -2794,7 +2792,7 @@ function TerminalPreview() {
         <UITerminal 
           key={activeVariant} // Force remount on variant change to reset history
           variant={activeVariant}
-          className="w-full max-w-3xl aspect-[4/5] sm:aspect-video shadow-2xl"
+          className="w-full max-w-3xl aspect-4/5 sm:aspect-video shadow-2xl"
           interactive={true}
           onCommand={handleCommand}
           commands={[`Welcome to the ${activeVariant} terminal preview!`, "Type any command and press Enter."]}

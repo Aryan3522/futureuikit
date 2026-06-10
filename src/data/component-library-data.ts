@@ -126,7 +126,7 @@ export default function Example() {
 "Perfect for high-end hero sections.",
  ],
  codes: {
- next:'import { NoirHero3D } from"@/components/ui/noir-hero-3d";\n\nexport default function Example() {\n return (\n <div className="w-full h-[500px]">\n <NoirHero3D className="w-full h-full"/>\n </div>\n );\n}',
+ next:'import { NoirHero3D } from"@/components/ui/noir-hero-3d";\n\nexport default function Example() {\n return (\n <div className="w-full h-125">\n <NoirHero3D className="w-full h-full"/>\n </div>\n );\n}',
  },
  usage: [
 "Install: Run'npx futureuikit add noir-hero-3d'.",
@@ -577,7 +577,7 @@ export default function Example() {
 "Lightweight and performant with zero image dependencies.",
  ],
  codes: {
- next:'import { DotBackground } from"@/components/ui/dot-background";\n\nexport default function Example() {\n return (\n <div className="w-full h-[400px] border rounded-3xl overflow-hidden">\n <DotBackground \n dotColor="#6366f1"\n dotSize={1.5} \n gap={24} \n maskOpacity={0.1}\n >\n <h2 className="text-2xl font-bold">Content Over Background</h2>\n </DotBackground>\n </div>\n );\n}',
+ next:'import { DotBackground } from"@/components/ui/dot-background";\n\nexport default function Example() {\n return (\n <div className="w-full h-100 border rounded-3xl overflow-hidden">\n <DotBackground \n dotColor="#6366f1"\n dotSize={1.5} \n gap={24} \n maskOpacity={0.1}\n >\n <h2 className="text-2xl font-bold">Content Over Background</h2>\n </DotBackground>\n </div>\n );\n}',
  },
  usage: [
 "Install: Run'npx futureuikit add dot-background'.",
@@ -655,7 +655,7 @@ export default function Example() {
 "Standardizes information containers across your application.",
  ],
  codes: {
- next:'import {\n Card,\n CardContent,\n CardDescription,\n CardFooter,\n CardHeader,\n CardTitle,\n} from"@/components/ui/card";\n\nexport default function Example() {\n return (\n <Card className="w-[350px]">\n <CardHeader>\n <CardTitle>Create project</CardTitle>\n <CardDescription>Deploy your new project in one-click.</CardDescription>\n </CardHeader>\n <CardContent>\n <p>Card Content goes here.</p>\n </CardContent>\n <CardFooter className="flex justify-between">\n <button>Cancel</button>\n <button>Deploy</button>\n </CardFooter>\n </Card>\n );\n}',
+ next:'import {\n Card,\n CardContent,\n CardDescription,\n CardFooter,\n CardHeader,\n CardTitle,\n} from"@/components/ui/card";\n\nexport default function Example() {\n return (\n <Card className="w-87.5">\n <CardHeader>\n <CardTitle>Create project</CardTitle>\n <CardDescription>Deploy your new project in one-click.</CardDescription>\n </CardHeader>\n <CardContent>\n <p>Card Content goes here.</p>\n </CardContent>\n <CardFooter className="flex justify-between">\n <button>Cancel</button>\n <button>Deploy</button>\n </CardFooter>\n </Card>\n );\n}',
  },
  usage: [
 "Install: Run'npx futureuikit add card'.",
@@ -733,7 +733,7 @@ export default function Example() {
 "React.memo optimized to prevent unnecessary re-renders.",
  ],
  codes: {
- next:'import { PerspectiveGrid } from"@/components/ui/perspective-grid";\n\nexport default function Example() {\n return (\n <div className="w-full h-[600px] bg-background relative overflow-hidden">\n <PerspectiveGrid \n gridLineGap={50} \n fadeRadius={70} \n />\n <div className="absolute inset-0 flex items-center justify-center">\n <h2 className="text-3xl font-bold italic">Cyber Horizon</h2>\n </div>\n </div>\n );\n}',
+ next:'import { PerspectiveGrid } from"@/components/ui/perspective-grid";\n\nexport default function Example() {\n return (\n <div className="w-full h-150 bg-background relative overflow-hidden">\n <PerspectiveGrid \n gridLineGap={50} \n fadeRadius={70} \n />\n <div className="absolute inset-0 flex items-center justify-center">\n <h2 className="text-3xl font-bold italic">Cyber Horizon</h2>\n </div>\n </div>\n );\n}',
  },
  usage: [
 "Install: Run'npx futureuikit add perspective-grid'.",
@@ -913,7 +913,7 @@ export default function AdvancedSearch() {
 "Accessibility conscious: falls back to the system cursor when not active.",
  ],
  codes: {
- next:'import { PointCursor } from"@/components/ui/PointCursor";\n\nexport default function Example() {\n return (\n <PointCursor>\n <section className="min-h-[400px] flex items-center justify-center bg-slate-900 text-white rounded-3xl p-12">\n <div className="text-center">\n <h2 className="text-3xl font-bold mb-4">Hover anywhere here!</h2>\n <button className="bg-white text-black px-6 py-2 rounded-full font-medium">\n Interactive Button\n </button>\n </div>\n </section>\n </PointCursor>\n );\n}',
+ next:'import { PointCursor } from"@/components/ui/PointCursor";\n\nexport default function Example() {\n return (\n <PointCursor>\n <section className="min-h-100 flex items-center justify-center bg-slate-900 text-white rounded-3xl p-12">\n <div className="text-center">\n <h2 className="text-3xl font-bold mb-4">Hover anywhere here!</h2>\n <button className="bg-white text-black px-6 py-2 rounded-full font-medium">\n Interactive Button\n </button>\n </div>\n </section>\n </PointCursor>\n );\n}',
  },
  usage: [
 "Install: Run'npx futureuikit add point-cursor'.",
@@ -1424,7 +1424,7 @@ export default function AdvancedSearch() {
 'Multiple visual variants: Default, Enterprise, Minimal, Glass, Compact.'
  ],
  codes: {
- next:'import { WorkflowBuilder } from"@/components/ui/workflow-builder";\n\nexport default function Example() {\n return (\n <div className="w-full h-[600px]">\n <WorkflowBuilder \n variant="enterprise"\n initialNodes={[\n { id:"1", type:"trigger", position: { x: 100, y: 200 }, data: { label:"Webhook"} },\n { id:"2", type:"agent", position: { x: 500, y: 200 }, data: { label:"AI Processor"} }\n ]}\n initialEdges={[\n { id:"e1-2", source:"1", target:"2", animated: true }\n ]}\n />\n </div>\n );\n}'
+ next:'import { WorkflowBuilder } from"@/components/ui/workflow-builder";\n\nexport default function Example() {\n return (\n <div className="w-full h-150">\n <WorkflowBuilder \n variant="enterprise"\n initialNodes={[\n { id:"1", type:"trigger", position: { x: 100, y: 200 }, data: { label:"Webhook"} },\n { id:"2", type:"agent", position: { x: 500, y: 200 }, data: { label:"AI Processor"} }\n ]}\n initialEdges={[\n { id:"e1-2", source:"1", target:"2", animated: true }\n ]}\n />\n </div>\n );\n}'
  },
  usage: [
 'Installation: Run npx futureuikit add workflow-builder',
@@ -1449,7 +1449,7 @@ export default function AdvancedSearch() {
 'Multiple visual variants: Default, Minimal, Writing, Enterprise, Glass.'
  ],
  codes: {
- next:'import { RichTextEditor } from"@/components/ui/rich-text-editor";\n\nexport default function Example() {\n return (\n <div className="w-full max-w-3xl mx-auto h-[500px]">\n <RichTextEditor \n variant="default"\n content="<h1>Welcome</h1><p>Type / for commands</p>"\n />\n </div>\n );\n}'
+ next:'import { RichTextEditor } from"@/components/ui/rich-text-editor";\n\nexport default function Example() {\n return (\n <div className="w-full max-w-3xl mx-auto h-125">\n <RichTextEditor \n variant="default"\n content="<h1>Welcome</h1><p>Type / for commands</p>"\n />\n </div>\n );\n}'
  },
  usage: [
 'Installation: Run npx futureuikit add rich-text-editor',
