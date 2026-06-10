@@ -2,16 +2,15 @@
 
 import React from"react";
 import { PreviewRegistry } from"@/route-components/PreviewRegistry";
-import { registry } from"@/data/component-library-data";
+import type { PreviewComponent } from "@/route-components/preview-engine/preview-types";
 
 export interface ComponentRendererProps {
  slug: string;
  fallback?: React.ReactNode;
 }
 
-export function getRegistryPreview(slug: string): React.FC | null {
- if (!registry[slug]) return null;
- return PreviewRegistry[slug] ?? null;
+export function getRegistryPreview(slug: string): PreviewComponent | null {
+  return PreviewRegistry[slug] ?? null;
 }
 
 export function ComponentRenderer({ slug, fallback }: ComponentRendererProps) {

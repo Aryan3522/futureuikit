@@ -15,7 +15,7 @@ Instead of Electron (which ships a heavy embedded Chromium instance), the native
 
 ### Process Model
 1. **Main Process (Rust):** Handles native APIs, filesystem access, database (SQLite) connections, OS-level window management, and native downloads.
-2. **Browser Window UI (React/Next.js):** The "Chrome" of the browser (tabs, URL bar, settings, downloads panel). This will be a refined version of our React `MacOS Browser Component V2`.
+2. **Browser Window UI (React/Next.js):** The "Chrome" of the browser (tabs, URL bar, settings, downloads panel). This will be a refined version of our React `Browser Window Component`.
 3. **WebContents (WebView):** The isolated sandbox where actual web pages render. 
 
 ## 2. Sync Engine & User Accounts
@@ -59,6 +59,6 @@ To handle 100+ tabs efficiently:
 
 ## 6. The Web Preview vs. Native
 
-The **Web Preview** (the `macos-browser-v2.tsx` React component) is a marketing tool. It uses standard `<iframe>` elements to simulate browsing. Because of web security (`X-Frame-Options`, `Content-Security-Policy`), many sites will refuse to load in an iframe. 
+The **Web Preview** (the `browser-window.tsx` React component) is a marketing tool. It uses standard `<iframe>` elements to simulate browsing. Because of web security (`X-Frame-Options`, `Content-Security-Policy`), many sites will refuse to load in an iframe. 
 
 The **Native Application** solves this because Tauri/Electron WebViews are not subject to standard iframe CORS/CSP restrictions—they operate as top-level browser contexts, guaranteeing 100% website compatibility.

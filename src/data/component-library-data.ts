@@ -1551,6 +1551,30 @@ export default function AdvancedSearch() {
 "Dependencies: Requires framer-motion and lucide-react.",
 "Usage: Drop into your verification or authentication flows.",
  ],
+ },
+ {
+ id: 57,
+ title:"Page Sidebar",
+ type:"Navigation",
+ slug:"component-page-sidebar",
+ category:"ui",
+ isNew: true,
+ description:"A dedicated sidebar for component documentation.",
+ details: ["Responsive sidebar nav"],
+ codes: { next:""},
+ usage: ["npx futureuikit add component-page-sidebar"]
+ },
+ {
+ id: 58,
+ title:"Breadcrumb",
+ type:"Navigation",
+ slug:"global-breadcrumb",
+ category:"ui",
+ isNew: true,
+ description:"A global breadcrumb navigation component.",
+ details: ["Pathname based breadcrumbs"],
+ codes: { next:""},
+ usage: ["npx futureuikit add global-breadcrumb"]
  }
 ];
 

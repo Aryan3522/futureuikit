@@ -3,18 +3,22 @@ import path from "path";
 
 const COMPONENTS_DIR = path.resolve("src/components/ui");
 const REGISTRY_FILE = path.resolve("src/data/registryData.ts");
-const BACKUP_FILE = path.resolve("src/data/registryData.backup.ts");
+const SRC_DIR = path.resolve("src");
 
+/**
+ * Recursively walks a directory and returns all .tsx and .ts files.
+ */
 function walk(dir) {
   const results = [];
+  const list = fs.readdirSync(dir);
 
-  for (const file of fs.readdirSync(dir)) {
+  for (const file of list) {
     const fullPath = path.join(dir, file);
     const stat = fs.statSync(fullPath);
 
     if (stat.isDirectory()) {
       results.push(...walk(fullPath));
-    } else if (file.endsWith(".tsx")) {
+    } else if (file.endsWith(".tsx") || file.endsWith(".ts")) {
       results.push(fullPath);
     }
   }
@@ -22,169 +26,169 @@ function walk(dir) {
   return results;
 }
 
+/**
+ * Parses the registry metadata from a file's DocBlock.
+ */
 function parseDocblock(content) {
-  const match = content.match(/^\/\*\*([\s\S]*?)\*\//);
-
+  const match = content.match(/\/\*\*([\s\S]*?)\*\//);
   if (!match) return null;
 
   const block = match[1];
+  if (!block.includes("@registry-slug")) return null;
 
   const meta = {
     slug: "",
     name: "",
     description: "",
     category: "ui",
+    type: "components:ui",
     dependencies: [],
+    files: [],
   };
 
-  for (const line of block.split("\n")) {
+  const lines = block.split("\n");
+  for (const line of lines) {
     const cleaned = line.replace(/^\s*\*\s?/, "").trim();
+    if (!cleaned) continue;
 
-    if (cleaned.startsWith("@registry-slug")) {
-      meta.slug = cleaned.replace("@registry-slug", "").trim();
-    }
+    const parts = cleaned.split(/\s+/);
+    const tag = parts[0];
+    const value = cleaned.slice(tag.length).trim();
 
-    if (cleaned.startsWith("@registry-name")) {
-      meta.name = cleaned.replace("@registry-name", "").trim();
-    }
-
-    if (cleaned.startsWith("@registry-description")) {
-      meta.description = cleaned
-        .replace("@registry-description", "")
-        .trim();
-    }
-
-    if (cleaned.startsWith("@registry-category")) {
-      meta.category = cleaned
-        .replace("@registry-category", "")
-        .trim();
-    }
-
-    if (cleaned.startsWith("@registry-dependency")) {
-      meta.dependencies.push(
-        cleaned.replace("@registry-dependency", "").trim()
-      );
+    if (tag === "@registry-slug") {
+      meta.slug = value;
+    } else if (tag === "@registry-name" || tag === "@name") {
+      // Prefer @registry-name over @name as fallback
+      if (!meta.name || tag === "@registry-name") {
+        meta.name = value;
+      }
+    } else if (tag === "@registry-description" || tag === "@description") {
+      // Prefer @registry-description over @description as fallback
+      if (!meta.description || tag === "@registry-description") {
+        meta.description = value;
+      }
+    } else if (tag === "@registry-category") {
+      meta.category = value;
+    } else if (tag === "@registry-type") {
+      meta.type = value;
+    } else if (tag === "@registry-dependency") {
+      // Support space-separated dependencies on one line
+      const deps = value.split(/\s+/).filter(Boolean);
+      meta.dependencies.push(...deps);
+    } else if (tag === "@registry-file") {
+      // Support space-separated files on one line
+      const extraFiles = value.split(/\s+/).filter(Boolean);
+      meta.files.push(...extraFiles);
     }
   }
 
   return meta;
 }
 
-function stripRegistryDocblock(content) {
-  return content
-    .replace(/^\/\*\*[\s\S]*?\*\//, "")
-    .trimStart();
+/**
+ * Removes the registry DocBlock from the component code.
+ */
+function stripDocblock(content) {
+  // Target only the DocBlock that contains the registry metadata.
+  return content.replace(/\/\*\*[\s\S]*?@registry-slug[\s\S]*?\*\//, "").trimStart();
 }
 
-function loadRegistryObject(fileContent) {
-  const start = fileContent.indexOf("{");
-  const end = fileContent.lastIndexOf("};");
+/**
+ * Creates a registry entry for a single component.
+ */
+function createRegistryEntry(filePath, metadata) {
+  const files = [];
 
-  if (start === -1 || end === -1) {
-    throw new Error("Could not locate registry object.");
-  }
+  // 1. Process the primary component file
+  const primaryContent = fs.readFileSync(filePath, "utf8");
+  files.push({
+    name: path.basename(filePath),
+    content: stripDocblock(primaryContent),
+    targetPath: path.relative(SRC_DIR, filePath).replace(/\\/g, "/"),
+  });
 
-  const objectString = fileContent.slice(start, end + 1);
+  // 2. Process any additional files defined in the DocBlock
+  for (const extraFilePath of metadata.files) {
+    const resolvedPath = path.resolve(extraFilePath);
 
-  try {
-    return Function(`return (${objectString})`)();
-  } catch (err) {
-    console.error("Failed to parse registryData.ts");
-    throw err;
-  }
-}
-
-function saveRegistry(registry) {
-  const output = `import { Registry } from '@/types';
-
-export const registry: Registry = ${JSON.stringify(
-    registry,
-    null,
-    2
-  )};
-`;
-
-  fs.writeFileSync(REGISTRY_FILE, output, "utf8");
-}
-
-function main() {
-  console.log("🔄 Sync started");
-
-  if (!fs.existsSync(REGISTRY_FILE)) {
-    throw new Error("registryData.ts not found");
-  }
-
-  fs.copyFileSync(REGISTRY_FILE, BACKUP_FILE);
-  console.log("📦 Backup created");
-
-  const registryContent = fs.readFileSync(REGISTRY_FILE, "utf8");
-  const registry = loadRegistryObject(registryContent);
-
-  const files = walk(COMPONENTS_DIR);
-
-  const seenSlugs = new Set();
-
-  for (const file of files) {
-    const raw = fs.readFileSync(file, "utf8");
-
-    const metadata = parseDocblock(raw);
-
-    if (!metadata) {
-      continue;
+    if (!fs.existsSync(resolvedPath)) {
+      throw new Error(`Referenced registry file not found: ${extraFilePath} (referenced in ${filePath})`);
     }
 
+    const extraContent = fs.readFileSync(resolvedPath, "utf8");
+    files.push({
+      name: path.basename(resolvedPath),
+      content: extraContent,
+      targetPath: path.relative(SRC_DIR, resolvedPath).replace(/\\/g, "/"),
+    });
+  }
+
+  return {
+    name: metadata.name,
+    type: metadata.type,
+    description: metadata.description,
+    category: metadata.category,
+    dependencies: Array.from(new Set(metadata.dependencies)),
+    files,
+  };
+}
+
+/**
+ * Main execution function.
+ */
+function main() {
+  console.log("🔄 Starting Registry Synchronization...");
+
+  const registry = {};
+  const slugs = new Set();
+  const allFiles = walk(COMPONENTS_DIR);
+
+  for (const file of allFiles) {
+    const content = fs.readFileSync(file, "utf8");
+    const metadata = parseDocblock(content);
+
+    // Skip files that don't have a registry DocBlock
+    if (!metadata) continue;
+
+    // Validation
     if (!metadata.slug) {
-      throw new Error(
-        `${path.basename(file)} missing @registry-slug`
-      );
+      throw new Error(`CRITICAL: File ${file} is missing @registry-slug`);
     }
 
     if (!metadata.name) {
-      throw new Error(
-        `${path.basename(file)} missing @registry-name`
-      );
+      throw new Error(`CRITICAL: File ${file} is missing @registry-name (or @name fallback)`);
     }
 
-    if (seenSlugs.has(metadata.slug)) {
-      throw new Error(
-        `Duplicate registry slug: ${metadata.slug}`
-      );
+    if (slugs.has(metadata.slug)) {
+      throw new Error(`CRITICAL: Duplicate registry slug detected: ${metadata.slug}`);
     }
 
-    seenSlugs.add(metadata.slug);
+    slugs.add(metadata.slug);
 
-    const componentCode = stripRegistryDocblock(raw);
-
-    registry[metadata.slug] = {
-      name: metadata.name,
-      type: "components:ui",
-      description: metadata.description,
-      category: metadata.category,
-      dependencies: [...new Set(metadata.dependencies)],
-      files: [
-        {
-          name: path.basename(file),
-          content: componentCode,
-          targetPath: `components/ui/${path.basename(file)}`
-        }
-      ]
-    };
-
-    console.log(`✓ ${metadata.slug}`);
+    // Create entry
+    registry[metadata.slug] = createRegistryEntry(file, metadata);
+    console.log(`   + Registered: ${metadata.slug}`);
   }
 
-  const sortedRegistry = Object.keys(registry)
+  // Sort registry keys alphabetically
+  const sortedRegistry = {};
+  Object.keys(registry)
     .sort()
-    .reduce((acc, key) => {
-      acc[key] = registry[key];
-      return acc;
-    }, {});
+    .forEach((key) => {
+      sortedRegistry[key] = registry[key];
+    });
 
-  saveRegistry(sortedRegistry);
+  // Prepare file content
+  const output = `import { Registry } from '@/types';
 
-  console.log(
-    `✅ Sync complete (${files.length} files scanned)`
-  );
+export const registry: Registry = ${JSON.stringify(sortedRegistry, null, 2)};
+`;
+
+  // Write to destination
+  fs.writeFileSync(REGISTRY_FILE, output, "utf8");
+
+  console.log(`\n✅ Successfully synchronized ${slugs.size} components to ${path.basename(REGISTRY_FILE)}`);
 }
 
+// Execute the sync
 main();
