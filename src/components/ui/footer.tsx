@@ -1,3 +1,10 @@
+/**
+ * @registry-slug footer
+ * @registry-name Footer
+ * @registry-description A minimal, modern footer component with branding, navigation links, and external social links.
+ * @registry-category ui
+ * @registry-dependency next/link
+ */
 import React from "react";
 import Link from "next/link";
 

@@ -1,3 +1,11 @@
+/**
+ * @registry-slug otp-verification
+ * @registry-name OTP Verification
+ * @registry-description An animated OTP input component with verification states, success and error feedback, keyboard navigation, and paste support.
+ * @registry-category ui
+ * @registry-dependency framer-motion
+ * @registry-dependency lucide-react
+ */
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";

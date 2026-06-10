@@ -1,3 +1,15 @@
+/**
+ * @registry-slug component-page-sidebar
+ * @registry-name Component Page Sidebar
+ * @registry-description A collapsible navigation sidebar with theme switching, active route highlighting, and responsive layout support.
+ * @registry-category ui
+ * @registry-dependency framer-motion
+ * @registry-dependency lucide-react
+ * @registry-dependency next/navigation
+ * @registry-dependency next/link
+ * @registry-dependency next/image
+ * @registry-dependency @radix-ui/react-slot
+ */
 "use client";
 
 import React from "react";

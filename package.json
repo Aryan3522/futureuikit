@@ -67,6 +67,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "sync": "node ./bin/sync.mjs",
     "lint": "eslint",
     "cli:version": "node ./bin/cli.mjs --version",
     "build:icons": "tsup && tsc --project tsconfig.icons.json",

@@ -1,3 +1,11 @@
+/**
+ * @registry-slug button
+ * @registry-name Button
+ * @registry-description A versatile button component with multiple variants, sizes, and Radix Slot support.
+ * @registry-category ui
+ * @registry-dependency @radix-ui/react-slot
+ * @registry-dependency class-variance-authority
+ */
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority";
