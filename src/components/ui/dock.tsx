@@ -86,10 +86,10 @@ export const Dock = React.memo(React.forwardRef<HTMLDivElement, DockProps>(
                   onMouseMove={(e) => mouseX.set(e.pageX)}
                   onMouseLeave={() => mouseX.set(Infinity)}
                   className={cn(
-                    "mx-auto flex h-16 items-end gap-3 rounded-2xl px-3 pb-2 pt-2",
-                    variant === "modern" && "bg-background/40 backdrop-blur-2xl border border-border",
+                    "mx-auto flex h-14 items-center justify-center gap-2 rounded-2xl px-2 py-2",
+                    variant === "modern" && "bg-background/40 backdrop-blur-2xl border border-border shadow-sm",
                     variant === "clean" && "bg-background border border-border shadow-none",
-                    variant === "interactive" && "bg-muted/80 backdrop-blur-xl border border-border",
+                    variant === "interactive" && "bg-muted/80 backdrop-blur-xl border border-border shadow-md",
                     className
                   )}
                   {...props}

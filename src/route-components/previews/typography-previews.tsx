@@ -12,7 +12,7 @@ import { PreviewContainer } from "../preview-engine/PreviewContainer";
 export const TextSystemPreview: React.FC = () => {
   return (
     <PreviewContainer title="Text System" description="A robust and fully responsive typography system." align="start">
-      <div className="max-w-2xl w-full flex flex-col gap-8 select-text text-left">
+      <div className="max-w-2xl w-full flex flex-col gap-8 select-text text-left p-6 md:p-12">
         <div className="space-y-2">
           <Label className="text-xs uppercase tracking-widest text-blue-500">
             Semantic Headings

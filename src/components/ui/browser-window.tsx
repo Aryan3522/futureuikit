@@ -20,6 +20,7 @@ export interface BrowserWindowProps extends Omit<HTMLMotionProps<"div">, "title"
   contentClassName?: string;
   scrollRef?: React.RefObject<HTMLDivElement | null>;
   title?: React.ReactNode;
+  headerAction?: React.ReactNode;
 }
 
 type WindowState = "default" | "maximized" | "minimized";
@@ -32,7 +33,7 @@ type WindowState = "default" | "maximized" | "minimized";
  * PERFORMANCE: State-preserving (never remounts).
  */
 export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, BrowserWindowProps>(
-  ({ className, contentClassName, children, scrollRef, title, ...props }, ref) => {
+  ({ className, contentClassName, children, scrollRef, title, headerAction, ...props }, ref) => {
     const [windowState, setWindowState] = React.useState<WindowState>("default");
     const [mounted, setMounted] = React.useState(false);
     const [rect, setRect] = React.useState<{ top: number; left: number; width: number; height: number } | null>(null);
@@ -298,7 +299,7 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
 
         {/* Header */}
         <div 
-          className="w-full h-10 shrink-0 bg-[#f3f4f6]/80 dark:bg-muted/80 backdrop-blur-md border-b border-black/5 dark:border-white/10 flex items-center px-4 gap-2 z-50 select-none"
+          className="w-full h-10 shrink-0 bg-[#f3f4f6]/80 dark:bg-muted/80 backdrop-blur-md border-b border-black/5 dark:border-white/10 flex items-center px-4 justify-between z-50 select-none"
           onPointerDown={(e) => {
             if ((e.target as HTMLElement).closest("button")) return;
             startInteraction(e, "drag");
@@ -309,7 +310,7 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
           }}
           style={{ cursor: isMaximized ? "default" : (isInteracting && interactionRef.current.type === "drag" ? "grabbing" : "grab") }}
         >
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 w-24">
             <button 
               onClick={handleClose}
               className="w-3.5 h-3.5 rounded-full bg-[#ff5f57] border border-black/5 hover:brightness-110 transition-all cursor-pointer group flex items-center justify-center"
@@ -331,13 +332,18 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
               </span>
             </button>
           </div>
+          
           {title ? (
-            <div className="flex-1 text-center pr-12">
+            <div className="flex-1 text-center">
               <span className="text-[10px] font-bold text-muted-foreground/30 uppercase tracking-[0.3em] pointer-events-none">{title}</span>
             </div>
           ) : (
             <div className="flex-1" />
           )}
+
+          <div className="flex items-center justify-end w-24">
+            {headerAction}
+          </div>
         </div>
         
         {/* Content Area */}
@@ -345,7 +351,10 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
           layout
           ref={scrollRef as any}
           className={cn("relative flex-1 w-full min-h-0 overflow-auto @container", contentClassName)}
-          style={{ pointerEvents: isInteracting ? "none" : "auto" }}
+          style={{ 
+            pointerEvents: isInteracting ? "none" : "auto",
+            transform: "translateZ(0)" // Scopes 'fixed' positioned descendants to this container
+          }}
         >
           {children}
         </motion.div>

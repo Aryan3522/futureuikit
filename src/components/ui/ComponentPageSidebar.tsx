@@ -78,7 +78,7 @@ const ComponentPageSidebar: React.FC<ComponentPageSidebarProps> = ({ open, setOp
             <div className="flex items-center justify-between px-4 py-4">
                 {open && (
                     <motion.div
-                        className="overflow-hidden flex items-center justify-center cursor-pointer"
+                        className="overflow-hidden flex items-center justify-start gap-4 cursor-pointer"
                     >
                         <motion.div
                             className="w-8 h-8 bg-primary rounded-md overflow-hidden flex items-center justify-center cursor-pointer"

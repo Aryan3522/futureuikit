@@ -29,18 +29,15 @@ export const SearchPreview: React.FC = () => {
   }, [searchQuery]);
 
   const controls = (
-    <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-4 w-full">
+    <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
       <span className="text-[10px] md:text-xs uppercase tracking-widest font-bold text-muted-foreground hidden sm:block">Size & State</span>
       <div className="flex flex-wrap items-center gap-4">
-        <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
           {(["sm", "md", "lg"] as const).map(s => (
             <button
               key={s}
               onClick={() => setSize(s)}
-              className={cn(
-                "px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap",
-                size === s ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-              )}
+              className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", size === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}
             >
               {s.toUpperCase()}
             </button>
@@ -49,11 +46,11 @@ export const SearchPreview: React.FC = () => {
 
         <div className="w-px h-6 bg-border hidden sm:block"></div>
 
-        <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
-          <button onClick={() => setLoading(!loading)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200", loading ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>Loading</button>
-          <button onClick={() => setDisabled(!disabled)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200", disabled ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>Disabled</button>
-          <button onClick={() => setClearable(!clearable)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200", clearable ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>Clearable</button>
-          <button onClick={() => setFullWidth(!fullWidth)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200", fullWidth ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>Full Width</button>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          <button onClick={() => setLoading(!loading)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", loading ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>Loading</button>
+          <button onClick={() => setDisabled(!disabled)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", disabled ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>Disabled</button>
+          <button onClick={() => setClearable(!clearable)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", clearable ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>Clearable</button>
+          <button onClick={() => setFullWidth(!fullWidth)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", fullWidth ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>Full Width</button>
         </div>
       </div>
     </div>

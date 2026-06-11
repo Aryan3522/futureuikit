@@ -242,7 +242,7 @@ const BaseField: React.FC<FieldProps> = ({ field, path, methods, variant }) => {
       <div className={cn("w-full border rounded-xl p-4 bg-muted/5 space-y-4", colSpanClass)}>
         {field.label && <h4 className="font-semibold text-lg">{field.label}</h4>}
         {field.description && <p className="text-sm text-muted-foreground -mt-3">{field.description}</p>}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           {field.fields.map((subField) => (
             <BaseField 
               key={subField.name} 
@@ -388,7 +388,7 @@ const ArrayField: React.FC<FieldProps & { colSpanClass: string }> = ({ field, pa
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+              <div className="grid grid-cols-1 @md:grid-cols-2 gap-4 mt-2">
                 {field.fields?.map((subField) => (
                   <BaseField 
                     key={subField.name} 
@@ -455,9 +455,9 @@ export const FormBuilder = React.memo(function FormBuilder({
   const layoutClass = useMemo(() => {
     switch (layout) {
       case "single": return "grid-cols-1";
-      case "two": return "grid-cols-1 md:grid-cols-2";
-      case "three": return "grid-cols-1 md:grid-cols-3";
-      case "auto": return "grid-cols-1 md:grid-cols-2 lg:grid-cols-12";
+      case "two": return "grid-cols-1 @md:grid-cols-2";
+      case "three": return "grid-cols-1 @md:grid-cols-3";
+      case "auto": return "grid-cols-1 @md:grid-cols-2 @lg:grid-cols-12";
       default: return "grid-cols-1";
     }
   }, [layout]);
@@ -472,9 +472,9 @@ export const FormBuilder = React.memo(function FormBuilder({
               className={cn(
                 "w-full", 
                 layout === "auto" ? (
-                  field.colSpan === "full" ? "lg:col-span-12" :
-                  field.colSpan === 3 ? "lg:col-span-9" :
-                  field.colSpan === 2 ? "lg:col-span-6" : "lg:col-span-3 md:col-span-1"
+                  field.colSpan === "full" ? "@lg:col-span-12" :
+                  field.colSpan === 3 ? "@lg:col-span-9" :
+                  field.colSpan === 2 ? "@lg:col-span-6" : "@lg:col-span-3 @md:col-span-1"
                 ) : ""
               )}
             >
@@ -519,3 +519,4 @@ export const FormBuilder = React.memo(function FormBuilder({
   );
 });
 FormBuilder.displayName = "FormBuilder";
+

@@ -198,7 +198,7 @@ export default function RootLayout({
       >
         <div className="fixed inset-0 noise-overlay z-100" aria-hidden="true" />
         <AppProviders>
-          <div className="flex flex-col min-h-screen">
+          <div className="flex flex-col min-h-screen @container">
             {children}
             <Footer />
           </div>

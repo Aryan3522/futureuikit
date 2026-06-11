@@ -58,7 +58,7 @@ export const Header: React.FC = React.memo(() => {
           "bg-background/80 backdrop-blur-md border-b border-border/40 flex justify-center h-14",
         )}
       >
-        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center h-full">
+        <div className="w-full max-w-7xl mx-auto px-4 @md:px-6 flex justify-between items-center h-full">
           {/* Left: Logo */}
           <div className="flex items-center gap-2 flex-1">
             <Link href="/" className="flex items-center shrink-0 group gap-2">
@@ -72,12 +72,12 @@ export const Header: React.FC = React.memo(() => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <span className="font-display text-xl font-bold tracking-tighter text-foreground hidden sm:block">FUTURE_UI</span>
+              <span className="font-display text-xl font-bold tracking-tighter text-foreground hidden @sm:block">FUTURE_UI</span>
             </Link>
           </div>
 
         {/* Center: Links (Desktop) */}
-        <nav className="hidden lg:flex justify-center items-center gap-8">
+        <nav className="hidden @lg:flex justify-center items-center gap-8">
           {navItems.map((item) => {
             const isActive = mounted && pathname === item.href;
             return (
@@ -99,8 +99,8 @@ export const Header: React.FC = React.memo(() => {
 
         {/* Right: Actions & Mobile Toggle */}
         <div className="flex items-center gap-3 justify-end shrink-0 flex-1">
-          <div className="hidden sm:block">
-            <SearchInput data={componentsList} className="w-full max-w-30 sm:max-w-40 lg:max-w-50 bg-white/5 border-white/10 rounded-full" />
+          <div className="hidden @sm:block">
+            <SearchInput data={componentsList} className="w-full max-w-30 @sm:max-w-40 @lg:max-w-50 bg-white/5 border-white/10 rounded-full" />
           </div>
 
           <Button
@@ -123,7 +123,7 @@ export const Header: React.FC = React.memo(() => {
             variant="ghost"
             size="icon"
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden rounded-full w-10 h-10 shrink-0 hover:bg-white/10 transition-all duration-300 flex items-center justify-center p-0 text-foreground"
+            className="@lg:hidden rounded-full w-10 h-10 shrink-0 hover:bg-white/10 transition-all duration-300 flex items-center justify-center p-0 text-foreground"
           >
             {isOpen ? (
               <X className="w-5 h-5" />
@@ -144,14 +144,14 @@ export const Header: React.FC = React.memo(() => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55] lg:hidden"
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55] @lg:hidden"
             />
             <motion.div
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 w-72 bg-background/95 backdrop-blur-[60px] border-r border-border/10 z-[60] lg:hidden flex flex-col p-6"
+              className="fixed inset-y-0 left-0 w-72 bg-background/95 backdrop-blur-[60px] border-r border-border/10 z-[60] @lg:hidden flex flex-col p-6"
             >
               <div className="flex justify-between items-center mb-8">
                 <Link href="/" className="flex items-center shrink-0 group gap-2" onClick={() => setIsOpen(false)}>

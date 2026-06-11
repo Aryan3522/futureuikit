@@ -8,12 +8,14 @@ import {
 } from"react-syntax-highlighter/dist/esm/styles/prism";
 import { Copy, CheckCircle2 } from"lucide-react";
 import { useTheme } from"@/contexts/ThemeContext";
+import { cn } from "@/lib/utils";
 
 interface CodeBlockProps {
  code: string;
  language?: string;
  filename?: string;
  showHeader?: boolean;
+ className?: string;
 }
 
 export function CodeBlock({
@@ -21,6 +23,7 @@ export function CodeBlock({
  language ="tsx",
  filename,
  showHeader = true,
+ className,
 }: CodeBlockProps) {
  const [copied, setCopied] = React.useState(false);
  const { theme } = useTheme();
@@ -37,7 +40,7 @@ export function CodeBlock({
  };
 
  return (
- <div className="relative overflow-hidden rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-black/40 shadow-sm">
+ <div className={cn("relative overflow-hidden rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-black/40 shadow-sm", className)}>
  {showHeader && (
  // <div className="flex items-center justify-between px-4 py-3 bg-zinc-100 dark:bg-white/5 border-b border-black/10 dark:border-white/10">
  <div className="flex justify-between items-center px-4 py-3 bg-card border-b border-border">

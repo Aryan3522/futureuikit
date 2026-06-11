@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { DotBackground } from "@/components/ui/dot-background";
 import { cn } from "@/lib/utils";
 import { PreviewContainer } from "../preview-engine/PreviewContainer";
+import { Sparkles } from "lucide-react";
 
 export const BasicCardPreview: React.FC = () => {
   const [variant, setVariant] = React.useState<
@@ -69,14 +70,49 @@ export const StandardCardPreview: React.FC = () => {
 };
 
 export const GlassPanelPreview: React.FC = () => {
+  const [variant, setVariant] = React.useState<"mantle" | "heavy" | "subtle" | "frost">("heavy");
+  const [glow, setGlow] = React.useState<"none" | "subtle" | "luminous">("subtle");
+
   return (
-    <PreviewContainer title="Glass Panel" description="A premium glassmorphic panel with heavy blur and luminous shadows.">
-      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-75 relative">
-        <DotBackground dotColor="currentColor" maskOpacity={0.1} />
+    <PreviewContainer 
+      title="Glass Panel" 
+      description="A premium glassmorphic panel with heavy blur and luminous shadows."
+      contentClassName="bg-transparent p-0 relative border-none"
+      isVirtualScreen={false}
+      extraControls={
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Blur Variant</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["subtle", "mantle", "heavy", "frost"] as const).map(v => (
+                <button key={v} onClick={() => setVariant(v)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", variant === v ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{v}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Glow Effect</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["none", "subtle", "luminous"] as const).map(g => (
+                <button key={g} onClick={() => setGlow(g)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", glow === g ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{g}</button>
+              ))}
+            </div>
+          </div>
+        </>
+      }
+    >
+      <div className="w-full h-full flex flex-col items-center justify-center p-4 md:p-12 min-h-[400px] relative overflow-hidden bg-[radial-gradient(circle_at_center,_var(--tw-colors-muted-foreground)_1px,_transparent_1px)] bg-[size:16px_16px] dark:bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.15)_1px,_transparent_1px)]">
+        {/* Colorful Blobs to show off the glass blur effect */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/30 rounded-full blur-3xl mix-blend-screen pointer-events-none" />
+        <div className="absolute top-1/3 left-1/3 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-blue-500/30 rounded-full blur-3xl mix-blend-screen pointer-events-none" />
+        <div className="absolute bottom-1/3 right-1/3 translate-x-1/4 translate-y-1/4 w-56 h-56 bg-purple-500/30 rounded-full blur-3xl mix-blend-screen pointer-events-none" />
+
         <div className="relative z-10 w-full max-w-lg">
-          <GlassPanel variant="heavy" glow="subtle" className="p-8">
-            <h2 className="text-xl font-bold mb-4">Glassmorphism</h2>
-            <p className="text-muted-foreground">This panel uses heavy background blur with subtle border highlights to create a premium frosted glass effect.</p>
+          <GlassPanel variant={variant} glow={glow} className="p-8 md:p-12 text-center flex flex-col items-center">
+            <div className="w-16 h-16 rounded-full bg-primary/20 backdrop-blur-md mb-6 flex items-center justify-center border border-white/20">
+              <Sparkles className="w-8 h-8 text-primary" />
+            </div>
+            <h2 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/60">Glassmorphism</h2>
+            <p className="text-foreground/80 leading-relaxed font-medium">This panel uses background blur with translucent overlays to create a premium frosted glass effect.</p>
           </GlassPanel>
         </div>
       </div>
@@ -96,18 +132,18 @@ export const HoverGlareCardPreview: React.FC = () => {
       activeVariant={layout}
       onVariantChange={setLayout as any}
       extraControls={
-        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full mt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
           <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Style & Glow</span>
-          <div className="flex flex-wrap gap-2">
-            <div className="flex items-center gap-1 p-1 bg-muted/30 rounded-lg">
+          <div className="flex flex-wrap items-center gap-4 w-full">
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
               {(["default", "glass", "solid", "ghost"] as const).map(v => (
-                <button key={v} onClick={() => setStyleVariant(v)} className={cn("px-3 py-1 text-xs font-medium rounded-md capitalize transition-all", styleVariant === v ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{v}</button>
+                <button key={v} onClick={() => setStyleVariant(v)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", styleVariant === v ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{v}</button>
               ))}
             </div>
-            <div className="flex items-center gap-1 p-1 bg-muted/30 rounded-lg">
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
               <span className="text-[10px] uppercase font-bold text-muted-foreground mx-2">Glow:</span>
               {(["none", "primary", "secondary", "white"] as const).map(g => (
-                <button key={g} onClick={() => setGlow(g)} className={cn("px-2 py-1 text-xs font-medium rounded-md capitalize transition-all", glow === g ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{g}</button>
+                <button key={g} onClick={() => setGlow(g)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", glow === g ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{g}</button>
               ))}
             </div>
           </div>

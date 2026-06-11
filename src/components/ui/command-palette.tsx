@@ -35,13 +35,13 @@ const useCommandContext = () => React.useContext(CommandContext);
 // --- Variants ---
 
 const commandDialogOverlayVariants = cva(
-  "fixed inset-0 z-50 grid place-items-center p-4 pt-16 sm:pt-24",
+  "fixed inset-0 z-[10000] flex items-center justify-center bg-background/80 backdrop-blur-sm",
   {
     variants: {
       variant: {
         default: "bg-background/80 backdrop-blur-sm",
         compact: "bg-background/80 backdrop-blur-sm",
-        floating: "bg-transparent", // No backdrop for floating
+        floating: "bg-background/40 backdrop-blur-[2px]", // Slight blur for floating
         glass: "bg-background/40 backdrop-blur-md",
         spotlight: "bg-background/90 backdrop-blur-sm",
       },
@@ -53,7 +53,7 @@ const commandDialogOverlayVariants = cva(
 );
 
 const commandDialogContentVariants = cva(
-  "relative z-50 w-full max-w-xl focus:outline-none flex flex-col overflow-hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-top-[2%] data-[state=open]:slide-in-from-top-[2%] duration-200",
+  "relative z-[10000] w-full max-w-xl focus:outline-none flex flex-col overflow-hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200",
   {
     variants: {
       variant: {
@@ -125,22 +125,28 @@ export const CommandPalette = React.memo(({
   return (
     <DialogPrimitive.Root {...props}>
       <DialogPrimitive.Portal container={container}>
-        <DialogPrimitive.Overlay className={commandDialogOverlayVariants({ variant })} />
-        <DialogPrimitive.Content className={commandDialogContentVariants({ variant })}>
-          <VisuallyHidden>
-            <DialogPrimitive.Title>Command Palette</DialogPrimitive.Title>
-          </VisuallyHidden>
-          <CommandContext.Provider value={{ variant }}>
-            <CommandPrimitive
-              className={cn(
-                "flex h-full w-full flex-col overflow-hidden bg-transparent text-foreground",
-                className
-              )}
+        <DialogPrimitive.Overlay asChild>
+          <div className={commandDialogOverlayVariants({ variant })}>
+            <DialogPrimitive.Content
+              onOpenAutoFocus={(e) => e.preventDefault()}
+              className={commandDialogContentVariants({ variant })}
             >
-              {children}
-            </CommandPrimitive>
-          </CommandContext.Provider>
-        </DialogPrimitive.Content>
+              <VisuallyHidden>
+                <DialogPrimitive.Title>Command Palette</DialogPrimitive.Title>
+              </VisuallyHidden>
+              <CommandContext.Provider value={{ variant }}>
+                <CommandPrimitive
+                  className={cn(
+                    "flex h-full w-full flex-col overflow-hidden bg-transparent text-foreground",
+                    className
+                  )}
+                >
+                  {children}
+                </CommandPrimitive>
+              </CommandContext.Provider>
+            </DialogPrimitive.Content>
+          </div>
+        </DialogPrimitive.Overlay>
       </DialogPrimitive.Portal>
     </DialogPrimitive.Root>
   );

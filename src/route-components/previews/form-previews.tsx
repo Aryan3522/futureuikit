@@ -279,7 +279,7 @@ export const DynamicFormPreview: React.FC = () => {
         setSubmittedData(null);
       }}
     >
-      <div className="flex flex-col lg:flex-row gap-8 items-stretch justify-center w-full max-w-5xl m-auto">
+      <div className="flex flex-col @3xl:flex-row gap-8 items-stretch justify-center w-full max-w-5xl m-auto @container">
         <div className="flex-1 flex flex-col justify-center min-w-0">
           <AnimatePresence mode="wait">
             {activeDemo === "contact" && (
@@ -414,19 +414,19 @@ export const SelectPreview: React.FC = () => {
       onVariantChange={setVariant}
       extraControls={
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
             <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
-            <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
               {(["sm", "md", "lg"] as const).map((s) => (
-                <button key={s} onClick={() => setSize(s)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap", size === s ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{s}</button>
+                <button key={s} onClick={() => setSize(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", size === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
             <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Mode</span>
-            <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
-              <button onClick={() => setIsMulti(false)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap", !isMulti ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>Single</button>
-              <button onClick={() => setIsMulti(true)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap", isMulti ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>Multi</button>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              <button onClick={() => setIsMulti(false)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", !isMulti ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>Single</button>
+              <button onClick={() => setIsMulti(true)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", isMulti ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>Multi</button>
             </div>
           </div>
         </>
@@ -610,18 +610,18 @@ export const FormBuilderPreview: React.FC = () => {
       align="start"
       onVariantChange={setVariant}
       extraControls={
-        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
           <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Layout Mode</span>
-          <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
             {(["auto", "single", "two", "three"] as const).map((l) => (
-              <button key={l} onClick={() => setLayout(l)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap", layout === l ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{l}</button>
+              <button key={l} onClick={() => setLayout(l)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", layout === l ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{l}</button>
             ))}
           </div>
         </div>
       }
     >
-      <div className="flex flex-col items-center justify-start w-full min-h-full p-4 md:p-8 relative z-10" style={{ transform: 'translateZ(0)' }}>
-        <div className="w-full max-w-4xl flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col items-center justify-start w-full min-h-full p-4 @md:p-8 relative z-10" style={{ transform: 'translateZ(0)' }}>
+        <div className="w-full max-w-4xl flex flex-col @4xl:flex-row gap-8">
           <div className="flex-1">
             <FormBuilder
               schema={sampleSchema}
@@ -631,7 +631,7 @@ export const FormBuilderPreview: React.FC = () => {
             />
           </div>
           {submittedData && (
-            <div className="w-full lg:w-80 shrink-0">
+            <div className="w-full @4xl:w-80 shrink-0">
               <div className="p-4 rounded-xl bg-muted/30 border border-border/50">
                 <h4 className="text-sm font-semibold mb-2">Submitted Data</h4>
                 <pre className="text-xs overflow-auto p-3 rounded-lg bg-background border border-border/50">
@@ -803,8 +803,8 @@ export const FilterBuilderPreview: React.FC = () => {
       onVariantChange={setVariant as any}
       contentClassName="bg-transparent border-none p-4 md:p-8 shadow-none min-h-0 items-start overflow-y-auto custom-scrollbar"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-        <div className="lg:col-span-2 space-y-6">
+      <div className="grid grid-cols-1 @4xl:grid-cols-3 gap-6 w-full">
+        <div className="@4xl:col-span-2 space-y-6">
 
           {/* The Component Itself */}
           <div className={cn(
@@ -889,7 +889,7 @@ export const FilterBuilderPreview: React.FC = () => {
         </div>
 
         {/* Output State Viewer */}
-        <div className="bg-background rounded-2xl border p-5 overflow-hidden flex flex-col h-125 lg:h-auto shadow-sm relative group">
+        <div className="bg-background rounded-2xl border p-5 overflow-hidden flex flex-col h-125 @4xl:h-auto shadow-sm relative group">
           <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-20" />
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">

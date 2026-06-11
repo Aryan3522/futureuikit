@@ -371,11 +371,11 @@ export const AIChatPreview: React.FC = () => {
       onVariantChange={setLayout}
       contentClassName="p-0 overflow-hidden"
       extraControls={
-        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
           <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Input Variant</span>
-          <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
             {(["standard", "floating", "command", "multiline", "workspace"] as const).map((v) => (
-              <button key={v} onClick={() => setInputVariant(v)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap", inputVariant === v ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{v}</button>
+              <button key={v} onClick={() => setInputVariant(v)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", inputVariant === v ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{v}</button>
             ))}
           </div>
         </div>

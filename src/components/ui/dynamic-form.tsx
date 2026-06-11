@@ -732,9 +732,9 @@ const inputStyles = {
 
 const colSpans = {
   1: "col-span-1",
-  2: "col-span-1 md:col-span-2",
-  3: "col-span-1 md:col-span-3",
-  4: "col-span-1 md:col-span-4",
+  2: "col-span-1 @md:col-span-2",
+  3: "col-span-1 @md:col-span-3",
+  4: "col-span-1 @md:col-span-4",
   full: "col-span-full"
 };
 
@@ -1343,7 +1343,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = React.memo(({
               )}
 
               {/* Form Fields Responsive Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 @md:grid-cols-2 gap-4 @container w-full">
                 {fieldsToRender.map((field) => (
                   <FieldWrapper
                     key={field.name}

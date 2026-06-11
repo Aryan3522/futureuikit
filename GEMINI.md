@@ -74,172 +74,58 @@ To ensure deterministic, production-safe outputs, Gemini must adhere to the foll
 * Gemini must summarize intended changes and clearly list impacted files before requesting approval.
 * No production action is allowed without user confirmation.
 
+### Absolute File Protection & Deletion Protocol
+
+* **NEVER** delete any file without explicit, separate permission, even if the user explicitly asks for a deletion.
+* If a deletion is requested or seems necessary, Gemini must:
+  1.  List the exact names of the files proposed for deletion.
+  2.  Explain the rationale for their removal.
+  3.  Wait for explicit user approval for those specific files before proceeding.
+
 ### Code Integrity & Completeness
 
 * All generated code must be syntactically correct, fully complete, and immediately executable.
+* **ZERO TRUNCATION POLICY**: Gemini must never truncate any line or block of code. Every section must be fully written out.
 * No placeholders, TODOs, or incomplete implementations are allowed.
 * All imports, dependencies, and types must be fully resolved.
 
-### Line-by-Line Completion Guarantee
+### File Change & Scope Isolation Rule
 
-* Gemini must complete all code line by line with full implementation.
-* No skipped sections, pseudo-code, or abstract descriptions are allowed.
-
-### Zero Truncation Policy
-
-* Gemini must never truncate any line or block of code.
-* All outputs must be complete in a single response unless explicitly instructed otherwise.
-
-### File Change Isolation Rule
-
-* Gemini must only modify files explicitly requested by the user.
-* No changes are allowed outside the specified scope.
+* Gemini must **ONLY** modify files explicitly requested by the user.
+* No changes are allowed outside the specified scope (e.g., no "cleanup" of unrelated files).
 * If additional files are required, Gemini must request permission before proceeding.
-
-### No Placeholder Comments Policy
-
-* Gemini must not use comments indicating omitted code sections.
-* Every section must be fully written out and complete.
-
-### Deterministic Output Standard
-
-* Outputs must be predictable, repeatable, and free from ambiguity.
-* No assumptions or hidden logic are allowed.
-
-### Error-Free Delivery Requirement
-
-* All code must pass build, lint, and runtime checks conceptually before being returned.
-* No unresolved references or missing dependencies are allowed.
-
-### Interaction Protocol
-
-* If instructions are incomplete, Gemini must ask for clarification before proceeding.
-* If instructions are ambiguous or conflicting, Gemini must pause and request direction.
+* **READ-ONLY INTEGRITY**: When reading code for context, do not write to or modify those files unless strictly necessary to fulfill the requested change.
 
 ### Post-Implementation Testing Requirement
 
-* Gemini must NEVER automatically run or simulate application-level testing after implementation.
+* Always test the application after major changes (e.g., `npm run build`, `npm run start`, or specific component verification).
 * After completing implementation, Gemini must ask the user whether they want application-level validation/testing to be performed.
 * Testing must only occur if:
   * The user explicitly says "yes"
   * The user explicitly requests testing
   * The user directly instructs Gemini to validate the application
 
-### If Testing Is Approved
+### UI Consistency & Spacing Standards
 
-* Gemini should then perform logical application-level validation equivalent to:
-  * `npm run build`
-  * `npm run start`
-  * Relevant linting/type validation
-
-### Validation Scope
-
-* Verify:
-  * No build-time errors
-  * No runtime exceptions
-  * No missing dependencies
-  * No broken imports
-  * No TypeScript type errors
-  * Critical user flows relevant to the implementation
-
-### Error Handling
-
-* If issues are detected during approved testing:
-  * Gemini must fix all detected issues before final delivery.
-
-### Enforcement
-
-* Code delivery does NOT require automatic testing.
-* Testing is conditional and user-controlled.
-* Gemini must always ask before performing validation unless explicitly instructed beforehand.
+* **UI CONSISTENCY**: The UI must always stay consistent with the existing design language.
+* **4X SPACING RULE**: All spacing (margins, padding, gaps) must strictly follow the 4x spacing rule (increments of 4px/1rem).
+* Preview pages for all components must be structurally similar and aesthetically aligned.
 
 ## Future UI Component Development Standards (Mandatory)
 
-### Complete Implementation Requirement
+### Component & Icon Creation
 
-* Every implementation must be fully completed before delivery.
-* No partial implementations are allowed.
-* No unfinished features are allowed.
-* No placeholder functions, temporary variables, mock logic, TODO comments, FIXME comments, or stub implementations are allowed.
-* Every generated file must be production-ready.
+* **FILE SEPARATION**: Every new component or icon must be created in its own separate file.
+* **DOCBLOCK ENFORCEMENT**: Every newly created reusable component must include a single DocBlock explaining its purpose, API, and usage.
+* **REGISTRATION**: New components/icons must be added to:
+  * `src/data/registryData.js`
+  * `src/data/component-library-data.js`
+  * The Components Listing Page
+  * The Component Details Page
+  * The Preview Page
+* **PREVIEW INTEGRITY**: Ensure all information and code provided to the user is verified and tested before being added to a preview page.
+* Registration must be performed "properly" without changing unrelated code in those files.
 
-### Duplicate Code Prevention
-
-* Before creating new code, search the project for existing implementations.
-* Do not create duplicate components.
-* Do not create duplicate utility functions.
-* Do not create duplicate hooks.
-* Do not create duplicate constants.
-* Reuse existing project patterns whenever possible.
-* If similar functionality already exists, extend the existing implementation instead of creating another version.
-
-### Component Registration Enforcement
-
-Whenever a new reusable component is created:
-
-1. Create the component file.
-2. Add the component to:
-
-   * `src/data/registryData.js`
-   * `src/data/component-library-data.js`
-3. Ensure the component appears in:
-
-   * Components Listing Page
-   * Component Details Page
-   * Preview Page
-4. Ensure the component can be installed through the CLI registry.
-5. Ensure preview screenshots, previews, metadata, and routing function correctly.
-
-A reusable component is considered incomplete until all registrations are finished.
-
-### Component Preview Enforcement
-
-Every component must:
-
-* Render correctly inside the virtual preview screen.
-* Render correctly on Preview Pages.
-* Render correctly on Component Details Pages.
-* Support Light Mode.
-* Support Dark Mode.
-* Follow existing preview page layouts.
-* Match the styling and structure of all existing Future UI preview pages.
-
-Never introduce a different preview layout unless explicitly requested.
-
-### Component Documentation Enforcement
-
-All reusable components must contain a single DocBlock.
-
-Rules:
-
-* If a component already contains a DocBlock, do not add another.
-* Never create multiple DocBlocks in the same reusable component.
-* Every newly created reusable component must include a DocBlock.
-* The DocBlock should explain:
-
-  * Component Purpose
-  * Public API
-  * Usage Notes
-
-No other comments should be added.
-
-Allowed:
-
-```tsx
-/**
- * Component description
- * Usage notes
- */
-```
-
-Not Allowed:
-
-```tsx
-// comment
-/* random note */
-// TODO
-// FIXME
-```
 
 ### Import and Export Standardization
 

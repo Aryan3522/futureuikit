@@ -102,19 +102,19 @@ export const ModalPreview: React.FC = () => {
       onVariantChange={setVariant}
       extraControls={
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
             <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
-            <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
               {(["xs", "sm", "md", "lg", "xl", "full-width", "full-screen"] as const).map(s => (
-                <button key={s} onClick={() => setSize(s)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap", size === s ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{s}</button>
+                <button key={s} onClick={() => setSize(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", size === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
             <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Position</span>
-            <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
               {(["center", "top-center", "bottom-sheet", "left-side", "right-side"] as const).map(p => (
-                <button key={p} onClick={() => setPosition(p)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap", position === p ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{p.replace("-", " ")}</button>
+                <button key={p} onClick={() => setPosition(p)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", position === p ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{p.replace("-", " ")}</button>
               ))}
             </div>
           </div>
@@ -166,11 +166,11 @@ export const DrawerPreview: React.FC = () => {
       onVariantChange={setVariant}
       contentClassName="relative overflow-hidden"
       extraControls={
-        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
           <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Placement</span>
-          <div className="flex items-center flex-wrap gap-1.5 p-1 bg-muted/30 rounded-lg">
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
             {(["left", "right", "top", "bottom"] as const).map(p => (
-              <button key={p} onClick={() => setPlacement(p)} className={cn("px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-all duration-200 whitespace-nowrap", placement === p ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{p}</button>
+              <button key={p} onClick={() => setPlacement(p)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", placement === p ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{p}</button>
             ))}
           </div>
         </div>

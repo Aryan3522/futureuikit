@@ -25,11 +25,11 @@ export const HeaderPreview: React.FC = () => {
   return (
     <PreviewContainer title="Header" description="A premium navigation header with a left-side drawer for mobile.">
       <div
-        className="w-full h-full min-h-125 relative bg-muted/10 border border-border/20 rounded-xl overflow-hidden shadow-inner"
+        className="w-full h-full min-h-125 relative bg-muted/10 border border-border/20 rounded-xl overflow-hidden shadow-inner @container"
         style={{ transform: "translateZ(0)" }}
       >
          {/* Background noise/pattern for context */}
-         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size[24px_24px]"></div>
+         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
          <Header />
          <div className="w-full h-full flex items-center justify-center pt-16">
            <div className="text-center space-y-2 opacity-50">
@@ -146,20 +146,16 @@ export const CommandPalettePreview: React.FC = () => {
 
   return (
     <PreviewContainer title="Command Palette" description="A powerful command palette for rapid navigation.">
-      <div className="flex flex-col items-center justify-center gap-4 min-h-75">
-        <button
+      <div className="flex flex-col items-center justify-center w-full h-full min-h-75">
+        <div
           onClick={() => setOpen(true)}
-          className="flex items-center gap-4 px-4 py-2 text-sm font-medium text-muted-foreground border rounded-xl hover:bg-muted/50 transition-colors shadow-sm"
+          className="w-full max-w-sm h-32 border-2 border-dashed border-muted-foreground/30 rounded-2xl flex items-center justify-center cursor-pointer hover:border-muted-foreground/50 hover:bg-muted/5 transition-all group"
         >
-          <div className="flex items-center gap-2">
-            <Search className="w-4 h-4" />
-            <span>Search commands...</span>
+          <div className="flex flex-col items-center gap-2 text-muted-foreground group-hover:text-foreground transition-colors">
+            <Search className="w-8 h-8 opacity-20 group-hover:opacity-100 transition-opacity" />
+            <span className="text-sm font-medium">Click to open Command Palette</span>
           </div>
-          <kbd className="hidden sm:inline-flex h-5 items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
-            <span className="text-xs">⌘</span>K
-          </kbd>
-        </button>
-        <p className="text-xs text-muted-foreground">Press ⌘K or click the button to open the palette</p>
+        </div>
 
         <CommandPalette open={open} onOpenChange={setOpen}>
           <CommandInput placeholder="Type a command or search..." />
