@@ -193,7 +193,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="antialiased bg-background text-foreground overflow-x-hidden selection:bg-secondary/30"
+        className="antialiased bg-background text-foreground overflow-x-clip selection:bg-secondary/30"
         suppressHydrationWarning
       >
         <div className="fixed inset-0 noise-overlay z-100" aria-hidden="true" />

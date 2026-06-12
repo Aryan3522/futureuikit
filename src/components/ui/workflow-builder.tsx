@@ -279,7 +279,7 @@ export const WorkflowBuilder = React.memo(function WorkflowBuilder({
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="absolute z-[100] bg-popover/90 backdrop-blur-md border shadow-xl rounded-xl p-3 flex flex-col gap-2 min-w-[160px]"
+              className="absolute z-100 bg-popover/90 backdrop-blur-md border shadow-xl rounded-xl p-3 flex flex-col gap-2 min-w-40"
               style={{ left: Math.min(pendingEdge.screenPos.x, typeof window !== 'undefined' ? window.innerWidth - 200 : pendingEdge.screenPos.x), top: Math.min(pendingEdge.screenPos.y, typeof window !== 'undefined' ? window.innerHeight - 200 : pendingEdge.screenPos.y) }}
             >
               <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1 px-1">Line Style</span>
@@ -780,7 +780,7 @@ function WorkflowNodeEditor() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="absolute inset-0 z-[200] bg-background/80 backdrop-blur-sm flex items-center justify-center p-4 pointer-events-auto"
+      className="absolute inset-0 z-200 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4 pointer-events-auto"
     >
       <motion.div 
         initial={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -886,11 +886,7 @@ export const WorkflowMiniMap = React.memo(function WorkflowMiniMap() {
       variant === "glass" && "bg-background/20 backdrop-blur-md",
       variant === "enterprise" && "rounded-md border-slate-200 dark:border-slate-800"
     )}>
-      <div className="relative w-full h-full transform scale-[-1] hidden" /> {/* Future impl for true minimap scaling */}
-      {/* <div className="absolute inset-0 flex items-center justify-center flex-col text-muted-foreground/30 font-bold text-xs">
-        <Grip className="w-8 h-8 mb-2 opacity-50" />
-        MINIMAP OVERVIEW
-      </div> */}
+      <div className="relative w-full h-full transform scale-[-1] hidden" />
       {/* Mock rendering of nodes in minimap */}
       <div className="absolute inset-0 pointer-events-none">
         {nodes.map(n => (

@@ -1,408 +1,404 @@
-# Future UI - Project Instructions
+# Future UI
 
-Future UI is a modern, high-performance UI component library built for Next.js 16 and React 19. It leverages Tailwind CSS 4 and Framer Motion to provide visually stunning, reusable components. The project includes a custom CLI (`futureuikit`) for distributing components via a registry API.
+IMPORTANT
 
-## Project Structure
+This file defines:
 
-* `bin/cli.mjs`: The custom CLI tool used to install components into other projects.
-* `src/app/api/registry/`: The API routes that serve component code to the CLI.
-* `src/data/registryData.js`: The "source of truth" for component distribution. It contains the code for every component served by the registry.
-* `src/data/component-library-data.js`: Metadata for the component library (titles, descriptions, previews).
-* `src/components/ui/`: The implementation of UI components used within the library's own website.
-* `src/app/`: Next.js App Router pages and layouts.
+* Project architecture
+* Project workflows
+* Component workflows
+* Registry workflows
+* Documentation workflows
+* Development standards
 
-## Key Technologies
+All enforcement rules, protection rules, anti-hallucination rules, file protection rules, registry protection rules, CLI protection rules, sync protection rules, and AI operational requirements are defined in:
 
-* **Framework**: Next.js 16 (App Router)
-* **Library**: React 19
-* **Styling**: Tailwind CSS 4 (using `@tailwindcss/postcss`)
-* **Animations**: Framer Motion 12
-* **Icons**: Lucide React
-* **Primitives**: Radix UI
+AGENT_RULES.md
 
-## Development Workflows
+Both files must always be followed together.
 
-### Running the Project
+If any conflict exists:
 
-* **Development Server**: `npm run dev`
-* **Build**: `npm run build`
-* **Production Start**: `npm run start`
-* **Linting**: `npm run lint`
+AGENT_RULES.md takes precedence.
 
-### Adding a New Component
 
-To add a new component to the library and make it available via the CLI:
+## Project Overview
 
-1. **Implement the Component**: Create the component file in `src/components/ui/`. Ensure it follows the project's styling and animation conventions.
-2. **Add to Registry Data**: Add the component's source code to `src/data/registryData.js`. Use the existing entries as a template. This is what the CLI actually downloads.
+Future UI is a modern component library built with:
 
-   * If the component requires custom global CSS, set `requiresCSS: true` and provide the `css` property.
-3. **Add Metadata**: Add an entry to `src/data/component-library-data.js` with the component's title, description, slug (matching the registry key), and preview assets.
-4. **Verify**: Start the dev server and check the component's preview page. Test the registry endpoint: `curl http://localhost:3000/api/registry/<your-slug>`.
+* Next.js (latest)
+* React 19
+* Tailwind CSS 4
+* Framer Motion
 
-### CLI Development
+The project distributes reusable components through the Future UI registry and CLI.
 
-The CLI (`bin/cli.mjs`) can be tested locally using:
+---
 
-`node bin/cli.mjs add <slug> --registry http://localhost:3000/api/registry`
+# Core Philosophy
 
-Note: The CLI expects certain environment variables like `FUTURE_UI_REGISTRY_URL` if not using the default.
+Components must be:
 
-## Coding Conventions
+* Reusable
+* Production-ready
+* Framework-friendly
+* Minimal
+* Interactive
+* Accessible
+* Consistent
 
-* **Modern React**: Use React 19 features where appropriate.
-* **Client Components**: Most UI components should be marked with `"use client";` as they use Framer Motion or React hooks.
-* **Tailwind CSS 4**: Utilize the new features of Tailwind 4. Prefer the `cn` utility for conditional classes.
-* **Accessibility**: Ensure components are accessible, utilizing Radix UI primitives when possible.
-* **Animations**: Use Framer Motion for smooth, high-quality interactions.
-* **Types**: While the project currently uses `.js` and `.jsx`, it is configured for TypeScript. New components can be written in `.tsx`.
+Users should be able to install a component and immediately use it without modification.
 
-## Contribution Guidelines
+---
 
-* Follow the existing code style.
-* Ensure all new components are documented in the library metadata.
-* Test components thoroughly in both light and dark modes.
-* Before submitting a PR, run `npm run lint` and `npm run build` to ensure no regressions.
+# Technology Standards
 
-## Gemini Execution Protocol (Strict Enforcement Layer)
+## Framework
 
-To ensure deterministic, production-safe outputs, Gemini must adhere to the following operational constraints:
+* Next.js latest
+* React 19
 
-### Pre-Production Confirmation Gate
+## Styling
 
-* Gemini must always ask for explicit approval before any production deployment or finalization.
-* Gemini must summarize intended changes and clearly list impacted files before requesting approval.
-* No production action is allowed without user confirmation.
+* Tailwind CSS 4
 
-### Absolute File Protection & Deletion Protocol
+## Animations
 
-* **NEVER** delete any file without explicit, separate permission, even if the user explicitly asks for a deletion.
-* If a deletion is requested or seems necessary, Gemini must:
-  1.  List the exact names of the files proposed for deletion.
-  2.  Explain the rationale for their removal.
-  3.  Wait for explicit user approval for those specific files before proceeding.
+* Framer Motion
 
-### Code Integrity & Completeness
+## Accessibility
 
-* All generated code must be syntactically correct, fully complete, and immediately executable.
-* **ZERO TRUNCATION POLICY**: Gemini must never truncate any line or block of code. Every section must be fully written out.
-* No placeholders, TODOs, or incomplete implementations are allowed.
-* All imports, dependencies, and types must be fully resolved.
+* Radix UI when appropriate
 
-### File Change & Scope Isolation Rule
+## Language
 
-* Gemini must **ONLY** modify files explicitly requested by the user.
-* No changes are allowed outside the specified scope (e.g., no "cleanup" of unrelated files).
-* If additional files are required, Gemini must request permission before proceeding.
-* **READ-ONLY INTEGRITY**: When reading code for context, do not write to or modify those files unless strictly necessary to fulfill the requested change.
+Reusable components should be written in:
 
-### Post-Implementation Testing Requirement
+* .ts
+* .tsx
 
-* Always test the application after major changes (e.g., `npm run build`, `npm run start`, or specific component verification).
-* After completing implementation, Gemini must ask the user whether they want application-level validation/testing to be performed.
-* Testing must only occur if:
-  * The user explicitly says "yes"
-  * The user explicitly requests testing
-  * The user directly instructs Gemini to validate the application
+---
 
-### UI Consistency & Spacing Standards
+# Future UI First Policy
 
-* **UI CONSISTENCY**: The UI must always stay consistent with the existing design language.
-* **4X SPACING RULE**: All spacing (margins, padding, gaps) must strictly follow the 4x spacing rule (increments of 4px/1rem).
-* Preview pages for all components must be structurally similar and aesthetically aligned.
+Always prefer:
 
-## Future UI Component Development Standards (Mandatory)
+* Future UI Components
+* Future UI Icons
 
-### Component & Icon Creation
+Locations:
 
-* **FILE SEPARATION**: Every new component or icon must be created in its own separate file.
-* **DOCBLOCK ENFORCEMENT**: Every newly created reusable component must include a single DocBlock explaining its purpose, API, and usage.
-* **REGISTRATION**: New components/icons must be added to:
-  * `src/data/registryData.js`
-  * `src/data/component-library-data.js`
-  * The Components Listing Page
-  * The Component Details Page
-  * The Preview Page
-* **PREVIEW INTEGRITY**: Ensure all information and code provided to the user is verified and tested before being added to a preview page.
-* Registration must be performed "properly" without changing unrelated code in those files.
+* src/components/ui
+* src/icons
 
+before introducing external alternatives.
 
-### Import and Export Standardization
+---
 
-Always use the simplest possible imports and exports.
+# Component Standards
 
-Preferred:
+Every reusable component must:
 
-```tsx
-import React from "react";
+* Live in src/components/ui
+* Be in its own file
+* Be production-ready
+* Be reusable
+* Be responsive
+* Support dark mode
+* Support light mode
+* Follow Future UI design language
 
-const Component = () => {
-  return <div />;
-};
+---
 
-export default Component;
-```
+# Variant Standards
 
-or
+Where appropriate:
 
-```tsx
-export function Component() {
-  return <div />;
-}
-```
+Components should support variants.
 
-Avoid unnecessary complexity.
+Examples:
 
-### React Optimization Rules
+* modern
+* clean
+* minimal
 
-Do not use:
+Variants must be:
 
-* optimizePackageImports
-* React.memo
-* useMemo
-* useCallback
-* dynamic optimization patterns
+* Typed
+* Consistent
+* Production-ready
 
-unless a measurable performance benefit exists.
+---
 
-Rules:
+# Documentation Requirement
 
-* React.memo may only be used for highly static reusable components.
-* Do not wrap components in memo by default.
-* Do not optimize prematurely.
-* Favor readability and maintainability.
+Every reusable component must include a DocBlock.
 
-### Component Template Standard
+The DocBlock should describe:
 
-When generating reusable React components:
+* Purpose
+* API
+* Usage
 
-* Follow the structure generated by the ES7+ React extension:
+---
 
-  * `rafce`
-  * `rafc`
+# Registry Architecture
 
-Use their import/export style as the project standard.
+Source of Truth:
 
-Do not introduce alternative export patterns unless required.
+src/components/ui/*.tsx
 
-### UI Consistency Enforcement
+Registry metadata originates from JSDoc metadata inside component files.
 
-New components must:
+Example:
 
-* Match Future UI design language.
-* Match spacing conventions.
-* Match typography conventions.
-* Match animation conventions.
-* Match dark mode conventions.
-* Match responsive behavior conventions.
+/**
 
-A new component should visually feel like it was built alongside all existing Future UI components.
+* @registry-slug example-component
+* @registry-name Example Component
+* @registry-description Example Description
+* @registry-category ui
+* @registry-type components:ui
+  */
 
-### Styling Enforcement
+---
 
-* Use Tailwind CSS utilities already used within the project.
-* Reuse existing utility patterns.
-* Avoid introducing custom CSS unless required.
-* Avoid creating duplicate style systems.
+# Registry Flow
 
-### Registry Integrity Requirement
+Component File
+↓
+JSDoc Metadata
+↓
+npm run sync
+↓
+registryData.ts
+↓
+Registry API
+↓
+futureuikit CLI
 
-Whenever modifying:
+---
 
-* Registry Components
-* Registry API
-* CLI Install Flow
+# Website Flow
+
+Component File
+↓
+component-library-data.ts
+↓
+PreviewRegistry.tsx
+↓
+Component Pages
+↓
+Documentation Website
+
+---
+
+# Component Creation Workflow
+
+Step 1
+
+Create:
+
+src/components/ui/[component].tsx
+
+Step 2
+
+Add registry JSDoc metadata.
+
+Step 3
+
+Add component metadata to:
+
+src/data/component-library-data.ts
+
+Step 4
+
+Register preview inside:
+
+src/route-components/PreviewRegistry.tsx
+
+Step 5
 
 Verify:
 
-* Registry slug matches component slug.
-* Registry response returns valid code.
-* CLI installation succeeds.
-* Generated component compiles without modification.
+* Component preview
+* Component rendering
+* Component availability
 
-### Post-Implementation Verification (Mandatory)
+Step 6
 
-After every implementation:
+Run validation:
 
-1. Review all modified files.
-2. Verify imports.
-3. Verify exports.
-4. Verify routing.
-5. Verify component registration.
-6. Verify preview rendering.
-7. Verify dark mode.
-8. Verify light mode.
-9. Verify registry integration.
-10. Verify no duplicate code exists.
+npm run lint
 
-Do not deliver code until verification is completed.
+npm run build
 
-### File Scope Protection
+---
 
-Modify only requested files.
+# Testing Requirements
 
-If additional files are required:
+Verify:
 
-* Stop.
-* List the files.
-* Explain why they are required.
-* Request approval.
+* Light mode
+* Dark mode
+* Responsive behavior
+* Variant behavior
 
-Do not proceed until approval is received.
+before completion.
 
-### Future UI Architectural Priority
+---
 
-Priority Order:
+# React Standards
 
-1. Project Stability
-2. Existing UI Consistency
-3. Component Reusability
-4. Registry Compatibility
-5. Developer Experience
-6. Performance Optimization
+Prefer:
 
-Never sacrifice stability or consistency for optimization.
+"use client"
 
-# Script File Lifecycle Policy
+for interactive components.
 
-## Temporary Script Files
+Avoid premature optimization.
 
-Whenever you create a script file for a one-time task, migration, data transformation, cleanup operation, registry generation, validation, debugging, analysis, refactoring, or maintenance activity, that script must be treated as temporary.
+Do not use:
 
-Rules:
+* React.memo
+* useMemo
+* useCallback
 
-1. Create the temporary script only when absolutely necessary.
-2. Execute the script and verify it completes successfully.
-3. Apply and verify the intended changes.
-4. Immediately delete the temporary script after successful execution.
-5. Ensure no references to the temporary script remain anywhere in the codebase.
-6. Remove any temporary npm scripts added solely for executing the temporary file.
-7. Never leave one-time-use scripts committed in the project.
-8. Never leave debugging, migration, validation, inspection, or maintenance scripts in the repository after use.
-9. Temporary scripts must not accumulate in the scripts directory.
-10. The repository should remain clean after task completion.
+unless measurable benefits exist.
 
-## Permanent Script Files
+---
 
-Only permanent CLI-related scripts may remain in the project.
+# Styling Rules
 
-Allowed permanent scripts include:
+Prefer:
 
-* Component installation CLI
-* Icon installation CLI
-* Registry resolution
-* Registry download handlers
-* Dependency installation helpers
-* Runtime CLI utilities
-* Package publishing utilities that are actively required
-* Core CLI infrastructure
+* Tailwind utilities
+* Existing patterns
+* Existing design language
 
-These files are considered production infrastructure and must not be removed.
+Avoid:
 
-## Cleanup Verification
+* Duplicate styling systems
+* Unnecessary custom CSS
 
-Before completing any task:
+---
 
-* Check for newly created temporary scripts.
-* Delete all one-time-use scripts.
-* Remove unused imports created for temporary execution.
-* Remove temporary package.json entries.
-* Remove temporary build artifacts.
-* Remove temporary generated files that are not part of the final product.
+# Import Standards
 
-## Repository Standard
+Preferred:
 
-The project must never contain:
+import React from "react";
 
-* Temporary migration scripts
-* Temporary fix scripts
-* Debug scripts
-* Inspection scripts
-* Data conversion scripts
-* Analysis scripts
-* One-time automation scripts
-* Experimental utility scripts
+export default Component;
 
-unless they are actively required for the production CLI system.
+or
 
-The only script files that should remain long-term are those required for the Component CLI and Icon CLI functionality and their supporting production infrastructure.
+export function Component() {}
 
-# Critical Protection Rule — CLI Infrastructure
+Keep imports simple.
 
-## Never Delete Core CLI Files
+Keep exports predictable.
 
-The Component CLI and Icon CLI systems are critical production infrastructure.
+---
 
-Under no circumstances may the following be deleted, replaced, disabled, broken, renamed, or removed unless explicitly instructed by the project owner:
+# Production Approval Gate
 
-* Component CLI command files
-* Icon CLI command files
-* CLI entry points
-* Registry download handlers
-* Registry resolution logic
-* Component installation logic
-* Icon installation logic
-* Dependency installation logic
-* CLI configuration files
-* CLI utilities required by component or icon downloads
-* Any file directly referenced by the Component CLI or Icon CLI execution flow
+Before deployment:
 
-## Mandatory Verification Before Deletion
+1. Summarize changes.
+2. List impacted files.
+3. Request approval.
 
-Before deleting any file, perform dependency analysis and determine whether the file is:
+Never deploy automatically.
 
-* Imported by the Component CLI
-* Imported by the Icon CLI
-* Referenced by CLI commands
-* Referenced by registry installation logic
-* Referenced by registry download logic
-* Required during component installation
-* Required during icon installation
-* Required during CLI execution
+# Architecture Preservation Rule
 
-If there is any possibility that a file participates in the CLI installation pipeline, it must be preserved.
+Never create parallel systems.
 
-## Protected Systems
+Examples:
 
-The following systems are permanently protected:
+Do not create:
 
-1. Component Download System
-2. Icon Download System
-3. Registry System
-4. CLI Command System
-5. CLI Runtime Infrastructure
-6. Package Installation Pipeline
-7. Registry Fetching Pipeline
-8. Registry Resolution Pipeline
+- alternative registries
+- alternative metadata systems
+- alternative preview systems
+- alternative icon systems
+- alternative component registration systems
 
-These systems must remain fully functional after every task.
+Use the existing architecture.
 
-## Deletion Policy
+Extend existing systems instead of replacing them.
 
-Temporary scripts:
+When uncertain:
 
-* May be deleted after successful execution and verification.
+Ask before introducing a new pattern.
 
-Production CLI files:
+# Website Registration Requirements
 
-* Must never be deleted.
-* Must never be automatically cleaned up.
-* Must never be treated as unused.
-* Must never be removed during refactoring.
-* Must never be removed during optimization.
-* Must never be removed during cleanup operations.
+A component is NOT considered fully integrated until all required website registrations are completed.
 
-If a file's purpose cannot be determined with certainty, preserve the file and report it for manual review instead of deleting it.
+Website Integration Requirements:
 
-## Final Validation Requirement
+1. Component exists inside:
 
-After every cleanup, refactor, optimization, or maintenance task:
+src/components/ui
 
-* Verify `futureuikit add <component>` works correctly.
-* Verify `futureuikit add-icon <icon>` works correctly.
-* Verify registry downloads work correctly.
-* Verify dependency installation works correctly.
-* Verify no CLI imports are broken.
-* Verify no CLI runtime errors exist.
+2. Component metadata exists inside:
 
-CLI functionality takes priority over cleanup, optimization, and file reduction.
+src/data/component-library-data.ts
+
+3. Component preview is registered inside:
+
+src/route-components/PreviewRegistry.tsx
+
+A component that exists only in src/components/ui is considered incomplete.
+
+A component that exists in component-library-data.ts but is missing from PreviewRegistry.tsx is considered incomplete.
+
+A component must be visible and functional on the website before implementation is considered complete.
+
+Always verify:
+
+* Component page rendering
+* Preview rendering
+* Component availability
+* Navigation to the component page
+
+# Generated Files
+
+The following files are generated and must be treated as read-only:
+
+src/data/registryData.ts
+
+Do not manually edit generated files.
+
+Generated files must only be updated through the official generation workflow.
+
+Registry generation is controlled by the user.
+
+Do not manually update generated registry output.
+
+## Frontend Design Skill
+
+A frontend design skill is installed at:
+
+.agents/skills/frontend-design/SKILL.md
+
+Before generating:
+
+- Components
+- Layouts
+- Landing pages
+- Documentation pages
+- Dashboard examples
+- Interactive UI
+
+Read and follow the frontend-design skill.
+
+However:
+
+- Maintain Future UI design consistency.
+- Do not create random visual identities for individual components.
+- Prioritize reusable component design over artistic experimentation.
+- Follow Future UI design tokens and architecture.
+- Production readiness is more important than visual novelty.

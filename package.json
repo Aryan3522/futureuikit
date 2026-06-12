@@ -149,6 +149,7 @@
     "@tiptap/starter-kit": "^3.24.0",
     "@tiptap/suggestion": "^3.24.0",
     "@types/three": "^0.184.1",
+    "agentation": "^3.0.2",
     "geist": "^1.7.2",
     "react-hook-form": "^7.76.1",
     "react-markdown": "^10.1.0",

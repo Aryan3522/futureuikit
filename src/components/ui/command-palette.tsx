@@ -197,7 +197,7 @@ export const CommandList = React.memo(React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.List
     ref={ref}
-    className={cn("max-h-[60vh] sm:max-h-100 overflow-y-auto overflow-x-hidden", className)}
+    className={cn("max-h-[60vh] sm:max-h-100 overflow-x-hidden", className)}
     {...props}
   />
 )));
@@ -227,20 +227,20 @@ export const CommandGroup = React.memo(React.forwardRef<
       className={cn(
         "overflow-hidden text-foreground",
 
-        "[&_[cmdk-group-heading]]:px-5",
-        "[&_[cmdk-group-heading]]:py-3",
-        "[&_[cmdk-group-heading]]:text-[11px]",
-        "[&_[cmdk-group-heading]]:font-bold",
-        "[&_[cmdk-group-heading]]:uppercase",
-        "[&_[cmdk-group-heading]]:tracking-[0.2em]",
-        "[&_[cmdk-group-heading]]:text-muted-foreground/60",
+        "[[cmdk-group-heading]]:px-5",
+        "[[cmdk-group-heading]]:py-3",
+        "[[cmdk-group-heading]]:text-[11px]",
+        "[[cmdk-group-heading]]:font-bold",
+        "[[cmdk-group-heading]]:uppercase",
+        "[[cmdk-group-heading]]:tracking-[0.2em]",
+        "[[cmdk-group-heading]]:text-muted-foreground/60",
 
         variant === "compact" && (
-          "[&_[cmdk-group-heading]]:px-4 [&_[cmdk-group-heading]]:py-2"
+          "[[cmdk-group-heading]]:px-4 [[cmdk-group-heading]]:py-2"
         ),
 
         variant === "floating" && (
-          "[&_[cmdk-group-heading]]:px-6"
+          "[[cmdk-group-heading]]:px-6"
         ),
 
         className

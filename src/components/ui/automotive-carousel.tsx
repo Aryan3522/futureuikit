@@ -329,7 +329,10 @@ export interface AutomotiveCarouselProps {
 export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: AutomotiveCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.innerWidth < 768;
+  });
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -339,7 +342,6 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
         setIsMobile(window.innerWidth < 768);
       }, 150);
     };
-    setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", checkMobile);
     return () => {
       window.removeEventListener("resize", checkMobile);
