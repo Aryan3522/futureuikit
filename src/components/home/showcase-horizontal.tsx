@@ -50,9 +50,9 @@ const slides = [
 const showcaseItems = [
   {
     number: "01",
-    title: "Automotive 3D",
-    category: "THREE.JS / REACT",
-    description: "Cinematic automotive showcase with interactive camera paths and premium lighting models.",
+    title: "Automotive Carousel",
+    category: "CAROUSEL / UI",
+    description: "A high-end, cinematic 3D carousel specifically designed for automotive showcases. It features a responsive camera rig that navigates through the car's interior and exterior with premium damping and ultra-wide angles.",
     id: "automotive-carousel",
     render: () => (
       <div className="w-full h-full rounded-2xl overflow-hidden border border-white/5 relative bg-black/20">
@@ -63,8 +63,8 @@ const showcaseItems = [
   {
     number: "02",
     title: "Workflow Builder",
-    category: "CANVAS / INTERACTIVE",
-    description: "Enterprise-grade node-based builder with infinite canvas, bezier edges, and zoom/pan functionality.",
+    category: "BOARD / DATA-DISPLAY",
+    description: "A fully reusable, highly customizable, production-ready Workflow Builder component inspired by n8n, Zapier, and Langflow. Features infinite canvas, zoom/pan, custom nodes, bezier edge rendering, and full drag-and-drop support out of the box with zero heavy third-party canvas dependencies.",
     id: "workflow-builder",
     render: () => (
       <div className="w-full h-full rounded-2xl overflow-hidden border border-white/5 relative bg-black/20">
@@ -90,9 +90,9 @@ const showcaseItems = [
   {
     number: "03",
     title: "Glowy Button",
-    category: "NAVIGATION / UI",
-    description: "Lightning-fast fuzzy search palette with keyboard shortcuts and customizable action sets.",
-    id: "command-palette",
+    category: "BUTTON / FORM",
+    description: "A signature pill-shaped button featuring a premium glass-morph interaction. Initially covered by a full-width colored glass sheet, the layer smoothly shrinks into a compact circle on hover/tap, revealing a hidden icon while emitting a vibrant outer glow.",
+    id: "glowy",
     render: () => (
       <div className="w-full h-full rounded-2xl overflow-hidden border border-white/5 relative bg-black/40 p-8 flex items-center justify-center">
         <div className="flex flex-wrap gap-6 items-center justify-center w-full">
@@ -106,8 +106,8 @@ const showcaseItems = [
   {
     number: "04",
     title: "AI Chat Interface",
-    category: "APPLICATION / AI",
-    description: "Production-ready chat system with streaming responses, markdown support, and file uploads.",
+    category: "APPLICATION / APPLICATION-UI",
+    description: "A fully reusable, highly customizable AI Chat Interface inspired by ChatGPT, Claude, and Perplexity. Features streaming responses, markdown rendering, syntax highlighting, and multiple premium layouts.",
     id: "ai-chat",
     render: () => {
       const ChatDemo = () => {
@@ -142,8 +142,8 @@ const showcaseItems = [
   {
     number: "05",
     title: "Nexus Card",
-    category: "CARDS / MOTION",
-    description: "Ultra-premium card with reactive 3D tilt, spotlight glow, and ambient border animations.",
+    category: "CARDS / UI",
+    description: "A completely unique, ultra-premium, and modernistic card component. Features reactive 3D tilt, a dynamic mouse-tracking spotlight glow, tactile glassmorphism with subtle noise texture, and an animated ambient border.",
     id: "nexus-card",
     render: () => (
       <div className="w-full h-full flex items-center justify-center p-8 bg-black/10 rounded-2xl overflow-hidden relative">
