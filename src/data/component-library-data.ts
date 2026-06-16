@@ -1575,6 +1575,45 @@ export default function AdvancedSearch() {
  details: ["Pathname based breadcrumbs"],
  codes: { next:""},
  usage: ["npx futureuikit add global-breadcrumb"]
+ },
+ {
+ id: 59,
+ title:"Premium OTP Input",
+ type:"Forms",
+ slug:"otp-input",
+ category:"ui",
+ isNew: true,
+ description:"A highly polished, production-ready OTP Verification Input Component with premium micro-interactions, smooth morphing animations, and complete configurability.",
+ details: [
+"Dynamic OTP length (4-10 digits).",
+"Premium SaaS-quality design with smooth border transitions and focus glow.",
+"Intelligent keyboard navigation and paste support.",
+"Advanced success animation: Inputs merge and morph into a circular success badge with particle burst.",
+"Advanced failure animation: Shake effect followed by morphing into an error badge.",
+"Fully responsive and supports both light and dark themes."
+ ],
+ codes: {
+ next: `import { OtpInput } from "@/components/ui/otp-input";
+
+export default function Example() {
+ return (
+ <OtpInput 
+ length={6} 
+ onVerify={async (otp) => {
+ // Simulate API call
+ await new Promise(resolve => setTimeout(resolve, 2000));
+ return otp === "123456";
+ }} 
+ />
+ );
+}`
+ },
+ usage: [
+"Install: Run 'npx futureuikit add otp-input'.",
+"Import: 'import { OtpInput } from \"@/components/ui/otp-input\";'",
+"Props: Configure 'length' (4-10) and 'onVerify' (async function returning boolean).",
+"States: The component handles Loading, Success, and Error animations automatically based on the 'onVerify' result."
+ ]
  }
 ];
 

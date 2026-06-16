@@ -20,6 +20,7 @@ import {
   FileUploadPreview,
   FormBuilderPreview,
   OTPVerificationPreview,
+  PremiumOtpInputPreview,
   FilterBuilderPreview,
   HeaderPreview,
   NavMenuPreview,
@@ -93,6 +94,7 @@ export const PreviewRegistry: PreviewRegistryMap = {
   "file-upload": FileUploadPreview,
   "form-builder": FormBuilderPreview,
   "otp-verification": OTPVerificationPreview,
+  "otp-input": PremiumOtpInputPreview,
   "filter-builder": FilterBuilderPreview,
 
   // Navigation

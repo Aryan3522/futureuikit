@@ -72,7 +72,6 @@ export const GlowyButton = React.memo(
       const finalGlass = theme.glass;
 
       const sharedProps = {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ref: internalRef as any,
         initial: "initial" as const,
         whileHover: (!disabled ? "hover" : "initial") as "hover" | "initial",

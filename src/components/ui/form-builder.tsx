@@ -269,7 +269,6 @@ const BaseField: React.FC<FieldProps> = ({ field, path, methods, variant }) => {
     );
   }
 
-  // eslint-disable-next-line react-hooks/static-components
   const InputWrapper = ({ children }: { children: React.ReactNode }) => (
     <div className={cn("w-full flex flex-col", colSpanClass)}>
       {field.label && field.type !== 'checkbox' && (

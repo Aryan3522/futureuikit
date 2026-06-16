@@ -1,4 +1,3 @@
-/* eslint-disable */
 /**
  * @registry-slug dynamic-form
  * @registry-name Dynamic Form System
@@ -1153,7 +1152,6 @@ export const DynamicForm: React.FC<DynamicFormProps> = React.memo(({
             formState: { isDirty }
           } = methods;
 
-          // eslint-disable-next-line react-hooks/incompatible-library
           const currentValues = watch();
 
           // Conditional rendering visibility checks
