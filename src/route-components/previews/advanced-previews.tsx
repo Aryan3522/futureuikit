@@ -12,6 +12,7 @@ import { BrowserWindow } from "@/components/ui/browser-window";
 import { Terminal as UITerminal, TerminalVariant } from "@/components/ui/terminal";
 import { CursorGlowButton } from "@/components/ui/cursor-glow-button";
 import { ScrollTextReveal } from "@/components/ui/scroll-text-reveal";
+import { SlideUpReveal, type SlideUpRevealVariant, type SlideUpRevealShape } from "@/components/ui/slide-up-reveal";
 import { PreviewContainer } from "../preview-engine/PreviewContainer";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -584,6 +585,39 @@ export const ScrollTextRevealPreview: React.FC = () => {
           </span>
         </section>
 
+      </div>
+    </PreviewContainer>
+  );
+};
+
+const SHAPE_VARIANTS: SlideUpRevealShape[] = ["rectangle", "rounded", "squircle", "arc", "wave", "curtain", "silk", "holographic"];
+
+export const SlideUpRevealPreview: React.FC = () => {
+  const [shape, setShape] = useState<SlideUpRevealShape>("squircle");
+
+  const shapeToTheme: Record<SlideUpRevealShape, SlideUpRevealVariant> = {
+    rectangle: "default",
+    rounded: "aurora",
+    squircle: "space",
+    arc: "cyberpunk",
+    wave: "neon",
+    curtain: "default",
+    silk: "aurora",
+    holographic: "cyberpunk",
+  };
+
+  return (
+    <PreviewContainer 
+      title="Slide Up Reveal" 
+      description="A futuristic lockscreen cloth simulator. Drag from the bottom to reveal the energy core and underlying OS." 
+      isVirtualScreen={false} 
+      variants={SHAPE_VARIANTS}
+      activeVariant={shape}
+      onVariantChange={(v) => setShape(v as SlideUpRevealShape)}
+      contentClassName="p-0 border-none"
+    >
+      <div className="w-full h-[800px] max-h-[85vh] relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+        <SlideUpReveal shape={shape} variant={shapeToTheme[shape]} key={shape} />
       </div>
     </PreviewContainer>
   );

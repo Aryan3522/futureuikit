@@ -1736,6 +1736,26 @@ export default function Example() {
 "Props: Supports variant, color, size, shape, loading, icon, and fullWidth.",
 "Interaction: Framer Motion provides precise tap scaling and transitions."
  ]
+ },
+ {
+ id: 65,
+ title: "Slide Up Reveal",
+ type: "Layout",
+ slug: "slide-up-reveal",
+ category: "ui",
+ description: "A premium futuristic reveal component that feels like physically lifting a landscape cloth to reveal an OS underneath.",
+ details: [
+    "Uses SVG clip-path morphing driven by Framer Motion drag values.",
+    "Features dynamic AI Core lighting that scales with interaction.",
+    "Provides a cinematic flash completion sequence."
+ ],
+ codes: {
+    next: 'import { SlideUpReveal } from "@/components/ui/slide-up-reveal";\n\nexport default function Example() {\n  return <div className="h-[600px] w-full"><SlideUpReveal /></div>;\n}'
+ },
+ usage: [
+    "Install: Run \'npx futureuikit add slide-up-reveal\'.",
+    "Import: \'import { SlideUpReveal } from \"@/components/ui/slide-up-reveal\";\'"
+ ]
  }
 ];
 

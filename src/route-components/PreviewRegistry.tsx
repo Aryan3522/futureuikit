@@ -65,6 +65,7 @@ import {
   TerminalPreview,
   CursorGlowButtonPreview,
   ScrollTextRevealPreview,
+  SlideUpRevealPreview,
   SearchPreview,
   SearchInputPreview,
   IconsPreview,
@@ -156,6 +157,7 @@ export const PreviewRegistry: PreviewRegistryMap = {
   terminal: TerminalPreview,
   "cursor-glow-button": CursorGlowButtonPreview,
   "scroll-text-reveal": ScrollTextRevealPreview,
+  "slide-up-reveal": SlideUpRevealPreview,
 
   // Search
   search: SearchPreview,
