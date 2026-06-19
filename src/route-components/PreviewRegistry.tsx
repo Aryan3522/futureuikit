@@ -215,7 +215,12 @@ export const PreviewRegistry: PreviewRegistryMap = {
 
     return (
       <PreviewContainer scrollRef={scrollRef} title="Velocity Marquee" description="An interactive marquee grid featuring glowing cards." isVirtualScreen={true} contentClassName="p-0 border-none">
-        <VelocityMarquee items={demoItems} containerRef={scrollRef} />
+        <div className="flex flex-col w-full min-h-[150vh] justify-center items-center relative overflow-hidden bg-neutral-50 dark:bg-[#0a0a0a]">
+          <div className="absolute top-20 flex flex-col items-center text-muted-foreground opacity-50">
+            <span className="animate-bounce">↓ Scroll the page to see physics animations ↓</span>
+          </div>
+          <VelocityMarquee items={demoItems} containerRef={scrollRef} />
+        </div>
       </PreviewContainer>
     );
   },
