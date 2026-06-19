@@ -57,7 +57,7 @@ export const KanbanPreview: React.FC = () => {
 export const WorkflowPreview: React.FC = () => {
   return (
     <PreviewContainer title="Workflow Builder" description="A node-based visual workflow builder." isVirtualScreen={true} contentClassName="p-0 border-none">
-      <div className="w-full h-full relative">
+      <div className="absolute inset-0 w-full h-full">
         <WorkflowBuilder 
           variant="enterprise"
           initialNodes={[

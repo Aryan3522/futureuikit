@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import fs from "fs/promises";
+import { accessSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { execSync } from "child_process";
@@ -19,6 +20,12 @@ const cliPackageJson = JSON.parse(
 
 const DEFAULT_REGISTRY_URL =
   cliPackageJson.config?.registryUrl || "https://futureuikit.vercel.app/api/registry";
+
+// Check Node.js version (needed for global fetch)
+if (process.versions.node && parseInt(process.versions.node.split(".")[0], 10) < 18) {
+  console.error("Future UI CLI requires Node.js 18 or later.");
+  process.exit(1);
+}
 
 const args = process.argv.slice(2);
 const command = args[0];
@@ -81,7 +88,7 @@ async function detectProjectStack(cwd) {
   // Check package.json for framework details
   try {
     const pkgContent = await fs.readFile(path.join(cwd, "package.json"), "utf-8");
-    const pkg = JSON.parse(pkgContent);
+    const pkg = JSON.parse(pkgContent.replace(/^\uFEFF/, ""));
     const allDeps = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
     
     if (allDeps.next) {
@@ -106,6 +113,25 @@ async function detectProjectStack(cwd) {
 function buildRegistryUrl(baseUrl, componentSlug) {
   const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
   return new URL(encodeURIComponent(componentSlug), normalizedBase).toString();
+}
+
+/**
+ * Detects which package manager the project uses by checking lockfiles.
+ */
+function detectPackageManager(cwd) {
+  try {
+    fs.accessSync(path.join(cwd, "pnpm-lock.yaml"));
+    return "pnpm";
+  } catch {}
+  try {
+    fs.accessSync(path.join(cwd, "yarn.lock"));
+    return "yarn";
+  } catch {}
+  try {
+    fs.accessSync(path.join(cwd, "bun.lockb"));
+    return "bun";
+  } catch {}
+  return "npm";
 }
 
 /**
@@ -215,10 +241,17 @@ async function injectCSS(baseDir, cssContent) {
 
     const markerStart = "/* future-ui:start */";
     const markerEnd = "/* future-ui:end */";
+    const startIdx = existing.indexOf(markerStart);
+    const endIdx = existing.indexOf(markerEnd);
 
-    if (existing.includes(markerStart)) {
-      await fs.appendFile(targetCSS, `\n${cssContent}\n`);
+    if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+      // Replace content between existing markers
+      const before = existing.slice(0, startIdx + markerStart.length);
+      const after = existing.slice(endIdx);
+      existing = `${before}\n${cssContent}\n${after}`;
+      await fs.writeFile(targetCSS, existing, "utf-8");
     } else {
+      // No markers found; append at end
       await fs.appendFile(targetCSS, `\n\n${markerStart}\n${cssContent}\n${markerEnd}\n`);
     }
     console.log(`Injected styles into ${targetCSS}`);
@@ -234,7 +267,7 @@ async function ensureDependencies(cwd, required = []) {
   const packageJsonPath = path.join(cwd, "package.json");
   try {
     const content = await fs.readFile(packageJsonPath, "utf-8");
-    const pkg = JSON.parse(content);
+    const pkg = JSON.parse(content.replace(/^\uFEFF/, ""));
     const deps = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
 
     const baseRequired = ["clsx", "tailwind-merge"];
@@ -242,12 +275,18 @@ async function ensureDependencies(cwd, required = []) {
     const missing = allRequired.filter((d) => !deps[d]);
 
     if (missing.length > 0) {
-      console.log(`Installing missing dependencies: ${missing.join(", ")}...`);
+      const pm = detectPackageManager(cwd);
+      const installCmd =
+        pm === "npm" ? "npm install" :
+        pm === "yarn" ? "yarn add" :
+        pm === "pnpm" ? "pnpm add" :
+        "bun add";
+      console.log(`Installing missing dependencies with ${pm}: ${missing.join(", ")}...`);
       try {
-        execSync(`npm install ${missing.join(" ")}`, { stdio: "inherit", cwd });
+        execSync(`${installCmd} ${missing.join(" ")}`, { stdio: "inherit", cwd });
       } catch (err) {
         console.warn(`Warning: Failed to install dependencies: ${err.message}`);
-        console.log(`Please run: npm install ${missing.join(" ")}`);
+        console.log(`Please run: ${installCmd} ${missing.join(" ")}`);
       }
     }
   } catch (err) {
@@ -296,8 +335,9 @@ async function addComponent(componentSlug) {
       const absolutePath = path.resolve(baseDir, relativePath);
       const targetDir = path.dirname(absolutePath);
 
-      // Security check: ensure absolutePath is still within cwd
-      if (!absolutePath.startsWith(cwd)) {
+      // Security check: ensure absolutePath is still within cwd (cross-platform)
+      const rel = path.relative(cwd, absolutePath);
+      if (rel.startsWith("..") || path.isAbsolute(rel)) {
         throw new Error(`Unsafe file path returned by registry: ${relativePath}`);
       }
 
@@ -325,8 +365,9 @@ async function addComponent(componentSlug) {
     }
 
     if (componentSlug === "icons") {
-      console.log("\nIcons are ready for named imports:");
-      console.log('  import { GithubIcon, SunIcon } from "@/components/ui/icons";');
+      console.log("\nIcons are built into Future UI — no extra installation needed.");
+      console.log("Import directly from the package:");
+      console.log('  import { GithubIcon, SunIcon } from "futureuikit/icons";');
     }
 
     console.log(`\nSUCCESS: Component '${componentSlug}' installed successfully.`);

@@ -4,6 +4,7 @@ import React from "react";
 import { GithubIcon, LinkedinIcon } from "@/icons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import VelocityMarquee from "@/components/ui/velocity-marquee";
 import { PreviewContainer } from "./preview-engine/PreviewContainer";
 import type { PreviewRegistryMap } from "./preview-engine/preview-types";
 import {
@@ -163,8 +164,61 @@ export const PreviewRegistry: PreviewRegistryMap = {
   search: SearchPreview,
   "search-input": SearchInputPreview,
 
-  // Icons
   icons: IconsPreview,
+
+  "velocity-marquee": function VelocityMarqueePreview() {
+    const scrollRef = React.useRef<HTMLDivElement>(null);
+    const demoItems = [
+      {
+        name: "React",
+        purpose: "UI Library",
+        impact: 95,
+        description: "The fundamental view layer allowing declarative component composition.",
+        color: "from-cyan-500 to-blue-500",
+      },
+      {
+        name: "Next.js",
+        purpose: "React Framework",
+        impact: 100,
+        description: "Provides the overarching architecture, routing, and rendering strategies.",
+        color: "from-neutral-700 to-neutral-500",
+      },
+      {
+        name: "Tailwind CSS",
+        purpose: "Styling Engine",
+        impact: 90,
+        description: "Utility-first CSS framework enabling rapid UI development without context switching.",
+        color: "from-teal-400 to-cyan-500",
+      },
+      {
+        name: "Framer Motion",
+        purpose: "Animation Library",
+        impact: 85,
+        description: "Powers the fluid, physics-based animations and layout transitions throughout the site.",
+        color: "from-fuchsia-500 to-purple-600",
+      },
+      {
+        name: "Radix UI",
+        purpose: "Accessible Primitives",
+        impact: 80,
+        description: "Unstyled, accessible components forming the foundation of complex interactive elements.",
+        color: "from-indigo-500 to-blue-500",
+      },
+      {
+        name: "Lucide",
+        purpose: "Iconography",
+        impact: 70,
+        description: "Beautiful, consistent icons providing visual anchors for interactive elements.",
+        color: "from-rose-400 to-red-500",
+      },
+    ];
+
+    return (
+      <PreviewContainer scrollRef={scrollRef} title="Velocity Marquee" description="An interactive marquee grid featuring glowing cards." isVirtualScreen={true} contentClassName="p-0 border-none">
+        <VelocityMarquee items={demoItems} containerRef={scrollRef} />
+      </PreviewContainer>
+    );
+  },
 
   // Previews not yet moved (as per specific list)
   badge: function BadgePreview() {

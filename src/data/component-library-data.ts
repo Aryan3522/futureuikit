@@ -1753,10 +1753,30 @@ export default function Example() {
     next: 'import { SlideUpReveal } from "@/components/ui/slide-up-reveal";\n\nexport default function Example() {\n  return <div className="h-[600px] w-full"><SlideUpReveal /></div>;\n}'
  },
  usage: [
-    "Install: Run \'npx futureuikit add slide-up-reveal\'.",
-    "Import: \'import { SlideUpReveal } from \"@/components/ui/slide-up-reveal\";\'"
- ]
- }
+    "Install: Run 'npx futureuikit add slide-up-reveal'.",
+    "Import: 'import { SlideUpReveal } from \"@/components/ui/slide-up-reveal\";'"
+  ]
+  },
+  {
+    id: 66,
+    title: "Velocity Marquee",
+    type: "Components",
+    slug: "velocity-marquee",
+    category: "ui",
+    description: "An interactive marquee grid of open source projects with glowing hover cards.",
+    details: [
+      "Uses Marquee Track internally for physics based scrolling.",
+      "Features dynamic mouse-following glow effects.",
+      "Staggered entrance animations."
+    ],
+    codes: {
+      next: "import VelocityMarquee from \"@/components/ui/velocity-marquee\";\n\nconst demoItems = [\n  {\n    name: \"React\",\n    purpose: \"UI Library\",\n    impact: 95,\n    description: \"The fundamental view layer allowing declarative component composition.\",\n    color: \"from-cyan-500 to-blue-500\",\n  }\n];\n\nexport default function Example() {\n  return <VelocityMarquee items={demoItems} />;\n}"
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add velocity-marquee'.",
+      "Import: 'import VelocityMarquee from \"@/components/ui/velocity-marquee\";'"
+    ]
+  }
 ];
 
 // Deduplicate manual components by slug
