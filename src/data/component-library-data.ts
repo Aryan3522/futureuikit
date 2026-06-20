@@ -2259,6 +2259,52 @@ export default function Example() {
       "Import: 'import { GutterLines } from \"@/components/ui/GutterLines\";'",
       "Usage: Place the component as a decorative element alongside content sections."
     ]
+  },
+  {
+    id: 88,
+    title: "Puzzle Video",
+    type: "Components",
+    slug: "puzzle-video",
+    category: "ui",
+    description: "A video player that shatters into a jigsaw puzzle based on scroll progress.",
+    details: [
+      "Jigsaw clip paths to cut the video frame.",
+      "Matching tabs for interlocking puzzle pieces.",
+      "Scroll-driven progress utilizing Framer Motion.",
+      "Optimized 30fps RAF loop pausing off-screen."
+    ],
+    codes: {
+      next: "import dynamic from 'next/dynamic';\nimport { useRef } from 'react';\nconst PuzzleVideo = dynamic(() => import('@/components/ui/puzzle-video').then(mod => mod.PuzzleVideo), { ssr: false });\n\nexport default function Example() {\n  const containerRef = useRef<HTMLDivElement>(null);\n  return (\n    <div ref={containerRef} className=\"h-screen overflow-y-auto overflow-x-hidden\">\n      <div style={{ marginTop: '100vh', paddingBottom: '100vh' }}>\n        <PuzzleVideo scrollContainer={containerRef} src=\"/videos/video.mp4\" rows={4} cols={3} />\n      </div>\n    </div>\n  );\n}"
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add puzzle-video'.",
+      "Import dynamically to bypass SSR issues: const PuzzleVideo = dynamic(() => import('@/components/ui/puzzle-video').then(mod => mod.PuzzleVideo), { ssr: false });",
+      "Pass the 'src' prop with a valid video URL.",
+      "Customize grid density using 'rows' and 'cols'."
+    ]
+  },
+  {
+    id: 90,
+    title: "Project Deck",
+    type: "Components",
+    slug: "project-deck",
+    category: "ui",
+    description: "A 3D stacked deck of project cards with hover fan-out and flip animation.",
+    details: [
+      "Stacked z-index for overlapping cards.",
+      "Hover fan-out with symmetrical spread and rotation.",
+      "CSS 3D transform for card flipping (rotateY).",
+      "Interactive cycling with next/prev controls.",
+      "Mouse parallax background effect."
+    ],
+    codes: {
+      next: "import ProjectDeck from '@/components/ui/project-deck';\n\nexport default function Example() {\n  return <ProjectDeck projects={[]} />;\n}"
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add project-deck'.",
+      "Import: 'import ProjectDeck from \"@/components/ui/project-deck\";'",
+      "Usage: Provide an array of Project objects to render the interactive deck."
+    ]
   }
 ];
 

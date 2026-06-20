@@ -7,7 +7,7 @@ import { AnimatedTerminal } from "@/components/home/animated-terminal";
 import { HeroSection } from "@/components/home/hero-section";
 import { ComponentsMarquee } from "@/components/home/components-marquee";
 import { ShowcaseHorizontal } from "@/components/home/showcase-horizontal";
-import { Agentation } from "agentation"
+import { Agentation } from "agentation";
 
 export default function Home() {
   return (
