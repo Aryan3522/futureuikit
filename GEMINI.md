@@ -23,8 +23,8 @@ Future UI is a modern component library built with the following specific tech s
 
 The main feature of this project is the download of the components. **It must always work properly without any errors, and the components must be fully reusable and bug-free.**
 
-* **Protected Files:** `bin/cli.mjs`, `bin/sync.mjs`, and any other scripts needed in the project for component downloads.
-* **NEVER delete these CLI files ever.**
+* **Protected Files:** `bin/cli.mjs`, `bin/sync.mjs`, `add-docblocks.mjs`, and any other scripts needed in the project for component downloads.
+* **NEVER delete these CLI and utility script files ever.**
 * If you need to upgrade them, **always test the changes properly** and thoroughly check if the downloads of the components are working properly or not.
 
 ## 4. Component Design & Theming
@@ -53,7 +53,8 @@ The main feature of this project is the download of the components. **It must al
 ## 5. Documentation & DocBlocks
 
 * **Main/Reusable Components:** When creating new components, always check if the component which is created is the main/reusable component which can be directly used. If it is a main component, you **MUST** add a DocBlock code in it.
-* **Supporter Components:** If it is a supporter component (meaning it cannot be used directly in any project), **NEVER** add DocBlock code in it.
+* **Component Directory Enforcement:** **ONLY** main/reusable components are permitted to live in the `src/components/ui` directory. All other files (like supporter components, internal utilities, and context files that cannot be used directly in any project) **MUST** be placed completely outside the `ui` directory (for example, in `src/components/internal` or `src/lib`).
+* **Supporter Components:** If it is a supporter component (meaning it cannot be used directly in any project), **NEVER** add DocBlock code in it, and ensure it is kept outside the `src/components/ui` directory.
 
 The DocBlock for main components should look like this:
 
