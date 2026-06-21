@@ -52,9 +52,49 @@ const DEFAULT_TRANSITION = {
   stiffness: 160,
 };
 
+export type Text3DFlipColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type Text3DFlipShape = "default" | "square" | "rounded" | "sharp";
+export type Text3DFlipSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
+export interface Text3DFlipProps extends Omit<React.HTMLAttributes<HTMLParagraphElement>, "color"> {
+  children?: React.ReactNode;
+  as?: React.ElementType;
+  textClassName?: string;
+  flipTextClassName?: string;
+  staggerDuration?: number;
+  staggerFrom?: "first" | "last" | "center" | "random" | number;
+  transition?: any;
+  rotateDirection?: "top" | "right" | "bottom" | "left";
+  color?: Text3DFlipColor;
+  shape?: Text3DFlipShape;
+  spacing?: Text3DFlipSpacing;
+}
+
+const colorThemeMap: Record<Text3DFlipColor, { text: string; flipText: string }> = {
+  default: { text: "text-foreground", flipText: "text-muted-foreground" },
+  blue: { text: "text-blue-500", flipText: "text-blue-300" },
+  emerald: { text: "text-emerald-500", flipText: "text-emerald-300" },
+  rose: { text: "text-rose-500", flipText: "text-rose-300" },
+  amber: { text: "text-amber-500", flipText: "text-amber-300" },
+  violet: { text: "text-violet-500", flipText: "text-violet-300" },
+  indigo: { text: "text-indigo-500", flipText: "text-indigo-300" },
+  sky: { text: "text-sky-500", flipText: "text-sky-300" },
+  slate: { text: "text-slate-500", flipText: "text-slate-300" },
+  orange: { text: "text-orange-500", flipText: "text-orange-300" },
+};
+
+const getSpacingClass = (spacing: Text3DFlipSpacing) => {
+  switch (spacing) {
+    case "2x": return "text-sm";
+    case "4x": return "text-base";
+    case "6x": return "text-2xl";
+    case "8x": return "text-4xl";
+    default: return "text-xl";
+  }
+};
+
 export default function Text3DFlip({
   children,
-  as: ElementTag = "p",
   className,
   textClassName,
   flipTextClassName,
@@ -62,11 +102,17 @@ export default function Text3DFlip({
   staggerFrom = "first",
   transition = DEFAULT_TRANSITION,
   rotateDirection = "top",
+  color = "default",
+  shape = "default", // unused on text, kept for universal API
+  spacing = "default",
   ...props
-}: any) {
+}: Text3DFlipProps) {
   const [scope, animate] = useAnimate();
   const isAnimatingRef = useRef(false);
   const isMountedRef = useRef(false);
+
+  const activeTheme = colorThemeMap[color];
+  const spacingClass = getSpacingClass(spacing);
 
   const rotationTransform = ROTATION_MAP[rotateDirection];
 
@@ -154,10 +200,10 @@ export default function Text3DFlip({
   let charIndex = 0;
 
   return (
-    <ElementTag
+    <p
       ref={scope}
       onMouseEnter={handleHoverStart}
-      className={cn("relative inline-flex flex-wrap items-center", className)}
+      className={cn("relative inline-flex flex-wrap items-center", spacingClass, className)}
       {...props}
     >
       <span className="sr-only">{text}</span>
@@ -171,8 +217,8 @@ export default function Text3DFlip({
                 <CharBox
                   key={key}
                   char={char}
-                  textClassName={textClassName}
-                  flipTextClassName={flipTextClassName}
+                  textClassName={cn(activeTheme.text, textClassName)}
+                  flipTextClassName={cn(activeTheme.flipText, flipTextClassName)}
                   rotateDirection={rotateDirection}
                 />
               );
@@ -188,7 +234,7 @@ export default function Text3DFlip({
           )}
         </React.Fragment>
       ))}
-    </ElementTag>
+    </p>
   );
 }
 

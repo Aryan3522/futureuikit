@@ -5,12 +5,28 @@ import { createPortal } from "react-dom";
 import { BrowserWindow } from "@/components/ui/browser-window";
 import { cn } from "@/lib/utils";
 
+export const DEFAULT_COLORS = [
+  { name: "default", class: "bg-black dark:bg-white" },
+  { name: "blue", class: "bg-blue-500" },
+  { name: "emerald", class: "bg-emerald-500" },
+  { name: "rose", class: "bg-rose-500" },
+  { name: "amber", class: "bg-amber-500" },
+  { name: "violet", class: "bg-violet-500" },
+  { name: "indigo", class: "bg-indigo-500" },
+  { name: "sky", class: "bg-sky-500" },
+  { name: "slate", class: "bg-slate-500" },
+  { name: "orange", class: "bg-orange-500" },
+] as const;
+
 export interface PreviewContainerProps {
   title: string;
   description?: string;
   variants?: readonly string[];
   activeVariant?: string;
   onVariantChange?: (variant: any) => void;
+  colors?: readonly { name: string; class: string }[];
+  activeColor?: string;
+  onColorChange?: (color: any) => void;
   children: React.ReactNode;
   className?: string;
   contentClassName?: string;
@@ -27,6 +43,9 @@ export const PreviewContainer: React.FC<PreviewContainerProps> = ({
   variants,
   activeVariant,
   onVariantChange,
+  colors,
+  activeColor,
+  onColorChange,
   children,
   className,
   contentClassName,
@@ -43,7 +62,7 @@ export const PreviewContainer: React.FC<PreviewContainerProps> = ({
     setMounted(true);
   }, []);
 
-  const controls = ((variants && variants.length > 0) || extraControls) && (
+  const controls = ((variants && variants.length > 0) || (colors && colors.length > 0) || extraControls) && (
     <div className="flex flex-col gap-6 w-full shrink-0 relative z-10 p-6 bg-transparent">
       {variants && variants.length > 0 && onVariantChange && (
         <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
@@ -65,6 +84,31 @@ export const PreviewContainer: React.FC<PreviewContainerProps> = ({
               >
                 {variant}
               </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {colors && colors.length > 0 && onColorChange && (
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full mt-2">
+          <span className="text-xs uppercase font-bold tracking-widest text-muted-foreground">
+            Color Theme
+          </span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {colors.map((c) => (
+              <button
+                key={c.name}
+                onClick={() => onColorChange(c.name)}
+                className={cn(
+                  "w-6 h-6 rounded-full transition-all duration-300 relative",
+                  c.class,
+                  activeColor === c.name
+                    ? "ring-2 ring-offset-2 ring-background scale-110"
+                    : "opacity-50 hover:opacity-100 hover:scale-105",
+                  c.name === "default" && "border border-border bg-foreground"
+                )}
+                title={c.name}
+              />
             ))}
           </div>
         </div>
@@ -105,11 +149,11 @@ export const PreviewContainer: React.FC<PreviewContainerProps> = ({
             contentClassName={cn("flex flex-col", canvasClassName)}
             scrollRef={scrollRef}
           >
-            <div className="w-full min-h-full flex flex-col relative">
+            <div className="w-full h-full flex flex-col relative">
               <div
                 className={cn(
                   "w-full flex flex-col",
-                  align === "center" ? "my-auto items-center justify-center" : "items-start justify-start"
+                  align === "center" ? "flex-1 items-center justify-center" : "items-start justify-start"
                 )}
               >
                 {children}
@@ -117,11 +161,11 @@ export const PreviewContainer: React.FC<PreviewContainerProps> = ({
             </div>
           </BrowserWindow>
         ) : (
-          <div className="w-full min-h-full flex flex-col relative">
+          <div className="w-full h-full flex flex-col relative">
             <div
               className={cn(
                 "w-full flex flex-col",
-                align === "center" ? "my-auto items-center justify-center" : "items-start justify-start"
+                align === "center" ? "flex-1 items-center justify-center" : "items-start justify-start"
               )}
             >
               {children}

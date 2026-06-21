@@ -15,15 +15,54 @@ import { cn } from "@/lib/utils";
 
 import { HTMLMotionProps } from "framer-motion";
 
-export interface BrowserWindowProps extends Omit<HTMLMotionProps<"div">, "title"> {
+export type BrowserWindowColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type BrowserWindowShape = "default" | "square" | "rounded" | "sharp";
+export type BrowserWindowSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
+export interface BrowserWindowProps extends Omit<HTMLMotionProps<"div">, "title" | "color"> {
   children: React.ReactNode;
   contentClassName?: string;
   scrollRef?: React.RefObject<HTMLDivElement | null>;
   title?: React.ReactNode;
   headerAction?: React.ReactNode;
+  color?: BrowserWindowColor;
+  shape?: BrowserWindowShape;
+  spacing?: BrowserWindowSpacing;
 }
 
 type WindowState = "default" | "maximized" | "minimized";
+
+const colorThemeMap: Record<BrowserWindowColor, { border: string; header: string; ring: string }> = {
+  default: { border: "border-black/10 dark:border-white/10", header: "bg-[#f3f4f6]/80 dark:bg-muted/80", ring: "ring-black/5 dark:ring-white/5" },
+  blue: { border: "border-blue-500/20", header: "bg-blue-500/10", ring: "ring-blue-500/10" },
+  emerald: { border: "border-emerald-500/20", header: "bg-emerald-500/10", ring: "ring-emerald-500/10" },
+  rose: { border: "border-rose-500/20", header: "bg-rose-500/10", ring: "ring-rose-500/10" },
+  amber: { border: "border-amber-500/20", header: "bg-amber-500/10", ring: "ring-amber-500/10" },
+  violet: { border: "border-violet-500/20", header: "bg-violet-500/10", ring: "ring-violet-500/10" },
+  indigo: { border: "border-indigo-500/20", header: "bg-indigo-500/10", ring: "ring-indigo-500/10" },
+  sky: { border: "border-sky-500/20", header: "bg-sky-500/10", ring: "ring-sky-500/10" },
+  slate: { border: "border-slate-500/20", header: "bg-slate-500/10", ring: "ring-slate-500/10" },
+  orange: { border: "border-orange-500/20", header: "bg-orange-500/10", ring: "ring-orange-500/10" },
+};
+
+const getBorderRadius = (shape: BrowserWindowShape) => {
+  switch (shape) {
+    case "square": return 0;
+    case "sharp": return 4;
+    case "rounded": return 12;
+    case "default": return 16;
+  }
+};
+
+const getSpacingClass = (spacing: BrowserWindowSpacing) => {
+  switch (spacing) {
+    case "2x": return "p-2";
+    case "4x": return "p-4";
+    case "6x": return "p-6";
+    case "8x": return "p-8";
+    default: return "";
+  }
+};
 
 /**
  * BrowserWindow Component
@@ -33,7 +72,7 @@ type WindowState = "default" | "maximized" | "minimized";
  * PERFORMANCE: State-preserving (never remounts).
  */
 export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, BrowserWindowProps>(
-  ({ className, contentClassName, children, scrollRef, title, headerAction, ...props }, ref) => {
+  ({ className, contentClassName, children, scrollRef, title, headerAction, color = "default", shape = "default", spacing = "default", ...props }, ref) => {
     const [windowState, setWindowState] = React.useState<WindowState>("default");
     const [mounted, setMounted] = React.useState(false);
     const [rect, setRect] = React.useState<{ top: number; left: number; width: number; height: number } | null>(null);
@@ -51,6 +90,8 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
 
     const isMaximized = windowState === "maximized";
     const activeRect = customRect || rect;
+    const activeTheme = colorThemeMap[color];
+    const borderRadius = getBorderRadius(shape);
 
     React.useEffect(() => {
       setMounted(true);
@@ -266,15 +307,15 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
           left: activeRect?.left ?? 0,
           width: activeRect?.width ?? 0,
           height: activeRect?.height ?? 0,
-          borderRadius: 16,
+          borderRadius: borderRadius,
           margin: 0,
         }}
         transition={isInteracting ? { type: "tween", duration: 0 } : transition}
         className={cn(
           "flex flex-col bg-background overflow-hidden transform-gpu transition-shadow duration-300",
-          "border border-black/10 dark:border-white/10",
+          "border", activeTheme.border,
           customRect 
-            ? "shadow-2xl shadow-black/20 dark:shadow-black/60 ring-1 ring-black/5 dark:ring-white/5" 
+            ? cn("shadow-2xl shadow-black/20 dark:shadow-black/60 ring-1", activeTheme.ring)
             : "shadow-xl shadow-black/5 dark:shadow-black/40"
         )}
         style={{
@@ -299,7 +340,7 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
 
         {/* Header */}
         <div 
-          className="w-full h-10 shrink-0 bg-[#f3f4f6]/80 dark:bg-muted/80 backdrop-blur-md border-b border-black/5 dark:border-white/10 flex items-center px-4 justify-between z-50 select-none"
+          className={cn("w-full h-10 shrink-0 backdrop-blur-md border-b flex items-center px-4 justify-between z-50 select-none", activeTheme.header, activeTheme.border)}
           onPointerDown={(e) => {
             if ((e.target as HTMLElement).closest("button")) return;
             startInteraction(e, "drag");
@@ -350,7 +391,7 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
         <motion.div 
           layout
           ref={scrollRef as any}
-          className={cn("relative flex-1 w-full min-h-0 overflow-auto @container", contentClassName)}
+          className={cn("relative flex-1 w-full min-h-0 overflow-auto @container", getSpacingClass(spacing), contentClassName)}
           style={{ 
             pointerEvents: isInteracting ? "none" : "auto",
             transform: "translateZ(0)" // Scopes 'fixed' positioned descendants to this container
@@ -366,10 +407,11 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
         {/* Placeholder: Occupies the actual space in the layout */}
         <div 
           ref={placeholderRef}
-          className={cn("w-full h-full rounded-2xl relative", className)}
+          className={cn("w-full h-full relative", className)}
+          style={{ borderRadius }}
         >
           {customRect && windowState === "default" && (
-            <div className="absolute inset-0 border-2 border-dashed border-border/40 rounded-2xl flex items-center justify-center bg-muted/5">
+            <div className="absolute inset-0 border-2 border-dashed border-border/40 flex items-center justify-center bg-muted/5" style={{ borderRadius }}>
               <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest opacity-50 select-none">
                 Window Detached
               </span>

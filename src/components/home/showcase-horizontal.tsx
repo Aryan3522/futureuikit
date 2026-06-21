@@ -55,7 +55,7 @@ const showcaseItems = [
     description: "A high-end, cinematic 3D carousel specifically designed for automotive showcases. It features a responsive camera rig that navigates through the car's interior and exterior with premium damping and ultra-wide angles.",
     id: "automotive-carousel",
     render: () => (
-      <div className="w-full h-full rounded-2xl overflow-hidden border border-white/5 relative bg-black/20">
+      <div className="w-full h-full rounded-2xl overflow-hidden border border-border/10 relative bg-background">
         <AutomotiveCarousel slides={slides} />
       </div>
     )
@@ -67,7 +67,7 @@ const showcaseItems = [
     description: "A fully reusable, highly customizable, production-ready Workflow Builder component inspired by n8n, Zapier, and Langflow. Features infinite canvas, zoom/pan, custom nodes, bezier edge rendering, and full drag-and-drop support out of the box with zero heavy third-party canvas dependencies.",
     id: "workflow-builder",
     render: () => (
-      <div className="w-full h-full rounded-2xl overflow-hidden border border-white/5 relative bg-black/20">
+      <div className="w-full h-full rounded-2xl overflow-hidden border border-border/10 relative bg-background">
         <WorkflowBuilder
           variant="glass"
           initialNodes={[
@@ -94,11 +94,11 @@ const showcaseItems = [
     description: "A signature pill-shaped button featuring a premium glass-morph interaction. Initially covered by a full-width colored glass sheet, the layer smoothly shrinks into a compact circle on hover/tap, revealing a hidden icon while emitting a vibrant outer glow.",
     id: "glowy",
     render: () => (
-      <div className="w-full h-full rounded-2xl overflow-hidden border border-white/5 relative bg-black/40 p-8 flex items-center justify-center">
+      <div className="w-full h-full rounded-2xl overflow-hidden border border-border/10 relative bg-background p-8 flex items-center justify-center">
         <div className="flex flex-wrap gap-6 items-center justify-center w-full">
-          <GlowyButton variant="primary">Primary</GlowyButton>
-          <GlowyButton variant="success">Success</GlowyButton>
-          <GlowyButton variant="danger">Danger</GlowyButton>
+          <GlowyButton>Primary</GlowyButton>
+          <GlowyButton>Success</GlowyButton>
+          <GlowyButton>Danger</GlowyButton>
         </div>
       </div>
     )
@@ -133,7 +133,7 @@ const showcaseItems = [
       };
 
       return (
-        <div className="w-full h-full rounded-2xl overflow-hidden border border-white/5 relative bg-black/20">
+        <div className="w-full h-full rounded-2xl overflow-hidden border border-border/10 relative bg-background">
           <ChatDemo />
         </div>
       );
@@ -146,9 +146,9 @@ const showcaseItems = [
     description: "A completely unique, ultra-premium, and modernistic card component. Features reactive 3D tilt, a dynamic mouse-tracking spotlight glow, tactile glassmorphism with subtle noise texture, and an animated ambient border.",
     id: "nexus-card",
     render: () => (
-      <div className="w-full h-full flex items-center justify-center p-8 bg-black/10 rounded-2xl overflow-hidden relative">
+      <div className="w-full h-full flex items-center justify-center p-8 bg-background rounded-2xl overflow-hidden relative">
         <NexusCard className="w-80 h-96 flex flex-col justify-center text-center" variant="neon">
-          <div className="w-16 h-16 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-4 border border-white/5">
+          <div className="w-16 h-16 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-4 border border-border/20">
             <User className="w-8 h-8 text-secondary" />
           </div>
           <h4 className="text-xl font-display font-medium text-foreground">Aryan Hooda</h4>
@@ -203,8 +203,8 @@ export function ShowcaseHorizontal() {
     <section ref={targetRef} className="relative h-[500vh] bg-background z-20">
       <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden bg-background">
 
-        <div className="absolute inset-0 bg-secondary/5 blur-[150px] rounded-full w-[600px] h-[600px] -left-1/4 top-1/2 -translate-y-1/2 pointer-events-none opacity-50" />
-        <div className="absolute inset-0 bg-primary/5 blur-[150px] rounded-full w-[600px] h-[600px] -right-1/4 top-1/4 pointer-events-none opacity-30" />
+        <div className="absolute inset-0 bg-secondary/5 blur-[150px] rounded-full w-[600px] h-[600px] -left-1/4 top-1/2 -translate-y-1/2 pointer-events-none opacity-30" />
+        <div className="absolute inset-0 bg-primary/5 blur-[150px] rounded-full w-[600px] h-[600px] -right-1/4 top-1/4 pointer-events-none opacity-20" />
 
         <motion.div ref={trackRef} style={{ x }} className="flex h-full items-center w-full">
           {showcaseItems.map((item) => (
@@ -225,7 +225,7 @@ export function ShowcaseHorizontal() {
                       <span className="font-mono text-5xl md:text-7xl font-black text-secondary/10 select-none">
                         {item.number}
                       </span>
-                      <Badge variant="default" className="bg-secondary/10 text-secondary border-secondary/20 font-mono-label text-xs py-1.5 px-4">
+                      <Badge variant="outline" className="bg-secondary/10 text-secondary border-secondary/20 font-mono-label text-xs py-1.5 px-4">
                         {item.category}
                       </Badge>
                     </div>
@@ -246,7 +246,7 @@ export function ShowcaseHorizontal() {
                     <item.render />
 
                     <div className="absolute top-6 right-6 z-50 pointer-events-none">
-                      <div className="bg-background/80 backdrop-blur-md border border-white/10 rounded-full px-4 py-1.5 flex items-center gap-2">
+                      <div className="bg-background/80 backdrop-blur-md border border-border/10 rounded-full px-4 py-1.5 flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />
                         <span className="text-[10px] font-mono-label uppercase tracking-widest text-muted-foreground">LIVE_INSTANCE</span>
                       </div>

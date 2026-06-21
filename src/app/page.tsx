@@ -4,6 +4,7 @@ import { GlassPanel } from "@/components/ui/glass-panel";
 import { GlowyButton } from "@/components/ui/glowy-button";
 import { Sparkles, Cpu, Shield, Activity, Terminal, Globe } from "lucide-react";
 import { AnimatedTerminal } from "@/components/home/animated-terminal";
+import { InteractiveFuture } from "@/components/home/interactive-future";
 import { HeroSection } from "@/components/home/hero-section";
 import { ComponentsMarquee } from "@/components/home/components-marquee";
 import { ShowcaseHorizontal } from "@/components/home/showcase-horizontal";
@@ -96,9 +97,9 @@ export default function Home() {
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-4">
                 <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
-                  <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
-                  <div className="w-3 h-3 rounded-full bg-emerald-500/80"></div>
+                  <div className="w-3 h-3 rounded-full bg-border"></div>
+                  <div className="w-3 h-3 rounded-full bg-muted"></div>
+                  <div className="w-3 h-3 rounded-full bg-muted-foreground/30"></div>
                 </div>
                 <span className="font-mono-label text-xs text-muted-foreground ml-2">terminal</span>
               </div>
@@ -116,14 +117,16 @@ export default function Home() {
 
           <div className="relative z-10 max-w-2xl mx-auto space-y-10">
             <h2 className="font-display text-4xl md:text-5xl font-light text-foreground">
-              READY TO BUILD THE <span className="text-secondary italic">FUTURE</span>?
+              READY TO BUILD THE{" "}
+              <InteractiveFuture />
+              ?
             </h2>
             <p className="font-display text-lg text-muted-foreground max-w-xl mx-auto">
               Stop building boring websites. Start using Future UI to create stunning, interactive, and highly performant web applications today.
             </p>
             <div className="pt-8">
               <Link href="/components" className="w-full sm:w-auto">
-                <GlowyButton asDiv variant="primary" className="h-16 px-12 text-sm font-label-caps tracking-[0.2em] luminous-glow">
+                <GlowyButton asDiv className="h-16 px-12 text-sm font-label-caps tracking-[0.2em] luminous-glow">
                   GET STARTED
                 </GlowyButton>
               </Link>

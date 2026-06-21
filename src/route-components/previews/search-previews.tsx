@@ -4,11 +4,13 @@ import React from "react";
 import { Search as SearchComponent } from "@/components/ui/search";
 import { SearchInput } from "@/components/ui/search-input";
 import { componentsList } from "@/data/component-library-data";
-import { PreviewContainer } from "../preview-engine/PreviewContainer";
+import { PreviewContainer, DEFAULT_COLORS } from "../preview-engine/PreviewContainer";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const SearchPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [variant, setVariant] = React.useState<"standard" | "compact" | "floating" | "command" | "icon">("standard");
   const [inputVariant, setInputVariant] = React.useState<"standard" | "compact" | "floating" | "command">("floating");
   const [size, setSize] = React.useState<"sm" | "md" | "lg">("md");
@@ -63,14 +65,14 @@ export const SearchPreview: React.FC = () => {
       variants={["standard", "compact", "floating", "command", "icon"]}
       activeVariant={variant}
       onVariantChange={setVariant as any}
-      extraControls={controls}
+      extraControls={controls} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className="w-full h-full flex flex-col items-center justify-center min-h-100 relative overflow-hidden">
          <div className="w-full max-w-2xl mx-auto relative flex justify-center">
            <SearchComponent
              variant={variant}
              inputVariant={inputVariant}
-             size={size}
+
              loading={loading}
              disabled={disabled}
              clearable={clearable}
@@ -148,6 +150,8 @@ export const SearchPreview: React.FC = () => {
 };
 
 export const SearchInputPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [variant, setVariant] = React.useState<"default" | "minimal" | "glass" | "pill">("default");
   return (
     <PreviewContainer
@@ -155,7 +159,7 @@ export const SearchInputPreview: React.FC = () => {
       description="A highly styled, interactive search input component with micro-animations."
       variants={["default", "minimal", "glass", "pill"]}
       activeVariant={variant}
-      onVariantChange={setVariant as any}
+      onVariantChange={setVariant as any} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className="w-full max-w-sm">
         <SearchInput placeholder="Try searching 'button'..." variant={variant} data={componentsList} />

@@ -14,6 +14,10 @@ import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import Image from "next/image";
 
+export type CarouselSliderColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type CarouselSliderShape = "default" | "square" | "rounded" | "sharp";
+export type CarouselSliderSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
 export interface CarouselSlide {
   id: string | number;
   image: string;
@@ -31,7 +35,52 @@ export interface CarouselSliderProps {
   showDots?: boolean;
   pauseOnHover?: boolean;
   variant?: string;
+  color?: CarouselSliderColor;
+  shape?: CarouselSliderShape;
+  spacing?: CarouselSliderSpacing;
 }
+
+const colorThemeMap: Record<CarouselSliderColor, { bg: string; text: string; tagBg: string }> = {
+  default: { bg: "bg-primary", text: "text-primary", tagBg: "bg-primary text-primary-foreground" },
+  blue: { bg: "bg-blue-600 dark:bg-blue-500", text: "text-blue-600 dark:text-blue-500", tagBg: "bg-blue-600 text-white" },
+  emerald: { bg: "bg-emerald-600 dark:bg-emerald-500", text: "text-emerald-600 dark:text-emerald-500", tagBg: "bg-emerald-600 text-white" },
+  rose: { bg: "bg-rose-600 dark:bg-rose-500", text: "text-rose-600 dark:text-rose-500", tagBg: "bg-rose-600 text-white" },
+  amber: { bg: "bg-amber-600 dark:bg-amber-500", text: "text-amber-600 dark:text-amber-500", tagBg: "bg-amber-600 text-white" },
+  violet: { bg: "bg-violet-600 dark:bg-violet-500", text: "text-violet-600 dark:text-violet-500", tagBg: "bg-violet-600 text-white" },
+  indigo: { bg: "bg-indigo-600 dark:bg-indigo-500", text: "text-indigo-600 dark:text-indigo-500", tagBg: "bg-indigo-600 text-white" },
+  sky: { bg: "bg-sky-600 dark:bg-sky-500", text: "text-sky-600 dark:text-sky-500", tagBg: "bg-sky-600 text-white" },
+  slate: { bg: "bg-slate-600 dark:bg-slate-500", text: "text-slate-600 dark:text-slate-400", tagBg: "bg-slate-600 text-white" },
+  orange: { bg: "bg-orange-600 dark:bg-orange-500", text: "text-orange-600 dark:text-orange-500", tagBg: "bg-orange-600 text-white" },
+};
+
+const getShapeClass = (shape: CarouselSliderShape) => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-lg sm:rounded-xl";
+    case "rounded": return "rounded-2xl sm:rounded-3xl";
+    case "default": return "rounded-3xl sm:rounded-[2.5rem]";
+  }
+};
+
+const getSpacingClass = (spacing: CarouselSliderSpacing) => {
+  switch (spacing) {
+    case "2x": return "p-4 md:p-6";
+    case "4x": return "p-6 md:p-8";
+    case "6x": return "p-8 md:p-12";
+    case "8x": return "p-10 md:p-16";
+    default: return "p-8 md:p-12";
+  }
+};
+
+const getHeightClass = (spacing: CarouselSliderSpacing) => {
+  switch (spacing) {
+    case "2x": return "h-[300px] md:h-[400px]";
+    case "4x": return "h-[350px] md:h-[450px]";
+    case "6x": return "h-[400px] md:h-[500px]";
+    case "8x": return "h-[450px] md:h-[600px]";
+    default: return "h-[400px] md:h-[500px]"; // Adjusted to md:h-[500px] instead of md:h-125 for valid tailwind class
+  }
+};
 
 export const CarouselSlider: React.FC<CarouselSliderProps> = React.memo(({ 
           slides = [], 
@@ -40,11 +89,19 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = React.memo(({
           showArrows = true,
           showDots = true,
           pauseOnHover = true,
-          variant = "modern"
+          variant = "modern",
+          color = "default",
+          shape = "default",
+          spacing = "default",
         }) => {
           const [currentIndex, setCurrentIndex] = useState(0);
           const [isPaused, setIsPaused] = useState(false);
           const [direction, setDirection] = useState(0);
+
+          const activeTheme = colorThemeMap[color];
+          const shapeClass = getShapeClass(shape);
+          const spacingClass = getSpacingClass(spacing);
+          const heightClass = getHeightClass(spacing);
 
           const nextSlide = useCallback(() => {
             setDirection(1);
@@ -90,7 +147,9 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = React.memo(({
           return (
             <div 
               className={cn(
-                "group relative w-full max-w-5xl mx-auto h-[400px] md:h-125 overflow-hidden rounded-3xl bg-black shadow-2xl", 
+                "group relative w-full max-w-5xl mx-auto overflow-hidden bg-black shadow-2xl", 
+                shapeClass,
+                heightClass,
                 className
               )}
               onMouseEnter={() => pauseOnHover && setIsPaused(true)}
@@ -134,10 +193,10 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = React.memo(({
                       className="object-cover"
                       sizes="(max-width: 1280px) 100vw, 1200px"
                     />
-                    <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent z-10" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent z-10" />
                   </div>
 
-                  <div className="absolute inset-0 z-20 flex flex-col justify-end p-8 md:p-12 text-white pointer-events-none">
+                  <div className={cn("absolute inset-0 z-20 flex flex-col justify-end text-white pointer-events-none", spacingClass)}>
                     <motion.div
                       initial={{ y: 30, opacity: 0, filter: "blur(10px)" }}
                       animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
@@ -150,7 +209,7 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = React.memo(({
                         transition={{ delay: 0.5, duration: 0.4 }}
                         className={cn(
                           "inline-block self-start px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
-                          slides[currentIndex].tagBg || "bg-primary"
+                          slides[currentIndex].tagBg || activeTheme.tagBg
                         )}
                       >
                         {slides[currentIndex].tag}
@@ -161,7 +220,7 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = React.memo(({
                       </h2>
                       
                       <div className="flex items-center gap-2 text-xs md:text-sm text-white/80 font-bold italic tracking-wide uppercase">
-                        <MapPin size={16} className="text-primary" />
+                        <MapPin size={16} className={activeTheme.text} />
                         {slides[currentIndex].location}
                       </div>
                     </motion.div>
@@ -206,7 +265,7 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = React.memo(({
                       {currentIndex === idx && (
                         <motion.div
                           layoutId="activeDot"
-                          className="absolute inset-0 bg-primary"
+                          className={cn("absolute inset-0", activeTheme.bg)}
                           transition={{ type: "spring", stiffness: 300, damping: 30 }}
                         />
                       )}
@@ -221,7 +280,7 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = React.memo(({
                    initial={{ width: "0%" }}
                    animate={{ width: "100%" }}
                    transition={{ duration: autoPlayInterval / 1000, ease: "linear" }}
-                   className="h-full bg-primary"
+                   className={cn("h-full", activeTheme.bg)}
                  />
               </div>
             </div>

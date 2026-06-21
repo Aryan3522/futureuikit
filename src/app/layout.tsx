@@ -183,12 +183,14 @@ export default function RootLayout({
       className={`${GeistSans.variable} ${jetbrainsMono.variable}`}
     >
       <head>
-        <script
+        <Script
+          id="json-ld"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <script
+        <Script
           id="dark-mode"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(){try{document.documentElement.classList.add('dark');}catch(_){}})();`,
           }}

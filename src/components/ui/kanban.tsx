@@ -22,6 +22,10 @@ import { cn } from "@/lib/utils";
 // TYPES & CONTEXT
 // ==========================================
 
+export type KanbanColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type KanbanShape = "default" | "square" | "rounded" | "sharp";
+export type KanbanSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
 export interface KanbanCardData {
   id: string;
   title: string;
@@ -44,6 +48,9 @@ type DragType = "card" | "column" | null;
 
 interface KanbanContextType {
   variant: "default" | "compact" | "enterprise" | "minimal";
+  color: KanbanColor;
+  shape: KanbanShape;
+  spacing: KanbanSpacing;
   activeDragId: string | null;
   activeDragType: DragType | null;
   activeDragColumnId: string | null;
@@ -69,6 +76,46 @@ export const useKanban = () => {
   return ctx;
 };
 
+const colorThemeMap: Record<KanbanColor, { bgIndicator: string; hoverBorder: string; textIndicator: string; focusRing: string; bgSoft: string; borderIndicator: string }> = {
+  default: { bgIndicator: "bg-primary shadow-[0_0_8px_rgba(var(--primary),0.5)]", hoverBorder: "hover:border-primary/50", textIndicator: "text-primary", focusRing: "focus:ring-primary/50", bgSoft: "bg-primary/5", borderIndicator: "border-primary/40 hover:border-l-primary" },
+  blue: { bgIndicator: "bg-blue-600 dark:bg-blue-500 shadow-[0_0_8px_rgba(37,99,235,0.5)] dark:shadow-[0_0_8px_rgba(59,130,246,0.5)]", hoverBorder: "hover:border-blue-600/50 dark:hover:border-blue-500/50", textIndicator: "text-blue-600 dark:text-blue-500", focusRing: "focus:ring-blue-600/50 dark:focus:ring-blue-500/50", bgSoft: "bg-blue-600/5 dark:bg-blue-500/5", borderIndicator: "border-blue-600/40 dark:border-blue-500/40 hover:border-l-blue-600 dark:hover:border-l-blue-500" },
+  emerald: { bgIndicator: "bg-emerald-600 dark:bg-emerald-500 shadow-[0_0_8px_rgba(22,163,74,0.5)] dark:shadow-[0_0_8px_rgba(34,197,94,0.5)]", hoverBorder: "hover:border-emerald-600/50 dark:hover:border-emerald-500/50", textIndicator: "text-emerald-600 dark:text-emerald-500", focusRing: "focus:ring-emerald-600/50 dark:focus:ring-emerald-500/50", bgSoft: "bg-emerald-600/5 dark:bg-emerald-500/5", borderIndicator: "border-emerald-600/40 dark:border-emerald-500/40 hover:border-l-emerald-600 dark:hover:border-l-emerald-500" },
+  rose: { bgIndicator: "bg-rose-600 dark:bg-rose-500 shadow-[0_0_8px_rgba(225,29,72,0.5)] dark:shadow-[0_0_8px_rgba(244,63,94,0.5)]", hoverBorder: "hover:border-rose-600/50 dark:hover:border-rose-500/50", textIndicator: "text-rose-600 dark:text-rose-500", focusRing: "focus:ring-rose-600/50 dark:focus:ring-rose-500/50", bgSoft: "bg-rose-600/5 dark:bg-rose-500/5", borderIndicator: "border-rose-600/40 dark:border-rose-500/40 hover:border-l-rose-600 dark:hover:border-l-rose-500" },
+  amber: { bgIndicator: "bg-amber-600 dark:bg-amber-500 shadow-[0_0_8px_rgba(217,119,6,0.5)] dark:shadow-[0_0_8px_rgba(245,158,11,0.5)]", hoverBorder: "hover:border-amber-600/50 dark:hover:border-amber-500/50", textIndicator: "text-amber-600 dark:text-amber-500", focusRing: "focus:ring-amber-600/50 dark:focus:ring-amber-500/50", bgSoft: "bg-amber-600/5 dark:bg-amber-500/5", borderIndicator: "border-amber-600/40 dark:border-amber-500/40 hover:border-l-amber-600 dark:hover:border-l-amber-500" },
+  violet: { bgIndicator: "bg-violet-600 dark:bg-violet-500 shadow-[0_0_8px_rgba(124,58,237,0.5)] dark:shadow-[0_0_8px_rgba(139,92,246,0.5)]", hoverBorder: "hover:border-violet-600/50 dark:hover:border-violet-500/50", textIndicator: "text-violet-600 dark:text-violet-500", focusRing: "focus:ring-violet-600/50 dark:focus:ring-violet-500/50", bgSoft: "bg-violet-600/5 dark:bg-violet-500/5", borderIndicator: "border-violet-600/40 dark:border-violet-500/40 hover:border-l-violet-600 dark:hover:border-l-violet-500" },
+  indigo: { bgIndicator: "bg-indigo-600 dark:bg-indigo-500 shadow-[0_0_8px_rgba(79,70,229,0.5)] dark:shadow-[0_0_8px_rgba(99,102,241,0.5)]", hoverBorder: "hover:border-indigo-600/50 dark:hover:border-indigo-500/50", textIndicator: "text-indigo-600 dark:text-indigo-500", focusRing: "focus:ring-indigo-600/50 dark:focus:ring-indigo-500/50", bgSoft: "bg-indigo-600/5 dark:bg-indigo-500/5", borderIndicator: "border-indigo-600/40 dark:border-indigo-500/40 hover:border-l-indigo-600 dark:hover:border-l-indigo-500" },
+  sky: { bgIndicator: "bg-sky-600 dark:bg-sky-500 shadow-[0_0_8px_rgba(2,132,199,0.5)] dark:shadow-[0_0_8px_rgba(14,165,233,0.5)]", hoverBorder: "hover:border-sky-600/50 dark:hover:border-sky-500/50", textIndicator: "text-sky-600 dark:text-sky-500", focusRing: "focus:ring-sky-600/50 dark:focus:ring-sky-500/50", bgSoft: "bg-sky-600/5 dark:bg-sky-500/5", borderIndicator: "border-sky-600/40 dark:border-sky-500/40 hover:border-l-sky-600 dark:hover:border-l-sky-500" },
+  slate: { bgIndicator: "bg-slate-600 dark:bg-slate-500 shadow-[0_0_8px_rgba(71,85,105,0.5)] dark:shadow-[0_0_8px_rgba(100,116,139,0.5)]", hoverBorder: "hover:border-slate-600/50 dark:hover:border-slate-500/50", textIndicator: "text-slate-600 dark:text-slate-500", focusRing: "focus:ring-slate-600/50 dark:focus:ring-slate-500/50", bgSoft: "bg-slate-600/5 dark:bg-slate-500/5", borderIndicator: "border-slate-600/40 dark:border-slate-500/40 hover:border-l-slate-600 dark:hover:border-l-slate-500" },
+  orange: { bgIndicator: "bg-orange-600 dark:bg-orange-500 shadow-[0_0_8px_rgba(234,88,12,0.5)] dark:shadow-[0_0_8px_rgba(249,115,22,0.5)]", hoverBorder: "hover:border-orange-600/50 dark:hover:border-orange-500/50", textIndicator: "text-orange-600 dark:text-orange-500", focusRing: "focus:ring-orange-600/50 dark:focus:ring-orange-500/50", bgSoft: "bg-orange-600/5 dark:bg-orange-500/5", borderIndicator: "border-orange-600/40 dark:border-orange-500/40 hover:border-l-orange-600 dark:hover:border-l-orange-500" },
+};
+
+const getShapeClass = (shape: KanbanShape, isCard?: boolean) => {
+  if (isCard) {
+    switch (shape) {
+      case "square": return "rounded-none";
+      case "sharp": return "rounded-sm";
+      case "rounded": return "rounded-md";
+      case "default": return "rounded-lg";
+    }
+  }
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-md";
+    case "rounded": return "rounded-2xl";
+    case "default": return "rounded-xl";
+  }
+};
+
+const getSpacingClass = (spacing: KanbanSpacing) => {
+  switch (spacing) {
+    case "2x": return "gap-2";
+    case "4x": return "gap-4";
+    case "6x": return "gap-6";
+    case "8x": return "gap-8";
+    default: return "gap-4";
+  }
+};
+
 // ==========================================
 // BOARD COMPONENT
 // ==========================================
@@ -76,6 +123,9 @@ export const useKanban = () => {
 export interface KanbanBoardProps {
   initialColumns?: KanbanColumnData[];
   variant?: "default" | "compact" | "enterprise" | "minimal";
+  color?: KanbanColor;
+  shape?: KanbanShape;
+  spacing?: KanbanSpacing;
   onChange?: (columns: KanbanColumnData[]) => void;
   className?: string;
 }
@@ -83,6 +133,9 @@ export interface KanbanBoardProps {
 export const KanbanBoard = React.memo(function KanbanBoard({
   initialColumns = [],
   variant = "default",
+  color = "default",
+  shape = "default",
+  spacing = "default",
   onChange,
   className
 }: KanbanBoardProps) {
@@ -107,6 +160,10 @@ export const KanbanBoard = React.memo(function KanbanBoard({
     columnId: null,
     card: null
   });
+
+  const activeTheme = colorThemeMap[color];
+  const shapeClass = getShapeClass(shape);
+  const spacingClass = getSpacingClass(spacing);
 
   // Sync back to parent if uncontrolled
   useEffect(() => {
@@ -263,6 +320,9 @@ export const KanbanBoard = React.memo(function KanbanBoard({
   return (
     <KanbanContext.Provider value={{
       variant,
+      color,
+      shape,
+      spacing,
       activeDragId,
       activeDragType,
       activeDragColumnId,
@@ -279,7 +339,8 @@ export const KanbanBoard = React.memo(function KanbanBoard({
     }}>
       <div 
         className={cn(
-          "flex flex-col md:flex-row items-start gap-4 h-full w-full overflow-y-auto md:overflow-y-hidden md:overflow-x-auto md:snap-x md:snap-mandatory pb-4 custom-scrollbar select-none relative",
+          "flex flex-col md:flex-row items-start h-full w-full overflow-y-auto md:overflow-y-hidden md:overflow-x-auto md:snap-x md:snap-mandatory pb-4 custom-scrollbar select-none relative",
+          spacingClass,
           className
         )}
       >
@@ -294,7 +355,9 @@ export const KanbanBoard = React.memo(function KanbanBoard({
         <button 
           onClick={() => openModal("add-column", null)}
           className={cn(
-            "flex items-center justify-center gap-2 shrink-0 w-full md:w-80 h-16 rounded-xl border-2 border-dashed border-border/50 hover:border-primary/50 text-muted-foreground hover:text-foreground transition-all bg-background/30",
+            "flex items-center justify-center gap-2 shrink-0 w-full md:w-80 h-16 border-2 border-dashed border-border/50 text-muted-foreground hover:text-foreground transition-all bg-background/30",
+            shapeClass,
+            activeTheme.hoverBorder,
             variant === "minimal" && "border-none bg-transparent hover:bg-muted/30 h-10 w-full md:w-40 justify-start px-2",
             variant === "compact" && "md:w-72"
           )}
@@ -334,6 +397,8 @@ export interface KanbanColumnProps {
 export const KanbanColumn = React.memo(function KanbanColumn({ id, title, count, children, className }: KanbanColumnProps) {
   const { 
     variant, 
+    color,
+    shape,
     handleDragStart, 
     handleDragOver, 
     handleDrop, 
@@ -348,6 +413,9 @@ export const KanbanColumn = React.memo(function KanbanColumn({ id, title, count,
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const activeTheme = colorThemeMap[color];
+  const shapeClass = getShapeClass(shape);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -387,7 +455,8 @@ export const KanbanColumn = React.memo(function KanbanColumn({ id, title, count,
       onDrop={onDrop}
       onDragEnd={handleDragEnd}
       className={cn(
-        "flex flex-col shrink-0 w-full md:w-80 max-w-full h-full max-h-full rounded-xl transition-all duration-200 md:snap-center",
+        "flex flex-col shrink-0 w-full md:w-80 max-w-full h-full max-h-full transition-all duration-200 md:snap-center",
+        shapeClass,
         variant === "default" && "bg-muted/40 border border-border/50",
         variant === "compact" && "md:w-72 bg-muted/20 border-border/30",
         variant === "enterprise" && "bg-muted/30 border border-border shadow-sm",
@@ -434,7 +503,7 @@ export const KanbanColumn = React.memo(function KanbanColumn({ id, title, count,
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: -5 }}
                 transition={{ duration: 0.1 }}
-                className="absolute right-0 top-full mt-1 w-36 bg-background border border-border rounded-md shadow-lg overflow-hidden flex flex-col z-50"
+                className={cn("absolute right-0 top-full mt-1 w-36 bg-background border border-border shadow-lg overflow-hidden flex flex-col z-50", shapeClass)}
               >
                 <button 
                   onClick={() => { setIsDropdownOpen(false); openModal("add", id); }}
@@ -463,12 +532,12 @@ export const KanbanColumn = React.memo(function KanbanColumn({ id, title, count,
       <div className={cn(
         "flex-1 overflow-y-auto overflow-x-hidden p-3 pt-0 flex flex-col gap-2 custom-scrollbar",
         variant === "minimal" && "px-0",
-        isDropTarget && "bg-primary/5 rounded-b-xl"
+        isDropTarget && activeTheme.bgSoft
       )}>
         {children}
         
         {isDropTarget && (
-          <div className="h-20 border-2 border-dashed border-primary/40 rounded-lg bg-primary/5" />
+          <div className={cn("h-20 border-2 border-dashed bg-transparent rounded-lg", activeTheme.borderIndicator, activeTheme.bgSoft)} />
         )}
 
         <button 
@@ -504,6 +573,8 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
   
   const { 
     variant, 
+    color,
+    shape,
     handleDragStart, 
     handleDragOver, 
     handleDrop, 
@@ -516,6 +587,10 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const activeTheme = colorThemeMap[color];
+  const shapeClass = getShapeClass(shape, true);
+  const modalShapeClass = getShapeClass(shape);
 
   const isDragging = activeDragId === id;
   const isDropTarget = dropTargetId === id;
@@ -559,7 +634,7 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
   return (
     <>
       {isDropTarget && (
-        <div className="h-1 bg-primary rounded-full my-1 shadow-[0_0_8px_rgba(var(--primary),0.5)]" />
+        <div className={cn("h-1 rounded-full my-1", activeTheme.bgIndicator)} />
       )}
       <div
         draggable
@@ -569,11 +644,13 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
         onDragEnd={handleDragEnd}
         onClick={() => openModal("edit", columnId, props)}
         className={cn(
-          "group relative cursor-grab active:cursor-grabbing rounded-lg p-3 flex flex-col gap-2.5 transition-all",
+          "group relative cursor-grab active:cursor-grabbing p-3 flex flex-col gap-2.5 transition-all",
+          shapeClass,
           variant === "default" && "bg-background border border-border shadow-sm hover:shadow-md",
           variant === "compact" && "bg-background border border-border/50 p-2 text-sm",
-          variant === "enterprise" && "bg-card border border-border/50 shadow-[0_1px_2px_rgba(0,0,0,0.05)] hover:border-primary/30",
-          variant === "minimal" && "bg-background border-l-2 border-l-border border-y border-y-transparent border-r border-r-transparent hover:border-l-primary hover:bg-muted/30 rounded-none rounded-r-lg",
+          variant === "enterprise" && "bg-card border border-border/50 shadow-[0_1px_2px_rgba(0,0,0,0.05)]",
+          variant === "minimal" && "bg-background border-l-2 border-l-border border-y border-y-transparent border-r border-r-transparent hover:bg-muted/30 rounded-none",
+          (variant === "enterprise" || variant === "minimal") && activeTheme.borderIndicator,
           isDragging && "opacity-40 scale-95 shadow-xl rotate-1 z-50",
           className
         )}
@@ -595,7 +672,7 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: -5 }}
                 transition={{ duration: 0.1 }}
-                className="absolute right-0 top-full mt-1 w-32 bg-background border border-border rounded-md shadow-lg overflow-hidden flex flex-col z-50"
+                className={cn("absolute right-0 top-full mt-1 w-32 bg-background border border-border shadow-lg overflow-hidden flex flex-col z-50", modalShapeClass)}
               >
                 <button 
                   onClick={(e) => { e.stopPropagation(); setIsDropdownOpen(false); openModal("edit", columnId, props); }}
@@ -673,11 +750,11 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
             {assignees && assignees.length > 0 && (
               <div className="flex items-center -space-x-1.5">
                 {assignees.map((user, i) => (
-                  <div key={i} className="w-5 h-5 rounded-full bg-primary/20 border-2 border-background flex items-center justify-center overflow-hidden">
+                  <div key={i} className={cn("w-5 h-5 border-2 border-background flex items-center justify-center overflow-hidden", activeTheme.bgSoft, shapeClass)}>
                     {user.avatar ? (
                       <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-[8px] font-bold text-primary">{user.name.charAt(0)}</span>
+                      <span className={cn("text-[8px] font-bold", activeTheme.textIndicator)}>{user.name.charAt(0)}</span>
                     )}
                   </div>
                 ))}
@@ -706,6 +783,10 @@ function KanbanModal({
   onClose: () => void;
   onSave: (data: Partial<KanbanCardData> & { columnTitle?: string }) => void;
 }) {
+  const { color, shape } = useKanban();
+  const activeTheme = colorThemeMap[color];
+  const shapeClass = getShapeClass(shape);
+
   const [formData, setFormData] = useState<Partial<KanbanCardData> & { columnTitle?: string }>(
     initialData || { title: "", description: "", priority: "low", columnTitle: "" }
   );
@@ -734,7 +815,7 @@ function KanbanModal({
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="relative w-full max-w-lg bg-background border border-border shadow-2xl rounded-2xl p-6 flex flex-col gap-6"
+        className={cn("relative w-full max-w-lg bg-background border border-border shadow-2xl p-6 flex flex-col gap-6", shapeClass)}
       >
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold tracking-tight">
@@ -756,7 +837,7 @@ function KanbanModal({
                 value={formData.columnTitle || ""}
                 onChange={e => setFormData({ ...formData, columnTitle: e.target.value })}
                 placeholder="e.g. Backlog, Review, Done"
-                className="w-full px-3 py-2 bg-transparent border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                className={cn("w-full px-3 py-2 bg-transparent border border-border focus:outline-none focus:ring-2 text-sm", shapeClass, activeTheme.focusRing)}
                 required
               />
             </div>
@@ -770,7 +851,7 @@ function KanbanModal({
                   value={formData.title || ""}
                   onChange={e => setFormData({ ...formData, title: e.target.value })}
                   placeholder="e.g. Design homepage hero section"
-                  className="w-full px-3 py-2 bg-transparent border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                  className={cn("w-full px-3 py-2 bg-transparent border border-border focus:outline-none focus:ring-2 text-sm", shapeClass, activeTheme.focusRing)}
                   required
                 />
               </div>
@@ -781,7 +862,7 @@ function KanbanModal({
                   value={formData.description || ""}
                   onChange={e => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Add more details to this task..."
-                  className="w-full px-3 py-2 bg-transparent border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm min-h-[100px] resize-y"
+                  className={cn("w-full px-3 py-2 bg-transparent border border-border focus:outline-none focus:ring-2 text-sm min-h-[100px] resize-y", shapeClass, activeTheme.focusRing)}
                 />
               </div>
 
@@ -790,7 +871,7 @@ function KanbanModal({
                 <select 
                   value={formData.priority || "low"}
                   onChange={e => setFormData({ ...formData, priority: e.target.value as any })}
-                  className="w-full px-3 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm appearance-none"
+                  className={cn("w-full px-3 py-2 bg-background border border-border focus:outline-none focus:ring-2 text-sm appearance-none", shapeClass, activeTheme.focusRing)}
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -798,22 +879,32 @@ function KanbanModal({
                   <option value="urgent">Urgent</option>
                 </select>
               </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium">Due Date</label>
+                <input 
+                  type="date"
+                  value={formData.dueDate || ""}
+                  onChange={e => setFormData({ ...formData, dueDate: e.target.value })}
+                  className={cn("w-full px-3 py-2 bg-transparent border border-border focus:outline-none focus:ring-2 text-sm", shapeClass, activeTheme.focusRing)}
+                />
+              </div>
             </>
           )}
 
-          <div className="flex justify-end gap-3 mt-4">
+          <div className="flex items-center justify-end gap-2 mt-4 pt-4 border-t border-border/50">
             <button 
               type="button" 
               onClick={onClose}
-              className="px-4 py-2 rounded-lg text-sm font-medium hover:bg-muted transition-colors"
+              className={cn("px-4 py-2 text-sm font-medium hover:bg-muted text-muted-foreground transition-colors", shapeClass)}
             >
               Cancel
             </button>
             <button 
               type="submit"
-              className="px-4 py-2 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm"
+              className={cn("px-4 py-2 text-sm font-medium bg-foreground text-background transition-colors", shapeClass)}
             >
-              {type === "add" ? "Create Card" : type === "edit" ? "Save Changes" : "Create Column"}
+              Save
             </button>
           </div>
         </form>

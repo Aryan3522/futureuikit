@@ -27,7 +27,7 @@ import {
 import { Toggle } from "@/components/ui/toggle";
 import { ErrorPage } from "@/components/ui/error-page";
 import { CinematicError } from "@/components/ui/cinematic-error";
-import { PreviewContainer } from "../preview-engine/PreviewContainer";
+import { PreviewContainer, DEFAULT_COLORS } from "../preview-engine/PreviewContainer";
 
 export const ToastPreview: React.FC = () => {
   const { toast } = useToast();
@@ -43,8 +43,8 @@ export const ToastPreview: React.FC = () => {
         ).map((pos) => (
           <Button
             key={pos}
-            variant={position === pos ? "default" : "outline"}
-            size="sm"
+            variant={position === pos ? "solid" : "outline"}
+           
             onClick={() => setPosition(pos)}
             className="capitalize w-full"
           >
@@ -69,7 +69,7 @@ export const ToastPreview: React.FC = () => {
         </Button>
 
         <Button
-          variant="destructive"
+          variant="solid"
           className="w-full sm:w-auto"
           onClick={() => {
             toast({
@@ -88,6 +88,8 @@ export const ToastPreview: React.FC = () => {
 };
 
 export const ModalPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [open, setOpen] = React.useState(false);
   const [variant, setVariant] = React.useState<"default" | "floating" | "glass" | "elevated" | "minimal" | "spotlight">("default");
   const [size, setSize] = React.useState<"xs" | "sm" | "md" | "lg" | "xl" | "full-width" | "full-screen">("md");
@@ -119,14 +121,14 @@ export const ModalPreview: React.FC = () => {
             </div>
           </div>
         </>
-      }
+      } colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className="flex-1 flex flex-col items-center justify-center w-full min-h-100 md:min-h-125 h-full p-4">
         <div className="flex items-center justify-center w-full h-64 relative">
-          <Button onClick={() => setOpen(true)} size="lg" className="rounded-full shadow-lg shadow-primary/20 px-8">Open Modal</Button>
+          <Button onClick={() => setOpen(true)} className="rounded-full shadow-lg shadow-primary/20 px-8">Open Modal</Button>
         </div>
 
-        <Modal open={open} onOpenChange={setOpen} variant={variant} size={size} position={position}>
+        <Modal open={open} onOpenChange={setOpen} variant={variant} size={size} position={position} color={previewColor}>
           <ModalContent>
             <ModalHeader>
               <ModalTitle>Premium Modal Interface</ModalTitle>
@@ -143,8 +145,8 @@ export const ModalPreview: React.FC = () => {
               </div>
             </ModalBody>
             <ModalFooter>
-              <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-              <Button onClick={() => setOpen(false)}>Confirm</Button>
+              <Button variant="outline" onClick={() => setOpen(false)} color={previewColor}>Cancel</Button>
+              <Button onClick={() => setOpen(false)} color={previewColor} variant={previewVariant}>Confirm</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
@@ -154,6 +156,8 @@ export const ModalPreview: React.FC = () => {
 };
 
 export const DrawerPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [placement, setPlacement] = React.useState<"left" | "right" | "top" | "bottom">("right");
   const [variant, setVariant] = React.useState<"default" | "compact" | "glass" | "elevated" | "floating">("default");
 
@@ -174,12 +178,12 @@ export const DrawerPreview: React.FC = () => {
             ))}
           </div>
         </div>
-      }
+      } colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className="flex-1 flex items-center justify-center w-full h-full min-h-75">
-        <Drawer placement={placement} variant={variant}>
+        <Drawer placement={placement} variant={variant} color={previewColor}>
           <DrawerTrigger asChild>
-            <Button size="lg" className="rounded-full px-8 shadow-lg shadow-primary/20">Open Drawer</Button>
+            <Button className="rounded-full px-8 shadow-lg shadow-primary/20">Open Drawer</Button>
           </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
@@ -194,9 +198,9 @@ export const DrawerPreview: React.FC = () => {
             </div>
           </DrawerBody>
           <DrawerFooter>
-            <Button className="w-full">Confirm Action</Button>
+            <Button className="w-full" color={previewColor} variant={previewVariant}>Confirm Action</Button>
             <DrawerClose asChild>
-              <Button variant="outline" className="w-full">Cancel</Button>
+              <Button variant="outline" className="w-full" color={previewColor}>Cancel</Button>
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
@@ -207,25 +211,27 @@ export const DrawerPreview: React.FC = () => {
 };
 
 export const TogglePreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Toggle" description="A flexible toggle component with multiple states and variants.">
+    <PreviewContainer title="Toggle" description="A flexible toggle component with multiple states and variants." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <div className="flex flex-col items-center justify-center w-full h-full p-12 space-y-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-12 justify-items-center">
           <div className="flex flex-col items-center gap-4">
             <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Default</span>
-            <Toggle size="md" variant="default" />
+            <Toggle variant="default" />
           </div>
           <div className="flex flex-col items-center gap-4">
             <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Modern</span>
-            <Toggle size="md" variant="modern" defaultChecked />
+            <Toggle variant="default" defaultChecked />
           </div>
           <div className="flex flex-col items-center gap-4">
             <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Glass</span>
-            <Toggle size="md" variant="glass" />
+            <Toggle variant="glass" />
           </div>
           <div className="flex flex-col items-center gap-4">
             <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Neon</span>
-            <Toggle size="md" variant="neon" defaultChecked />
+            <Toggle variant="neon" defaultChecked />
           </div>
         </div>
 
@@ -234,9 +240,9 @@ export const TogglePreview: React.FC = () => {
         <div className="flex flex-col items-center gap-4">
           <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Sizes</span>
           <div className="flex items-center gap-8">
-            <Toggle size="sm" variant="default" />
-            <Toggle size="md" variant="default" defaultChecked />
-            <Toggle size="lg" variant="default" />
+            <Toggle variant="default" />
+            <Toggle variant="default" defaultChecked />
+            <Toggle variant="default" />
           </div>
         </div>
       </div>
@@ -245,19 +251,23 @@ export const TogglePreview: React.FC = () => {
 };
 
 export const ErrorPagePreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Error Page" description="A clean, full-screen error component." contentClassName="p-0">
+    <PreviewContainer title="Error Page" description="A clean, full-screen error component." contentClassName="p-0" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <ErrorPage errorCode="404" errorText="ERROR" />
     </PreviewContainer>
   );
 };
 
 export const CinematicErrorPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
     <PreviewContainer
       title="Cinematic Error"
       description="A dramatic and immersive error page."
-      contentClassName="p-0 bg-transparent border-0 shadow-none"
+      contentClassName="p-0 bg-transparent border-0 shadow-none" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
     >
       <div className="w-full h-full absolute inset-0 overflow-hidden">
         <CinematicError />

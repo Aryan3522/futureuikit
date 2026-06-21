@@ -117,7 +117,7 @@ export const PreviewRegistry: PreviewRegistryMap = {
   "component-page-sidebar": ComponentPageSidebarPreview,
 
   // Loaders
-  basic: BasicLoaderPreview,
+  "basic-loader": BasicLoaderPreview,
   "boxy-rotate": BoxyRotatePreview,
   "boxy-bounce": BoxyBouncePreview,
   "boxy-shift": BoxyShiftPreview,
@@ -172,6 +172,9 @@ export const PreviewRegistry: PreviewRegistryMap = {
 
   "velocity-marquee": function VelocityMarqueePreview() {
     const scrollRef = React.useRef<HTMLDivElement>(null);
+    const [color, setColor] = React.useState<string>("default");
+    const [shape, setShape] = React.useState<string>("default");
+    const [spacing, setSpacing] = React.useState<string>("default");
     const demoItems = [
       {
         name: "React",
@@ -218,12 +221,44 @@ export const PreviewRegistry: PreviewRegistryMap = {
     ];
 
     return (
-      <PreviewContainer scrollRef={scrollRef} title="Velocity Marquee" description="An interactive marquee grid featuring glowing cards." isVirtualScreen={true} contentClassName="p-0 border-none">
-        <div className="flex flex-col w-full min-h-[150vh] justify-center items-center relative overflow-hidden bg-neutral-50 dark:bg-[#0a0a0a]">
+      <PreviewContainer scrollRef={scrollRef} title="Velocity Marquee" description="An interactive marquee grid featuring glowing cards." isVirtualScreen={true} contentClassName="p-0 border-none"
+        extraControls={
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Color</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "blue", "emerald", "rose", "amber", "violet", "indigo", "sky", "slate", "orange"] as const).map(c => (
+                  <button key={c} onClick={() => setColor(c)}
+                    className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", color === c ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{c}</button>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                  <button key={s} onClick={() => setShape(s)}
+                    className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", shape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                  <button key={s} onClick={() => setSpacing(s)}
+                    className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", spacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+                ))}
+              </div>
+            </div>
+          </>
+        }
+      >
+        <div className="flex flex-col w-full min-h-[150vh] justify-center items-center relative overflow-hidden bg-background">
           <div className="absolute top-20 flex flex-col items-center text-muted-foreground opacity-50">
             <span className="animate-bounce">↓ Scroll the page to see physics animations ↓</span>
           </div>
-          <VelocityMarquee items={demoItems} containerRef={scrollRef} />
+          <VelocityMarquee items={demoItems} containerRef={scrollRef} color={color as any} shape={shape as any} spacing={spacing as any} />
         </div>
       </PreviewContainer>
     );
@@ -234,9 +269,9 @@ export const PreviewRegistry: PreviewRegistryMap = {
     return (
       <PreviewContainer title="Badge" description="A small status descriptor for UI elements.">
         <div className="flex flex-wrap gap-8 items-center justify-center w-full">
-          <Badge variant="default">Default</Badge>
-          <Badge variant="secondary">Secondary</Badge>
-          <Badge variant="destructive">Destructive</Badge>
+          <Badge variant="solid">Default</Badge>
+          <Badge variant="ghost">Secondary</Badge>
+          <Badge variant="outline">Destructive</Badge>
           <Badge variant="outline">Outline</Badge>
         </div>
       </PreviewContainer>
@@ -247,18 +282,18 @@ export const PreviewRegistry: PreviewRegistryMap = {
       <PreviewContainer title="Standard Button" description="The base button component matching Radix / shadcn spec.">
         <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-75">
           <div className="flex flex-wrap gap-8 items-center justify-center w-full">
-            <Button variant="default">Default</Button>
-            <Button variant="secondary">Secondary</Button>
+            <Button variant="solid">Default</Button>
+            <Button variant="ghost">Secondary</Button>
             <Button variant="outline">
               <GithubIcon className="w-4 h-4 mr-2" />
               GitHub
             </Button>
             <Button variant="ghost">Ghost</Button>
-            <Button variant="default" className="bg-[#0077b5] text-white hover:bg-[#0077b5]/90">
+            <Button variant="solid" className="bg-[#0077b5] text-white hover:bg-[#0077b5]/90">
               <LinkedinIcon className="w-4 h-4 mr-2" />
               LinkedIn
             </Button>
-            <Button variant="destructive">Destructive</Button>
+            <Button variant="solid">Destructive</Button>
             <Button variant="link">Link</Button>
           </div>
         </div>

@@ -20,11 +20,14 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+export type DrawerColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+
 const DrawerContext = React.createContext<{
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
   placement: "left" | "right" | "top" | "bottom";
   variant: "default" | "floating" | "glass" | "compact" | "elevated";
+  color: DrawerColor;
 } | null>(null);
 
 function useDrawer() {
@@ -42,6 +45,7 @@ export interface DrawerProps {
   defaultIsOpen?: boolean;
   placement?: "left" | "right" | "top" | "bottom";
   variant?: "default" | "floating" | "glass" | "compact" | "elevated";
+  color?: DrawerColor;
 }
 
 export const Drawer = React.memo(function Drawer({
@@ -51,6 +55,7 @@ export const Drawer = React.memo(function Drawer({
   defaultIsOpen = false,
   placement = "right",
   variant = "default",
+  color = "default",
 }: DrawerProps) {
   const [uncontrolledIsOpen, setUncontrolledIsOpen] = React.useState(defaultIsOpen);
 
@@ -68,7 +73,7 @@ export const Drawer = React.memo(function Drawer({
   );
 
   return (
-    <DrawerContext.Provider value={{ isOpen, setIsOpen, placement, variant }}>
+    <DrawerContext.Provider value={{ isOpen, setIsOpen, placement, variant, color }}>
       {children}
     </DrawerContext.Provider>
   );
@@ -117,6 +122,18 @@ const drawerVariants = cva(
         glass: "bg-background/70 backdrop-blur-2xl border-white/10 shadow-2xl",
         compact: "bg-background border-border shadow-2xl",
         elevated: "bg-background border-border shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.6)]",
+      },
+      color: {
+        default: "border-border",
+        blue: "border-blue-500/50 dark:border-blue-400/50",
+        emerald: "border-emerald-500/50 dark:border-emerald-400/50",
+        rose: "border-rose-500/50 dark:border-rose-400/50",
+        amber: "border-amber-500/50 dark:border-amber-400/50",
+        violet: "border-violet-500/50 dark:border-violet-400/50",
+        indigo: "border-indigo-500/50 dark:border-indigo-400/50",
+        sky: "border-sky-500/50 dark:border-sky-400/50",
+        slate: "border-slate-500/50 dark:border-slate-400/50",
+        orange: "border-orange-500/50 dark:border-orange-400/50",
       },
     },
     compoundVariants: [
@@ -174,6 +191,7 @@ const drawerVariants = cva(
     defaultVariants: {
       placement: "right",
       variant: "default",
+      color: "default",
     },
   }
 );
@@ -182,7 +200,7 @@ export const DrawerContent = React.memo(React.forwardRef<
           HTMLDivElement,
           React.HTMLAttributes<HTMLDivElement> & { container?: HTMLElement | null }
         >(({ className, children, container, ...props }, ref) => {
-          const { isOpen, setIsOpen, placement, variant } = useDrawer();
+          const { isOpen, setIsOpen, placement, variant, color } = useDrawer();
           const contentRef = React.useRef<HTMLDivElement>(null);
           const [mounted, setMounted] = React.useState(false);
 
@@ -316,7 +334,7 @@ export const DrawerContent = React.memo(React.forwardRef<
                     role="dialog"
                     aria-modal="true"
                     tabIndex={-1}
-                    className={cn(drawerVariants({ placement, variant }).replace("fixed", positionClass), className)}
+                    className={cn(drawerVariants({ placement, variant, color }).replace("fixed", positionClass), className)}
                     {...(props as any)}
                   >
                     {children}

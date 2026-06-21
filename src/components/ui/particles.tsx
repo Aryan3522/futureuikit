@@ -26,6 +26,42 @@ function hexToRgb(hex: string): [number, number, number] {
   return [red, green, blue]
 }
 
+export type ParticlesColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type ParticlesShape = "default" | "square" | "rounded" | "sharp";
+export type ParticlesSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
+const colorThemeMap: Record<ParticlesColor, { hex: string }> = {
+  default: { hex: "#ffffff" }, // or black based on theme Adaptive later
+  blue: { hex: "#3b82f6" },
+  emerald: { hex: "#10b981" },
+  rose: { hex: "#f43f5e" },
+  amber: { hex: "#f59e0b" },
+  violet: { hex: "#8b5cf6" },
+  indigo: { hex: "#6366f1" },
+  sky: { hex: "#0ea5e9" },
+  slate: { hex: "#64748b" },
+  orange: { hex: "#f97316" },
+};
+
+const getShapeClass = (shape: ParticlesShape) => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-sm";
+    case "rounded": return "rounded-2xl";
+    case "default": return ""; // Usually full bleed
+  }
+};
+
+const getSpacingClass = (spacing: ParticlesSpacing) => {
+  switch (spacing) {
+    case "2x": return "p-2";
+    case "4x": return "p-4";
+    case "6x": return "p-6";
+    case "8x": return "p-8";
+    default: return ""; // Usually full bleed
+  }
+};
+
 export interface ParticlesProps {
   className?: string;
   quantity?: number;
@@ -37,6 +73,9 @@ export interface ParticlesProps {
   vx?: number;
   vy?: number;
   themeAdaptive?: boolean;
+  variantColor?: ParticlesColor;
+  shape?: ParticlesShape;
+  spacing?: ParticlesSpacing;
 }
 
 interface Circle {
@@ -63,6 +102,9 @@ export const Particles: React.FC<ParticlesProps> = React.memo(({
           vx = 0,
           vy = 0,
           themeAdaptive = true,
+          variantColor = "default",
+          shape = "default",
+          spacing = "default",
           ...props
         }) => {
           const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -78,17 +120,23 @@ export const Particles: React.FC<ParticlesProps> = React.memo(({
           const initCanvasRef = useRef<() => void>(() => { })
           const animateRef = useRef<() => void>(() => { })
 
-          const [resolvedColor, setResolvedColor] = React.useState(color || "#ffffff");
+          const resolvedColorWithVariant = color || colorThemeMap[variantColor].hex;
+
+          const [resolvedColor, setResolvedColor] = React.useState(resolvedColorWithVariant || "#ffffff");
 
           useEffect(() => {
-            if (color && !themeAdaptive) {
-              setResolvedColor(color);
+            if (resolvedColorWithVariant && !themeAdaptive) {
+              setResolvedColor(resolvedColorWithVariant);
               return;
             }
 
             const updateColor = () => {
               const isDark = document.documentElement.classList.contains("dark");
-              setResolvedColor(isDark ? (color || "#ffffff") : (color || "#000000"));
+              if (variantColor === "default" && !color) {
+                setResolvedColor(isDark ? "#ffffff" : "#000000");
+              } else {
+                setResolvedColor(isDark ? (resolvedColorWithVariant || "#ffffff") : (resolvedColorWithVariant || "#000000"));
+              }
             };
 
             updateColor();
@@ -104,7 +152,7 @@ export const Particles: React.FC<ParticlesProps> = React.memo(({
             observer.observe(document.documentElement, { attributes: true });
 
             return () => observer.disconnect();
-          }, [color, themeAdaptive]);
+          }, [resolvedColorWithVariant, themeAdaptive, variantColor, color]);
 
           const rgb = useMemo(() => hexToRgb(resolvedColor), [resolvedColor])
 
@@ -301,7 +349,7 @@ export const Particles: React.FC<ParticlesProps> = React.memo(({
               resizeObserver.disconnect()
               window.removeEventListener("mousemove", handleMouseMove)
             };
-          }, [color, vx, vy, quantity, staticity, ease, size])
+          }, [resolvedColor, vx, vy, quantity, staticity, ease, size])
 
           useEffect(() => {
             initCanvasRef.current()
@@ -315,7 +363,9 @@ export const Particles: React.FC<ParticlesProps> = React.memo(({
               aria-hidden="true"
               {...props}
               className={cn(
-                "pointer-events-none relative w-full h-full",
+                "pointer-events-none relative w-full h-full overflow-hidden",
+                getShapeClass(shape),
+                getSpacingClass(spacing),
                 className
               )}
             >
@@ -323,4 +373,5 @@ export const Particles: React.FC<ParticlesProps> = React.memo(({
             </div>
           );
         })
+Particles.displayName = "Particles";
 Particles.displayName = "Particles";

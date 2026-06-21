@@ -13,6 +13,10 @@ import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+export type CalendarColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type CalendarShape = "default" | "square" | "rounded" | "sharp";
+export type CalendarSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
 export interface CalendarProps {
   value?: Date;
   onChange?: (date: Date) => void;
@@ -24,6 +28,9 @@ export interface CalendarProps {
   className?: string;
   variant?: "modern" | "clean" | "minimal";
   id?: string;
+  color?: CalendarColor;
+  shape?: CalendarShape;
+  spacing?: CalendarSpacing;
 }
 
 const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -31,6 +38,47 @@ const MONTHS = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
+
+const colorThemeMap: Record<CalendarColor, { bg: string; text: string; bgSoft: string; border: string; shadow: string; bgSoftest: string; textOnBg: string; bgDot: string }> = {
+  default: { bg: "bg-primary", text: "text-primary", bgSoft: "bg-primary/10", border: "border-primary/20", shadow: "shadow-primary/30", bgSoftest: "bg-primary/5", textOnBg: "text-primary-foreground", bgDot: "bg-primary/60" },
+  blue: { bg: "bg-blue-600 dark:bg-blue-500", text: "text-blue-600 dark:text-blue-500", bgSoft: "bg-blue-600/10 dark:bg-blue-500/10", border: "border-blue-600/20 dark:border-blue-500/20", shadow: "shadow-blue-600/30 dark:shadow-blue-500/30", bgSoftest: "bg-blue-600/5 dark:bg-blue-500/5", textOnBg: "text-white", bgDot: "bg-blue-600/60 dark:bg-blue-500/60" },
+  emerald: { bg: "bg-emerald-600 dark:bg-emerald-500", text: "text-emerald-600 dark:text-emerald-500", bgSoft: "bg-emerald-600/10 dark:bg-emerald-500/10", border: "border-emerald-600/20 dark:border-emerald-500/20", shadow: "shadow-emerald-600/30 dark:shadow-emerald-500/30", bgSoftest: "bg-emerald-600/5 dark:bg-emerald-500/5", textOnBg: "text-white", bgDot: "bg-emerald-600/60 dark:bg-emerald-500/60" },
+  rose: { bg: "bg-rose-600 dark:bg-rose-500", text: "text-rose-600 dark:text-rose-500", bgSoft: "bg-rose-600/10 dark:bg-rose-500/10", border: "border-rose-600/20 dark:border-rose-500/20", shadow: "shadow-rose-600/30 dark:shadow-rose-500/30", bgSoftest: "bg-rose-600/5 dark:bg-rose-500/5", textOnBg: "text-white", bgDot: "bg-rose-600/60 dark:bg-rose-500/60" },
+  amber: { bg: "bg-amber-600 dark:bg-amber-500", text: "text-amber-600 dark:text-amber-500", bgSoft: "bg-amber-600/10 dark:bg-amber-500/10", border: "border-amber-600/20 dark:border-amber-500/20", shadow: "shadow-amber-600/30 dark:shadow-amber-500/30", bgSoftest: "bg-amber-600/5 dark:bg-amber-500/5", textOnBg: "text-white", bgDot: "bg-amber-600/60 dark:bg-amber-500/60" },
+  violet: { bg: "bg-violet-600 dark:bg-violet-500", text: "text-violet-600 dark:text-violet-500", bgSoft: "bg-violet-600/10 dark:bg-violet-500/10", border: "border-violet-600/20 dark:border-violet-500/20", shadow: "shadow-violet-600/30 dark:shadow-violet-500/30", bgSoftest: "bg-violet-600/5 dark:bg-violet-500/5", textOnBg: "text-white", bgDot: "bg-violet-600/60 dark:bg-violet-500/60" },
+  indigo: { bg: "bg-indigo-600 dark:bg-indigo-500", text: "text-indigo-600 dark:text-indigo-500", bgSoft: "bg-indigo-600/10 dark:bg-indigo-500/10", border: "border-indigo-600/20 dark:border-indigo-500/20", shadow: "shadow-indigo-600/30 dark:shadow-indigo-500/30", bgSoftest: "bg-indigo-600/5 dark:bg-indigo-500/5", textOnBg: "text-white", bgDot: "bg-indigo-600/60 dark:bg-indigo-500/60" },
+  sky: { bg: "bg-sky-600 dark:bg-sky-500", text: "text-sky-600 dark:text-sky-500", bgSoft: "bg-sky-600/10 dark:bg-sky-500/10", border: "border-sky-600/20 dark:border-sky-500/20", shadow: "shadow-sky-600/30 dark:shadow-sky-500/30", bgSoftest: "bg-sky-600/5 dark:bg-sky-500/5", textOnBg: "text-white", bgDot: "bg-sky-600/60 dark:bg-sky-500/60" },
+  slate: { bg: "bg-slate-600 dark:bg-slate-500", text: "text-slate-600 dark:text-slate-400", bgSoft: "bg-slate-600/10 dark:bg-slate-500/10", border: "border-slate-600/20 dark:border-slate-500/20", shadow: "shadow-slate-600/30 dark:shadow-slate-500/30", bgSoftest: "bg-slate-600/5 dark:bg-slate-500/5", textOnBg: "text-white", bgDot: "bg-slate-600/60 dark:bg-slate-500/60" },
+  orange: { bg: "bg-orange-600 dark:bg-orange-500", text: "text-orange-600 dark:text-orange-500", bgSoft: "bg-orange-600/10 dark:bg-orange-500/10", border: "border-orange-600/20 dark:border-orange-500/20", shadow: "shadow-orange-600/30 dark:shadow-orange-500/30", bgSoftest: "bg-orange-600/5 dark:bg-orange-500/5", textOnBg: "text-white", bgDot: "bg-orange-600/60 dark:bg-orange-500/60" },
+};
+
+const getShapeClass = (shape: CalendarShape) => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-lg sm:rounded-xl";
+    case "rounded": return "rounded-2xl sm:rounded-3xl";
+    case "default": return "rounded-3xl sm:rounded-[2.5rem]";
+  }
+};
+
+const getItemShapeClass = (shape: CalendarShape) => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-sm";
+    case "rounded": return "rounded-xl";
+    case "default": return "rounded-2xl";
+  }
+};
+
+const getSpacingClass = (spacing: CalendarSpacing) => {
+  switch (spacing) {
+    case "2x": return "p-2 sm:p-4";
+    case "4x": return "p-4 sm:p-7";
+    case "6x": return "p-6 sm:p-10";
+    case "8x": return "p-8 sm:p-12";
+    default: return "p-4 sm:p-7";
+  }
+};
 
 export const Calendar: React.FC<CalendarProps> = React.memo(({
           value,
@@ -43,12 +91,20 @@ export const Calendar: React.FC<CalendarProps> = React.memo(({
           className,
           variant = "modern",
           id: providedId,
+          color = "default",
+          shape = "default",
+          spacing = "default",
         }) => {
           const today = new Date();
           const [viewDate, setViewDate] = useState(value || today);
           const [direction, setDirection] = useState(0);
           const internalId = React.useId();
           const calendarId = providedId || internalId;
+
+          const activeTheme = colorThemeMap[color];
+          const shapeClass = getShapeClass(shape);
+          const itemShapeClass = getItemShapeClass(shape);
+          const spacingClass = getSpacingClass(spacing);
 
           const month = viewDate.getMonth();
           const year = viewDate.getFullYear();
@@ -133,7 +189,9 @@ export const Calendar: React.FC<CalendarProps> = React.memo(({
             <LayoutGroup id={calendarId}>
               <div 
                 className={cn(
-                  "w-full max-w-sm rounded-3xl sm:rounded-[2.5rem] border p-4 sm:p-7 select-none overflow-hidden shrink-0",
+                  "w-full max-w-sm border select-none overflow-hidden shrink-0",
+                  shapeClass,
+                  spacingClass,
                   getVariantStyles(),
                   className
                 )}
@@ -210,14 +268,14 @@ export const Calendar: React.FC<CalendarProps> = React.memo(({
                             {selected && (
                               <motion.div
                                 layoutId="selected-indicator"
-                                className="absolute inset-1 bg-primary rounded-2xl shadow-lg shadow-primary/30 z-0"
+                                className={cn("absolute inset-1 shadow-lg z-0", activeTheme.bg, activeTheme.shadow, itemShapeClass)}
                                 transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
                               />
                             )}
                             {highlighted && !selected && (
                               <motion.div
                                 layoutId={`highlight-${date.toDateString()}`}
-                                className="absolute inset-1 border-2 border-primary/20 bg-primary/5 rounded-2xl z-0"
+                                className={cn("absolute inset-1 border-2 z-0", activeTheme.border, activeTheme.bgSoftest, itemShapeClass)}
                                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                               />
                             )}
@@ -229,15 +287,15 @@ export const Calendar: React.FC<CalendarProps> = React.memo(({
                               className={cn(
                                 "relative z-10 w-full h-full flex flex-col items-center justify-center transition-all duration-300",
                                 !isCurrentMonth && "opacity-[0.15] scale-90",
-                                isCurrentMonth && !selected && !highlighted && "hover:bg-muted/40 rounded-2xl text-foreground/60 hover:text-foreground",
-                                selected && "text-primary-foreground",
-                                highlighted && !selected && "text-primary font-bold",
+                                isCurrentMonth && !selected && !highlighted && cn("hover:bg-muted/40 text-foreground/60 hover:text-foreground", itemShapeClass),
+                                selected && activeTheme.textOnBg,
+                                highlighted && !selected && cn(activeTheme.text, "font-bold"),
                                 disabled && "opacity-5 cursor-not-allowed grayscale"
                               )}
                             >
                               <span className="text-xs sm:text-sm font-semibold tabular-nums">{date.getDate()}</span>
                               {isToday && !selected && (
-                                <div className="absolute bottom-1.5 w-1 h-1 rounded-full bg-primary/60" />
+                                <div className={cn("absolute bottom-1.5 w-1 h-1 rounded-full", activeTheme.bgDot)} />
                               )}
                             </motion.button>
                           </div>
@@ -255,9 +313,9 @@ export const Calendar: React.FC<CalendarProps> = React.memo(({
                       setViewDate(now);
                       onChange?.(now);
                     }}
-                    className="flex items-center gap-2 px-4 py-2 rounded-2xl hover:bg-muted/50 transition-all group"
+                    className={cn("flex items-center gap-2 px-4 py-2 hover:bg-muted/50 transition-all group", itemShapeClass)}
                   >
-                    <div className="p-1 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <div className={cn("p-1 rounded-lg transition-colors group-hover:text-white", activeTheme.bgSoft, activeTheme.text, "group-hover:" + activeTheme.bg.split(' ')[0])}>
                       <CalendarIcon size={12} strokeWidth={3} />
                     </div>
                     <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 group-hover:text-foreground transition-colors">

@@ -506,36 +506,35 @@ export default function Example() {
 "Customization: Pass custom CSS classes via the'className'prop to control card height or container width.",
  ],
  },
- {
- id: 19,
- title:"Basic Loader",
- type:"Loader",
- slug:"basic",
- category:"loader",
- description:
-"A modern, animated loading indicator with multiple visual styles. Built with Framer Motion, it provides smooth and engaging feedback while users wait for content or data to load.",
- details: [
-"Built with Framer Motion for high-quality, smooth animations.",
-"Supports Modern (Rings), Clean (Dots), and Minimal (Circle) variants.",
-"Fully customizable color for the loading indicator.",
-"Lightweight and highly responsive design.",
+  {
+  id: 19,
+  title:"Basic Loader",
+  type:"Loader",
+  slug:"basic-loader",
+  category:"loader",
+  description:
+"A modern, animated loading indicator with multiple visual styles built with Framer Motion. Supports Modern (Rings), Clean (Dots), and Minimal (Circle) variants with full color customization.",
+  details: [
+"Built with Framer Motion for smooth, high-quality animations.",
+"Three distinct variants: Modern (Rings), Clean (Dots), and Minimal (Circle).",
+"Full 10-color palette support via the color prop.",
 "Optional animated loading text with a pulse effect.",
-"Perfect for page transitions, API calls, and data fetching states.",
- ],
- codes: {
- next:'import { BasicLoader } from"@/components/ui/basic-loader";\n\nexport default function Example() {\n return (\n <div className="flex flex-col gap-8">\n <BasicLoader variant="modern"color="#3b82f6"text="Modern Rings..."/>\n <BasicLoader variant="clean"color="#10b981"text="Clean Dots..."/>\n <BasicLoader variant="minimal"color="#f59e0b"text="Minimalist..."/>\n </div>\n );\n}',
- },
- usage: [
-"Install: Run'npx futureuikit add basic'.",
+"Customizable shape and spacing dimensions.",
+  ],
+  codes: {
+  next:'import { BasicLoader } from"@/components/ui/basic-loader";\n\nexport default function Example() {\n return (\n <div className="flex flex-col gap-8">\n <BasicLoader variant="modern"color="default"text="Modern Rings..."/>\n <BasicLoader variant="clean"color="emerald"text="Clean Dots..."/>\n <BasicLoader variant="minimal"color="amber"text="Minimalist..."/>\n </div>\n );\n}',
+  },
+  usage: [
+"Install: Run'npx futureuikit add basic-loader'.",
 "Import:'import { BasicLoader } from \"@/components/ui/basic-loader\";'",
 "Variants: Use'modern'for high-end cinematic rings,'clean'for minimal dots, or'minimal'for a simple pulse.",
-"Color: Override the default theme via the'color'prop (accepts hex, hsl, or rgb).",
+"Color: Choose from 10 theme colors (default, blue, emerald, rose, amber, violet, indigo, sky, slate, orange).",
 "Text: Provide a'text'prop to show a pulsing status message below the animation.",
- ],
- },
- {
- id: 20,
- title:"Toast Notification",
+  ],
+  },
+  {
+  id: 20,
+  title:"Toast Notification",
  type:"Feedback",
  slug:"toast",
  category:"ui",
@@ -1344,7 +1343,7 @@ export default function AdvancedSearch() {
 "Supports GLB models (M4, Car, Bike, etc.) with auto-fitting.",
  ],
  codes: {
- next:'import { AutomotiveCarousel } from"@/components/ui/automotive-carousel";\n\nexport default function Example() {\n const slides = [\n { id: 52, title:"EXTERIOR", description:"Sleek aerodynamic design.", annotations: [] },\n { id: 53, title:"INTERIOR", description:"Premium luxury dashboard.", annotations: [{ id:"gear", position: [0.1, 0.5, 0.2], label:"Gear Shift"}] },\n ];\n\n return (\n <div className="w-full h-screen">\n <AutomotiveCarousel slides={slides} objectVariant="m4"/>\n </div>\n );\n}',
+ next:'import { AutomotiveCarousel } from"@/components/ui/automotive-carousel";\n\nexport default function Example() {\n const slides = [\n { id: 52, title:"EXTERIOR", description:"Sleek aerodynamic design.", annotations: [] },\n { id: 53, title:"INTERIOR", description:"Premium luxury dashboard.", annotations: [{ id:"gear", position: [0.1, 0.5, 0.2], label:"Gear Shift"}] },\n ];\n\n return (\n <div className="w-full h-screen">\n <AutomotiveCarousel slides={slides} />\n </div>\n );\n}',
  },
  usage: [
 "Install: Run \'npx futureuikit add automotive-carousel\'.",
@@ -1821,27 +1820,6 @@ export default function Example() {
   },
   {
     id: 69,
-    title: "Breadcrumb",
-    type: "Navigation",
-    slug: "breadcrumb",
-    category: "ui",
-    description: "Displays the path to the current resource using a hierarchy of links for easy navigation.",
-    details: [
-      "Composable API with BreadcrumbList, BreadcrumbItem, and BreadcrumbLink.",
-      "Supports a current-page indicator via BreadcrumbPage.",
-      "Includes customizable separators between items."
-    ],
-    codes: {
-      next: 'import {\n  Breadcrumb,\n  BreadcrumbItem,\n  BreadcrumbLink,\n  BreadcrumbList,\n  BreadcrumbPage,\n  BreadcrumbSeparator,\n} from "@/components/ui/breadcrumb";\n\nexport default function Example() {\n  return (\n    <Breadcrumb>\n      <BreadcrumbList>\n        <BreadcrumbItem>\n          <BreadcrumbLink href="/">Home</BreadcrumbLink>\n        </BreadcrumbItem>\n        <BreadcrumbSeparator />\n        <BreadcrumbItem>\n          <BreadcrumbPage>Current</BreadcrumbPage>\n        </BreadcrumbItem>\n      </BreadcrumbList>\n    </Breadcrumb>\n  );\n}'
-    },
-    usage: [
-      "Install: Run 'npx futureuikit add breadcrumb'.",
-      "Import: 'import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from \"@/components/ui/breadcrumb\";'",
-      "Usage: Compose a breadcrumb trail by nesting BreadcrumbItems inside a BreadcrumbList."
-    ]
-  },
-  {
-    id: 70,
     title: "Collapsible",
     type: "UI",
     slug: "collapsible",

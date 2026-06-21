@@ -15,12 +15,6 @@ import { Loader2 } from "lucide-react";
 
 export type ClayMorphButtonVariant =
   | "primary"
-  | "secondary"
-  | "success"
-  | "danger"
-  | "warning"
-  | "info"
-  | "neutral"
   | "ghost"
   | "outline"
   | "soft"
@@ -28,43 +22,15 @@ export type ClayMorphButtonVariant =
   | "gradient"
   | "glass";
 
-export type ClayMorphButtonColor =
-  | "blue"
-  | "indigo"
-  | "purple"
-  | "violet"
-  | "pink"
-  | "rose"
-  | "red"
-  | "orange"
-  | "amber"
-  | "yellow"
-  | "lime"
-  | "green"
-  | "emerald"
-  | "teal"
-  | "cyan"
-  | "sky"
-  | "slate"
-  | "zinc"
-  | "gray"
-  | "black"
-  | "white";
-
-export type ClayMorphButtonSize = "xs" | "sm" | "md" | "lg" | "xl";
-
-export type ClayMorphButtonShape =
-  | "rounded"
-  | "soft-rounded"
-  | "pill"
-  | "square"
-  | "circle";
+export type ClayMorphButtonColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type ClayMorphButtonShape = "default" | "square" | "rounded" | "sharp";
+export type ClayMorphButtonSpacing = "default" | "2x" | "4x" | "6x" | "8x";
 
 export interface ClayMorphButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ClayMorphButtonVariant;
   color?: ClayMorphButtonColor;
-  size?: ClayMorphButtonSize;
+  spacing?: ClayMorphButtonSpacing;
   shape?: ClayMorphButtonShape;
   loading?: boolean;
   fullWidth?: boolean;
@@ -75,82 +41,57 @@ export interface ClayMorphButtonProps
 }
 
 const colorMap: Record<ClayMorphButtonColor, string> = {
-  blue: "bg-blue-500 text-white",
-  indigo: "bg-indigo-500 text-white",
-  purple: "bg-purple-500 text-white",
-  violet: "bg-violet-500 text-white",
-  pink: "bg-pink-500 text-white",
-  rose: "bg-rose-500 text-white",
-  red: "bg-red-500 text-white",
-  orange: "bg-orange-500 text-white",
-  amber: "bg-amber-500 text-white",
-  yellow: "bg-yellow-400 text-zinc-900",
-  lime: "bg-lime-400 text-zinc-900",
-  green: "bg-green-500 text-white",
+  default: "bg-foreground text-background",
+  blue: "bg-blue-600 text-white",
   emerald: "bg-emerald-500 text-white",
-  teal: "bg-teal-500 text-white",
-  cyan: "bg-cyan-500 text-white",
-  sky: "bg-sky-500 text-white",
-  slate: "bg-slate-500 text-white",
-  zinc: "bg-zinc-500 text-white",
-  gray: "bg-gray-500 text-white",
-  black: "bg-zinc-900 text-white",
-  white: "bg-white text-zinc-900",
+  rose: "bg-rose-500 text-white",
+  amber: "bg-amber-500 text-zinc-950",
+  violet: "bg-violet-600 text-white",
+  indigo: "bg-indigo-600 text-white",
+  sky: "bg-sky-500 text-zinc-950",
+  slate: "bg-slate-600 text-white",
+  orange: "bg-orange-500 text-white",
 };
 
 const gradientColorMap: Record<ClayMorphButtonColor, string> = {
+  default: "bg-gradient-to-br from-foreground/80 to-foreground text-background dark:from-background dark:to-background/80 dark:text-foreground",
   blue: "bg-gradient-to-br from-blue-400 to-blue-600 text-white",
-  indigo: "bg-gradient-to-br from-indigo-400 to-indigo-600 text-white",
-  purple: "bg-gradient-to-br from-purple-400 to-purple-600 text-white",
-  violet: "bg-gradient-to-br from-violet-400 to-violet-600 text-white",
-  pink: "bg-gradient-to-br from-pink-400 to-pink-600 text-white",
-  rose: "bg-gradient-to-br from-rose-400 to-rose-600 text-white",
-  red: "bg-gradient-to-br from-red-400 to-red-600 text-white",
-  orange: "bg-gradient-to-br from-orange-400 to-orange-600 text-white",
-  amber: "bg-gradient-to-br from-amber-400 to-amber-600 text-white",
-  yellow: "bg-gradient-to-br from-yellow-300 to-yellow-500 text-zinc-900",
-  lime: "bg-gradient-to-br from-lime-300 to-lime-500 text-zinc-900",
-  green: "bg-gradient-to-br from-green-400 to-green-600 text-white",
   emerald: "bg-gradient-to-br from-emerald-400 to-emerald-600 text-white",
-  teal: "bg-gradient-to-br from-teal-400 to-teal-600 text-white",
-  cyan: "bg-gradient-to-br from-cyan-400 to-cyan-600 text-white",
-  sky: "bg-gradient-to-br from-sky-400 to-sky-600 text-white",
+  rose: "bg-gradient-to-br from-rose-400 to-rose-600 text-white",
+  amber: "bg-gradient-to-br from-amber-400 to-amber-600 text-zinc-950",
+  violet: "bg-gradient-to-br from-violet-400 to-violet-600 text-white",
+  indigo: "bg-gradient-to-br from-indigo-400 to-indigo-600 text-white",
+  sky: "bg-gradient-to-br from-sky-400 to-sky-600 text-zinc-950",
   slate: "bg-gradient-to-br from-slate-400 to-slate-600 text-white",
-  zinc: "bg-gradient-to-br from-zinc-400 to-zinc-600 text-white",
-  gray: "bg-gradient-to-br from-gray-400 to-gray-600 text-white",
-  black: "bg-gradient-to-br from-zinc-700 to-zinc-950 text-white",
-  white: "bg-gradient-to-br from-white to-zinc-100 text-zinc-900",
+  orange: "bg-gradient-to-br from-orange-400 to-orange-600 text-white",
 };
 
-const shapeMap: Record<ClayMorphButtonShape, string> = {
-  rounded: "rounded-xl",
-  "soft-rounded": "rounded-2xl",
-  pill: "rounded-full",
-  square: "rounded-none",
-  circle: "rounded-full",
-};
-
-const getSizeStyles = (size: ClayMorphButtonSize, shape: ClayMorphButtonShape) => {
-  const isCircle = shape === "circle";
-
-  switch (size) {
-    case "xs": return isCircle ? "w-8 h-8 text-xs p-0" : "px-3 py-1.5 text-xs";
-    case "sm": return isCircle ? "w-10 h-10 text-sm p-0" : "px-4 py-2 text-sm";
-    case "md": return isCircle ? "w-12 h-12 text-base p-0" : "px-6 py-3 text-base";
-    case "lg": return isCircle ? "w-14 h-14 text-lg p-0" : "px-8 py-4 text-lg";
-    case "xl": return isCircle ? "w-16 h-16 text-xl p-0" : "px-10 py-5 text-xl font-bold";
-    default: return "";
+const getShapeClass = (shape: ClayMorphButtonShape) => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-[2px]";
+    case "rounded": return "rounded-xl";
+    case "default": return "rounded-3xl"; // A bit more rounded for claymorphism by default
   }
 };
 
-const getIconSize = (size: ClayMorphButtonSize) => {
-  switch (size) {
-    case "xs": return "[&>svg]:w-3.5 [&>svg]:h-3.5";
-    case "sm": return "[&>svg]:w-4 [&>svg]:h-4";
-    case "md": return "[&>svg]:w-5 [&>svg]:h-5";
-    case "lg": return "[&>svg]:w-6 [&>svg]:h-6";
-    case "xl": return "[&>svg]:w-7 [&>svg]:h-7";
-    default: return "[&>svg]:w-5 [&>svg]:h-5";
+const getSpacingStyles = (spacing: ClayMorphButtonSpacing) => {
+  switch (spacing) {
+    case "2x": return "px-3 py-1.5 text-xs";
+    case "4x": return "px-4 py-2 text-sm";
+    case "6x": return "px-6 py-3 text-base";
+    case "8x": return "px-8 py-4 text-lg";
+    default: return "px-5 py-2.5 text-sm";
+  }
+};
+
+const getIconSize = (spacing: ClayMorphButtonSpacing) => {
+  switch (spacing) {
+    case "2x": return "[&>svg]:w-3.5 [&>svg]:h-3.5";
+    case "4x": return "[&>svg]:w-4 [&>svg]:h-4";
+    case "6x": return "[&>svg]:w-5 [&>svg]:h-5";
+    case "8x": return "[&>svg]:w-6 [&>svg]:h-6";
+    default: return "[&>svg]:w-4 [&>svg]:h-4";
   }
 };
 
@@ -176,9 +117,9 @@ export const ClayMorphButton = React.forwardRef<
   (
     {
       variant = "primary",
-      color = "blue",
-      size = "md",
-      shape = "soft-rounded",
+      color = "default",
+      spacing = "default",
+      shape = "default",
       loading = false,
       fullWidth = false,
       icon,
@@ -198,30 +139,21 @@ export const ClayMorphButton = React.forwardRef<
       "relative inline-flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer outline-none select-none",
       "font-semibold tracking-wide",
       fullWidth && "w-full",
-      shapeMap[shape],
-      getSizeStyles(size, shape),
+      getShapeClass(shape),
+      getSpacingStyles(spacing),
       disabled && "opacity-50 cursor-not-allowed grayscale",
       className
     );
 
     const variantStyles = {
       primary: cn(colorMap[color], getElevationStyles(elevation)),
-      secondary: cn(
-        "bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100",
-        getElevationStyles(elevation)
-      ),
-      success: cn("bg-emerald-500 text-white", getElevationStyles(elevation)),
-      danger: cn("bg-red-500 text-white", getElevationStyles(elevation)),
-      warning: cn("bg-amber-400 text-zinc-900", getElevationStyles(elevation)),
-      info: cn("bg-sky-500 text-white", getElevationStyles(elevation)),
-      neutral: cn("bg-zinc-500 text-white", getElevationStyles(elevation)),
       ghost: cn(
-        "bg-transparent text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800",
+        "bg-transparent text-muted-foreground hover:bg-accent",
         "shadow-none active:shadow-[inset_2px_4px_8px_rgba(0,0,0,0.05)] dark:active:shadow-[inset_2px_4px_8px_rgba(0,0,0,0.3)]"
       ),
       outline: cn(
-        "bg-transparent border-2 border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200",
-        "hover:bg-zinc-50 dark:hover:bg-zinc-800",
+        "bg-transparent border-2 border-border text-muted-foreground",
+        "hover:bg-accent",
         "shadow-[4px_4px_10px_rgba(0,0,0,0.02),-4px_-4px_10px_rgba(255,255,255,0.5)] dark:shadow-[4px_4px_10px_rgba(0,0,0,0.3),-4px_-4px_10px_rgba(255,255,255,0.02)]"
       ),
       soft: cn(
@@ -270,7 +202,7 @@ export const ClayMorphButton = React.forwardRef<
             <span
               className={cn(
                 "shrink-0 inline-flex items-center justify-center",
-                getIconSize(size)
+                getIconSize(spacing)
               )}
             >
               {icon}
@@ -283,7 +215,7 @@ export const ClayMorphButton = React.forwardRef<
             <span
               className={cn(
                 "shrink-0 inline-flex items-center justify-center",
-                getIconSize(size)
+                getIconSize(spacing)
               )}
             >
               {icon}

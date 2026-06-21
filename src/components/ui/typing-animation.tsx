@@ -27,6 +27,53 @@ const motionElements = {
   span: motion.span
 }
 
+export type TypingAnimationColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type TypingAnimationShape = "default" | "square" | "rounded" | "sharp";
+export type TypingAnimationSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
+export interface TypingAnimationProps {
+  children?: React.ReactNode;
+  words?: string[];
+  className?: string;
+  duration?: number;
+  typeSpeed?: number;
+  deleteSpeed?: number;
+  delay?: number;
+  pauseDelay?: number;
+  loop?: boolean;
+  as?: string;
+  startOnView?: boolean;
+  showCursor?: boolean;
+  blinkCursor?: boolean;
+  cursorStyle?: "line" | "block" | "underscore";
+  color?: TypingAnimationColor;
+  shape?: TypingAnimationShape;
+  spacing?: TypingAnimationSpacing;
+}
+
+const colorThemeMap: Record<TypingAnimationColor, string> = {
+  default: "text-foreground",
+  blue: "text-blue-500",
+  emerald: "text-emerald-500",
+  rose: "text-rose-500",
+  amber: "text-amber-500",
+  violet: "text-violet-500",
+  indigo: "text-indigo-500",
+  sky: "text-sky-500",
+  slate: "text-slate-500",
+  orange: "text-orange-500",
+};
+
+const getSpacingClass = (spacing: TypingAnimationSpacing) => {
+  switch (spacing) {
+    case "2x": return "text-sm";
+    case "4x": return "text-base";
+    case "6x": return "text-2xl";
+    case "8x": return "text-4xl";
+    default: return "text-xl";
+  }
+};
+
 export default function TypingAnimation({
   children,
   words,
@@ -42,8 +89,11 @@ export default function TypingAnimation({
   showCursor = true,
   blinkCursor = true,
   cursorStyle = "line",
+  color = "default",
+  shape = "default", // unused on text
+  spacing = "default",
   ...props
-}: any) {
+}: TypingAnimationProps) {
   const MotionComponent = motionElements[Component as keyof typeof motionElements]
 
   const [displayedText, setDisplayedText] = useState("")
@@ -56,24 +106,29 @@ export default function TypingAnimation({
     once: true,
   })
 
-  const wordsToAnimate = useMemo(() => words ?? (children ? [children] : []), [words, children])
+  const wordsToAnimate = useMemo(() => words ?? (children && typeof children === 'string' ? [children] : []), [words, children])
   const hasMultipleWords = wordsToAnimate.length > 1
 
   const typingSpeed = typeSpeed ?? duration
   const deletingSpeed = deleteSpeed ?? typingSpeed / 2
 
   const shouldStart = startOnView ? isInView : true
-  const animationSourceKey = useMemo(() => (words ? words.join("\u0000") : (children ?? "")), [words, children])
+  const animationSourceKey = useMemo(() => (words ? words.join("\u0000") : (typeof children === 'string' ? children : "")), [words, children])
+
+  const activeColor = colorThemeMap[color];
+  const spacingClass = getSpacingClass(spacing);
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     setDisplayedText("")
     setCurrentWordIndex(0)
     setCurrentCharIndex(0)
     setPhase("typing")
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [animationSourceKey])
 
   useEffect(() => {
-    let timeout = null
+    let timeout: NodeJS.Timeout | null = null
 
     if (shouldStart && wordsToAnimate.length > 0) {
       const timeoutDelay =
@@ -173,9 +228,11 @@ export default function TypingAnimation({
       className={cn(
         "leading-20 tracking-[-0.02em]",
         Component === "span" && "inline-block",
+        activeColor,
+        spacingClass,
         className
       )}
-      {...props}>
+      {...props as any}>
       {displayedText}
       {shouldShowCursor && (
         <span className={cn("inline-block", blinkCursor && "animate-blink-cursor")}>

@@ -18,12 +18,14 @@ import {
 } from "@/components/ui/command-palette";
 import { GlobalBreadcrumb } from "@/components/ui/global-breadcrumb";
 import ComponentPageSidebar from "@/components/ui/ComponentPageSidebar";
-import { PreviewContainer } from "../preview-engine/PreviewContainer";
+import { PreviewContainer, DEFAULT_COLORS } from "../preview-engine/PreviewContainer";
 import { Home, User, Settings, Mail, Bell, Search, Monitor, Plus, Filter, MessageSquare, Compass } from "lucide-react";
 
 export const HeaderPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Header" description="A premium navigation header with a left-side drawer for mobile.">
+    <PreviewContainer title="Header" description="A premium navigation header with a left-side drawer for mobile." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <div
         className="w-full h-full min-h-125 relative bg-muted/10 border border-border/20 rounded-xl overflow-hidden shadow-inner @container"
         style={{ transform: "translateZ(0)" }}
@@ -43,16 +45,20 @@ export const HeaderPreview: React.FC = () => {
 };
 
 export const NavMenuPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Navigation Menu" description="A dynamic floating menu." contentClassName="relative">
+    <PreviewContainer title="Navigation Menu" description="A dynamic floating menu." contentClassName="relative" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <NavMenu />
     </PreviewContainer>
   );
 };
 
 export const SidebarButtonPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Sidebar Button" description="Navigation button with active state and category styling for sidebars.">
+    <PreviewContainer title="Sidebar Button" description="Navigation button with active state and category styling for sidebars." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-75">
         <div className="w-full max-w-60 flex flex-col gap-1 p-4 bg-muted/20 rounded-xl">
           <SidebarButton label="Dashboard" isActive />
@@ -68,8 +74,10 @@ export const SidebarButtonPreview: React.FC = () => {
 };
 
 export const AccordionPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Accordion" description="A vertically collapsing accordion component.">
+    <PreviewContainer title="Accordion" description="A vertically collapsing accordion component." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <div className="flex items-center justify-center w-full max-w-2xl h-full p-4 mx-auto">
         <Accordion
           items={[
@@ -96,6 +104,8 @@ export const AccordionPreview: React.FC = () => {
 };
 
 export const DockPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [variant, setVariant] = useState<"modern" | "clean" | "interactive">("modern");
   return (
     <PreviewContainer 
@@ -103,10 +113,10 @@ export const DockPreview: React.FC = () => {
       description="A fluid, macOS-inspired interactive dock with hover scaling."
       variants={["modern", "clean", "interactive"]}
       activeVariant={variant}
-      onVariantChange={setVariant as any}
+      onVariantChange={setVariant as any} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className="w-full flex items-center justify-center min-h-75">
-        <Dock className="mb-4" variant={variant}>
+        <Dock className="mb-4" variant={variant} color={previewColor}>
           <DockItem label="Home">
             <Home className="w-5 h-5" />
           </DockItem>
@@ -131,6 +141,8 @@ export const DockPreview: React.FC = () => {
 };
 
 export const CommandPalettePreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -145,7 +157,7 @@ export const CommandPalettePreview: React.FC = () => {
   }, []);
 
   return (
-    <PreviewContainer title="Command Palette" description="A powerful command palette for rapid navigation.">
+    <PreviewContainer title="Command Palette" description="A powerful command palette for rapid navigation." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <div className="flex flex-col items-center justify-center w-full h-full min-h-75">
         <div
           onClick={() => setOpen(true)}
@@ -157,7 +169,7 @@ export const CommandPalettePreview: React.FC = () => {
           </div>
         </div>
 
-        <CommandPalette open={open} onOpenChange={setOpen}>
+        <CommandPalette open={open} onOpenChange={setOpen} color={previewColor} variant={previewVariant}>
           <CommandInput placeholder="Type a command or search..." />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
@@ -201,8 +213,10 @@ export const CommandPalettePreview: React.FC = () => {
 };
 
 export const GlobalBreadcrumbPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Breadcrumb" description="A global breadcrumb navigation component.">
+    <PreviewContainer title="Breadcrumb" description="A global breadcrumb navigation component." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <div className="w-full flex items-center justify-start p-4 md:p-12 min-h-75">
          <GlobalBreadcrumb />
       </div>
@@ -211,9 +225,11 @@ export const GlobalBreadcrumbPreview: React.FC = () => {
 };
 
 export const ComponentPageSidebarPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [open, setOpen] = useState(true);
   return (
-    <PreviewContainer title="Page Sidebar" description="A dedicated sidebar for component documentation." isVirtualScreen={true} align="start">
+    <PreviewContainer title="Page Sidebar" description="A dedicated sidebar for component documentation." isVirtualScreen={true} align="start" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <div className="w-full h-full min-h-125 relative overflow-hidden bg-muted/10 border border-border/50 rounded-xl" style={{ transform: "translateZ(0)" }}>
         <ComponentPageSidebar open={open} setOpen={setOpen} />
         <div className={`transition-all duration-300 p-8 ${open ? "ml-64" : "ml-16"}`}>

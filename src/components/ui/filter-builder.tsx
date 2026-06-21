@@ -22,6 +22,10 @@ import { cn } from "@/lib/utils";
 // TYPES & CONTEXT
 // ==========================================
 
+export type FilterBuilderColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type FilterBuilderShape = "default" | "square" | "rounded" | "sharp";
+export type FilterBuilderSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
 export type FieldType = "text" | "number" | "date" | "select" | "multiselect" | "boolean" | "currency" | "percentage" | "user" | "tags";
 
 export interface FieldOption {
@@ -65,6 +69,9 @@ interface FilterBuilderContextType {
   fields: FilterField[];
   operators: FilterOperator[];
   variant: VariantType;
+  color: FilterBuilderColor;
+  shape: FilterBuilderShape;
+  spacing: FilterBuilderSpacing;
   onUpdateNode: (id: string, updates: any) => void;
   onDeleteNode: (id: string) => void;
   onAddRule: (parentId: string) => void;
@@ -83,24 +90,78 @@ const useFilterBuilder = () => {
 };
 
 // ==========================================
+// THEMING
+// ==========================================
+
+const colorThemeMap: Record<FilterBuilderColor, { text: string; bgActive: string; ring: string; borderActive: string }> = {
+  default: { text: "text-foreground", bgActive: "bg-muted", ring: "focus:ring-ring/20", borderActive: "border-foreground" },
+  blue: { text: "text-blue-600", bgActive: "bg-blue-50 dark:bg-blue-900/20", ring: "focus:ring-blue-600/20", borderActive: "border-blue-600" },
+  emerald: { text: "text-emerald-600", bgActive: "bg-emerald-50 dark:bg-emerald-900/20", ring: "focus:ring-emerald-600/20", borderActive: "border-emerald-600" },
+  rose: { text: "text-rose-600", bgActive: "bg-rose-50 dark:bg-rose-900/20", ring: "focus:ring-rose-600/20", borderActive: "border-rose-600" },
+  amber: { text: "text-amber-600", bgActive: "bg-amber-50 dark:bg-amber-900/20", ring: "focus:ring-amber-500/20", borderActive: "border-amber-500" },
+  violet: { text: "text-violet-600", bgActive: "bg-violet-50 dark:bg-violet-900/20", ring: "focus:ring-violet-600/20", borderActive: "border-violet-600" },
+  indigo: { text: "text-indigo-600", bgActive: "bg-indigo-50 dark:bg-indigo-900/20", ring: "focus:ring-indigo-600/20", borderActive: "border-indigo-600" },
+  sky: { text: "text-sky-600", bgActive: "bg-sky-50 dark:bg-sky-900/20", ring: "focus:ring-sky-500/20", borderActive: "border-sky-500" },
+  slate: { text: "text-slate-600", bgActive: "bg-slate-50 dark:bg-slate-900/20", ring: "focus:ring-slate-600/20", borderActive: "border-slate-600" },
+  orange: { text: "text-orange-600", bgActive: "bg-orange-50 dark:bg-orange-900/20", ring: "focus:ring-orange-500/20", borderActive: "border-orange-500" },
+};
+
+const getShapeClass = (shape: FilterBuilderShape, element: "container" | "button" | "input" = "container") => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-[2px]";
+    case "rounded": return element === "container" ? "rounded-2xl" : "rounded-xl";
+    case "default": return element === "container" ? "rounded-xl" : "rounded-lg";
+  }
+};
+
+const getSpacingClass = (spacing: FilterBuilderSpacing, element: "container" | "button" | "input" = "input") => {
+  if (element === "button") {
+    switch (spacing) {
+      case "2x": return "px-2 py-1 text-xs";
+      case "4x": return "px-2.5 py-1.5 text-xs";
+      case "6x": return "px-4 py-2 text-sm";
+      case "8x": return "px-5 py-2.5 text-base";
+      default: return "px-3 py-1 text-xs";
+    }
+  }
+  if (element === "container") {
+    switch (spacing) {
+      case "2x": return "p-2";
+      case "4x": return "p-3";
+      case "6x": return "p-5 md:p-8";
+      case "8x": return "p-6 md:p-10";
+      default: return "p-4 md:p-6";
+    }
+  }
+  switch (spacing) {
+    case "2x": return "px-2 py-1 text-xs";
+    case "4x": return "px-2.5 py-1.5 text-xs";
+    case "6x": return "px-4 py-2 text-sm";
+    case "8x": return "px-5 py-2.5 text-base";
+    default: return "px-3 py-1.5 text-sm";
+  }
+};
+
+// ==========================================
 // UTILS & DEFAULT OPERATORS
 // ==========================================
 
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
 export const DEFAULT_OPERATORS: FilterOperator[] = [
-          { id: "eq", label: "Equals", types: ["text", "number", "select", "boolean", "currency", "percentage", "user", "date"] },
-          { id: "neq", label: "Not Equals", types: ["text", "number", "select", "boolean", "currency", "percentage", "user", "date"] },
-          { id: "contains", label: "Contains", types: ["text", "multiselect", "tags"] },
-          { id: "not_contains", label: "Does Not Contain", types: ["text", "multiselect", "tags"] },
-          { id: "starts_with", label: "Starts With", types: ["text"] },
-          { id: "ends_with", label: "Ends With", types: ["text"] },
-          { id: "gt", label: "Greater Than", types: ["number", "currency", "percentage", "date"] },
-          { id: "lt", label: "Less Than", types: ["number", "currency", "percentage", "date"] },
-          { id: "between", label: "Between", types: ["number", "date", "currency", "percentage"] },
-          { id: "is_empty", label: "Is Empty", types: ["text", "number", "select", "multiselect", "date", "user", "tags"] },
-          { id: "is_not_empty", label: "Is Not Empty", types: ["text", "number", "select", "multiselect", "date", "user", "tags"] },
-        ];
+  { id: "eq", label: "Equals", types: ["text", "number", "select", "boolean", "currency", "percentage", "user", "date"] },
+  { id: "neq", label: "Not Equals", types: ["text", "number", "select", "boolean", "currency", "percentage", "user", "date"] },
+  { id: "contains", label: "Contains", types: ["text", "multiselect", "tags"] },
+  { id: "not_contains", label: "Does Not Contain", types: ["text", "multiselect", "tags"] },
+  { id: "starts_with", label: "Starts With", types: ["text"] },
+  { id: "ends_with", label: "Ends With", types: ["text"] },
+  { id: "gt", label: "Greater Than", types: ["number", "currency", "percentage", "date"] },
+  { id: "lt", label: "Less Than", types: ["number", "currency", "percentage", "date"] },
+  { id: "between", label: "Between", types: ["number", "date", "currency", "percentage"] },
+  { id: "is_empty", label: "Is Empty", types: ["text", "number", "select", "multiselect", "date", "user", "tags"] },
+  { id: "is_not_empty", label: "Is Not Empty", types: ["text", "number", "select", "multiselect", "date", "user", "tags"] },
+];
 
 export const createEmptyRule = (fields: FilterField[]): FilterRule => {
   const fieldId = fields[0]?.id || "";
@@ -130,6 +191,9 @@ export interface FilterBuilderProps {
   fields: FilterField[];
   operators?: FilterOperator[];
   variant?: VariantType;
+  color?: FilterBuilderColor;
+  shape?: FilterBuilderShape;
+  spacing?: FilterBuilderSpacing;
   className?: string;
 }
 
@@ -139,6 +203,9 @@ export const FilterBuilder = React.memo(function FilterBuilder({
   fields,
   operators = DEFAULT_OPERATORS,
   variant = "default",
+  color = "default",
+  shape = "default",
+  spacing = "default",
   className,
 }: FilterBuilderProps) {
   const [data, setData] = useState<FilterGroup>(initialData);
@@ -261,12 +328,13 @@ export const FilterBuilder = React.memo(function FilterBuilder({
 
   return (
     <FilterBuilderContext.Provider value={{
-      fields, operators, variant,
+      fields, operators, variant, color, shape, spacing,
       onUpdateNode, onDeleteNode, onAddRule, onAddGroup, onMoveNode,
       draggedNodeId, setDraggedNodeId
     }}>
       <div className={cn(
-        "flex flex-col w-full rounded-xl transition-colors duration-300",
+        "flex flex-col w-full transition-colors duration-300",
+        getShapeClass(shape, "container"),
         variant === "default" && "bg-background border border-border/60 shadow-sm",
         variant === "enterprise" && "bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800",
         variant === "glass" && "bg-background/40 backdrop-blur-md border border-border/40 shadow-lg",
@@ -286,7 +354,7 @@ FilterBuilder.displayName = "FilterBuilder";
 // ==========================================
 
 function FilterGroupComponent({ group, isRoot }: { group: FilterGroup; isRoot?: boolean }) {
-  const { variant, onUpdateNode, onAddRule, onAddGroup, onDeleteNode, onMoveNode, draggedNodeId, setDraggedNodeId } = useFilterBuilder();
+  const { variant, color, shape, spacing, onUpdateNode, onAddRule, onAddGroup, onDeleteNode, onMoveNode, draggedNodeId, setDraggedNodeId } = useFilterBuilder();
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -306,6 +374,8 @@ function FilterGroupComponent({ group, isRoot }: { group: FilterGroup; isRoot?: 
     setDraggedNodeId(null);
   };
 
+  const activeTheme = colorThemeMap[color];
+
   return (
     <div 
       className={cn(
@@ -316,7 +386,8 @@ function FilterGroupComponent({ group, isRoot }: { group: FilterGroup; isRoot?: 
         !isRoot && variant === "minimal" && "border-muted",
         !isRoot && variant === "glass" && "border-primary/20",
         !isRoot && variant === "compact" && "ml-3 pl-3 mt-2",
-        isRoot && (variant === "compact" ? "p-3" : "p-4 md:p-6")
+        isRoot && getSpacingClass(spacing, "container"),
+        isRoot && variant === "compact" && "p-3"
       )}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
@@ -324,7 +395,8 @@ function FilterGroupComponent({ group, isRoot }: { group: FilterGroup; isRoot?: 
       {/* Group Header */}
       <div className="flex flex-wrap items-center gap-2 mb-3 z-10 relative">
         <div className={cn(
-          "flex items-center rounded-lg border overflow-hidden p-0.5",
+          "flex items-center border overflow-hidden p-0.5",
+          getShapeClass(shape, "button"),
           variant === "default" && "bg-muted/50 border-border/50",
           variant === "enterprise" && "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm",
           variant === "minimal" && "bg-transparent border-transparent",
@@ -334,10 +406,12 @@ function FilterGroupComponent({ group, isRoot }: { group: FilterGroup; isRoot?: 
           <button
             onClick={() => onUpdateNode(group.id, { logicalOperator: "AND" })}
             className={cn(
-              "px-3 py-1 text-xs font-semibold rounded-md transition-all",
+              "transition-all",
+              getSpacingClass(spacing, "button"),
+              getShapeClass(shape, "button"),
               group.logicalOperator === "AND" 
-                ? "bg-background shadow-sm text-foreground" 
-                : "text-muted-foreground hover:text-foreground"
+                ? cn("bg-background shadow-sm font-bold", activeTheme.text) 
+                : "text-muted-foreground hover:text-foreground font-semibold"
             )}
           >
             AND
@@ -345,10 +419,12 @@ function FilterGroupComponent({ group, isRoot }: { group: FilterGroup; isRoot?: 
           <button
             onClick={() => onUpdateNode(group.id, { logicalOperator: "OR" })}
             className={cn(
-              "px-3 py-1 text-xs font-semibold rounded-md transition-all",
+              "transition-all",
+              getSpacingClass(spacing, "button"),
+              getShapeClass(shape, "button"),
               group.logicalOperator === "OR" 
-                ? "bg-background shadow-sm text-foreground" 
-                : "text-muted-foreground hover:text-foreground"
+                ? cn("bg-background shadow-sm font-bold", activeTheme.text) 
+                : "text-muted-foreground hover:text-foreground font-semibold"
             )}
           >
             OR
@@ -360,20 +436,20 @@ function FilterGroupComponent({ group, isRoot }: { group: FilterGroup; isRoot?: 
         <div className="flex items-center gap-1.5 opacity-0 hover:opacity-100 transition-opacity focus-within:opacity-100 sm:opacity-100">
           <button
             onClick={() => onAddRule(group.id)}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg hover:bg-muted text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+            className={cn("flex items-center gap-1 font-medium text-muted-foreground transition-colors", getSpacingClass(spacing, "button"), getShapeClass(shape, "button"), `hover:${activeTheme.bgActive} hover:${activeTheme.text}`)}
           >
             <Plus className="w-3.5 h-3.5" /> Rule
           </button>
           <button
             onClick={() => onAddGroup(group.id)}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg hover:bg-muted text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+            className={cn("flex items-center gap-1 font-medium text-muted-foreground transition-colors", getSpacingClass(spacing, "button"), getShapeClass(shape, "button"), `hover:${activeTheme.bgActive} hover:${activeTheme.text}`)}
           >
             <Filter className="w-3.5 h-3.5" /> Group
           </button>
           {!isRoot && (
             <button
               onClick={() => onDeleteNode(group.id)}
-              className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors ml-1"
+              className={cn("p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors ml-1")}
             >
               <X className="w-4 h-4" />
             </button>
@@ -421,7 +497,7 @@ function FilterGroupComponent({ group, isRoot }: { group: FilterGroup; isRoot?: 
 // ==========================================
 
 function FilterRuleComponent({ rule }: { rule: FilterRule }) {
-  const { fields, operators, variant, onUpdateNode, onDeleteNode, onMoveNode, setDraggedNodeId, draggedNodeId } = useFilterBuilder();
+  const { fields, operators, variant, shape, onUpdateNode, onDeleteNode, onMoveNode, setDraggedNodeId, draggedNodeId } = useFilterBuilder();
   const [isDragOver, setIsDragOver] = useState<"top" | "bottom" | null>(null);
 
   const selectedField = fields.find(f => f.id === rule.fieldId);
@@ -499,7 +575,8 @@ function FilterRuleComponent({ rule }: { rule: FilterRule }) {
       </div>
 
       <div className={cn(
-        "flex flex-wrap items-center gap-2 flex-1 rounded-xl p-1.5 transition-colors",
+        "flex flex-wrap items-center gap-2 flex-1 p-1.5 transition-colors",
+        getShapeClass(shape, "container"),
         variant === "default" && "bg-muted/30 hover:bg-muted/50 border border-border/50",
         variant === "enterprise" && "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm",
         variant === "minimal" && "hover:bg-muted/40 -mx-2 px-2 border border-transparent hover:border-border/50",
@@ -513,7 +590,6 @@ function FilterRuleComponent({ rule }: { rule: FilterRule }) {
           onChange={(v) => onUpdateNode(rule.id, { fieldId: v, value: "" })}
           options={fields.map(f => ({ value: f.id, label: f.label }))}
           placeholder="Select Field"
-          variant={variant}
         />
 
         {/* Operator Select */}
@@ -523,14 +599,13 @@ function FilterRuleComponent({ rule }: { rule: FilterRule }) {
             onChange={(v) => onUpdateNode(rule.id, { operatorId: v })}
             options={availableOperators.map(o => ({ value: o.id, label: o.label }))}
             placeholder="Operator"
-            variant={variant}
           />
         )}
 
         {/* Value Input */}
         {selectedField && !["is_empty", "is_not_empty"].includes(rule.operatorId) && (
           <div className="flex-1 min-w-[120px]">
-            <ValueRenderer rule={rule} field={selectedField} variant={variant} onUpdate={(v) => onUpdateNode(rule.id, { value: v })} />
+            <ValueRenderer rule={rule} field={selectedField} onUpdate={(v) => onUpdateNode(rule.id, { value: v })} />
           </div>
         )}
       </div>
@@ -549,14 +624,19 @@ function FilterRuleComponent({ rule }: { rule: FilterRule }) {
 // VALUE RENDERER
 // ==========================================
 
-function ValueRenderer({ rule, field, variant, onUpdate }: { rule: FilterRule, field: FilterField, variant: VariantType, onUpdate: (val: any) => void }) {
+function ValueRenderer({ rule, field, onUpdate }: { rule: FilterRule, field: FilterField, onUpdate: (val: any) => void }) {
+  const { variant, color, shape, spacing } = useFilterBuilder();
+  const activeTheme = colorThemeMap[color];
+
   const baseInputClass = cn(
-    "w-full px-3 py-1.5 text-sm rounded-lg focus:outline-none transition-shadow",
-    variant === "default" && "bg-background border border-border/60 focus:border-primary/50 focus:ring-2 focus:ring-primary/20",
-    variant === "enterprise" && "bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-primary/20",
+    "w-full focus:outline-none transition-shadow",
+    getShapeClass(shape, "input"),
+    getSpacingClass(spacing, "input"),
+    variant === "default" && cn("bg-background border border-border/60 focus:border-primary/50 focus:ring-2", activeTheme.ring),
+    variant === "enterprise" && cn("bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:ring-2", activeTheme.ring),
     variant === "minimal" && "bg-transparent border-b border-border hover:border-foreground/50 focus:border-primary rounded-none px-0 py-1",
-    variant === "glass" && "bg-background/50 border border-border/40 focus:ring-2 focus:ring-primary/30",
-    variant === "compact" && "bg-background border border-border/60 px-2 py-1 text-xs"
+    variant === "glass" && cn("bg-background/50 border border-border/40 focus:ring-2", activeTheme.ring),
+    variant === "compact" && "bg-background border border-border/60"
   );
 
   if (field.type === "select" || field.type === "boolean") {
@@ -570,7 +650,6 @@ function ValueRenderer({ rule, field, variant, onUpdate }: { rule: FilterRule, f
         onChange={onUpdate}
         options={options}
         placeholder="Select value..."
-        variant={variant}
         fullWidth
       />
     );
@@ -619,18 +698,18 @@ function CustomSelect({
   onChange, 
   options, 
   placeholder, 
-  variant, 
   fullWidth 
 }: { 
   value: string; 
   onChange: (val: string) => void; 
   options: { value: string, label: string }[]; 
   placeholder?: string;
-  variant: VariantType;
   fullWidth?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { variant, color, shape, spacing } = useFilterBuilder();
+  const activeTheme = colorThemeMap[color];
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -650,12 +729,15 @@ function CustomSelect({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "w-full flex items-center justify-between px-3 py-1.5 text-sm rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary/20",
+          "w-full flex items-center justify-between transition-all focus:outline-none focus:ring-2",
+          getShapeClass(shape, "input"),
+          getSpacingClass(spacing, "input"),
+          activeTheme.ring,
           variant === "default" && "bg-background border border-border/60 hover:bg-muted/50",
           variant === "enterprise" && "bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-900 shadow-sm",
           variant === "minimal" && "bg-transparent border-b border-border hover:border-foreground/50 rounded-none px-0 py-1",
           variant === "glass" && "bg-background/50 border border-border/40 hover:bg-background/80",
-          variant === "compact" && "bg-background border border-border/60 px-2 py-1 text-xs"
+          variant === "compact" && "bg-background border border-border/60"
         )}
       >
         <span className="truncate pr-2">{selectedOption ? selectedOption.label : <span className="text-muted-foreground">{placeholder}</span>}</span>
@@ -685,7 +767,7 @@ function CustomSelect({
                 className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-muted transition-colors text-left"
               >
                 <span className="truncate">{opt.label}</span>
-                {value === opt.value && <Check className="w-3.5 h-3.5 text-primary shrink-0" />}
+                {value === opt.value && <Check className={cn("w-3.5 h-3.5 shrink-0", activeTheme.text)} />}
               </button>
             ))}
           </motion.div>

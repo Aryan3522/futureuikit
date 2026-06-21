@@ -10,14 +10,80 @@
 import React, { useEffect, useRef, useState } from "react"
 import { renderToString } from "react-dom/server"
 
+export type IconCloudColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type IconCloudShape = "default" | "square" | "rounded" | "sharp";
+export type IconCloudSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
+export interface IconCloudProps {
+  icons?: any[];
+  images?: string[];
+  color?: IconCloudColor;
+  shape?: IconCloudShape;
+  spacing?: IconCloudSpacing;
+}
+
 function easeOutCubic(t: number) {
   return 1 - Math.pow(1 - t, 3);
 }
 
+const colorThemeMap: Record<IconCloudColor, { hex: string }> = {
+  default: { hex: "#18181b" }, // zinc-900 — B&W default, pure dark (canvas can't use CSS vars)
+  blue: { hex: "#2563eb" },
+  emerald: { hex: "#16a34a" },
+  rose: { hex: "#e11d48" },
+  amber: { hex: "#d97706" },
+  violet: { hex: "#7c3aed" },
+  indigo: { hex: "#4f46e5" },
+  sky: { hex: "#0284c7" },
+  slate: { hex: "#475569" },
+  orange: { hex: "#ea580c" },
+};
+
+const getCanvasSize = (spacing: IconCloudSpacing) => {
+  switch (spacing) {
+    case "2x": return 250;
+    case "4x": return 300;
+    case "6x": return 350;
+    case "8x": return 450;
+    default: return 400;
+  }
+};
+
+const applyShapeToCanvas = (ctx: CanvasRenderingContext2D, shape: IconCloudShape, x: number, y: number, size: number) => {
+  const radius = size / 2;
+  ctx.beginPath();
+  switch (shape) {
+    case "square":
+      ctx.rect(x, y, size, size);
+      break;
+    case "sharp":
+      if (ctx.roundRect) {
+        ctx.roundRect(x, y, size, size, 4);
+      } else {
+        ctx.rect(x, y, size, size);
+      }
+      break;
+    case "rounded":
+      if (ctx.roundRect) {
+        ctx.roundRect(x, y, size, size, 12);
+      } else {
+        ctx.rect(x, y, size, size);
+      }
+      break;
+    case "default":
+      ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2);
+      break;
+  }
+  ctx.closePath();
+}
+
 export default function IconCloud({
   icons,
-  images
-}: any) {
+  images,
+  color = "default",
+  shape = "default",
+  spacing = "default"
+}: IconCloudProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [iconPositions, setIconPositions] = useState<any[]>([])
   const [isDragging, setIsDragging] = useState(false)
@@ -28,6 +94,9 @@ export default function IconCloud({
   const rotationRef = useRef({ x: 0, y: 0 })
   const iconCanvasesRef = useRef<any[]>([])
   const imagesLoadedRef = useRef<boolean[]>([])
+
+  const activeTheme = colorThemeMap[color];
+  const canvasSize = getCanvasSize(spacing);
 
   // Create icon canvases once when icons/images change
   useEffect(() => {
@@ -51,10 +120,8 @@ export default function IconCloud({
           img.onload = () => {
             offCtx.clearRect(0, 0, offscreen.width, offscreen.height)
 
-            // Create circular clipping path
-            offCtx.beginPath()
-            offCtx.arc(20, 20, 20, 0, Math.PI * 2)
-            offCtx.closePath()
+            // Create shape clipping path
+            applyShapeToCanvas(offCtx, shape, 0, 0, 40)
             offCtx.clip()
 
             // Draw the image
@@ -79,7 +146,7 @@ export default function IconCloud({
     })
 
     iconCanvasesRef.current = newIconCanvases
-  }, [icons, images])
+  }, [icons, images, shape])
 
   // Generate initial icon positions on a sphere
   useEffect(() => {
@@ -108,6 +175,7 @@ export default function IconCloud({
         id: i,
       })
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIconPositions(newIcons)
   }, [icons, images])
 
@@ -262,9 +330,8 @@ export default function IconCloud({
             }
           } else {
             // Show numbered circles if no icons/images are provided
-            ctx.beginPath()
-            ctx.arc(0, 0, 20, 0, Math.PI * 2)
-            ctx.fillStyle = "#4444ff"
+            applyShapeToCanvas(ctx, shape, -20, -20, 40)
+            ctx.fillStyle = activeTheme.hex
             ctx.fill()
             ctx.fillStyle = "white"
             ctx.textAlign = "center"
@@ -286,18 +353,17 @@ export default function IconCloud({
         cancelAnimationFrame(animationFrameRef.current)
       }
     };
-  }, [icons, images, iconPositions, isDragging, mousePos, targetRotation])
+  }, [icons, images, iconPositions, isDragging, mousePos, targetRotation, activeTheme.hex, shape])
 
   return (
     <canvas
       ref={canvasRef}
-      width={400}
-      height={400}
+      width={canvasSize}
+      height={canvasSize}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
-      className="rounded-lg"
       aria-label="Interactive 3D Icon Cloud"
       role="img" />
   );

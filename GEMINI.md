@@ -2,403 +2,87 @@
 
 IMPORTANT
 
-This file defines:
+This file defines the entire project architecture, workflows, component guidelines, registry protection, and CLI operations. Follow everything stated here.
 
-* Project architecture
-* Project workflows
-* Component workflows
-* Registry workflows
-* Documentation workflows
-* Development standards
+## 1. Project Context and Markdown Usage
 
-All enforcement rules, protection rules, anti-hallucination rules, file protection rules, registry protection rules, CLI protection rules, sync protection rules, and AI operational requirements are defined in:
+- **Use Available MD Files:** Always read and use all the `.md` files available in the project for context and instructions before starting any task. 
+- Currently, unnecessary md files have been removed, and we will write md files one by one as needed. Keep `README.md` and this `GEMINI.md` intact.
 
-AGENT_RULES.md
+## 2. Tech Stack
 
-Both files must always be followed together.
+Future UI is a modern component library built with the following specific tech stack. You MUST follow this exact stack without hallucinating or introducing unrequested frameworks:
 
-If any conflict exists:
-
-AGENT_RULES.md takes precedence.
-
-
-## Project Overview
-
-Future UI is a modern component library built with:
-
-* Next.js (latest)
-* React 19
+* Next.js (latest) - *Note: This version has breaking changes. APIs, conventions, and file structure may differ from older versions. Read Next.js docs before writing code.*
+* React 19 - *Prefer `"use client"` for interactive components. Avoid premature optimization (`useMemo`, etc.) unless measurably beneficial.*
 * Tailwind CSS 4
 * Framer Motion
+* Radix UI (when appropriate for accessibility)
 
-The project distributes reusable components through the Future UI registry and CLI.
+## 3. CLI & Component Downloads (CRITICAL)
 
----
+The main feature of this project is the download of the components. **It must always work properly without any errors, and the components must be fully reusable and bug-free.**
 
-# Core Philosophy
+* **Protected Files:** `bin/cli.mjs`, `bin/sync.mjs`, and any other scripts needed in the project for component downloads.
+* **NEVER delete these CLI files ever.**
+* If you need to upgrade them, **always test the changes properly** and thoroughly check if the downloads of the components are working properly or not.
 
-Components must be:
+## 4. Component Design & Theming
 
-* Reusable
-* Production-ready
-* Framework-friendly
-* Minimal
-* Interactive
-* Accessible
-* Consistent
+* **Universal Variant API & Consistency:** When creating new components, you must keep consistency in mind. If a user uses one variant of all components in their project, they must all be fully consistent and look unified on their website.
+  * **Style Variants (`variant`):** `solid` (Solid background), `outline` (Transparent with Border), `ghost` (Transparent, hover effect), `link` (Underlined text).
+  * **Color Variants (`color`):** Every component MUST support these 10 distinct color palettes for its styles, mapped correctly for both light and dark modes:
+    1. `default` (Black & White - the ultimate default)
+    2. `blue` (Blue-600)
+    3. `emerald` (Emerald-500)
+    4. `rose` (Rose-500)
+    5. `amber` (Amber-500)
+    6. `violet` (Violet-600)
+    7. `indigo` (Indigo-600)
+    8. `sky` (Sky-500)
+    9. `slate` (Slate-600)
+    10. `orange` (Orange-500)
+  * **Shape Variants (`shape`):** `default`, `square`, `rounded`, `sharp`. All components must have shape variants.
+  * **Spacing Variants (`spacing`):** `default`, `2x`, `4x`, `6x`, `8x`. Applicable to interactive elements and containers.
+* **Black and White Default:** **Always default `color` to `"default"` (Black and White)**.
+* **No Shadows:** Do not use `shadow`, `shadow-sm`, `shadow-lg`, or `drop-shadow` in any component.
+* **Theme Alignment:** All components and their 10 colors must be fully theme-aligned (look premium in both light and dark modes).
+* **Spacing Consistency:** The whole website and all components must follow a **44x spacing consistency** strictly.
+* **Premium & Reusable:** All components must be fully optimized, premium, and reusable without modification.
 
-Users should be able to install a component and immediately use it without modification.
+## 5. Documentation & DocBlocks
 
----
+* **Main/Reusable Components:** When creating new components, always check if the component which is created is the main/reusable component which can be directly used. If it is a main component, you **MUST** add a DocBlock code in it.
+* **Supporter Components:** If it is a supporter component (meaning it cannot be used directly in any project), **NEVER** add DocBlock code in it.
 
-# Technology Standards
+The DocBlock for main components should look like this:
 
-## Framework
-
-* Next.js latest
-* React 19
-
-## Styling
-
-* Tailwind CSS 4
-
-## Animations
-
-* Framer Motion
-
-## Accessibility
-
-* Radix UI when appropriate
-
-## Language
-
-Reusable components should be written in:
-
-* .ts
-* .tsx
-
----
-
-# Future UI First Policy
-
-Always prefer:
-
-* Future UI Components
-* Future UI Icons
-
-Locations:
-
-* src/components/ui
-* src/icons
-
-before introducing external alternatives.
-
----
-
-# Component Standards
-
-Every reusable component must:
-
-* Live in src/components/ui
-* Be in its own file
-* Be production-ready
-* Be reusable
-* Be responsive
-* Support dark mode
-* Support light mode
-* Follow Future UI design language
-
----
-
-# Variant Standards
-
-Where appropriate:
-
-Components should support variants.
-
-Examples:
-
-* modern
-* clean
-* minimal
-
-Variants must be:
-
-* Typed
-* Consistent
-* Production-ready
-
----
-
-# Documentation Requirement
-
-Every reusable component must include a DocBlock.
-
-The DocBlock should describe:
-
-* Purpose
-* API
-* Usage
-
----
-
-# Registry Architecture
-
-Source of Truth:
-
-src/components/ui/*.tsx
-
-Registry metadata originates from JSDoc metadata inside component files.
-
-Example:
-
+```javascript
 /**
-
-* @registry-slug example-component
-* @registry-name Example Component
-* @registry-description Example Description
-* @registry-category ui
-* @registry-type components:ui
-  */
-
----
-
-# Registry Flow
-
-Component File
-↓
-JSDoc Metadata
-↓
-npm run sync
-↓
-registryData.ts
-↓
-Registry API
-↓
-futureuikit CLI
-
----
-
-# Website Flow
-
-Component File
-↓
-component-library-data.ts
-↓
-PreviewRegistry.tsx
-↓
-Component Pages
-↓
-Documentation Website
-
----
-
-# Component Creation Workflow
-
-Step 1
-
-Create:
-
-src/components/ui/[component].tsx
-
-Step 2
-
-Add registry JSDoc metadata.
-
-Step 3
-
-Add component metadata to:
-
-src/data/component-library-data.ts
-
-Step 4
-
-Register preview inside:
-
-src/route-components/PreviewRegistry.tsx
-
-Step 5
-
-Verify:
-
-* Component preview
-* Component rendering
-* Component availability
-
-Step 6
-
-Run validation:
-
-npm run lint
-
-npm run build
-
----
-
-# Testing Requirements
-
-Verify:
-
-* Light mode
-* Dark mode
-* Responsive behavior
-* Variant behavior
-
-before completion.
-
----
-
-# React Standards
-
-Prefer:
-
-"use client"
-
-for interactive components.
-
-Avoid premature optimization.
-
-Do not use:
-
-* React.memo
-* useMemo
-* useCallback
-
-unless measurable benefits exist.
-
----
-
-# Styling Rules
-
-Prefer:
-
-* Tailwind utilities
-* Existing patterns
-* Existing design language
-
-Avoid:
-
-* Duplicate styling systems
-* Unnecessary custom CSS
-
----
-
-# Import Standards
-
-Preferred:
-
-import React from "react";
-
-export default Component;
-
-or
-
-export function Component() {}
-
-Keep imports simple.
-
-Keep exports predictable.
-
----
-
-# Production Approval Gate
-
-Before deployment:
-
-1. Summarize changes.
-2. List impacted files.
-3. Request approval.
-
-Never deploy automatically.
-
-# Architecture Preservation Rule
-
-Never create parallel systems.
-
-Examples:
-
-Do not create:
-
-- alternative registries
-- alternative metadata systems
-- alternative preview systems
-- alternative icon systems
-- alternative component registration systems
-
-Use the existing architecture.
-
-Extend existing systems instead of replacing them.
-
-When uncertain:
-
-Ask before introducing a new pattern.
-
-# Website Registration Requirements
-
-A component is NOT considered fully integrated until all required website registrations are completed.
-
-Website Integration Requirements:
-
-1. Component exists inside:
-
-src/components/ui
-
-2. Component metadata exists inside:
-
-src/data/component-library-data.ts
-
-3. Component preview is registered inside:
-
-src/route-components/PreviewRegistry.tsx
-
-A component that exists only in src/components/ui is considered incomplete.
-
-A component that exists in component-library-data.ts but is missing from PreviewRegistry.tsx is considered incomplete.
-
-A component must be visible and functional on the website before implementation is considered complete.
-
-Always verify:
-
-* Component page rendering
-* Preview rendering
-* Component availability
-* Navigation to the component page
-
-# Generated Files
-
-The following files are generated and must be treated as read-only:
-
-src/data/registryData.ts
-
-Do not manually edit generated files.
-
-Generated files must only be updated through the official generation workflow.
-
-Registry generation is controlled by the user.
-
-Do not manually update generated registry output.
-
-## Frontend Design Skill
-
-A frontend design skill is installed at:
-
-.agents/skills/frontend-design/SKILL.md
-
-Before generating:
-
-- Components
-- Layouts
-- Landing pages
-- Documentation pages
-- Dashboard examples
-- Interactive UI
-
-Read and follow the frontend-design skill.
-
-However:
-
-- Maintain Future UI design consistency.
-- Do not create random visual identities for individual components.
-- Prioritize reusable component design over artistic experimentation.
-- Follow Future UI design tokens and architecture.
-- Production readiness is more important than visual novelty.
+ * @registry-slug component-name
+ * @registry-name Component Name
+ * @registry-description Description
+ * @registry-category ui
+ * @registry-type components:ui
+ */
+```
+
+## 6. Registry & Preview Workflow
+
+A component is NOT considered fully integrated until all required website registrations are completed and previewed.
+
+1. **Create File:** Every reusable component must live in `src/components/ui` and be in its own file (`.ts` or `.tsx`). 
+2. **Metadata:** Add component metadata to `src/data/component-library-data.ts`. Follow the existing schema exactly. Do not assume or invent schemas.
+3. **Preview Registration:** Register the preview inside `src/route-components/PreviewRegistry.tsx`. **Show the component's preview properly in the preview page.**
+4. **Sync Registry:** **Sync the registry properly** using `npm run sync`. However, the user controls registry generation—do not run it automatically unless explicitly requested or clearly part of your approved task.
+   - *Registry Pipeline:* `JSDoc Metadata -> npm run sync -> src/data/registryData.ts -> Registry API -> CLI`.
+5. **Verification:** Run `npm run lint` and `npm run build`. Verify light/dark mode, responsiveness, and variant behavior before completion.
+
+## 7. Existing Architecture & Agent Policies
+
+* **Required File Inspection:** Before modifying any component, icon, metadata, documentation, or CLI script, inspect existing implementations. Follow the exact same structure, naming, typing, export, and registration conventions. Do not guess.
+* **No Parallel Systems:** Never create alternative registries, metadata systems, preview systems, or icon systems. Extend the existing architecture.
+* **File Scope:** Modify only requested files. No unrelated refactoring or optimization.
+* **Generated Files:** Treat generated files (like `src/data/registryData.ts`) as read-only. Never modify them manually.
+* **Deletion Protection:** Never delete files automatically. If deletion is needed: list files, explain why, request approval, and wait.
+* **Hallucination Prevention:** Do not assume schemas for metadata or structures. Always read existing implementations first.

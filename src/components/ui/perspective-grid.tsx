@@ -4,26 +4,77 @@
  * @registry-description A Future UI Perspective Grid component.
  * @registry-category ui
  */
+"use client";
+
 import React from "react";
 import { cn } from "@/lib/utils";
+
+export type PerspectiveGridColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type PerspectiveGridShape = "default" | "square" | "rounded" | "sharp";
+export type PerspectiveGridSpacing = "default" | "2x" | "4x" | "6x" | "8x";
 
 export interface PerspectiveGridProps {
   className?: string;
   gridLineGap?: number;
   showOverlay?: boolean;
   fadeRadius?: number;
+  color?: PerspectiveGridColor;
+  shape?: PerspectiveGridShape;
+  spacing?: PerspectiveGridSpacing;
 }
+
+const colorThemeMap: Record<PerspectiveGridColor, { text: string }> = {
+  default: { text: "text-muted-foreground/30" },
+  blue: { text: "text-blue-600/30 dark:text-blue-500/30" },
+  emerald: { text: "text-emerald-600/30 dark:text-emerald-500/30" },
+  rose: { text: "text-rose-600/30 dark:text-rose-500/30" },
+  amber: { text: "text-amber-600/30 dark:text-amber-500/30" },
+  violet: { text: "text-violet-600/30 dark:text-violet-500/30" },
+  indigo: { text: "text-indigo-600/30 dark:text-indigo-500/30" },
+  sky: { text: "text-sky-600/30 dark:text-sky-500/30" },
+  slate: { text: "text-slate-600/30 dark:text-slate-500/30" },
+  orange: { text: "text-orange-600/30 dark:text-orange-500/30" },
+};
+
+const getShapeClass = (shape: PerspectiveGridShape) => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-md";
+    case "rounded": return "rounded-2xl";
+    case "default": return "rounded-none"; // Grid typically full bleed
+  }
+};
+
+const getSpacingValue = (spacing: PerspectiveGridSpacing, defaultGap: number) => {
+  if (defaultGap !== 60) return defaultGap; // User provided explicit gap
+  switch (spacing) {
+    case "2x": return 40;
+    case "4x": return 60;
+    case "6x": return 80;
+    case "8x": return 100;
+    default: return 60;
+  }
+};
 
 export const PerspectiveGrid = React.memo(function PerspectiveGrid({
   className,
   gridLineGap = 60,
   showOverlay = true,
   fadeRadius = 80,
+  color = "default",
+  shape = "default",
+  spacing = "default"
 }: PerspectiveGridProps) {
+  const activeTheme = colorThemeMap[color];
+  const shapeClass = getShapeClass(shape);
+  const actualGap = getSpacingValue(spacing, gridLineGap);
+
   return (
     <div
       className={cn(
-        "relative w-full h-full overflow-hidden bg-background text-muted-foreground/30",
+        "relative w-full h-full overflow-hidden bg-background",
+        activeTheme.text,
+        shapeClass,
         "[--fade-stop:theme(colors.background)]",
         className
       )}
@@ -47,14 +98,14 @@ export const PerspectiveGrid = React.memo(function PerspectiveGrid({
               currentColor 0px,
               currentColor 1px,
               transparent 1px,
-              transparent ${gridLineGap}px
+              transparent ${actualGap}px
             ),
             repeating-linear-gradient(
               to bottom,
               currentColor 0px,
               currentColor 1px,
               transparent 1px,
-              transparent ${gridLineGap}px
+              transparent ${actualGap}px
             )
           `,
         }}

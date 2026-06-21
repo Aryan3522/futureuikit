@@ -27,14 +27,16 @@ import {
   Filter,
   Layers
 } from "lucide-react";
-import { PreviewContainer } from "../preview-engine/PreviewContainer";
+import { PreviewContainer, DEFAULT_COLORS } from "../preview-engine/PreviewContainer";
 import { useTheme } from "@/contexts/ThemeContext";
 
 export const PremiumOtpInputPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const { theme } = useTheme();
   const [length, setLength] = useState<number>(6);
   const [size, setSize] = useState<"sm" | "md" | "lg">("md");
-  const [otpColor, setOtpColor] = useState<"indigo" | "rose" | "emerald" | "amber" | "sky" | "violet" | "zinc">("indigo");
+  const [otpColor, setOtpColor] = useState<"indigo" | "rose" | "emerald" | "amber" | "sky" | "violet" | "slate">("indigo");
 
   const colors = [
     { name: "indigo", class: "bg-indigo-500" },
@@ -43,7 +45,7 @@ export const PremiumOtpInputPreview: React.FC = () => {
     { name: "amber", class: "bg-amber-500" },
     { name: "sky", class: "bg-sky-500" },
     { name: "violet", class: "bg-violet-500" },
-    { name: "zinc", class: "bg-zinc-500" },
+    { name: "slate", class: "bg-zinc-500" },
   ] as const;
 
   return (
@@ -90,7 +92,7 @@ export const PremiumOtpInputPreview: React.FC = () => {
             </div>
           </div>
         </div>
-      }
+      } colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className={cn(
         "flex flex-col items-center justify-center w-full h-full p-8 md:p-12 transition-colors duration-500 rounded-3xl",
@@ -120,12 +122,13 @@ export const PremiumOtpInputPreview: React.FC = () => {
               key={`${length}-${theme}-${size}-${otpColor}`}
               length={length} 
               theme={theme}
-              size={size}
+              
               color={otpColor}
               onVerify={async (code) => {
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 return code === "1234" || code === "123456" || code === "12345678" || code === "1234567890";
               }} 
+
             />
           </div>
 
@@ -144,18 +147,20 @@ export const PremiumOtpInputPreview: React.FC = () => {
 };
 
 export const CalendarPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [date, setDate] = useState<Date | undefined>(new Date());
 
   return (
     <PreviewContainer
       title="Calendar"
-      description="A clean, responsive calendar component for date selection."
+      description="A clean, responsive calendar component for date selection." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
     >
       <div className="bg-card border rounded-2xl p-6 shadow-sm">
         <Calendar
           value={date}
           onChange={setDate}
-          className="rounded-md"
+          className="rounded-md" color={previewColor} variant={previewVariant}
         />
       </div>
     </PreviewContainer>
@@ -163,17 +168,21 @@ export const CalendarPreview: React.FC = () => {
 };
 
 export const CalculatorPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
     <PreviewContainer
       title="Calculator"
-      description="A functional, glassmorphic calculator with advanced math operations."
+      description="A functional, glassmorphic calculator with advanced math operations." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
     >
-      <Calculator />
+      <Calculator color={previewColor} variant={previewVariant} />
     </PreviewContainer>
   );
 };
 
 export const DynamicFormPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [submittedData, setSubmittedData] = useState<any>(null);
   const [activeDemo, setActiveDemo] = useState("contact");
 
@@ -331,7 +340,7 @@ export const DynamicFormPreview: React.FC = () => {
       onVariantChange={(v) => {
         setActiveDemo(v);
         setSubmittedData(null);
-      }}
+      }} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className="flex flex-col @3xl:flex-row gap-8 items-stretch justify-center w-full max-w-5xl m-auto @container">
         <div className="flex-1 flex flex-col justify-center min-w-0">
@@ -417,18 +426,20 @@ export const DynamicFormPreview: React.FC = () => {
 };
 
 export const SelectPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [value, setValue] = useState<string | string[]>("");
   const [multiValue, setMultiValue] = useState<string | string[]>(["apple"]);
 
   return (
     <PreviewContainer
       title="Advanced Select"
-      description="Feature-rich select components with virtualization, multi-select, and search."
+      description="Feature-rich select components with virtualization, multi-select, and search." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl m-auto">
         <div className="space-y-4">
           <h4 className="text-sm font-bold uppercase tracking-widest text-muted-foreground px-1">Single Selection</h4>
-          <Select value={value as string} onValueChange={setValue}>
+          <Select value={value as string} onValueChange={setValue} color={previewColor} variant={previewVariant}>
             <SelectTrigger placeholder="Pick a fruit..." />
             <SelectContent>
               <SelectSearch placeholder="Search fruits..." />
@@ -446,7 +457,7 @@ export const SelectPreview: React.FC = () => {
 
         <div className="space-y-4">
           <h4 className="text-sm font-bold uppercase tracking-widest text-muted-foreground px-1">Multi-Select + Search</h4>
-          <Select multiSelect value={multiValue} onValueChange={setMultiValue}>
+          <Select multiSelect value={multiValue} onValueChange={setMultiValue} color={previewColor} variant={previewVariant}>
             <SelectTrigger placeholder="Choose multiple..." />
             <SelectContent>
               <SelectSearch placeholder="Filter options..." />
@@ -466,18 +477,20 @@ export const SelectPreview: React.FC = () => {
 };
 
 export const FileUploadPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [files, setFiles] = useState<FileState[]>([]);
 
   return (
     <PreviewContainer
       title="File Upload"
-      description="Premium drag-and-drop file upload with progress tracking and previews."
+      description="Premium drag-and-drop file upload with progress tracking and previews." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
     >
       <div className="w-full max-w-2xl m-auto space-y-8">
         <FileUpload
           maxFiles={5}
           maxSize={10 * 1024 * 1024}
-          onFilesChange={setFiles}
+          onFilesChange={setFiles} color={previewColor} variant={previewVariant}
         >
           <UploadDropzone />
           <div className="mt-8 space-y-4">
@@ -505,6 +518,8 @@ export const FileUploadPreview: React.FC = () => {
 };
 
 export const FormBuilderPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [data, setData] = useState<any>(null);
 
   const schema: SchemaField[] = [
@@ -533,7 +548,7 @@ export const FormBuilderPreview: React.FC = () => {
   return (
     <PreviewContainer
       title="Schema Form Builder"
-      description="Build complex nested forms with a simple JSON schema."
+      description="Build complex nested forms with a simple JSON schema." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
     >
       <div className="w-full max-w-4xl m-auto grid grid-cols-1 @2xl:grid-cols-[1fr_300px] gap-8 @container">
         <div className="bg-card border rounded-2xl p-6 shadow-sm">
@@ -556,10 +571,12 @@ export const FormBuilderPreview: React.FC = () => {
 };
 
 export const OTPVerificationPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
     <PreviewContainer
       title="OTP Verification"
-      description="Animated multi-field OTP input with various verification states."
+      description="Animated multi-field OTP input with various verification states." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
     >
       <div className="w-full max-w-md m-auto flex flex-col items-center gap-12">
         <div className="text-center space-y-2">
@@ -579,12 +596,14 @@ export const OTPVerificationPreview: React.FC = () => {
 };
 
 export const FilterBuilderPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [data, setData] = useState<any>(null);
 
   return (
     <PreviewContainer
       title="Filter Builder"
-      description="Advanced query builder for creating complex filtering logic."
+      description="Advanced query builder for creating complex filtering logic." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
     >
       <div className="w-full max-w-4xl m-auto space-y-8">
         <FilterBuilder
@@ -604,7 +623,7 @@ export const FilterBuilderPreview: React.FC = () => {
             ]},
             { id: "date", label: "Date Created", type: "date" }
           ]}
-          onChange={setData}
+          onChange={setData} color={previewColor} variant={previewVariant}
         />
         <div className="p-5 rounded-2xl border bg-muted/30">
           <h4 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Query Output</h4>

@@ -95,7 +95,7 @@ const ComponentPageSidebar: React.FC<ComponentPageSidebarProps> = ({ open, setOp
                         </motion.div>
                         <Button
                             variant="ghost"
-                            size="sm"
+                            
                             onClick={toggleTheme}
                             className="w-9 h-9 p-0 hover:bg-transparent md:hover:bg-subtle"
                         >

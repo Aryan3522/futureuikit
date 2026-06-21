@@ -14,19 +14,21 @@
  */
 
 import React, { useMemo } from "react";
-import { useForm, useFieldArray, Controller, UseFormReturn } from "react-hook-form";
+import { useForm, useFieldArray, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Trash2, ChevronRight, AlertCircle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { cva } from "class-variance-authority";
 
 // ==========================================
 // TYPES & SCHEMAS
 // ==========================================
 
-export type FormVariant = "default" | "minimal" | "enterprise" | "compact";
+export type FormBuilderColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type FormBuilderShape = "default" | "square" | "rounded" | "sharp";
+export type FormBuilderSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
 export type LayoutOption = "single" | "two" | "three" | "auto";
 
 export type FieldType =
@@ -80,7 +82,9 @@ export interface FormBuilderProps {
   schema: SchemaField[];
   defaultValues?: Record<string, any>;
   onSubmit: (data: any, methods: UseFormReturn<any>) => void | Promise<void>;
-  variant?: FormVariant;
+  color?: FormBuilderColor;
+  shape?: FormBuilderShape;
+  spacing?: FormBuilderSpacing;
   layout?: LayoutOption;
   submitText?: string;
   className?: string;
@@ -163,44 +167,58 @@ const buildZodSchema = (fields: SchemaField[]): z.ZodObject<any, any> => {
 // STYLES
 // ==========================================
 
-const inputVariants = cva(
-  "w-full transition-all focus-visible:outline-none placeholder:text-muted-foreground/40",
-  {
-    variants: {
-      variant: {
-        default: "bg-background border border-border focus:border-primary focus:ring-2 focus:ring-primary/10 rounded-lg px-3 py-2 text-sm",
-        minimal: "bg-transparent border-b border-border/50 focus:border-primary rounded-none px-0 py-1.5 text-sm",
-        enterprise: "bg-muted/30 border border-border/60 focus:border-primary focus:bg-background rounded-md px-3 py-2.5 text-sm shadow-sm",
-        compact: "bg-background border border-border focus:border-primary rounded px-2.5 py-1.5 text-xs",
-      },
-      hasError: {
-        true: "border-destructive focus:border-destructive focus:ring-destructive/10",
-        false: "",
-      }
-    },
-    defaultVariants: {
-      variant: "default",
-      hasError: false,
-    }
-  }
-);
+const colorThemeMap: Record<FormBuilderColor, { button: string; ring: string; text: string; bg: string }> = {
+  default: { button: "bg-foreground text-background hover:bg-foreground/90", ring: "focus:ring-ring/20 focus:border-foreground", text: "text-foreground", bg: "bg-muted text-foreground" },
+  blue: { button: "bg-blue-600 text-white hover:bg-blue-700", ring: "focus:ring-blue-600/20 focus:border-blue-600", text: "text-blue-600", bg: "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400" },
+  emerald: { button: "bg-emerald-600 text-white hover:bg-emerald-700", ring: "focus:ring-emerald-600/20 focus:border-emerald-600", text: "text-emerald-600", bg: "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400" },
+  rose: { button: "bg-rose-600 text-white hover:bg-rose-700", ring: "focus:ring-rose-600/20 focus:border-rose-600", text: "text-rose-600", bg: "bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400" },
+  amber: { button: "bg-amber-500 text-zinc-950 hover:bg-amber-600", ring: "focus:ring-amber-500/20 focus:border-amber-500", text: "text-amber-600", bg: "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400" },
+  violet: { button: "bg-violet-600 text-white hover:bg-violet-700", ring: "focus:ring-violet-600/20 focus:border-violet-600", text: "text-violet-600", bg: "bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400" },
+  indigo: { button: "bg-indigo-600 text-white hover:bg-indigo-700", ring: "focus:ring-indigo-600/20 focus:border-indigo-600", text: "text-indigo-600", bg: "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400" },
+  sky: { button: "bg-sky-500 text-zinc-950 hover:bg-sky-600", ring: "focus:ring-sky-500/20 focus:border-sky-500", text: "text-sky-600", bg: "bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400" },
+  slate: { button: "bg-slate-600 text-white hover:bg-slate-700", ring: "focus:ring-slate-600/20 focus:border-slate-600", text: "text-slate-600", bg: "bg-slate-50 dark:bg-slate-900/20 text-slate-600 dark:text-slate-400" },
+  orange: { button: "bg-orange-500 text-white hover:bg-orange-600", ring: "focus:ring-orange-500/20 focus:border-orange-500", text: "text-orange-600", bg: "bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400" },
+};
 
-const labelVariants = cva(
-  "block font-medium mb-1.5",
-  {
-    variants: {
-      variant: {
-        default: "text-sm text-foreground",
-        minimal: "text-xs font-bold text-muted-foreground uppercase tracking-wider",
-        enterprise: "text-[13px] font-semibold text-slate-700 dark:text-slate-300",
-        compact: "text-xs text-foreground",
-      }
-    },
-    defaultVariants: {
-      variant: "default",
+const getShapeClass = (shape: FormBuilderShape, element: "input" | "button" | "container" = "input") => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-[2px]";
+    case "rounded": 
+      return element === "container" ? "rounded-2xl" : element === "button" ? "rounded-xl" : "rounded-lg";
+    case "default": 
+      return element === "container" ? "rounded-xl" : element === "button" ? "rounded-md" : "rounded-md";
+  }
+};
+
+const getSpacingStyles = (spacing: FormBuilderSpacing, element: "input" | "button" | "label" = "input") => {
+  if (element === "button") {
+    switch (spacing) {
+      case "2x": return "px-3 py-1 text-xs";
+      case "4x": return "px-4 py-1.5 text-sm";
+      case "6x": return "px-8 py-3 text-base";
+      case "8x": return "px-10 py-4 text-lg";
+      default: return "px-6 py-2.5 text-sm";
     }
   }
-);
+  if (element === "label") {
+    switch (spacing) {
+      case "2x": return "mb-1 text-xs";
+      case "4x": return "mb-1 text-sm";
+      case "6x": return "mb-2 text-base";
+      case "8x": return "mb-2 text-lg";
+      default: return "mb-1.5 text-sm";
+    }
+  }
+  // input
+  switch (spacing) {
+    case "2x": return "px-2.5 py-1.5 text-xs";
+    case "4x": return "px-3 py-2 text-sm";
+    case "6x": return "px-4 py-3 text-base";
+    case "8x": return "px-5 py-4 text-lg";
+    default: return "px-3 py-2 text-sm";
+  }
+};
 
 // ==========================================
 // FIELD COMPONENTS
@@ -208,21 +226,21 @@ const labelVariants = cva(
 
 interface FieldProps {
   field: SchemaField;
-  path: string; // The full dot-notation path (e.g. "users.0.name")
+  path: string; 
   methods: UseFormReturn<any>;
-  variant: FormVariant;
+  color: FormBuilderColor;
+  shape: FormBuilderShape;
+  spacing: FormBuilderSpacing;
 }
 
-const BaseField: React.FC<FieldProps> = ({ field, path, methods, variant }) => {
-  const { register, control, formState: { errors }, watch } = methods;
+const BaseField: React.FC<FieldProps> = ({ field, path, methods, color, shape, spacing }) => {
+  const { register, formState: { errors }, watch } = methods;
   
-  // Conditional rendering
   const formValues = watch();
   if (field.showIf && !field.showIf(formValues)) return null;
 
-  // Error handling
   const errorObj = path.split('.').reduce((acc, part) => acc?.[part], errors as any);
-  const errorMessage = errorObj?.message;
+  const errorMessage = errorObj?.message as string | undefined;
 
   const colSpanClass = field.colSpan === "full" ? "col-span-full" : 
                        field.colSpan === 2 ? "col-span-1 md:col-span-2" : 
@@ -237,19 +255,23 @@ const BaseField: React.FC<FieldProps> = ({ field, path, methods, variant }) => {
     );
   }
 
+  const activeTheme = colorThemeMap[color];
+
   if (field.type === "group" && field.fields) {
     return (
-      <div className={cn("w-full border rounded-xl p-4 bg-muted/5 space-y-4", colSpanClass)}>
+      <div className={cn("w-full border p-3 md:p-4 space-y-3 md:space-y-4", getShapeClass(shape, "container"), colSpanClass, "bg-muted/5 border-border/40")}>
         {field.label && <h4 className="font-semibold text-lg">{field.label}</h4>}
         {field.description && <p className="text-sm text-muted-foreground -mt-3">{field.description}</p>}
-        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {field.fields.map((subField) => (
             <BaseField 
               key={subField.name} 
               field={subField} 
               path={`${path}.${subField.name}`} 
               methods={methods} 
-              variant={variant} 
+              color={color} 
+              shape={shape} 
+              spacing={spacing} 
             />
           ))}
         </div>
@@ -263,7 +285,9 @@ const BaseField: React.FC<FieldProps> = ({ field, path, methods, variant }) => {
         field={field} 
         path={path} 
         methods={methods} 
-        variant={variant} 
+        color={color} 
+        shape={shape} 
+        spacing={spacing} 
         colSpanClass={colSpanClass} 
       />
     );
@@ -272,7 +296,7 @@ const BaseField: React.FC<FieldProps> = ({ field, path, methods, variant }) => {
   const InputWrapper = ({ children }: { children: React.ReactNode }) => (
     <div className={cn("w-full flex flex-col", colSpanClass)}>
       {field.label && field.type !== 'checkbox' && (
-        <label className={labelVariants({ variant })}>
+        <label className={cn("block font-medium text-foreground", getSpacingStyles(spacing, "label"))}>
           {field.label} {field.required && <span className="text-destructive">*</span>}
         </label>
       )}
@@ -289,7 +313,12 @@ const BaseField: React.FC<FieldProps> = ({ field, path, methods, variant }) => {
     </div>
   );
 
-  const inputClass = inputVariants({ variant, hasError: !!errorMessage });
+  const inputClass = cn(
+    "w-full transition-all focus-visible:outline-none placeholder:text-muted-foreground/40 bg-background border",
+    getShapeClass(shape, "input"),
+    getSpacingStyles(spacing, "input"),
+    errorMessage ? "border-destructive focus:border-destructive focus:ring-destructive/10 focus:ring-2" : `border-border focus:ring-2 ${activeTheme.ring}`
+  );
 
   return (
     <InputWrapper>
@@ -313,7 +342,7 @@ const BaseField: React.FC<FieldProps> = ({ field, path, methods, variant }) => {
             type="checkbox"
             {...register(path)}
             id={path}
-            className="w-4 h-4 rounded border-border text-primary focus:ring-primary/20 transition-colors"
+            className={cn("w-4 h-4 rounded border-border transition-colors", activeTheme.text, activeTheme.ring)}
           />
           <label htmlFor={path} className={cn("text-sm cursor-pointer", errorMessage ? "text-destructive" : "text-foreground")}>
             {field.label} {field.required && <span className="text-destructive">*</span>}
@@ -327,7 +356,7 @@ const BaseField: React.FC<FieldProps> = ({ field, path, methods, variant }) => {
                 type="radio"
                 value={opt.value}
                 {...register(path)}
-                className="w-4 h-4 text-primary focus:ring-primary/20"
+                className={cn("w-4 h-4 border-border/80 transition-colors", activeTheme.text, activeTheme.ring)}
               />
               {opt.label}
             </label>
@@ -349,7 +378,7 @@ const BaseField: React.FC<FieldProps> = ({ field, path, methods, variant }) => {
 // ARRAY FIELD COMPONENT (Repeatable)
 // ==========================================
 
-const ArrayField: React.FC<FieldProps & { colSpanClass: string }> = ({ field, path, methods, variant, colSpanClass }) => {
+const ArrayField: React.FC<FieldProps & { colSpanClass: string }> = ({ field, path, methods, color, shape, spacing, colSpanClass }) => {
   const { control, watch } = methods;
   const { fields, append, remove } = useFieldArray({
     control,
@@ -359,8 +388,10 @@ const ArrayField: React.FC<FieldProps & { colSpanClass: string }> = ({ field, pa
   const formValues = watch();
   if (field.showIf && !field.showIf(formValues)) return null;
 
+  const activeTheme = colorThemeMap[color];
+
   return (
-    <div className={cn("w-full border rounded-xl p-4 bg-background shadow-sm space-y-4", colSpanClass)}>
+    <div className={cn("w-full border p-3 md:p-4 shadow-sm space-y-3 md:space-y-4", getShapeClass(shape, "container"), colSpanClass, "bg-background border-border")}>
       <div className="flex items-center justify-between">
         <div>
           {field.label && <h4 className="font-semibold text-foreground">{field.label}</h4>}
@@ -368,7 +399,7 @@ const ArrayField: React.FC<FieldProps & { colSpanClass: string }> = ({ field, pa
         </div>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3 md:space-y-4">
         <AnimatePresence initial={false}>
           {fields.map((item, index) => (
             <motion.div
@@ -376,25 +407,29 @@ const ArrayField: React.FC<FieldProps & { colSpanClass: string }> = ({ field, pa
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="relative p-4 border rounded-lg bg-muted/20"
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className={cn("relative p-3 md:p-4 border bg-muted/20 hover:bg-muted/30 transition-colors", getShapeClass(shape, "container"))}
             >
               <div className="absolute right-2 top-2 z-10">
                 <button
                   type="button"
                   onClick={() => remove(index)}
                   className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md transition-colors"
+                  aria-label={`Remove item ${index + 1}`}
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
-              <div className="grid grid-cols-1 @md:grid-cols-2 gap-4 mt-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mt-2">
                 {field.fields?.map((subField) => (
                   <BaseField 
                     key={subField.name} 
                     field={subField} 
                     path={`${path}.${index}.${subField.name}`} 
                     methods={methods} 
-                    variant={variant} 
+                    color={color} 
+                    shape={shape} 
+                    spacing={spacing} 
                   />
                 ))}
               </div>
@@ -406,17 +441,17 @@ const ArrayField: React.FC<FieldProps & { colSpanClass: string }> = ({ field, pa
       <button
         type="button"
         onClick={() => {
-          // Initialize empty object based on fields
           const newItem = field.fields?.reduce((acc, f) => ({ ...acc, [f.name]: f.defaultValue || "" }), {});
           append(newItem);
         }}
         className={cn(
-          "flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors mt-2",
-          variant === "enterprise" && "bg-primary/10 px-3 py-1.5 rounded-md",
-          variant === "minimal" && "underline underline-offset-4"
+          "w-full sm:w-auto flex items-center justify-center gap-1.5 text-sm font-medium transition-colors mt-2 px-3 py-2",
+          getShapeClass(shape, "button"),
+          activeTheme.text,
+          activeTheme.bg
         )}
       >
-        <Plus className="w-4 h-4" /> Add {field.label ? field.label.slice(0, -1) : "Item"}
+        <Plus className="w-4 h-4 shrink-0" /> Add {field.label ? field.label.slice(0, -1) : "Item"}
       </button>
     </div>
   );
@@ -430,7 +465,9 @@ export const FormBuilder = React.memo(function FormBuilder({
   schema,
   defaultValues,
   onSubmit,
-  variant = "default",
+  color = "default",
+  shape = "default",
+  spacing = "default",
   layout = "auto",
   submitText = "Submit",
   className,
@@ -454,26 +491,28 @@ export const FormBuilder = React.memo(function FormBuilder({
   const layoutClass = useMemo(() => {
     switch (layout) {
       case "single": return "grid-cols-1";
-      case "two": return "grid-cols-1 @md:grid-cols-2";
-      case "three": return "grid-cols-1 @md:grid-cols-3";
-      case "auto": return "grid-cols-1 @md:grid-cols-2 @lg:grid-cols-12";
+      case "two": return "grid-cols-1 md:grid-cols-2";
+      case "three": return "grid-cols-1 md:grid-cols-3";
+      case "auto": return "grid-cols-1 md:grid-cols-2 lg:grid-cols-12";
       default: return "grid-cols-1";
     }
   }, [layout]);
 
+  const activeTheme = colorThemeMap[color];
+
   return (
-    <div className={cn("w-full max-w-4xl mx-auto", className)}>
-      <form onSubmit={handleSubmit(handleFormSubmit)} className="w-full space-y-6">
-        <div className={cn("grid gap-6 items-start", layoutClass)}>
+    <div className={cn("w-full", className)}>
+      <form onSubmit={handleSubmit(handleFormSubmit)} className="w-full space-y-4 md:space-y-6">
+        <div className={cn("grid gap-4 md:gap-6 items-start", layoutClass)}>
           {schema.map((field) => (
             <div 
               key={field.name} 
               className={cn(
                 "w-full", 
                 layout === "auto" ? (
-                  field.colSpan === "full" ? "@lg:col-span-12" :
-                  field.colSpan === 3 ? "@lg:col-span-9" :
-                  field.colSpan === 2 ? "@lg:col-span-6" : "@lg:col-span-3 @md:col-span-1"
+                  field.colSpan === "full" ? "md:col-span-2 lg:col-span-12" :
+                  field.colSpan === 3 ? "md:col-span-2 lg:col-span-9" :
+                  field.colSpan === 2 ? "md:col-span-2 lg:col-span-6" : "md:col-span-1 lg:col-span-3"
                 ) : ""
               )}
             >
@@ -481,22 +520,24 @@ export const FormBuilder = React.memo(function FormBuilder({
                 field={field} 
                 path={field.name} 
                 methods={methods} 
-                variant={variant} 
+                color={color} 
+                shape={shape} 
+                spacing={spacing} 
               />
             </div>
           ))}
         </div>
 
-        <div className="pt-4 flex justify-end">
+        <div className="pt-4 flex sm:justify-end">
           <button
             type="submit"
             disabled={isSubmitting || isLoading}
             className={cn(
-              "flex items-center justify-center gap-2 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2",
-              variant === "default" && "bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg px-6 py-2.5",
-              variant === "minimal" && "bg-transparent text-primary hover:bg-primary/10 border border-primary/20 rounded-none px-6 py-2",
-              variant === "enterprise" && "bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 rounded-md px-6 py-2 shadow-sm",
-              variant === "compact" && "bg-primary text-primary-foreground hover:bg-primary/90 rounded px-4 py-1.5 text-sm",
+              "w-full sm:w-auto flex items-center justify-center gap-2 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2",
+              activeTheme.button,
+              activeTheme.ring,
+              getShapeClass(shape, "button"),
+              getSpacingStyles(spacing, "button"),
               (isSubmitting || isLoading) && "opacity-70 cursor-not-allowed"
             )}
           >
@@ -518,4 +559,3 @@ export const FormBuilder = React.memo(function FormBuilder({
   );
 });
 FormBuilder.displayName = "FormBuilder";
-

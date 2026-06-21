@@ -91,7 +91,7 @@ const MarqueeRow = ({ items, reverse = false, speed = 40 }: { items: typeof test
                     </div>
                     <div>
                       <h4 className="font-display font-medium text-sm">{item.author}</h4>
-                      <p className="text-secondary text-[10px] font-mono-label mt-0.5">{item.role}</p>
+                      <p className="text-muted-foreground text-[10px] font-mono-label mt-0.5">{item.role}</p>
                     </div>
                   </div>
                 </div>

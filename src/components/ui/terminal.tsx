@@ -1,23 +1,11 @@
 /**
- * @name Terminal
- * @description A premium, highly customizable terminal window component with authentic styling for various OS variants (macOS, Windows, Ubuntu, etc) and built-in animations.
- * @usage
- * import { Terminal } from "@/components/ui/terminal";
- * 
- * export default function Example() {
- *   return (
- *     <Terminal 
- *       variant="macos" 
- *       commands={["npm install futureuikit", "npx futureui add terminal"]} 
- *       animated 
- *     />
- *   );
- * }
- * @props title, variant, commands, output, animated, showLineNumbers, showPrompt, showHeader, copyable
- * @variants windows, powershell, cmd, bash, ubuntu, linux, macos, zsh
- * @author Future UI
  * @registry-slug terminal
- * @registry-dependency framer-motion lucide-react class-variance-authority
+ * @registry-name Terminal
+ * @registry-description A premium, highly customizable terminal window component with authentic styling for various OS variants (macOS, Windows, Ubuntu, etc) and built-in animations.
+ * @registry-category ui
+ * @registry-dependency framer-motion
+ * @registry-dependency lucide-react
+ * @registry-dependency class-variance-authority
  */
 
 "use client";
@@ -38,19 +26,23 @@ export type TerminalVariant =
   | "macos"
   | "zsh";
 
+export type TerminalColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type TerminalShape = "default" | "square" | "rounded" | "sharp";
+export type TerminalSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
 const terminalVariants = cva(
   "relative overflow-hidden flex flex-col font-mono text-sm transition-shadow duration-300 shadow-xl",
   {
     variants: {
       variant: {
-        windows: "bg-[#0c0c0c] text-[#cccccc] rounded-md border border-[#3e3e42]",
-        powershell: "bg-[#012456] text-white rounded-md border border-[#012456]",
-        cmd: "bg-black text-[#cccccc] rounded-md border border-zinc-800",
-        bash: "bg-[#1e1e1e] text-[#cccccc] rounded-lg border border-white/10",
-        ubuntu: "bg-[#300a24] text-white rounded-lg border border-[#3e0c2e]",
-        linux: "bg-[#1a1b26] text-[#a9b1d6] rounded-lg border border-[#292e42]",
-        macos: "bg-white dark:bg-[#1e1e1e] text-zinc-800 dark:text-zinc-200 rounded-xl border border-zinc-200 dark:border-white/10",
-        zsh: "bg-[#18181b] text-[#a1a1aa] rounded-xl border border-zinc-800/50",
+        windows: "bg-[#0c0c0c] text-[#cccccc] border-[#3e3e42]",
+        powershell: "bg-[#012456] text-white border-[#012456]",
+        cmd: "bg-black text-[#cccccc] border-border",
+        bash: "bg-[#1e1e1e] text-[#cccccc] border-white/10",
+        ubuntu: "bg-[#300a24] text-white border-[#3e0c2e]",
+        linux: "bg-[#1a1b26] text-[#a9b1d6] border-[#292e42]",
+        macos: "bg-background text-foreground border-border",
+        zsh: "bg-[#18181b] text-[#a1a1aa] border-border/50",
       },
     },
     defaultVariants: {
@@ -69,8 +61,43 @@ export interface TerminalProps extends React.HTMLAttributes<HTMLDivElement>, Var
   showHeader?: boolean;
   copyable?: boolean;
   interactive?: boolean;
+  color?: TerminalColor;
+  shape?: TerminalShape;
+  spacing?: TerminalSpacing;
   onCommand?: (command: string) => void | string | string[] | Promise<void | string | string[]>;
 }
+
+const colorThemeMap: Record<TerminalColor, string> = {
+  default: "",
+  blue: "ring-1 ring-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)]",
+  emerald: "ring-1 ring-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.3)]",
+  rose: "ring-1 ring-rose-500/50 shadow-[0_0_15px_rgba(244,63,94,0.3)]",
+  amber: "ring-1 ring-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.3)]",
+  violet: "ring-1 ring-violet-500/50 shadow-[0_0_15px_rgba(139,92,246,0.3)]",
+  indigo: "ring-1 ring-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.3)]",
+  sky: "ring-1 ring-sky-500/50 shadow-[0_0_15px_rgba(14,165,233,0.3)]",
+  slate: "ring-1 ring-slate-500/50 shadow-[0_0_15px_rgba(100,116,139,0.3)]",
+  orange: "ring-1 ring-orange-500/50 shadow-[0_0_15px_rgba(249,115,22,0.3)]",
+};
+
+const getShapeClass = (shape: TerminalShape) => {
+  switch (shape) {
+    case "square": return "rounded-none border-x-0 border-b-0";
+    case "sharp": return "rounded-sm border";
+    case "rounded": return "rounded-2xl border";
+    case "default": return "rounded-xl border";
+  }
+};
+
+const getSpacingClass = (spacing: TerminalSpacing) => {
+  switch (spacing) {
+    case "2x": return "p-2 md:p-3";
+    case "4x": return "p-4 md:p-6";
+    case "6x": return "p-6 md:p-8";
+    case "8x": return "p-8 md:p-10";
+    default: return "p-4 md:p-6";
+  }
+};
 
 const WindowsIcon = () => (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -92,7 +119,7 @@ const TerminalAppIcon = ({ variant }: { variant: TerminalVariant }) => {
   switch (variant) {
     case "macos":
       return (
-        <div className="w-full h-full bg-gradient-to-b from-zinc-700 to-zinc-900 rounded-[22%] border border-zinc-600/50 flex flex-col overflow-hidden shadow-inner p-1">
+        <div className="w-full h-full bg-gradient-to-b from-foreground/80 to-foreground rounded-[22%] border border-foreground/40 flex flex-col overflow-hidden shadow-inner p-1">
           <div className="h-2.5 w-full flex items-center gap-[3px] px-1 mt-0.5">
              <div className="w-1.5 h-1.5 rounded-full bg-[#ff5f56]" />
              <div className="w-1.5 h-1.5 rounded-full bg-[#ffbd2e]" />
@@ -119,7 +146,7 @@ const TerminalAppIcon = ({ variant }: { variant: TerminalVariant }) => {
       );
     default:
       return (
-        <div className="w-full h-full bg-[#1a1b26] rounded-[22%] border border-zinc-800 flex items-center justify-center shadow-inner">
+        <div className="w-full h-full bg-[#1a1b26] rounded-[22%] border border-border flex items-center justify-center shadow-inner">
           <TerminalIcon className="w-8 h-8 text-[#a9b1d6]" />
         </div>
       );
@@ -142,6 +169,9 @@ export const Terminal = React.forwardRef<HTMLDivElement, TerminalProps>(
       showHeader = true,
       copyable = true,
       interactive = false,
+      color = "default",
+      shape = "default",
+      spacing = "default",
       onCommand,
       className,
       children,
@@ -180,13 +210,17 @@ export const Terminal = React.forwardRef<HTMLDivElement, TerminalProps>(
     const [tabs, setTabs] = useState<Tab[]>([{ id: "1", title: defaultTitle }]);
     const [activeTabId, setActiveTabId] = useState<string>("1");
 
-    // Interactive state (global across tabs for simplicity, but could be refactored to per-tab)
+    // Interactive state
     const [history, setHistory] = useState<{ command: string; output: string[] }[]>([]);
     const [inputValue, setInputValue] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
     const [isAwaitingResponse, setIsAwaitingResponse] = useState(false);
     
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const activeTheme = colorThemeMap[color];
+    const shapeClass = getShapeClass(shape);
+    const spacingClass = getSpacingClass(spacing);
 
     useEffect(() => {
       if (!animated || commands.length === 0) return;
@@ -275,13 +309,13 @@ export const Terminal = React.forwardRef<HTMLDivElement, TerminalProps>(
 
       if (variant === "macos") {
         return (
-          <div className="flex items-center px-4 py-3 bg-[#e6e6e6] dark:bg-[#2d2d2d] border-b border-zinc-300 dark:border-zinc-800 select-none">
+          <div className="flex items-center px-4 py-3 bg-muted border-b border-border select-none">
             <div className="flex gap-2 relative z-10">
               <button onClick={(e) => { e.stopPropagation(); setWindowState("closed"); }} className="w-3 h-3 rounded-full bg-[#ff5f56] flex items-center justify-center group/btn cursor-pointer overflow-hidden"><X className="w-2 h-2 text-black/50 opacity-0 group-hover/btn:opacity-100 transition-opacity" /></button>
               <button onClick={(e) => { e.stopPropagation(); setWindowState("minimized"); }} className="w-3 h-3 rounded-full bg-[#ffbd2e] flex items-center justify-center group/btn cursor-pointer overflow-hidden"><Minus className="w-2 h-2 text-black/50 opacity-0 group-hover/btn:opacity-100 transition-opacity" /></button>
               <button onClick={(e) => { e.stopPropagation(); setWindowState(windowState === "maximized" ? "default" : "maximized"); }} className="w-3 h-3 rounded-full bg-[#27c93f] flex items-center justify-center group/btn cursor-pointer overflow-hidden"><Square className="w-2 h-2 text-black/50 opacity-0 group-hover/btn:opacity-100 transition-opacity" /></button>
             </div>
-            <div className="absolute inset-x-0 text-center text-xs font-semibold text-zinc-600 dark:text-zinc-400 pointer-events-none">
+            <div className="absolute inset-x-0 text-center text-xs font-semibold text-muted-foreground pointer-events-none">
               {defaultTitle}
             </div>
           </div>
@@ -385,7 +419,7 @@ export const Terminal = React.forwardRef<HTMLDivElement, TerminalProps>(
         case "ubuntu": return <span className="text-[#8ae234] mr-2">user@server:~$</span>;
         case "linux": return <span className="text-[#7aa2f7] mr-2">[user@localhost ~]$</span>;
         case "zsh": return <span className="text-[#f7768e] font-bold mr-2">➜</span>;
-        case "macos": return <span className="text-zinc-500 dark:text-zinc-400 mr-2">~ %</span>;
+        case "macos": return <span className="text-muted-foreground mr-2">~ %</span>;
         case "windows": return <span className="text-[#16c60c] mr-2">C:\Users\User&gt;</span>;
         default: return <span className="mr-2">$</span>;
       }
@@ -419,6 +453,8 @@ export const Terminal = React.forwardRef<HTMLDivElement, TerminalProps>(
             ref={ref as any}
             className={cn(
               terminalVariants({ variant }),
+              shapeClass,
+              activeTheme,
               windowState === "maximized" ? "fixed md:absolute inset-0 z-50 !w-full !h-full !max-w-none !max-h-none !rounded-none" : "",
               className
             )}
@@ -433,7 +469,7 @@ export const Terminal = React.forwardRef<HTMLDivElement, TerminalProps>(
                     className={cn(
                       "absolute z-20 p-2 rounded-lg transition-all opacity-0 group-hover:opacity-100",
                       showHeader ? "top-14 right-4" : "top-4 right-4",
-                      variant === "macos" ? "bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400" : "bg-white/10 text-white hover:bg-white/20",
+                      variant === "macos" ? "bg-muted text-muted-foreground" : "bg-white/10 text-white hover:bg-white/20",
                       copied ? "opacity-100" : "hover:opacity-100 focus:opacity-100"
                     )}
                     style={{ opacity: copied ? 1 : undefined }}
@@ -464,7 +500,7 @@ export const Terminal = React.forwardRef<HTMLDivElement, TerminalProps>(
                   </button>
                 )}
 
-                <div ref={containerRef} className="relative flex-1 p-4 md:p-6 overflow-auto group custom-scrollbar" onClick={handleContainerClick}>
+                <div ref={containerRef} className={cn("relative flex-1 overflow-auto group custom-scrollbar", spacingClass)} onClick={handleContainerClick}>
                   
                   {/* Force remount of internal state if tab changes (optional: right now history is global) */}
                   <div key={activeTabId} className="min-h-full flex flex-col">
@@ -511,7 +547,7 @@ export const Terminal = React.forwardRef<HTMLDivElement, TerminalProps>(
                         <motion.span
                           animate={{ opacity: [1, 0] }}
                           transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                          className={cn("inline-block w-2 h-4 ml-0.5 align-middle", variant === "macos" ? "bg-zinc-800 dark:bg-zinc-200" : "bg-white")}
+                          className={cn("inline-block w-2 h-4 ml-0.5 align-middle", variant === "macos" ? "bg-foreground" : "bg-white")}
                         />
                       ) : (
                         <div className="flex-1 relative flex items-center">
@@ -546,7 +582,7 @@ export const Terminal = React.forwardRef<HTMLDivElement, TerminalProps>(
                             <motion.span
                               animate={{ opacity: [1, 0] }}
                               transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                              className={cn("inline-block w-2 h-4 ml-0.5 align-middle", variant === "macos" ? "bg-zinc-800 dark:bg-zinc-200" : "bg-white")}
+                              className={cn("inline-block w-2 h-4 ml-0.5 align-middle", variant === "macos" ? "bg-foreground" : "bg-white")}
                             />
                           )}
                         </span>
@@ -582,7 +618,7 @@ export const Terminal = React.forwardRef<HTMLDivElement, TerminalProps>(
                           <motion.span
                             animate={{ opacity: [1, 0] }}
                             transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                            className={cn("inline-block w-2 h-4 ml-0.5 align-middle", variant === "macos" ? "bg-zinc-800 dark:bg-zinc-200" : "bg-white")}
+                            className={cn("inline-block w-2 h-4 ml-0.5 align-middle", variant === "macos" ? "bg-foreground" : "bg-white")}
                           />
                         </div>
                       </motion.div>
@@ -599,7 +635,7 @@ export const Terminal = React.forwardRef<HTMLDivElement, TerminalProps>(
                         <motion.span
                           animate={{ opacity: [1, 0] }}
                           transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                          className={cn("inline-block w-2 h-4 ml-0.5 align-middle", variant === "macos" ? "bg-zinc-800 dark:bg-zinc-200" : "bg-white")}
+                          className={cn("inline-block w-2 h-4 ml-0.5 align-middle", variant === "macos" ? "bg-foreground" : "bg-white")}
                         />
                       </div>
                     )}

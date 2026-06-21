@@ -12,44 +12,57 @@ import { cn } from "@/lib/utils";
  * @registry-type components:ui
  */
 
-export type SlideUpRevealShape = 
-  | "rectangle" 
-  | "rounded" 
-  | "squircle" 
-  | "arc" 
-  | "wave" 
-  | "curtain" 
-  | "silk" 
-  | "holographic";
-
+export type SlideUpRevealColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type SlideUpRevealShape = "default" | "square" | "rounded" | "sharp" | "arc" | "wave" | "curtain" | "silk" | "holographic" | "squircle" | "rectangle";
+export type SlideUpRevealSpacing = "default" | "2x" | "4x" | "6x" | "8x";
 export type SlideUpRevealVariant = "default" | "cyberpunk" | "aurora" | "space" | "neon";
 
 export interface SlideUpRevealProps {
   revealedContent?: React.ReactNode;
   landscapeImage?: string;
-  variant?: SlideUpRevealVariant;
+  color?: SlideUpRevealColor;
   shape?: SlideUpRevealShape;
+  spacing?: SlideUpRevealSpacing;
   className?: string;
   onComplete?: () => void;
+  // Kept for backwards compatibility if needed
+  variant?: SlideUpRevealVariant;
 }
 
-const variantColors: Record<SlideUpRevealVariant, { glowRgb: string }> = {
-  default: { glowRgb: "255, 255, 255" },
-  cyberpunk: { glowRgb: "6, 182, 212" },
-  aurora: { glowRgb: "52, 211, 153" },
-  space: { glowRgb: "99, 102, 241" },
-  neon: { glowRgb: "236, 72, 153" },
+const colorThemeMap: Record<SlideUpRevealColor, { glowRgb: string; gradientTailwind: string }> = {
+  default: { glowRgb: "255, 255, 255", gradientTailwind: "from-white/50 via-white/20 to-transparent" },
+  blue: { glowRgb: "59, 130, 246", gradientTailwind: "from-blue-500/50 via-blue-500/20 to-transparent" },
+  emerald: { glowRgb: "16, 185, 129", gradientTailwind: "from-emerald-500/50 via-emerald-500/20 to-transparent" },
+  rose: { glowRgb: "244, 63, 94", gradientTailwind: "from-rose-500/50 via-rose-500/20 to-transparent" },
+  amber: { glowRgb: "245, 158, 11", gradientTailwind: "from-amber-500/50 via-amber-500/20 to-transparent" },
+  violet: { glowRgb: "139, 92, 246", gradientTailwind: "from-violet-500/50 via-violet-500/20 to-transparent" },
+  indigo: { glowRgb: "99, 102, 241", gradientTailwind: "from-indigo-500/50 via-indigo-500/20 to-transparent" },
+  sky: { glowRgb: "14, 165, 233", gradientTailwind: "from-sky-500/50 via-sky-500/20 to-transparent" },
+  slate: { glowRgb: "100, 116, 139", gradientTailwind: "from-slate-500/50 via-slate-500/20 to-transparent" },
+  orange: { glowRgb: "249, 115, 22", gradientTailwind: "from-orange-500/50 via-orange-500/20 to-transparent" },
 };
 
-const defaultImages: Record<SlideUpRevealVariant, string> = {
+const defaultImages: Record<SlideUpRevealColor, string> = {
   default: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&q=80&w=2000",
-  cyberpunk: "https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&q=80&w=2000",
-  aurora: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&q=80&w=2000",
-  space: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2000",
-  neon: "https://images.unsplash.com/photo-1557672172-298e090bd0f1?auto=format&fit=crop&q=80&w=2000",
+  blue: "https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&q=80&w=2000",
+  emerald: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&q=80&w=2000",
+  rose: "https://images.unsplash.com/photo-1557672172-298e090bd0f1?auto=format&fit=crop&q=80&w=2000",
+  amber: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&q=80&w=2000",
+  violet: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2000",
+  indigo: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2000",
+  sky: "https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&q=80&w=2000",
+  slate: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&q=80&w=2000",
+  orange: "https://images.unsplash.com/photo-1557672172-298e090bd0f1?auto=format&fit=crop&q=80&w=2000",
 };
 
-function generateClothPath(shape: SlideUpRevealShape, w: number, h: number, dragY: number): string {
+function resolveClothShape(shape: SlideUpRevealShape) {
+  if (shape === "default") return "squircle";
+  if (shape === "square" || shape === "sharp") return "rectangle";
+  if (shape === "rounded") return "rounded";
+  return shape;
+}
+
+function generateClothPath(shape: string, w: number, h: number, dragY: number): string {
   if (w === 0 || h === 0) return `M 0 0 L 2000 0 L 2000 2000 Z`;
 
   // dragY is negative when dragging up. Lift is positive magnitude.
@@ -155,35 +168,48 @@ function generateClothPath(shape: SlideUpRevealShape, w: number, h: number, drag
   return d;
 }
 
-const DefaultRevealedContent = () => (
-  <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-950 text-white relative overflow-hidden">
-    <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
-    
-    <div className="relative z-10 flex flex-col items-center gap-8 p-8 max-w-xl text-center">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="flex flex-col items-center gap-4"
-      >
-        <h1 className="text-4xl md:text-6xl font-light tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50">
-          SYSTEM ONLINE
-        </h1>
-        <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-      </motion.div>
+const getSpacingClass = (spacing: SlideUpRevealSpacing) => {
+  switch(spacing) {
+    case "2x": return "p-4 gap-4";
+    case "4x": return "p-6 gap-6";
+    case "6x": return "p-12 gap-10";
+    case "8x": return "p-16 gap-12";
+    default: return "p-8 gap-8";
+  }
+}
+
+const DefaultRevealedContent = ({ color, spacing }: { color: SlideUpRevealColor, spacing: SlideUpRevealSpacing }) => {
+  const activeTheme = colorThemeMap[color];
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-950 text-white relative overflow-hidden">
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
       
-      <motion.button
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.3, duration: 0.5 }}
-        className="px-8 py-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm tracking-widest hover:bg-white/10 hover:border-white/20 transition-all duration-300 relative overflow-hidden group"
-      >
-        <span className="relative z-10">ENTER</span>
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      </motion.button>
+      <div className={cn("relative z-10 flex flex-col items-center max-w-xl text-center", getSpacingClass(spacing))}>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="flex flex-col items-center gap-4"
+        >
+          <h1 className="text-4xl md:text-6xl font-light tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50">
+            SYSTEM ONLINE
+          </h1>
+          <div className={cn("h-[1px] w-24 bg-gradient-to-r", activeTheme.gradientTailwind)} />
+        </motion.div>
+        
+        <motion.button
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="px-8 py-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm tracking-widest hover:bg-white/10 hover:border-white/20 transition-all duration-300 relative overflow-hidden group"
+        >
+          <span className="relative z-10">ENTER</span>
+          <div className={cn("absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r", activeTheme.gradientTailwind)} />
+        </motion.button>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const TripleChevronIcon = ({ className }: { className?: string }) => (
   <div className={cn("flex flex-col items-center justify-center gap-1.5", className)}>
@@ -202,8 +228,10 @@ const TripleChevronIcon = ({ className }: { className?: string }) => (
 export function SlideUpReveal({ 
   revealedContent,
   landscapeImage,
-  variant = "default",
-  shape = "squircle",
+  color = "default",
+  shape = "default",
+  spacing = "default",
+  variant, // Kept for backwards compatibility
   className,
   onComplete
 }: SlideUpRevealProps) {
@@ -216,8 +244,14 @@ export function SlideUpReveal({
   const widthMv = useMotionValue(0);
   const heightMv = useMotionValue(0);
 
-  const finalImage = landscapeImage || defaultImages[variant];
-  const { glowRgb } = variantColors[variant];
+  const activeColor: SlideUpRevealColor = variant === "cyberpunk" ? "blue" :
+                                          variant === "aurora" ? "emerald" :
+                                          variant === "space" ? "indigo" :
+                                          variant === "neon" ? "rose" : color;
+
+  const finalImage = landscapeImage || defaultImages[activeColor] || defaultImages.default;
+  const { glowRgb } = colorThemeMap[activeColor];
+  const actualClothShape = resolveClothShape(shape);
 
   const clipId = React.useId().replace(/:/g, "-");
 
@@ -236,7 +270,7 @@ export function SlideUpReveal({
   }, [widthMv, heightMv]);
 
   const clipPathD = useTransform(() => {
-    return generateClothPath(shape, widthMv.get(), heightMv.get(), y.get());
+    return generateClothPath(actualClothShape, widthMv.get(), heightMv.get(), y.get());
   });
 
   // Lighting System Evolution
@@ -330,7 +364,7 @@ export function SlideUpReveal({
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="absolute inset-0 z-0"
           >
-            {revealedContent || <DefaultRevealedContent />}
+            {revealedContent || <DefaultRevealedContent color={activeColor} spacing={spacing} />}
           </motion.div>
         )}
       </AnimatePresence>

@@ -13,7 +13,7 @@
 
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { motion, AnimatePresence, HTMLMotionProps } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cva, type VariantProps } from "class-variance-authority";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -23,6 +23,8 @@ import { cn } from "@/lib/utils";
 export type ModalVariant = "default" | "floating" | "glass" | "elevated" | "minimal" | "spotlight";
 export type ModalSize = "xs" | "sm" | "md" | "lg" | "xl" | "full-width" | "full-screen";
 export type ModalPosition = "center" | "top-center" | "bottom-sheet" | "left-side" | "right-side";
+export type ModalColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type ModalShape = "default" | "square" | "rounded" | "sharp";
 
 interface ModalContextValue {
   isOpen: boolean;
@@ -30,6 +32,8 @@ interface ModalContextValue {
   variant: ModalVariant;
   size: ModalSize;
   position: ModalPosition;
+  color: ModalColor;
+  shape: ModalShape;
 }
 
 const ModalContext = React.createContext<ModalContextValue | undefined>(undefined);
@@ -48,6 +52,8 @@ export interface ModalProps extends React.ComponentPropsWithoutRef<typeof Dialog
   variant?: ModalVariant;
   size?: ModalSize;
   position?: ModalPosition;
+  color?: ModalColor;
+  shape?: ModalShape;
   container?: HTMLElement | null; // Added for preview constraining
 }
 
@@ -58,6 +64,8 @@ export const Modal: React.FC<ModalProps> = React.memo(({
           variant = "default",
           size = "md",
           position = "center",
+          color = "default",
+          shape = "default",
           children,
           container, // Not used here, passed to context or Portal directly?
           ...props
@@ -78,7 +86,7 @@ export const Modal: React.FC<ModalProps> = React.memo(({
 
           return (
             <DialogPrimitive.Root open={isOpen} onOpenChange={handleOpenChange} {...props}>
-              <ModalContext.Provider value={{ isOpen, setIsOpen: handleOpenChange, variant, size, position }}>
+              <ModalContext.Provider value={{ isOpen, setIsOpen: handleOpenChange, variant, size, position, color, shape }}>
                 {children}
               </ModalContext.Provider>
             </DialogPrimitive.Root>
@@ -98,12 +106,12 @@ const modalOverlayVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-background/80 backdrop-blur-sm",
-        floating: "bg-background/60 backdrop-blur-[2px]",
-        glass: "bg-background/40 backdrop-blur-md",
-        elevated: "bg-background/90 backdrop-blur-sm",
-        minimal: "bg-background/80",
-        spotlight: "bg-background/95 backdrop-blur-sm",
+        default: "bg-black/80 dark:bg-black/80 backdrop-blur-sm",
+        floating: "bg-black/60 dark:bg-black/60 backdrop-blur-[2px]",
+        glass: "bg-black/40 dark:bg-black/40 backdrop-blur-md",
+        elevated: "bg-black/90 dark:bg-black/90 backdrop-blur-sm",
+        minimal: "bg-black/80 dark:bg-black/80",
+        spotlight: "bg-black/95 dark:bg-black/95 backdrop-blur-sm",
       },
       position: {
         center: "items-center justify-center p-4",
@@ -126,11 +134,11 @@ const modalContentVariants = cva(
     variants: {
       variant: {
         default: "bg-background border border-border/40 shadow-xl",
-        floating: "bg-background border border-border/50 shadow-2xl rounded-2xl ring-1 ring-black/5",
+        floating: "bg-background border border-border/50 shadow-2xl ring-1 ring-black/5",
         glass: "bg-background/80 backdrop-blur-2xl border border-white/20 dark:border-white/10 shadow-2xl",
         elevated: "bg-background border border-border/60 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)]",
-        minimal: "bg-background shadow-md",
-        spotlight: "bg-background border border-primary/30 shadow-[0_0_40px_-10px_rgba(var(--primary),0.3)]",
+        minimal: "bg-background shadow-md border-none",
+        spotlight: "bg-background border",
       },
       size: {
         xs: "w-full max-w-xs",
@@ -140,6 +148,12 @@ const modalContentVariants = cva(
         xl: "w-full max-w-xl",
         "full-width": "w-full max-w-[calc(100%-2rem)] mx-auto",
         "full-screen": "w-screen h-[100dvh] rounded-none border-none",
+      },
+      shape: {
+        default: "", // Will be overridden by position below
+        square: "rounded-none",
+        rounded: "rounded-3xl",
+        sharp: "rounded-[2px]",
       },
       position: {
         center: "rounded-xl",
@@ -153,6 +167,7 @@ const modalContentVariants = cva(
       variant: "default",
       size: "md",
       position: "center",
+      shape: "default",
     }
   }
 );
@@ -198,7 +213,7 @@ export interface ModalContentProps extends React.ComponentPropsWithoutRef<typeof
 
 export const ModalContent = React.memo(React.forwardRef<React.ElementRef<typeof DialogPrimitive.Content>, ModalContentProps>(
           ({ className, hideCloseButton = false, container, children, ...props }, ref) => {
-            const { isOpen, variant, size, position } = useModalContext();
+            const { isOpen, variant, size, position, color, shape } = useModalContext();
             const animConfig = animationConfigs[position];
 
             const positionClass = container ? "absolute" : "fixed";
@@ -209,10 +224,39 @@ export const ModalContent = React.memo(React.forwardRef<React.ElementRef<typeof 
             );
             const overlayClass = container ? baseOverlayClass.replace("fixed", positionClass) : baseOverlayClass;
 
-            const baseContentClass = cn(modalContentVariants({ variant, size, position }), className);
+            const baseContentClass = cn(
+              modalContentVariants({ variant, size, position, shape }), 
+              // Spotlight colors
+              variant === "spotlight" && color === "blue" && "border-blue-500/30 shadow-[0_0_40px_-10px_rgba(59,130,246,0.3)]",
+              variant === "spotlight" && color === "emerald" && "border-emerald-500/30 shadow-[0_0_40px_-10px_rgba(16,185,129,0.3)]",
+              variant === "spotlight" && color === "rose" && "border-rose-500/30 shadow-[0_0_40px_-10px_rgba(244,63,94,0.3)]",
+              variant === "spotlight" && color === "amber" && "border-amber-500/30 shadow-[0_0_40px_-10px_rgba(245,158,11,0.3)]",
+              variant === "spotlight" && color === "violet" && "border-violet-500/30 shadow-[0_0_40px_-10px_rgba(139,92,246,0.3)]",
+              variant === "spotlight" && color === "indigo" && "border-indigo-500/30 shadow-[0_0_40px_-10px_rgba(99,102,241,0.3)]",
+              variant === "spotlight" && color === "sky" && "border-sky-500/30 shadow-[0_0_40px_-10px_rgba(14,165,233,0.3)]",
+              variant === "spotlight" && color === "slate" && "border-slate-500/30 shadow-[0_0_40px_-10px_rgba(100,116,139,0.3)]",
+              variant === "spotlight" && color === "orange" && "border-orange-500/30 shadow-[0_0_40px_-10px_rgba(249,115,22,0.3)]",
+              variant === "spotlight" && color === "default" && "border-foreground/30 shadow-[0_0_40px_-10px_rgba(0,0,0,0.3)] dark:shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]",
+              className
+            );
             const contentClass = container 
               ? baseContentClass.replace(/w-screen/g, "w-full").replace(/h-\[100dvh\]/g, "h-full").replace(/min-h-\[100dvh\]/g, "min-h-full")
               : baseContentClass;
+
+            const getCloseButtonColorClasses = () => {
+              switch (color) {
+                case "blue": return "hover:bg-blue-100 hover:text-blue-900 focus:ring-blue-500 dark:hover:bg-blue-900/30 dark:hover:text-blue-100";
+                case "emerald": return "hover:bg-emerald-100 hover:text-emerald-900 focus:ring-emerald-500 dark:hover:bg-emerald-900/30 dark:hover:text-emerald-100";
+                case "rose": return "hover:bg-rose-100 hover:text-rose-900 focus:ring-rose-500 dark:hover:bg-rose-900/30 dark:hover:text-rose-100";
+                case "amber": return "hover:bg-amber-100 hover:text-amber-900 focus:ring-amber-500 dark:hover:bg-amber-900/30 dark:hover:text-amber-100";
+                case "violet": return "hover:bg-violet-100 hover:text-violet-900 focus:ring-violet-500 dark:hover:bg-violet-900/30 dark:hover:text-violet-100";
+                case "indigo": return "hover:bg-indigo-100 hover:text-indigo-900 focus:ring-indigo-500 dark:hover:bg-indigo-900/30 dark:hover:text-indigo-100";
+                case "sky": return "hover:bg-sky-100 hover:text-sky-900 focus:ring-sky-500 dark:hover:bg-sky-900/30 dark:hover:text-sky-100";
+                case "slate": return "hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500 dark:hover:bg-slate-900/30 dark:hover:text-slate-100";
+                case "orange": return "hover:bg-orange-100 hover:text-orange-900 focus:ring-orange-500 dark:hover:bg-orange-900/30 dark:hover:text-orange-100";
+                default: return "hover:bg-accent hover:text-accent-foreground focus:ring-ring";
+              }
+            };
 
             return (
               <AnimatePresence>
@@ -243,7 +287,11 @@ export const ModalContent = React.memo(React.forwardRef<React.ElementRef<typeof 
                             {children}
                             {!hideCloseButton && (
                               <DialogPrimitive.Close asChild>
-                                <motion.button whileTap={{ scale: 0.9 }} className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-full p-1.5 bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 z-10">
+                                <motion.button whileTap={{ scale: 0.9 }} className={cn(
+                                  "absolute right-3 top-3 sm:right-4 sm:top-4 p-1.5 bg-muted/50 text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 z-10",
+                                  shape === "square" ? "rounded-none" : shape === "sharp" ? "rounded-[2px]" : "rounded-full",
+                                  getCloseButtonColorClasses()
+                                )}>
                                   <X className="h-4 w-4" />
                                   <span className="sr-only">Close</span>
                                 </motion.button>
@@ -270,7 +318,7 @@ export const ModalTitle = React.memo(React.forwardRef<React.ElementRef<typeof Di
           ({ className, ...props }, ref) => (
             <DialogPrimitive.Title
               ref={ref}
-              className={cn("text-lg font-semibold leading-none tracking-tight", className)}
+              className={cn("text-lg font-semibold leading-none tracking-tight text-foreground", className)}
               {...props}
             />
           )

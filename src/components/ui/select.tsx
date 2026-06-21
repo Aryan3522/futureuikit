@@ -25,6 +25,11 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
+// --- Types ---
+export type SelectColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type SelectShape = "default" | "square" | "rounded" | "sharp";
+export type SelectSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
 // --- Contexts ---
 
 type SelectContextValue = {
@@ -36,7 +41,9 @@ type SelectContextValue = {
   searchable: boolean;
   disabled: boolean;
   variant: "default" | "soft" | "floating" | "glass" | "minimal";
-  size: "sm" | "md" | "lg";
+  color: SelectColor;
+  shape: SelectShape;
+  spacing: SelectSpacing;
   container?: HTMLElement | null;
   onClear?: () => void;
   creatable?: boolean;
@@ -67,7 +74,9 @@ export interface SelectProps {
   searchable?: boolean;
   disabled?: boolean;
   variant?: "default" | "soft" | "floating" | "glass" | "minimal";
-  size?: "sm" | "md" | "lg";
+  color?: SelectColor;
+  shape?: SelectShape;
+  spacing?: SelectSpacing;
   container?: HTMLElement | null;
   creatable?: boolean;
   onCreate?: (val: string) => void;
@@ -85,7 +94,9 @@ export const Select = React.memo(function Select({
   searchable = true,
   disabled = false,
   variant = "default",
-  size = "md",
+  color = "default",
+  shape = "default",
+  spacing = "default",
   container,
   creatable = false,
   onCreate,
@@ -124,7 +135,9 @@ export const Select = React.memo(function Select({
         searchable,
         disabled,
         variant,
-        size,
+        color,
+        shape,
+        spacing,
         container,
         onClear: handleClear,
         creatable,
@@ -144,21 +157,43 @@ const selectTriggerVariants = cva(
   {
     variants: {
       variant: {
-        default: "border border-border bg-background hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg shadow-sm",
-        soft: "border-transparent bg-muted/50 hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring rounded-xl",
-        floating: "border border-border/50 bg-background hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring rounded-2xl shadow-sm",
-        glass: "border border-white/20 bg-background/30 backdrop-blur-md hover:bg-background/40 focus-visible:ring-2 focus-visible:ring-ring rounded-xl shadow-sm dark:bg-black/20 dark:border-white/10",
-        minimal: "border-b border-border bg-transparent hover:border-foreground/50 focus-visible:border-primary rounded-none px-0 shadow-none",
+        default: "border border-border bg-background hover:bg-accent focus-visible:ring-1 shadow-sm",
+        soft: "border-transparent bg-muted hover:bg-accent focus-visible:ring-1",
+        floating: "border border-border/50 bg-background hover:shadow-md focus-visible:ring-1 shadow-sm",
+        glass: "border border-border/20 bg-background/30 backdrop-blur-md hover:bg-white/40 dark:hover:bg-zinc-950/40 focus-visible:ring-1 shadow-sm",
+        minimal: "border-b border-border bg-transparent hover:border-foreground/40 focus-visible:border-foreground px-0 shadow-none",
       },
-      size: {
-        sm: "h-9 px-3 text-xs",
-        md: "h-10 px-4 text-sm",
-        lg: "h-12 px-5 text-base",
+      color: {
+        default: "focus-visible:ring-ring focus-visible:border-foreground",
+        blue: "focus-visible:ring-blue-600 dark:focus-visible:ring-blue-500 focus-visible:border-blue-600 dark:focus-visible:border-blue-500",
+        emerald: "focus-visible:ring-emerald-500 focus-visible:border-emerald-500",
+        rose: "focus-visible:ring-rose-500 focus-visible:border-rose-500",
+        amber: "focus-visible:ring-amber-500 focus-visible:border-amber-500",
+        violet: "focus-visible:ring-violet-600 dark:focus-visible:ring-violet-500 focus-visible:border-violet-600 dark:focus-visible:border-violet-500",
+        indigo: "focus-visible:ring-indigo-600 dark:focus-visible:ring-indigo-500 focus-visible:border-indigo-600 dark:focus-visible:border-indigo-500",
+        sky: "focus-visible:ring-sky-500 focus-visible:border-sky-500",
+        slate: "focus-visible:ring-slate-600 dark:focus-visible:ring-slate-500 focus-visible:border-slate-600 dark:focus-visible:border-slate-500",
+        orange: "focus-visible:ring-orange-500 focus-visible:border-orange-500",
+      },
+      shape: {
+        default: "rounded-xl",
+        square: "rounded-none",
+        rounded: "rounded-full",
+        sharp: "rounded-[2px]",
+      },
+      spacing: {
+        default: "h-10 px-4 text-sm",
+        "2x": "h-8 px-3 text-xs",
+        "4x": "h-10 px-4 text-sm",
+        "6x": "h-12 px-5 text-base",
+        "8x": "h-14 px-6 text-lg",
       },
     },
     defaultVariants: {
       variant: "default",
-      size: "md",
+      color: "default",
+      shape: "default",
+      spacing: "default",
     },
   }
 );
@@ -170,7 +205,7 @@ export interface SelectTriggerProps extends React.ButtonHTMLAttributes<HTMLButto
 
 export const SelectTrigger = React.memo(React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
           ({ className, placeholder = "Select an option...", renderValue, children, ...props }, ref) => {
-            const { open, value, disabled, variant, size, multiSelect, onValueChange } = useSelectContext();
+            const { open, value, disabled, variant, color, shape, spacing, multiSelect, onValueChange } = useSelectContext();
 
             const handleRemoveItem = (e: React.MouseEvent, itemToRemove: string) => {
               e.stopPropagation();
@@ -190,13 +225,26 @@ export const SelectTrigger = React.memo(React.forwardRef<HTMLButtonElement, Sele
                     {value.map((v) => (
                       <span
                         key={v}
-                        className="inline-flex items-center gap-1 rounded bg-secondary px-1.5 py-0.5 text-xs font-medium text-secondary-foreground"
+                        className={cn(
+                          "inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-medium",
+                          color === "default" ? "bg-muted text-foreground" :
+                          color === "blue" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" :
+                          color === "emerald" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" :
+                          color === "rose" ? "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400" :
+                          color === "amber" ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400" :
+                          color === "violet" ? "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400" :
+                          color === "indigo" ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400" :
+                          color === "sky" ? "bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400" :
+                          color === "slate" ? "bg-slate-100 text-slate-700 dark:bg-slate-900/30 dark:text-slate-400" :
+                          "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
+                          shape === "square" ? "rounded-none" : shape === "sharp" ? "rounded-[2px]" : shape === "rounded" ? "rounded-full" : "rounded"
+                        )}
                       >
                         {v}
                         <span
                           role="button"
                           tabIndex={0}
-                          className="rounded-full hover:bg-background/50 focus:bg-background/50 outline-none"
+                          className="rounded-full hover:bg-black/10 dark:hover:bg-white/10 outline-none p-0.5"
                           onClick={(e) => handleRemoveItem(e, v)}
                           onKeyDown={(e) => {
                             if (e.key === "Enter" || e.key === " ") {
@@ -215,15 +263,15 @@ export const SelectTrigger = React.memo(React.forwardRef<HTMLButtonElement, Sele
               if (!value || value.length === 0) {
                 return <span className="text-muted-foreground">{placeholder}</span>;
               }
-              return value;
-            }, [value, multiSelect, placeholder, renderValue]);
+              return <span className="text-foreground">{value}</span>;
+            }, [value, multiSelect, placeholder, renderValue, color, shape]);
 
             return (
               <PopoverPrimitive.Trigger asChild>
                 <button
                   ref={ref}
                   disabled={disabled}
-                  className={cn(selectTriggerVariants({ variant, size }), className)}
+                  className={cn(selectTriggerVariants({ variant, color, shape, spacing: variant === "minimal" ? "default" : spacing }), className)}
                   aria-expanded={open}
                   {...props}
                 >
@@ -242,19 +290,26 @@ export const SelectTrigger = React.memo(React.forwardRef<HTMLButtonElement, Sele
 SelectTrigger.displayName = "SelectTrigger";
 
 const selectContentVariants = cva(
-  "z-50 min-w-[8rem] overflow-hidden rounded-md border text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+  "z-50 min-w-[8rem] overflow-hidden border shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
   {
     variants: {
       variant: {
-        default: "bg-popover border-border",
-        soft: "bg-popover border-transparent shadow-lg rounded-xl",
-        floating: "bg-popover border-border/50 shadow-xl rounded-2xl",
-        glass: "bg-background/70 backdrop-blur-xl border-white/20 shadow-xl rounded-xl dark:bg-black/50 dark:border-white/10",
-        minimal: "bg-popover border-border rounded-none shadow-sm",
+        default: "bg-background border-border",
+        soft: "bg-background border-transparent shadow-lg",
+        floating: "bg-background border-border/50 shadow-xl",
+        glass: "bg-background/70 backdrop-blur-xl border-border/20 shadow-xl",
+        minimal: "bg-background border-border shadow-sm",
       },
+      shape: {
+        default: "rounded-xl",
+        square: "rounded-none",
+        rounded: "rounded-3xl",
+        sharp: "rounded-[2px]",
+      }
     },
     defaultVariants: {
       variant: "default",
+      shape: "default",
     },
   }
 );
@@ -263,7 +318,7 @@ export const SelectContent = React.memo(React.forwardRef<
           React.ElementRef<typeof PopoverPrimitive.Content>,
           React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
         >(({ className, children, sideOffset = 4, ...props }, ref) => {
-          const { container, variant, size } = useSelectContext();
+          const { container, variant, shape } = useSelectContext();
 
           return (
             <PopoverPrimitive.Portal container={container}>
@@ -271,7 +326,7 @@ export const SelectContent = React.memo(React.forwardRef<
                 ref={ref}
                 sideOffset={sideOffset}
                 className={cn(
-                  selectContentVariants({ variant }),
+                  selectContentVariants({ variant, shape }),
                   "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
                   "w-[var(--radix-popover-trigger-width)]",
                   className
@@ -291,19 +346,19 @@ export const SelectSearch = React.memo(React.forwardRef<
           React.ElementRef<typeof CommandPrimitive.Input>,
           React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & { isLoading?: boolean }
         >(({ className, isLoading, ...props }, ref) => {
-          const { searchable, size } = useSelectContext();
+          const { searchable, spacing } = useSelectContext();
 
           if (!searchable) return null;
 
           return (
-            <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+            <div className="flex items-center border-b border-border px-3" cmdk-input-wrapper="">
               <Search className="mr-2 h-4 w-4 shrink-0 text-muted-foreground opacity-50" />
               <CommandPrimitive.Input
                 ref={ref}
                 className={cn(
-                  "flex w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
-                  size === "sm" && "py-2 text-xs",
-                  size === "lg" && "py-4 text-base",
+                  "flex w-full bg-transparent py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+                  spacing === "2x" && "py-2 text-xs",
+                  (spacing === "6x" || spacing === "8x") && "py-4 text-base",
                   className
                 )}
                 {...props}
@@ -320,7 +375,7 @@ export const SelectList = React.memo(React.forwardRef<
         >(({ className, ...props }, ref) => (
           <CommandPrimitive.List
             ref={ref}
-            className={cn("max-h-72 overflow-y-auto overflow-x-hidden custom-scrollbar", className)}
+            className={cn("max-h-72 overflow-y-auto overflow-x-hidden custom-scrollbar p-1", className)}
             {...props}
           />
         )));
@@ -360,7 +415,7 @@ export const SelectItem = React.memo(React.forwardRef<
             label?: string;
           }
         >(({ className, children, value: itemValue, label, onSelect, ...props }, ref) => {
-          const { value, onValueChange, multiSelect, setOpen, variant } = useSelectContext();
+          const { value, onValueChange, multiSelect, setOpen, variant, color, shape } = useSelectContext();
 
           const isSelected = React.useMemo(() => {
             if (multiSelect && Array.isArray(value)) {
@@ -386,6 +441,22 @@ export const SelectItem = React.memo(React.forwardRef<
             [multiSelect, value, isSelected, onValueChange, setOpen, onSelect]
           );
 
+          // Get the dynamic color classes based on active `color` context
+          const getColorClasses = () => {
+            switch(color) {
+              case "blue": return "data-[selected=true]:bg-blue-100 data-[selected=true]:text-blue-900 dark:data-[selected=true]:bg-blue-900/30 dark:data-[selected=true]:text-blue-100 hover:bg-blue-50 dark:hover:bg-blue-900/10";
+              case "emerald": return "data-[selected=true]:bg-emerald-100 data-[selected=true]:text-emerald-900 dark:data-[selected=true]:bg-emerald-900/30 dark:data-[selected=true]:text-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/10";
+              case "rose": return "data-[selected=true]:bg-rose-100 data-[selected=true]:text-rose-900 dark:data-[selected=true]:bg-rose-900/30 dark:data-[selected=true]:text-rose-100 hover:bg-rose-50 dark:hover:bg-rose-900/10";
+              case "amber": return "data-[selected=true]:bg-amber-100 data-[selected=true]:text-amber-900 dark:data-[selected=true]:bg-amber-900/30 dark:data-[selected=true]:text-amber-100 hover:bg-amber-50 dark:hover:bg-amber-900/10";
+              case "violet": return "data-[selected=true]:bg-violet-100 data-[selected=true]:text-violet-900 dark:data-[selected=true]:bg-violet-900/30 dark:data-[selected=true]:text-violet-100 hover:bg-violet-50 dark:hover:bg-violet-900/10";
+              case "indigo": return "data-[selected=true]:bg-indigo-100 data-[selected=true]:text-indigo-900 dark:data-[selected=true]:bg-indigo-900/30 dark:data-[selected=true]:text-indigo-100 hover:bg-indigo-50 dark:hover:bg-indigo-900/10";
+              case "sky": return "data-[selected=true]:bg-sky-100 data-[selected=true]:text-sky-900 dark:data-[selected=true]:bg-sky-900/30 dark:data-[selected=true]:text-sky-100 hover:bg-sky-50 dark:hover:bg-sky-900/10";
+              case "slate": return "data-[selected=true]:bg-slate-100 data-[selected=true]:text-slate-900 dark:data-[selected=true]:bg-slate-900/30 dark:data-[selected=true]:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-900/10";
+              case "orange": return "data-[selected=true]:bg-orange-100 data-[selected=true]:text-orange-900 dark:data-[selected=true]:bg-orange-900/30 dark:data-[selected=true]:text-orange-100 hover:bg-orange-50 dark:hover:bg-orange-900/10";
+              default: return "data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground hover:bg-muted";
+            }
+          };
+
           return (
             <CommandPrimitive.Item
               ref={ref}
@@ -393,22 +464,20 @@ export const SelectItem = React.memo(React.forwardRef<
               keywords={label ? [label] : undefined}
               onSelect={handleSelect}
               className={cn(
-                "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
-                variant === "default" && "data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground",
-                variant === "soft" && "data-[selected=true]:bg-muted/80",
-                variant === "floating" && "data-[selected=true]:bg-accent/50 data-[selected=true]:font-medium",
-                variant === "glass" && "data-[selected=true]:bg-white/10 dark:data-[selected=true]:bg-white/5",
-                variant === "minimal" && "data-[selected=true]:bg-transparent data-[selected=true]:font-bold data-[selected=true]:text-foreground hover:bg-muted",
+                "relative flex cursor-pointer select-none items-center px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+                shape === "square" ? "rounded-none" : shape === "rounded" ? "rounded-xl" : shape === "sharp" ? "rounded-[2px]" : "rounded-md",
+                variant === "minimal" && "rounded-none",
+                getColorClasses(),
                 className
               )}
               {...props}
             >
-              <span className="flex items-center flex-1 truncate">
+              <span className="flex items-center flex-1 truncate text-foreground">
                 {children || label || itemValue}
               </span>
               <span
                 className={cn(
-                  "ml-auto flex h-4 w-4 items-center justify-center shrink-0 transition-opacity",
+                  "ml-auto flex h-4 w-4 items-center justify-center shrink-0 transition-opacity text-current",
                   isSelected ? "opacity-100" : "opacity-0"
                 )}
               >

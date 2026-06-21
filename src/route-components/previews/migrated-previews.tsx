@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { PreviewContainer } from "../preview-engine/PreviewContainer";
+import { PreviewContainer, DEFAULT_COLORS } from "../preview-engine/PreviewContainer";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -18,14 +18,7 @@ import {
 
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+
 
 import {
   Collapsible,
@@ -135,30 +128,6 @@ export const MigratedPreviews = {
     );
   },
 
-  "breadcrumb": function BreadcrumbPreview() {
-    return (
-      <PreviewContainer title="Breadcrumb" description="Displays the path to the current resource using a hierarchy of links.">
-        <div className="flex flex-col gap-8 justify-center min-h-[200px] px-4">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/">Home</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/components">Components</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </PreviewContainer>
-    );
-  },
-
   "collapsible": function CollapsiblePreview() {
     const [isOpen, setIsOpen] = React.useState(false);
     return (
@@ -168,7 +137,7 @@ export const MigratedPreviews = {
             <div className="flex items-center justify-between space-x-4 px-4 py-2 border rounded-md">
               <h4 className="text-sm font-semibold">@peduarte starred 3 repositories</h4>
               <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="sm" className="w-9 p-0">
+                <Button variant="ghost" className="w-9 p-0">
                   {isOpen ? "-" : "+"}
                 </Button>
               </CollapsibleTrigger>
@@ -345,7 +314,7 @@ export const MigratedPreviews = {
         onVariantChange={setVariant as any}
       >
         <div className="flex items-center justify-center min-h-[300px]">
-          <RadioGroup defaultValue="option-1" variant={variant}>
+          <RadioGroup defaultValue="option-1">
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="option-1" id="r1" />
               <label htmlFor="r1" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
@@ -509,7 +478,7 @@ export const MigratedPreviews = {
     return (
       <PreviewContainer title="Typing Animation" description="A text component that animates as if being typed.">
         <div className="flex items-center justify-center min-h-[200px]">
-          <TypingAnimation text="Hello, welcome to Future UI!" className="text-4xl font-bold text-primary" />
+          <TypingAnimation className="text-4xl font-bold text-primary">Hello, welcome to Future UI!</TypingAnimation>
         </div>
       </PreviewContainer>
     );
@@ -521,7 +490,7 @@ export const MigratedPreviews = {
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="w-full max-w-md bg-neutral-900 p-8 rounded-xl text-white">
             <p>
-              This is a beautiful <Highlighter color="#facc15">highlighted</Highlighter> text effect.
+              This is a beautiful <Highlighter color="amber">highlighted</Highlighter> text effect.
             </p>
           </div>
         </div>
@@ -563,7 +532,7 @@ export const MigratedPreviews = {
       <PreviewContainer 
         title="Gutter Lines" 
         description="A decorative repeating line pattern component with multiple variants."
-        variants={["default", "dense", "wide", "vertical"]}
+        variants={["default", "vertical"]}
         activeVariant={variant}
         onVariantChange={setVariant as any}
         isVirtualScreen={true}
@@ -591,7 +560,7 @@ export const MigratedPreviews = {
           </div>
         }
       >
-        <GutterLines variant={variant} color={color} className="absolute inset-0 w-full h-full pointer-events-none" />
+        <GutterLines variant={variant as "default" | "vertical"} color={color} className="absolute inset-0 w-full h-full pointer-events-none" />
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="bg-background/80 backdrop-blur-sm border border-border p-6 rounded-xl shadow-lg">
             <h3 className="text-xl font-semibold tracking-tight">Content Layer</h3>

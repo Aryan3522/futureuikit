@@ -17,10 +17,12 @@ import { NexusCard } from "@/components/ui/nexus-card";
 import { Button } from "@/components/ui/button";
 import { DotBackground } from "@/components/ui/dot-background";
 import { cn } from "@/lib/utils";
-import { PreviewContainer } from "../preview-engine/PreviewContainer";
+import { PreviewContainer, DEFAULT_COLORS } from "../preview-engine/PreviewContainer";
 import { Sparkles } from "lucide-react";
 
 export const BasicCardPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [variant, setVariant] = React.useState<
     "default" | "elevated" | "interactive" | "feature" | "stats" | "content" | "compact" | "media"
   >("default");
@@ -31,25 +33,27 @@ export const BasicCardPreview: React.FC = () => {
       description="A premium composable card system. Each variant is purpose-built for a specific UI context."
       variants={["default", "elevated", "interactive", "feature", "stats", "content", "compact", "media"]}
       activeVariant={variant}
-      onVariantChange={setVariant}
+      onVariantChange={setVariant} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className="w-full flex items-center justify-center p-8">
-        <BasicCard variant={variant} />
+        <BasicCard variant={variant} color={previewColor} />
       </div>
     </PreviewContainer>
   );
 };
 
 export const StandardCardPreview: React.FC = () => {
-  const [variant, setVariant] = React.useState<"default" | "outline" | "ghost" | "glass">("default");
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+  const [variant, setVariant] = React.useState<"solid" | "outline" | "ghost" | "glass">("solid");
 
   return (
     <PreviewContainer
       title="Standard Card"
       description="A base structural card component."
-      variants={["default", "outline", "ghost", "glass"]}
+      variants={["solid", "outline", "ghost", "glass"]}
       activeVariant={variant}
-      onVariantChange={setVariant as any}
+      onVariantChange={setVariant as any} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <Card className="w-full max-w-md mx-auto" variant={variant}>
         <CardHeader>
@@ -62,7 +66,7 @@ export const StandardCardPreview: React.FC = () => {
           </p>
         </CardContent>
         <CardFooter>
-          <Button className="w-full">Action</Button>
+          <Button className="w-full" color={previewColor} variant={previewVariant}>Action</Button>
         </CardFooter>
       </Card>
     </PreviewContainer>
@@ -70,6 +74,8 @@ export const StandardCardPreview: React.FC = () => {
 };
 
 export const GlassPanelPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [variant, setVariant] = React.useState<"mantle" | "heavy" | "subtle" | "frost">("heavy");
   const [glow, setGlow] = React.useState<"none" | "subtle" | "luminous">("subtle");
 
@@ -98,7 +104,7 @@ export const GlassPanelPreview: React.FC = () => {
             </div>
           </div>
         </>
-      }
+      } colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
     >
       <div className="w-full h-full flex flex-col items-center justify-center p-4 md:p-12 min-h-[400px] relative overflow-hidden bg-[radial-gradient(circle_at_center,_var(--tw-colors-muted-foreground)_1px,_transparent_1px)] bg-[size:16px_16px] dark:bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.15)_1px,_transparent_1px)]">
         {/* Colorful Blobs to show off the glass blur effect */}
@@ -107,7 +113,7 @@ export const GlassPanelPreview: React.FC = () => {
         <div className="absolute bottom-1/3 right-1/3 translate-x-1/4 translate-y-1/4 w-56 h-56 bg-purple-500/30 rounded-full blur-3xl mix-blend-screen pointer-events-none" />
 
         <div className="relative z-10 w-full max-w-lg">
-          <GlassPanel variant={variant} glow={glow} className="p-8 md:p-12 text-center flex flex-col items-center">
+          <GlassPanel variant={variant} glow={glow} className="p-8 md:p-12 text-center flex flex-col items-center" color={previewColor}>
             <div className="w-16 h-16 rounded-full bg-primary/20 backdrop-blur-md mb-6 flex items-center justify-center border border-white/20">
               <Sparkles className="w-8 h-8 text-primary" />
             </div>
@@ -121,6 +127,8 @@ export const GlassPanelPreview: React.FC = () => {
 };
 
 export const HoverGlareCardPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [layout, setLayout] = React.useState<"default" | "media" | "content" | "stats" | "compact" | "feature">("default");
   const [styleVariant, setStyleVariant] = React.useState<"default" | "glass" | "solid" | "ghost">("glass");
   const [glow, setGlow] = React.useState<"none" | "primary" | "secondary" | "white">("primary");
@@ -148,13 +156,13 @@ export const HoverGlareCardPreview: React.FC = () => {
             </div>
           </div>
         </div>
-      }
+      } colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className="flex items-center justify-center w-full h-full p-4 sm:p-8 min-h-100">
         <HoverGlareCard
           layout={layout}
           variant={styleVariant}
-          glow={glow}
+          glow={glow} color={previewColor}
         />
       </div>
     </PreviewContainer>
@@ -162,8 +170,10 @@ export const HoverGlareCardPreview: React.FC = () => {
 };
 
 export const ExpandingCardPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Expanding Flex Card" description="A beautiful, interactive expanding flex layout.">
+    <PreviewContainer title="Expanding Flex Card" description="A beautiful, interactive expanding flex layout." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <ExpandingFlexCard
         options={[
           {
@@ -201,6 +211,8 @@ export const ExpandingCardPreview: React.FC = () => {
 };
 
 export const NexusCardPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [variant, setVariant] = React.useState<"default" | "glass" | "solid" | "neon">("default");
 
   return (
@@ -209,10 +221,10 @@ export const NexusCardPreview: React.FC = () => {
       description="A premium 3D parallax card with reactive spotlight."
       variants={["default", "glass", "solid", "neon"]}
       activeVariant={variant}
-      onVariantChange={setVariant as any}
+      onVariantChange={setVariant as any} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className="flex items-center justify-center w-full h-full p-4 sm:p-8">
-        <NexusCard className="w-80 h-96" variant={variant}>
+        <NexusCard className="w-80 h-96" variant={variant} color={previewColor}>
           <h2 className="text-2xl font-bold text-foreground mb-2">Nexus Design</h2>
           <p className="text-muted-foreground">Hover over this card to experience the premium tactile feel, reactive spotlight, and 3D parallax tilt.</p>
         </NexusCard>

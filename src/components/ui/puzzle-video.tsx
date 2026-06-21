@@ -11,6 +11,10 @@ import React, { useEffect, useRef, useMemo, useState } from 'react';
 import { motion, useTransform, useSpring, useMotionValueEvent, useScroll } from 'framer-motion';
 import { cn } from "@/lib/utils";
 
+export type PuzzleVideoColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type PuzzleVideoShape = "default" | "square" | "rounded" | "sharp";
+export type PuzzleVideoSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
 export interface PuzzleVideoProps {
   src: string;
   variant?: "jigsaw" | "jigsaw-uneven" | "glass";
@@ -20,7 +24,42 @@ export interface PuzzleVideoProps {
   className?: string;
   position?: "left" | "center" | "right";
   scrollContainer?: React.RefObject<HTMLElement | null>;
+  color?: PuzzleVideoColor;
+  shape?: PuzzleVideoShape;
+  spacing?: PuzzleVideoSpacing;
 }
+
+const colorThemeMap: Record<PuzzleVideoColor, { glow: string; border: string }> = {
+  default: { glow: "bg-white/5", border: "border-white/20" },
+  blue: { glow: "bg-blue-500/10", border: "border-blue-500/30" },
+  emerald: { glow: "bg-emerald-500/10", border: "border-emerald-500/30" },
+  rose: { glow: "bg-rose-500/10", border: "border-rose-500/30" },
+  amber: { glow: "bg-amber-500/10", border: "border-amber-500/30" },
+  violet: { glow: "bg-violet-500/10", border: "border-violet-500/30" },
+  indigo: { glow: "bg-indigo-500/10", border: "border-indigo-500/30" },
+  sky: { glow: "bg-sky-500/10", border: "border-sky-500/30" },
+  slate: { glow: "bg-slate-500/10", border: "border-slate-500/30" },
+  orange: { glow: "bg-orange-500/10", border: "border-orange-500/30" },
+};
+
+const getShapeClass = (shape: PuzzleVideoShape) => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-md md:rounded-lg";
+    case "rounded": return "rounded-3xl md:rounded-[2rem]";
+    case "default": return "rounded-2xl md:rounded-3xl";
+  }
+};
+
+const getSpacingClass = (spacing: PuzzleVideoSpacing) => {
+  switch (spacing) {
+    case "2x": return "py-12";
+    case "4x": return "py-24";
+    case "6x": return "py-32";
+    case "8x": return "py-48";
+    default: return "py-32";
+  }
+};
 
 interface PieceShape {
   i: number;
@@ -314,11 +353,18 @@ export const PuzzleVideo: React.FC<PuzzleVideoProps> = ({
   className,
   position = "center",
   scrollContainer,
+  color = "default",
+  shape = "default",
+  spacing = "default"
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRefs = useRef<(HTMLCanvasElement | null)[]>([]);
   const [isMobile, setIsMobile] = useState(false);
+
+  const activeTheme = colorThemeMap[color];
+  const shapeClass = getShapeClass(shape);
+  const spacingClass = getSpacingClass(spacing);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -395,6 +441,7 @@ export const PuzzleVideo: React.FC<PuzzleVideoProps> = ({
         setIsVideoVisible(true);
       }, 400);
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsVideoVisible(false);
     }
     return () => clearTimeout(timeout);
@@ -518,7 +565,7 @@ export const PuzzleVideo: React.FC<PuzzleVideoProps> = ({
 
   return (
     <div
-      className={cn("w-full flex py-32 overflow-visible", {
+      className={cn("w-full flex overflow-visible", spacingClass, {
         "justify-start": position === "left",
         "justify-center": position === "center",
         "justify-end": position === "right",
@@ -539,13 +586,13 @@ export const PuzzleVideo: React.FC<PuzzleVideoProps> = ({
         <motion.div 
           animate={{ opacity: isVideoVisible ? 1 : 0, scale: isVideoVisible ? 1 : 0.95 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="absolute inset-0 w-full h-full bg-white/5 blur-[120px] rounded-full pointer-events-none"
+          className={cn("absolute inset-0 w-full h-full blur-[120px] rounded-full pointer-events-none", activeTheme.glow)}
         />
 
         <motion.div
           animate={{ opacity: isVideoVisible ? 1 : 0, scale: isVideoVisible ? 1 : 0.95 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="absolute inset-0 w-full h-full rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.8)] border border-white/20 bg-black/50 backdrop-blur-3xl z-10"
+          className={cn("absolute inset-0 w-full h-full overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.8)] border bg-black/50 backdrop-blur-3xl z-10", shapeClass, activeTheme.border)}
           style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.4), 0 40px 100px rgba(0,0,0,0.8)' }}
         >
           <video

@@ -13,43 +13,30 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Upload, File as FileIcon, Check, AlertCircle, RefreshCw, Sparkles, BrainCircuit, CloudUpload, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/**
- * Props for the PremiumUploadButton component.
- */
+export type PremiumUploadColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type PremiumUploadShape = "default" | "square" | "rounded" | "sharp";
+export type PremiumUploadSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
 export interface PremiumUploadButtonProps {
-  /** The visual variant of the button. */
   variant?: "modern" | "minimal" | "futuristic" | "enterprise" | "apple" | "windows" | "clean" | "ai";
-  /** Text to show when no file is selected. */
+  color?: PremiumUploadColor;
+  shape?: PremiumUploadShape;
+  spacing?: PremiumUploadSpacing;
   placeholderText?: string;
-  /** Text for the upload action button. */
   buttonLabel?: string;
-  /** Accepted file types, e.g., "image/*, .pdf". */
   accept?: string;
-  /** Whether multiple files can be selected. */
   multiple?: boolean;
-  /** Maximum total file size in bytes. */
   maxSize?: number;
-  /** Custom upload handler. Called with the selected files and a progress callback. */
   onUpload?: (files: File[], onProgress: (progress: number) => void) => Promise<void> | void;
-  /** URL to automatically post files to via XMLHttpRequest for real progress tracking. */
   uploadUrl?: string;
-  /** HTTP method to use when uploadUrl is provided. Defaults to POST. */
   method?: "POST" | "PUT";
-  /** Name of the field for the file in the FormData. Defaults to 'file'. */
   name?: string;
-  /** Optional headers to attach to the XMLHttpRequest. */
   headers?: Record<string, string>;
-  /** Callback fired when an error occurs during selection or upload. */
   onError?: (error: Error) => void;
-  /** Callback fired when the upload successfully completes. */
   onSuccess?: () => void;
-  /** Controlled progress value from 0 to 100. */
   progress?: number;
-  /** Controlled status of the button. */
   status?: "idle" | "selected" | "expanding-margin" | "expanding-width" | "uploading" | "success" | "error";
-  /** Fallback simulation mode for UI library previews. Defaults to true if no uploadUrl or onUpload is provided. */
   simulate?: boolean;
-  /** Custom class name for the root container. */
   className?: string;
 }
 
@@ -61,11 +48,84 @@ const formatFileSize = (bytes: number) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 };
 
-/**
- * A highly animated, premium file upload component.
- */
+const getShapeClass = (shape: PremiumUploadShape, element: "container" | "button" | "icon") => {
+  if (shape === "square") return "rounded-none";
+  if (shape === "sharp") return "rounded-[2px]";
+  
+  // Custom default logic depending on element
+  if (shape === "rounded") {
+    if (element === "container") return "rounded-2xl";
+    if (element === "button") return "rounded-xl";
+    return "rounded-lg";
+  }
+
+  // default
+  if (element === "container") return "rounded-2xl";
+  if (element === "button") return "rounded-xl";
+  return "rounded-lg";
+};
+
+const getSpacingStyles = (spacing: PremiumUploadSpacing, element: "container" | "button" | "icon" | "text") => {
+  if (element === "container") {
+    switch (spacing) {
+      case "2x": return "min-h-[48px]";
+      case "4x": return "min-h-[56px]";
+      case "6x": return "min-h-[72px]";
+      case "8x": return "min-h-[88px]";
+      default: return "min-h-[64px]";
+    }
+  }
+  if (element === "button") {
+    switch (spacing) {
+      case "2x": return "h-[36px] min-w-[90px] px-4 text-xs";
+      case "4x": return "h-[40px] min-w-[100px] px-5 text-sm";
+      case "6x": return "h-[56px] min-w-[140px] px-8 text-base";
+      case "8x": return "h-[64px] min-w-[160px] px-10 text-lg";
+      default: return "h-[48px] min-w-[120px] px-6 text-sm";
+    }
+  }
+  if (element === "icon") {
+    switch (spacing) {
+      case "2x": return "w-8 h-8";
+      case "4x": return "w-9 h-9";
+      case "6x": return "w-12 h-12";
+      case "8x": return "w-14 h-14";
+      default: return "w-10 h-10";
+    }
+  }
+  if (element === "text") {
+    switch (spacing) {
+      case "2x": return "text-xs";
+      case "4x": return "text-sm";
+      case "6x": return "text-base";
+      case "8x": return "text-lg";
+      default: return "text-sm";
+    }
+  }
+  return "";
+};
+
+const getColorMap = (color: PremiumUploadColor) => {
+  const map = {
+    default: { action: "bg-foreground text-background", idleHover: "hover:bg-accent text-foreground" },
+    blue: { action: "bg-blue-600 text-white", idleHover: "hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-700 dark:text-blue-300" },
+    emerald: { action: "bg-emerald-600 text-white", idleHover: "hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300" },
+    rose: { action: "bg-rose-600 text-white", idleHover: "hover:bg-rose-50 dark:hover:bg-rose-900/20 text-rose-700 dark:text-rose-300" },
+    amber: { action: "bg-amber-500 text-zinc-950", idleHover: "hover:bg-amber-50 dark:hover:bg-amber-900/20 text-amber-700 dark:text-amber-300" },
+    violet: { action: "bg-violet-600 text-white", idleHover: "hover:bg-violet-50 dark:hover:bg-violet-900/20 text-violet-700 dark:text-violet-300" },
+    indigo: { action: "bg-indigo-600 text-white", idleHover: "hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300" },
+    sky: { action: "bg-sky-500 text-zinc-950", idleHover: "hover:bg-sky-50 dark:hover:bg-sky-900/20 text-sky-700 dark:text-sky-300" },
+    slate: { action: "bg-slate-600 text-white", idleHover: "hover:bg-slate-50 dark:hover:bg-slate-900/20 text-slate-700 dark:text-slate-300" },
+    orange: { action: "bg-orange-500 text-white", idleHover: "hover:bg-orange-50 dark:hover:bg-orange-900/20 text-orange-700 dark:text-orange-300" },
+  };
+  return map[color];
+};
+
 export function PremiumUploadButton({
   variant = "modern",
+  color = "default",
+  shape = "default",
+  spacing = "default",
   placeholderText = "Choose a file",
   buttonLabel = "Upload",
   accept,
@@ -299,94 +359,101 @@ export function PremiumUploadButton({
     }
   };
 
+  const activeColorSet = getColorMap(color);
+
   const variantConfig = {
     modern: {
-      container: "bg-white dark:bg-black/40 backdrop-blur-xl border border-zinc-200 dark:border-white/10 shadow-sm dark:shadow-lg overflow-hidden rounded-xl",
-      actionBg: "bg-zinc-900 dark:bg-white text-white dark:text-black",
-      idleBg: "bg-zinc-50 dark:bg-white/10 hover:bg-zinc-100 dark:hover:bg-white/20 text-zinc-900 dark:text-white",
-      iconBg: "bg-zinc-50 dark:bg-white/10",
-      progressBg: "bg-green-50 dark:bg-green-500",
-      successBg: "bg-green-50 dark:bg-green-500 text-green-900 dark:text-white",
-      text: "text-zinc-900 dark:text-zinc-200",
+      container: "bg-white dark:bg-black/40 backdrop-blur-xl border border-zinc-200 dark:border-white/10 shadow-sm dark:shadow-lg",
+      actionBg: activeColorSet.action,
+      idleBg: `bg-muted ${activeColorSet.idleHover}`,
+      iconBg: "bg-muted",
+      progressBg: "bg-muted",
+      successBg: "bg-green-500 text-white",
+      text: "text-foreground",
       icon: <Upload size={18} />
     },
     minimal: {
-      container: "bg-transparent border border-zinc-200 dark:border-white/20 overflow-hidden rounded-none",
-      actionBg: "bg-zinc-900 dark:bg-white text-white dark:text-black",
-      idleBg: "bg-zinc-50 dark:bg-white/10 hover:bg-zinc-100 dark:hover:bg-white/20 text-zinc-900 dark:text-white",
-      iconBg: "bg-zinc-50 dark:bg-white/10",
-      progressBg: "bg-green-50 dark:bg-green-500",
-      successBg: "bg-green-50 dark:bg-green-500 text-green-900 dark:text-white",
-      text: "text-zinc-900 dark:text-zinc-100",
+      container: "bg-transparent border border-zinc-200 dark:border-white/20 shadow-none",
+      actionBg: activeColorSet.action,
+      idleBg: `bg-transparent ${activeColorSet.idleHover}`,
+      iconBg: "bg-transparent",
+      progressBg: "bg-muted",
+      successBg: "bg-green-500 text-white",
+      text: "text-foreground",
       icon: <FileIcon size={18} />
     },
     futuristic: {
-      container: "bg-white dark:bg-[#0a0a0f] border border-cyan-200 dark:border-cyan-500/30 shadow-sm dark:shadow-[0_0_15px_rgba(6,182,212,0.15)] overflow-hidden rounded-lg",
-      actionBg: "bg-cyan-500 text-white dark:text-black shadow-none dark:shadow-[0_0_10px_rgba(6,182,212,0.5)]",
-      idleBg: "bg-cyan-50 dark:bg-cyan-950 hover:bg-cyan-100 dark:hover:bg-cyan-900 text-cyan-900 dark:text-cyan-100",
+      container: "bg-white dark:bg-[#0a0a0f] border border-cyan-200 dark:border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)]",
+      actionBg: activeColorSet.action,
+      idleBg: `bg-cyan-50 dark:bg-cyan-950 ${activeColorSet.idleHover}`,
       iconBg: "bg-cyan-50 dark:bg-cyan-950",
-      progressBg: "bg-green-50 dark:bg-green-500",
-      successBg: "bg-green-50 dark:bg-green-500 text-green-900 dark:text-white",
+      progressBg: "bg-muted",
+      successBg: "bg-green-500 text-white",
       text: "text-zinc-900 dark:text-cyan-50",
-      icon: <CloudUpload size={18} className="text-cyan-600 dark:text-cyan-400" />
+      icon: <CloudUpload size={18} />
     },
     enterprise: {
-      container: "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden rounded-md",
-      actionBg: "bg-blue-600 text-white",
-      idleBg: "bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white",
-      iconBg: "bg-zinc-50 dark:bg-zinc-800",
-      progressBg: "bg-green-50 dark:bg-green-500",
-      successBg: "bg-green-50 dark:bg-green-500 text-green-900 dark:text-white",
+      container: "bg-background border border-border shadow-sm",
+      actionBg: activeColorSet.action,
+      idleBg: `bg-muted ${activeColorSet.idleHover}`,
+      iconBg: "bg-muted",
+      progressBg: "bg-muted",
+      successBg: "bg-green-500 text-white",
       text: "text-zinc-900 dark:text-white",
       icon: <Upload size={18} />
     },
     apple: {
-      container: "bg-white/70 dark:bg-[#1c1c1e]/70 backdrop-blur-3xl border border-black/[0.04] dark:border-white/[0.04] shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)] rounded-2xl",
-      actionBg: "bg-[#007AFF] text-white shadow-sm",
-      idleBg: "bg-[#F2F2F7] dark:bg-[#2C2C2E] hover:bg-[#E5E5EA] dark:hover:bg-[#3A3A3C] text-black dark:text-white",
+      container: "bg-white/70 dark:bg-[#1c1c1e]/70 backdrop-blur-3xl border border-black/[0.04] dark:border-white/[0.04] shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)]",
+      actionBg: activeColorSet.action,
+      idleBg: `bg-[#F2F2F7] dark:bg-[#2C2C2E] ${activeColorSet.idleHover}`,
       iconBg: "bg-[#F2F2F7] dark:bg-[#2C2C2E]",
-      progressBg: "bg-[#E5F3E8] dark:bg-[#34C759]",
-      successBg: "bg-[#E5F3E8] dark:bg-[#34C759] text-[#1E5D2B] dark:text-white",
+      progressBg: "bg-muted",
+      successBg: "bg-green-500 text-white",
       text: "text-black dark:text-white",
-      icon: <Upload size={18} className="text-[#007AFF]" />
+      icon: <Upload size={18} />
     },
     windows: {
-      container: "bg-white/80 dark:bg-black/60 backdrop-blur-2xl border border-zinc-200 dark:border-white/20 shadow-sm rounded-xl",
-      actionBg: "bg-[#005FB8] text-white",
-      idleBg: "bg-zinc-100 dark:bg-white/10 hover:bg-zinc-200 dark:hover:bg-white/20 text-zinc-900 dark:text-white",
+      container: "bg-white/80 dark:bg-black/60 backdrop-blur-2xl border border-zinc-200 dark:border-white/20 shadow-sm",
+      actionBg: activeColorSet.action,
+      idleBg: `bg-zinc-100 dark:bg-white/10 ${activeColorSet.idleHover}`,
       iconBg: "bg-zinc-100 dark:bg-white/10",
-      progressBg: "bg-green-50 dark:bg-green-500",
-      successBg: "bg-green-50 dark:bg-green-500 text-green-900 dark:text-white",
+      progressBg: "bg-muted",
+      successBg: "bg-green-500 text-white",
       text: "text-zinc-900 dark:text-white",
-      icon: <FileIcon size={18} className="text-[#005FB8]" />
+      icon: <FileIcon size={18} />
     },
     clean: {
-      container: "bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 shadow-sm rounded-2xl",
-      actionBg: "bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black",
-      idleBg: "bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-800",
-      iconBg: "bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800",
-      progressBg: "bg-green-50 dark:bg-green-500",
-      successBg: "bg-green-50 dark:bg-green-500 text-green-900 dark:text-white",
+      container: "bg-background border border-border shadow-sm",
+      actionBg: activeColorSet.action,
+      idleBg: `bg-muted ${activeColorSet.idleHover} border border-border`,
+      iconBg: "bg-muted border border-border",
+      progressBg: "bg-muted",
+      successBg: "bg-green-500 text-white",
       text: "text-zinc-900 dark:text-white",
       icon: <Upload size={18} />
     },
     ai: {
-      container: "bg-white dark:bg-background border border-zinc-200 dark:border-fuchsia-500/30 shadow-sm dark:shadow-[0_0_30px_rgba(217,70,239,0.1)] overflow-hidden rounded-2xl",
-      actionBg: "bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-md",
-      idleBg: "bg-fuchsia-50/50 dark:bg-fuchsia-500/10 hover:bg-fuchsia-100/50 dark:hover:bg-fuchsia-500/20 text-zinc-900 dark:text-fuchsia-100 border border-fuchsia-100 dark:border-transparent",
+      container: "bg-white dark:bg-background border border-zinc-200 dark:border-fuchsia-500/30 shadow-[0_0_30px_rgba(217,70,239,0.1)]",
+      actionBg: activeColorSet.action,
+      idleBg: `bg-fuchsia-50/50 dark:bg-fuchsia-500/10 ${activeColorSet.idleHover} border border-fuchsia-100 dark:border-transparent`,
       iconBg: "bg-fuchsia-50/50 dark:bg-fuchsia-500/10 border border-fuchsia-100 dark:border-transparent",
-      progressBg: "bg-green-50 dark:bg-green-500",
-      successBg: "bg-green-50 dark:bg-green-500 text-green-900 dark:text-white",
+      progressBg: "bg-muted",
+      successBg: "bg-green-500 text-white",
       text: "text-zinc-900 dark:text-fuchsia-50",
-      icon: <BrainCircuit size={18} className="text-fuchsia-600 dark:text-fuchsia-400" />
+      icon: <BrainCircuit size={18} />
     }
   };
 
   const config = variantConfig[variant];
-  const isApple = variant === "apple";
-  
   const isMarginExpanded = status === "expanding-margin" || status === "expanding-width" || status === "uploading" || status === "success";
   const isWidthExpanded = status === "expanding-width" || status === "uploading" || status === "success";
+
+  const containerShape = getShapeClass(shape, "container");
+  const buttonShape = getShapeClass(shape, "button");
+  const containerSpacing = getSpacingStyles(spacing, "container");
+  const buttonSpacing = getSpacingStyles(spacing, "button");
+  const iconSpacing = getSpacingStyles(spacing, "icon");
+  const textSpacing = getSpacingStyles(spacing, "text");
 
   return (
     <div className={cn("relative w-full max-w-md mx-auto group perspective-1000", className)}>
@@ -419,12 +486,14 @@ export function PremiumUploadButton({
         className={cn(
           "relative cursor-pointer w-full flex items-center justify-between overflow-hidden",
           config.container,
+          containerShape,
+          containerSpacing,
           isDragging && "ring-2 ring-primary"
         )}
-        style={{ minHeight: "64px" }}
       >
         <div className={cn(
-          "relative z-10 flex items-center justify-between w-full h-full min-h-[64px]"
+          "relative z-10 flex items-center justify-between w-full h-full",
+          containerSpacing
         )}>
           
           <div className="flex-1 flex items-center h-full overflow-hidden pl-4 py-2">
@@ -439,13 +508,14 @@ export function PremiumUploadButton({
                   className={cn("flex items-center gap-4 w-full", config.text)}
                 >
                   <div className={cn(
-                    "w-10 h-10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300",
-                    isApple ? "rounded-full" : "rounded-lg",
+                    "flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300",
+                    getShapeClass(shape, "icon"),
+                    iconSpacing,
                     config.iconBg
                   )}>
                     {config.icon}
                   </div>
-                  <span className={cn("font-medium", isApple ? "text-[15px]" : "text-sm")}>
+                  <span className={cn("font-medium", textSpacing)}>
                     {isDragging ? "Drop files here" : placeholderText}
                   </span>
                 </motion.div>
@@ -465,8 +535,9 @@ export function PremiumUploadButton({
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ type: "spring", bounce: 0.4 }}
                     className={cn(
-                      "w-10 h-10 flex items-center justify-center shrink-0",
-                      isApple ? "rounded-full" : "rounded-lg",
+                      "flex items-center justify-center shrink-0",
+                      getShapeClass(shape, "icon"),
+                      iconSpacing,
                       config.iconBg
                     )}
                   >
@@ -498,7 +569,11 @@ export function PremiumUploadButton({
                   animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
                   className="flex items-center gap-3 text-red-500 w-full"
                 >
-                  <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center shrink-0">
+                  <div className={cn(
+                    "bg-red-500/10 flex items-center justify-center shrink-0",
+                    getShapeClass(shape, "icon"),
+                    iconSpacing
+                  )}>
                     <AlertCircle size={18} />
                   </div>
                   <div className="flex flex-col">
@@ -518,7 +593,7 @@ export function PremiumUploadButton({
                 onClick={status === "selected" ? triggerUpload : undefined}
                 initial={false}
                 animate={{ 
-                  borderRadius: isMarginExpanded ? 0 : (isApple ? 12 : 8),
+                  borderRadius: isMarginExpanded ? 0 : (shape === "rounded" ? 8 : (shape === "square" ? 0 : 12)),
                   boxShadow: status === "selected" ? "0 0 15px rgba(0,0,0,0.1)" : "0 0 0px rgba(0,0,0,0)",
                 }}
                 transition={{ layout: { type: "spring", bounce: 0, duration: 0.6 } }}
@@ -528,8 +603,8 @@ export function PremiumUploadButton({
                   isWidthExpanded ? "absolute inset-0 z-50 text-base" : "relative shrink-0",
                   !isWidthExpanded && (
                     isMarginExpanded 
-                      ? "h-[64px] min-w-[120px] px-8 mr-0 text-sm" 
-                      : "h-[48px] min-w-[120px] px-6 mr-2 my-2 text-sm"
+                      ? `${containerSpacing} min-w-[120px] px-8 mr-0 text-sm` 
+                      : `${buttonSpacing} mr-2 my-2`
                   )
                 )}
               >
@@ -636,7 +711,8 @@ export function PremiumUploadButton({
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                 className={cn(
                   "shrink-0 bg-red-500 text-white flex items-center overflow-hidden z-20",
-                  isApple ? "h-12 rounded-xl" : "h-[64px]"
+                  getShapeClass(shape, "button"),
+                  containerSpacing // Error container matches container height roughly
                 )}
               >
                 {files.length > 0 ? (

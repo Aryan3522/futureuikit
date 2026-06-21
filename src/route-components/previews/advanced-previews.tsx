@@ -13,11 +13,13 @@ import { Terminal as UITerminal, TerminalVariant } from "@/components/ui/termina
 import { CursorGlowButton } from "@/components/ui/cursor-glow-button";
 import { ScrollTextReveal } from "@/components/ui/scroll-text-reveal";
 import { SlideUpReveal, type SlideUpRevealVariant, type SlideUpRevealShape } from "@/components/ui/slide-up-reveal";
-import { PreviewContainer } from "../preview-engine/PreviewContainer";
+import { PreviewContainer, DEFAULT_COLORS } from "../preview-engine/PreviewContainer";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const KanbanPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const initialColumns = [
     {
       id: "todo",
@@ -46,17 +48,19 @@ export const KanbanPreview: React.FC = () => {
   ];
 
   return (
-    <PreviewContainer title="Kanban Board" description="A highly interactive, draggable kanban board for project management." isVirtualScreen={true}>
+    <PreviewContainer title="Kanban Board" description="A highly interactive, draggable kanban board for project management." isVirtualScreen={true} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <div className="w-full h-full min-h-125">
-        <KanbanBoard initialColumns={initialColumns} />
+        <KanbanBoard initialColumns={initialColumns} color={previewColor} variant={previewVariant} />
       </div>
     </PreviewContainer>
   );
 };
 
 export const WorkflowPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Workflow Builder" description="A node-based visual workflow builder." isVirtualScreen={true} contentClassName="p-0 border-none">
+    <PreviewContainer title="Workflow Builder" description="A node-based visual workflow builder." isVirtualScreen={true} contentClassName="p-0 border-none" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <div className="absolute inset-0 w-full h-full">
         <WorkflowBuilder 
           variant="enterprise"
@@ -68,7 +72,7 @@ export const WorkflowPreview: React.FC = () => {
           initialEdges={[
             { id: "e1-2", source: "1", target: "2", animated: true },
             { id: "e2-3", source: "2", target: "3", animated: true }
-          ]}
+          ]} color={previewColor}
         >
           <WorkflowCanvas />
           <WorkflowToolbar />
@@ -80,6 +84,8 @@ export const WorkflowPreview: React.FC = () => {
 };
 
 export const RichTextEditorPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [variant, setVariant] = useState<"default" | "minimal" | "writing" | "enterprise" | "glass">("default");
   return (
     <PreviewContainer
@@ -87,7 +93,7 @@ export const RichTextEditorPreview: React.FC = () => {
       description="A powerful Notion-style rich text editor built with Tiptap."
       variants={["default", "minimal", "writing", "enterprise", "glass"]}
       activeVariant={variant}
-      onVariantChange={setVariant}
+      onVariantChange={setVariant} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className="w-full max-w-4xl mx-auto min-h-125">
         <RichTextEditor
@@ -104,7 +110,7 @@ export const RichTextEditorPreview: React.FC = () => {
             <blockquote>"The best tools get out of your way and let you focus on what matters most."</blockquote>
             <pre><code>function test() {\n  console.log('It even has code blocks!');\n}</code></pre>
             <p>You can also insert tables and images seamlessly.</p>
-          `}
+          `} color={previewColor}
         />
       </div>
     </PreviewContainer>
@@ -112,6 +118,8 @@ export const RichTextEditorPreview: React.FC = () => {
 };
 
 export const AIChatPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -380,7 +388,7 @@ export const AIChatPreview: React.FC = () => {
             ))}
           </div>
         </div>
-      }
+      } colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className="flex w-full h-full min-h-125">
         <div className="flex-1 min-h-125 overflow-hidden relative">
@@ -405,6 +413,8 @@ export const AIChatPreview: React.FC = () => {
 };
 
 export const AutomotiveCarouselPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [variant, setVariant] = useState<"bike" | "car" | "chair" | "m4">("m4");
   const slides = [
     {
@@ -441,20 +451,22 @@ export const AutomotiveCarouselPreview: React.FC = () => {
     }
   ];
   return (
-    <PreviewContainer title="Automotive Carousel" isVirtualScreen={true} className="overflow-hidden pb-4">
+    <PreviewContainer title="Automotive Carousel" isVirtualScreen={true} className="overflow-hidden pb-4" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <div className="relative w-full h-full overflow-hidden rounded-xl border border-border/50">
-        <AutomotiveCarousel slides={slides} objectVariant={variant} />
+        <AutomotiveCarousel slides={slides} />
       </div>
     </PreviewContainer>
   );
 };
 
 export const ScifiHelmetPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
     <PreviewContainer
       title="Sci-Fi Helmet"
       description="A premium 3D Sci-Fi Helmet with interactive orbit controls."
-      canvasClassName="bg-[#050505] p-0 overflow-hidden"
+      canvasClassName="bg-[#050505] p-0 overflow-hidden" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
     >
       <ScifiHelmet className="w-full h-full" />
     </PreviewContainer>
@@ -462,11 +474,13 @@ export const ScifiHelmetPreview: React.FC = () => {
 };
 
 export const BmwM4Preview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
     <PreviewContainer
       title="BMW M4"
       description="A premium 3D M4 Car component with interactive orbit controls."
-      canvasClassName="bg-[#050505] p-0 overflow-hidden"
+      canvasClassName="bg-[#050505] p-0 overflow-hidden" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
     >
       <BmwM4 className="w-full h-full" />
     </PreviewContainer>
@@ -474,11 +488,13 @@ export const BmwM4Preview: React.FC = () => {
 };
 
 export const BrowserWindowPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
     <PreviewContainer
       title="Browser Window"
       description="A clean, responsive mock browser window for displaying UI components or screenshots."
-      isVirtualScreen={false}
+      isVirtualScreen={false} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
     >
       <div className="flex flex-col items-center justify-center w-full h-full p-0 relative z-10 overflow-hidden">
         <BrowserWindow className="w-full h-full">
@@ -493,6 +509,8 @@ export const BrowserWindowPreview: React.FC = () => {
 };
 
 export const TerminalPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [activeVariant, setActiveVariant] = useState<TerminalVariant>("macos");
 
   const handleCommand = async (cmd: string) => {
@@ -516,7 +534,7 @@ export const TerminalPreview: React.FC = () => {
       activeVariant={activeVariant}
       onVariantChange={setActiveVariant}
       isVirtualScreen={true}
-      canvasClassName="bg-zinc-100 dark:bg-zinc-900/50"
+      canvasClassName="bg-zinc-100 dark:bg-zinc-900/50" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className="w-full h-full flex items-center justify-center p-4 sm:p-8 md:p-12">
         <UITerminal 
@@ -526,7 +544,7 @@ export const TerminalPreview: React.FC = () => {
           interactive={true}
           onCommand={handleCommand}
           commands={[`Welcome to the ${activeVariant} terminal preview!`, "Type any command and press Enter."]}
-          output={[]}
+          output={[]} color={previewColor}
         />
       </div>
     </PreviewContainer>
@@ -534,16 +552,18 @@ export const TerminalPreview: React.FC = () => {
 };
 
 export const CursorGlowButtonPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Cursor Glow Button" description="Buttons with a reactive glowing effect following the cursor.">
+    <PreviewContainer title="Cursor Glow Button" description="Buttons with a reactive glowing effect following the cursor." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-75">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-3xl justify-items-center">
-          <CursorGlowButton variant="default">Primary</CursorGlowButton>
-          <CursorGlowButton variant="secondary">Secondary</CursorGlowButton>
-          <CursorGlowButton variant="outline">Outline</CursorGlowButton>
-          <CursorGlowButton variant="destructive" glowColor="rgba(239, 68, 68, 0.8)">Destructive</CursorGlowButton>
-          <CursorGlowButton variant="ghost">Ghost</CursorGlowButton>
-          <CursorGlowButton variant="link">Link</CursorGlowButton>
+          <CursorGlowButton variant="solid" color={previewColor}>Primary</CursorGlowButton>
+          <CursorGlowButton variant="solid" color={previewColor}>Secondary</CursorGlowButton>
+          <CursorGlowButton variant="outline" color={previewColor}>Outline</CursorGlowButton>
+          <CursorGlowButton variant="solid" glowColor="rgba(239, 68, 68, 0.8)" color={previewColor}>Destructive</CursorGlowButton>
+          <CursorGlowButton variant="ghost" color={previewColor}>Ghost</CursorGlowButton>
+          <CursorGlowButton variant="link" color={previewColor}>Link</CursorGlowButton>
         </div>
       </div>
     </PreviewContainer>
@@ -551,6 +571,8 @@ export const CursorGlowButtonPreview: React.FC = () => {
 };
 
 export const ScrollTextRevealPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const scrollContainer = useRef<HTMLDivElement>(null);
 
   return (
@@ -558,7 +580,7 @@ export const ScrollTextRevealPreview: React.FC = () => {
       title="Scroll Text Reveal"
       description="Text that reveals itself as you scroll down the screen."
       scrollRef={scrollContainer}
-      canvasClassName="block p-0 sm:p-0 md:p-0"
+      canvasClassName="block p-0 sm:p-0 md:p-0" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
     >
       <div className="w-full h-full">
         
@@ -593,11 +615,16 @@ export const ScrollTextRevealPreview: React.FC = () => {
 const SHAPE_VARIANTS: SlideUpRevealShape[] = ["rectangle", "rounded", "squircle", "arc", "wave", "curtain", "silk", "holographic"];
 
 export const SlideUpRevealPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [shape, setShape] = useState<SlideUpRevealShape>("squircle");
 
   const shapeToTheme: Record<SlideUpRevealShape, SlideUpRevealVariant> = {
-    rectangle: "default",
+    default: "default",
+    square: "space",
     rounded: "aurora",
+    sharp: "cyberpunk",
+    rectangle: "default",
     squircle: "space",
     arc: "cyberpunk",
     wave: "neon",
@@ -614,10 +641,10 @@ export const SlideUpRevealPreview: React.FC = () => {
       variants={SHAPE_VARIANTS}
       activeVariant={shape}
       onVariantChange={(v) => setShape(v as SlideUpRevealShape)}
-      contentClassName="p-0 border-none"
+      contentClassName="p-0 border-none" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className="w-full h-[800px] max-h-[85vh] relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-        <SlideUpReveal shape={shape} variant={shapeToTheme[shape]} key={shape} />
+        <SlideUpReveal shape={shape} variant={shapeToTheme[shape]} key={shape} color={previewColor} />
       </div>
     </PreviewContainer>
   );

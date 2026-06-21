@@ -44,6 +44,10 @@ export interface Message {
   attachments?: string[];
 }
 
+export type AIChatColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type AIChatShape = "default" | "square" | "rounded" | "sharp";
+export type AIChatSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
 export interface AIChatContextType {
   messages: Message[];
   isLoading: boolean;
@@ -55,6 +59,9 @@ export interface AIChatContextType {
   onEdit?: (id: string, newContent: string) => void;
   layout: "chatgpt" | "claude" | "perplexity" | "compact" | "enterprise" | "minimal";
   inputVariant: "standard" | "floating" | "command" | "multiline" | "workspace";
+  color: AIChatColor;
+  shape: AIChatShape;
+  spacing: AIChatSpacing;
 }
 
 const AIChatContext = createContext<AIChatContextType | null>(null);
@@ -63,6 +70,37 @@ export const useAIChat = () => {
   const ctx = useContext(AIChatContext);
   if (!ctx) throw new Error("useAIChat must be used within AIChat");
   return ctx;
+};
+
+const colorThemeMap: Record<AIChatColor, { bg: string; text: string; ring: string; border: string; bgSoft: string }> = {
+  default: { bg: "bg-primary text-primary-foreground", text: "text-primary", ring: "focus-within:ring-primary/20", border: "border-primary/20", bgSoft: "bg-primary/10" },
+  blue: { bg: "bg-blue-600 text-white", text: "text-blue-600 dark:text-blue-500", ring: "focus-within:ring-blue-600/20 dark:focus-within:ring-blue-500/20", border: "border-blue-600/20 dark:border-blue-500/20", bgSoft: "bg-blue-600/10 dark:bg-blue-500/10" },
+  emerald: { bg: "bg-emerald-600 text-white", text: "text-emerald-600 dark:text-emerald-500", ring: "focus-within:ring-emerald-600/20 dark:focus-within:ring-emerald-500/20", border: "border-emerald-600/20 dark:border-emerald-500/20", bgSoft: "bg-emerald-600/10 dark:bg-emerald-500/10" },
+  rose: { bg: "bg-rose-600 text-white", text: "text-rose-600 dark:text-rose-500", ring: "focus-within:ring-rose-600/20 dark:focus-within:ring-rose-500/20", border: "border-rose-600/20 dark:border-rose-500/20", bgSoft: "bg-rose-600/10 dark:bg-rose-500/10" },
+  amber: { bg: "bg-amber-600 text-white", text: "text-amber-600 dark:text-amber-500", ring: "focus-within:ring-amber-600/20 dark:focus-within:ring-amber-500/20", border: "border-amber-600/20 dark:border-amber-500/20", bgSoft: "bg-amber-600/10 dark:bg-amber-500/10" },
+  violet: { bg: "bg-violet-600 text-white", text: "text-violet-600 dark:text-violet-500", ring: "focus-within:ring-violet-600/20 dark:focus-within:ring-violet-500/20", border: "border-violet-600/20 dark:border-violet-500/20", bgSoft: "bg-violet-600/10 dark:bg-violet-500/10" },
+  indigo: { bg: "bg-indigo-600 text-white", text: "text-indigo-600 dark:text-indigo-500", ring: "focus-within:ring-indigo-600/20 dark:focus-within:ring-indigo-500/20", border: "border-indigo-600/20 dark:border-indigo-500/20", bgSoft: "bg-indigo-600/10 dark:bg-indigo-500/10" },
+  sky: { bg: "bg-sky-600 text-white", text: "text-sky-600 dark:text-sky-500", ring: "focus-within:ring-sky-600/20 dark:focus-within:ring-sky-500/20", border: "border-sky-600/20 dark:border-sky-500/20", bgSoft: "bg-sky-600/10 dark:bg-sky-500/10" },
+  slate: { bg: "bg-slate-600 text-white", text: "text-slate-600 dark:text-slate-400", ring: "focus-within:ring-slate-600/20 dark:focus-within:ring-slate-500/20", border: "border-slate-600/20 dark:border-slate-500/20", bgSoft: "bg-slate-600/10 dark:bg-slate-500/10" },
+  orange: { bg: "bg-orange-600 text-white", text: "text-orange-600 dark:text-orange-500", ring: "focus-within:ring-orange-600/20 dark:focus-within:ring-orange-500/20", border: "border-orange-600/20 dark:border-orange-500/20", bgSoft: "bg-orange-600/10 dark:bg-orange-500/10" },
+};
+
+const getShapeClass = (shape: AIChatShape) => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-sm";
+    case "rounded": return "rounded-xl";
+    case "default": return "rounded-2xl";
+  }
+};
+
+const getButtonShapeClass = (shape: AIChatShape) => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-sm";
+    case "rounded": return "rounded-md";
+    case "default": return "rounded-full";
+  }
 };
 
 // ==========================================
@@ -80,6 +118,9 @@ export interface AIChatProps {
   onEdit?: (id: string, newContent: string) => void;
   layout?: "chatgpt" | "claude" | "perplexity" | "compact" | "enterprise" | "minimal";
   inputVariant?: "standard" | "floating" | "command" | "multiline" | "workspace";
+  color?: AIChatColor;
+  shape?: AIChatShape;
+  spacing?: AIChatSpacing;
   className?: string;
   children: React.ReactNode;
 }
@@ -95,6 +136,9 @@ export const AIChat = React.memo(function AIChat({
   onEdit,
   layout = "chatgpt",
   inputVariant = "standard",
+  color = "default",
+  shape = "default",
+  spacing = "default",
   className,
   children,
 }: AIChatProps) {
@@ -105,6 +149,7 @@ export const AIChat = React.memo(function AIChat({
       value={{
         messages, isLoading, input, setInput, onSubmit,
         onStop, onReload, onEdit, layout, inputVariant,
+        color, shape, spacing
       }}
     >
       <motion.div
@@ -128,7 +173,7 @@ AIChat.displayName = "AIChat";
 // ==========================================
 
 export const ChatMessages = React.memo(function ChatMessages({ className }: { className?: string }) {
-  const { messages, layout } = useAIChat();
+  const { messages, layout, spacing } = useAIChat();
   const containerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -172,6 +217,27 @@ export const ChatMessages = React.memo(function ChatMessages({ className }: { cl
 
   const hasMessages = messages.length > 0;
 
+  const getContainerSpacing = () => {
+    if (layout === "compact") return "p-2";
+    switch (spacing) {
+      case "2x": return "p-2 md:p-4";
+      case "4x": return "p-4 md:p-6";
+      case "6x": return "p-6 md:p-8";
+      case "8x": return "p-8 md:p-10";
+      default: return "p-4 md:p-6";
+    }
+  };
+
+  const getGapSpacing = () => {
+    switch (spacing) {
+      case "2x": return "gap-2 pb-2";
+      case "4x": return "gap-4 pb-4";
+      case "6x": return "gap-6 pb-6";
+      case "8x": return "gap-8 pb-8";
+      default: return "gap-4 pb-4";
+    }
+  };
+
   return (
     <motion.div
       layout
@@ -187,12 +253,13 @@ export const ChatMessages = React.memo(function ChatMessages({ className }: { cl
         onScroll={handleScroll}
         className={cn(
           "w-full h-full overflow-y-auto overscroll-contain",
-          layout === "compact" ? "p-2" : "p-4 md:p-6"
+          getContainerSpacing()
         )}
       >
         <div
           className={cn(
-            "flex flex-col gap-4 pb-4 w-full",
+            "flex flex-col w-full",
+            getGapSpacing(),
             layout === "claude" && "mx-auto max-w-3xl",
             layout === "perplexity" && "mx-auto max-w-3xl",
             layout === "chatgpt" && "mx-auto max-w-3xl",
@@ -255,11 +322,11 @@ const messageVariants = cva("flex w-full group", {
 const bubbleVariants = cva("relative flex flex-col min-w-0", {
   variants: {
     layout: {
-      chatgpt: "rounded-2xl px-4 py-2.5 text-sm",
+      chatgpt: "px-4 py-2.5 text-sm",
       claude: "text-sm leading-relaxed",
       perplexity: "text-sm leading-relaxed",
-      compact: "rounded-xl px-4 py-2 text-xs",
-      enterprise: "rounded-2xl px-4 py-3 text-sm",
+      compact: "px-4 py-2 text-xs",
+      enterprise: "px-4 py-3 text-sm",
       minimal: "text-sm font-light",
     },
     role: {
@@ -271,21 +338,22 @@ const bubbleVariants = cva("relative flex flex-col min-w-0", {
   compoundVariants: [
     { layout: "chatgpt", role: "user", className: "bg-muted text-foreground shadow-sm border border-border/50" },
     { layout: "chatgpt", role: "assistant", className: "bg-transparent text-foreground" },
-    { layout: "compact", role: "user", className: "bg-primary text-primary-foreground ml-auto shadow-sm" },
     { layout: "compact", role: "assistant", className: "bg-muted border border-border/50 text-foreground mr-auto shadow-sm" },
-    { layout: "claude", role: "user", className: "bg-muted/50 border border-border/50 text-foreground px-4 py-2.5 rounded-2xl shadow-sm" },
-    { layout: "perplexity", role: "user", className: "bg-muted/50 border border-border/50 text-foreground px-4 py-2.5 rounded-2xl shadow-sm" },
-    { layout: "minimal", role: "user", className: "bg-muted/50 border border-border/50 text-foreground px-4 py-2.5 rounded-2xl shadow-sm" },
-    { layout: "enterprise", role: "user", className: "bg-primary text-primary-foreground ml-auto shadow-sm" },
+    { layout: "claude", role: "user", className: "bg-muted/50 border border-border/50 text-foreground px-4 py-2.5 shadow-sm" },
+    { layout: "perplexity", role: "user", className: "bg-muted/50 border border-border/50 text-foreground px-4 py-2.5 shadow-sm" },
+    { layout: "minimal", role: "user", className: "bg-muted/50 border border-border/50 text-foreground px-4 py-2.5 shadow-sm" },
     { layout: "enterprise", role: "assistant", className: "bg-muted/50 border border-border/50 text-foreground shadow-sm" },
   ],
 });
 
 export const ChatMessage = React.memo(function ChatMessage({ message }: { message: Message }) {
-  const { layout, onReload, onEdit } = useAIChat();
+  const { layout, onReload, onEdit, color, shape } = useAIChat();
   const [isHovered, setIsHovered] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(message.content);
+
+  const activeTheme = colorThemeMap[color];
+  const shapeClass = getShapeClass(shape);
 
   const isUser = message.role === "user";
   const isCompact = layout === "compact";
@@ -300,6 +368,13 @@ export const ChatMessage = React.memo(function ChatMessage({ message }: { messag
   const handleSaveEdit = () => {
     if (onEdit) onEdit(message.id, editContent);
     setIsEditing(false);
+  };
+
+  // Determine dynamic classes that rely on color mapping
+  const getDynamicUserClasses = () => {
+    if (!isUser) return "";
+    if (layout === "compact" || layout === "enterprise") return activeTheme.bg + " ml-auto shadow-sm";
+    return "";
   };
 
   return (
@@ -318,7 +393,7 @@ export const ChatMessage = React.memo(function ChatMessage({ message }: { messag
             "flex h-7 w-7 items-center justify-center rounded-full border",
             isUser
               ? "bg-background border-border"
-              : "bg-primary/10 text-primary border-primary/20",
+              : cn(activeTheme.bgSoft, activeTheme.text, activeTheme.border),
             layout === "enterprise" && "rounded-sm"
           )}>
             {isUser ? <User className="h-3.5 w-3.5" /> : <Bot className="h-3.5 w-3.5" />}
@@ -327,7 +402,13 @@ export const ChatMessage = React.memo(function ChatMessage({ message }: { messag
       )}
 
       {/* Bubble */}
-      <div className={cn(bubbleVariants({ layout, role: message.role }))}>
+      <div className={cn(
+        bubbleVariants({ layout, role: message.role }), 
+        getDynamicUserClasses(),
+        // Apply shape to bubble backgrounds
+        (layout === "chatgpt" || layout === "compact" || layout === "enterprise" || 
+         (isUser && (layout === "claude" || layout === "perplexity" || layout === "minimal"))) && shapeClass
+      )}>
         {/* Sender name tag */}
         {(layout === "perplexity" || layout === "claude" || layout === "minimal") && (
           <div className="flex items-center gap-2 mb-2">
@@ -335,7 +416,7 @@ export const ChatMessage = React.memo(function ChatMessage({ message }: { messag
               {isUser ? "You" : "Assistant"}
             </span>
             {message.isStreaming && (
-              <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+              <span className={cn("h-2 w-2 rounded-full animate-pulse", activeTheme.bg)} />
             )}
           </div>
         )}
@@ -345,32 +426,36 @@ export const ChatMessage = React.memo(function ChatMessage({ message }: { messag
             <textarea
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
-              className="w-full min-h-[80px] p-2.5 rounded-lg border bg-background text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/40"
+              className={cn("w-full min-h-[80px] p-2.5 rounded-lg border bg-background text-sm resize-none focus:outline-none focus:ring-2", activeTheme.ring)}
             />
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setIsEditing(false)}
-                className="px-3 py-1 text-xs rounded-md border hover:bg-muted transition-colors"
+                className="px-3 py-1 text-xs rounded-md border hover:bg-muted transition-colors text-foreground"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveEdit}
-                className="px-3 py-1 text-xs rounded-md bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-1 transition-colors"
+                className={cn("px-3 py-1 text-xs rounded-md flex items-center gap-1 transition-colors hover:opacity-90", activeTheme.bg)}
               >
                 <Check className="w-3 h-3" /> Save
               </button>
             </div>
           </div>
         ) : (
-          <div className="prose prose-sm prose-neutral dark:prose-invert max-w-none prose-p:leading-relaxed prose-p:my-1 prose-pre:p-0 prose-pre:bg-transparent prose-headings:mb-2 prose-headings:mt-3 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+          <div className={cn(
+            "prose prose-sm max-w-none prose-p:leading-relaxed prose-p:my-1 prose-pre:p-0 prose-pre:bg-transparent prose-headings:mb-2 prose-headings:mt-3 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0",
+            // If user bubble has solid background, prose should inherit text colors
+            (getDynamicUserClasses().includes("text-white") || getDynamicUserClasses().includes("text-primary-foreground")) ? "text-inherit prose-headings:text-inherit prose-a:text-inherit prose-strong:text-inherit" : "prose-neutral dark:prose-invert"
+          )}>
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
                 code({ node, inline, className, children, ...props }: any) {
                   const match = /language-(\w+)/.exec(className || "");
                   return !inline && match ? (
-                    <div className="rounded-lg overflow-hidden my-3 border border-border/50 bg-[#1E1E1E] not-prose w-full max-w-full">
+                    <div className="rounded-lg overflow-hidden my-3 border border-border/50 bg-[#1E1E1E] not-prose w-full max-w-full text-foreground">
                       <div className="flex items-center justify-between px-4 py-1.5 bg-black/40 border-b border-white/10 text-xs text-white/60">
                         <span className="font-mono">{match[1]}</span>
                         <button
@@ -391,7 +476,7 @@ export const ChatMessage = React.memo(function ChatMessage({ message }: { messag
                       </SyntaxHighlighter>
                     </div>
                   ) : (
-                    <code {...props} className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">
+                    <code {...props} className={cn("px-1.5 py-0.5 rounded text-xs font-mono", getDynamicUserClasses() ? "bg-black/20" : "bg-muted")}>
                       {children}
                     </code>
                   );
@@ -413,7 +498,8 @@ export const ChatMessage = React.memo(function ChatMessage({ message }: { messag
           <div className={cn(
             "flex items-center gap-1 mt-2 transition-opacity duration-150",
             isHovered ? "opacity-100" : "opacity-0",
-            layout === "chatgpt" && isUser && "justify-end"
+            layout === "chatgpt" && isUser && "justify-end",
+            getDynamicUserClasses() && "text-inherit"
           )}>
             {!isUser && (
               <>
@@ -441,7 +527,7 @@ function ActionButton({ icon, onClick, title }: { icon: React.ReactNode; onClick
     <button
       onClick={onClick}
       title={title}
-      className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
+      className="p-1.5 opacity-70 hover:opacity-100 hover:bg-black/10 dark:hover:bg-white/10 rounded-lg transition-colors"
     >
       {icon}
     </button>
@@ -456,10 +542,10 @@ const inputContainerVariants = cva("relative w-full transition-all duration-300"
   variants: {
     variant: {
       standard: "border-t bg-background px-4 py-4",
-      floating: "bg-background border rounded-2xl shadow-xl px-4 py-4",
+      floating: "bg-background border shadow-xl px-4 py-4",
       command: "border-t bg-background px-4 py-4",
       multiline: "border-t bg-muted/20 px-4 py-4",
-      workspace: "border border-border/60 rounded-2xl bg-card m-4 p-4",
+      workspace: "border border-border/60 bg-card m-4 p-4",
     },
   },
 });
@@ -470,7 +556,7 @@ export interface ChatInputProps {
 }
 
 export const ChatInput = React.memo(function ChatInput({ onFileUpload, onImageUpload }: ChatInputProps = {}) {
-  const { input, setInput, onSubmit, isLoading, onStop, inputVariant, messages } = useAIChat();
+  const { input, setInput, onSubmit, isLoading, onStop, inputVariant, messages, color, shape } = useAIChat();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -478,6 +564,10 @@ export const ChatInput = React.memo(function ChatInput({ onFileUpload, onImageUp
   const [attachDropdownOpen, setAttachDropdownOpen] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+
+  const activeTheme = colorThemeMap[color];
+  const shapeClass = getShapeClass(shape);
+  const btnShapeClass = getButtonShapeClass(shape);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -557,6 +647,7 @@ export const ChatInput = React.memo(function ChatInput({ onFileUpload, onImageUp
       transition={{ type: "spring", bounce: 0, duration: 0.6 }}
       className={cn(
         inputContainerVariants({ variant: inputVariant }),
+        (inputVariant === "floating" || inputVariant === "workspace") && shapeClass,
         !hasMessages && "max-w-2xl mx-auto border-transparent shadow-none bg-transparent",
         hasMessages && inputVariant === "floating" && "absolute bottom-4 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-3xl z-10"
       )}
@@ -598,9 +689,10 @@ export const ChatInput = React.memo(function ChatInput({ onFileUpload, onImageUp
         onSubmit={(e) => { e.preventDefault(); if (input.trim() && !isLoading) onSubmit(e); }}
         className={cn(
           "flex items-end gap-2 bg-background border transition-shadow",
+          activeTheme.ring,
           isRounded
-            ? "rounded-full px-4 py-2 focus-within:ring-2 focus-within:ring-primary/20 shadow-sm"
-            : "rounded-2xl px-4 py-2 focus-within:ring-1 focus-within:ring-ring shadow-sm"
+            ? cn(btnShapeClass === "rounded-md" ? "rounded-xl" : btnShapeClass === "rounded-none" ? "rounded-none" : "rounded-full", "px-4 py-2 focus-within:ring-2 shadow-sm")
+            : cn(shapeClass, "px-4 py-2 focus-within:ring-1 shadow-sm")
         )}
       >
         {/* Attachment dropdown */}
@@ -679,9 +771,9 @@ export const ChatInput = React.memo(function ChatInput({ onFileUpload, onImageUp
             type="button"
             onClick={toggleMic}
             className={cn(
-              "p-2 transition-colors rounded-full",
+              "p-2 transition-colors", btnShapeClass,
               isListening
-                ? "text-primary bg-primary/10 animate-pulse"
+                ? cn(activeTheme.text, activeTheme.bgSoft, "animate-pulse")
                 : "text-muted-foreground hover:text-foreground hover:bg-muted"
             )}
             title={isListening ? "Stop listening" : "Voice input"}
@@ -693,7 +785,7 @@ export const ChatInput = React.memo(function ChatInput({ onFileUpload, onImageUp
             <button
               type="button"
               onClick={onStop}
-              className="p-2 text-primary hover:text-primary/80 transition-colors rounded-full"
+              className={cn("p-2 transition-colors", btnShapeClass, activeTheme.text, "hover:opacity-80")}
             >
               <StopCircle className="w-5 h-5 animate-pulse" />
             </button>
@@ -702,9 +794,9 @@ export const ChatInput = React.memo(function ChatInput({ onFileUpload, onImageUp
               type="submit"
               disabled={!input.trim() && attachedFiles.length === 0}
               className={cn(
-                "p-2 rounded-full transition-all flex items-center justify-center",
+                "p-2 transition-all flex items-center justify-center", btnShapeClass,
                 input.trim() || attachedFiles.length > 0
-                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                  ? cn(activeTheme.bg, "hover:opacity-90")
                   : "bg-muted text-muted-foreground cursor-not-allowed"
               )}
             >
@@ -729,9 +821,10 @@ ChatInput.displayName = "ChatInput";
 // ==========================================
 
 export const ChatPromptSuggestions = React.memo(function ChatPromptSuggestions({ suggestions }: { suggestions: string[] }) {
-  const { setInput, onSubmit, messages } = useAIChat();
+  const { setInput, onSubmit, messages, shape } = useAIChat();
 
   const hasMessages = messages.length > 0;
+  const btnShapeClass = getButtonShapeClass(shape);
 
   return (
     <motion.div
@@ -748,7 +841,9 @@ export const ChatPromptSuggestions = React.memo(function ChatPromptSuggestions({
           onClick={() => {
             setInput(prompt);
           }}
-          className="text-sm px-4 py-2 rounded-2xl border border-border/60 bg-background/50 hover:bg-muted transition-colors text-muted-foreground hover:text-foreground shadow-sm"
+          className={cn("text-sm px-4 py-2 border border-border/60 bg-background/50 hover:bg-muted transition-colors text-muted-foreground hover:text-foreground shadow-sm",
+            btnShapeClass === "rounded-md" ? "rounded-xl" : btnShapeClass === "rounded-none" ? "rounded-none" : "rounded-2xl"
+          )}
         >
           {prompt}
         </button>

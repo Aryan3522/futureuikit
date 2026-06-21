@@ -151,10 +151,9 @@ const ExploreComponents: React.FC = () => {
  {/* Filter */}
  <div className="flex items-center justify-start md:justify-center gap-2 mb-10 overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0">
  {types.map((type) => (
- <Button
- key={type}
- size="sm"
- variant={selectedType === type ?"default":"secondary"}
+  <Button
+  key={type}
+   variant={selectedType === type ?"solid":"ghost"}
  onClick={() => setSelectedType(type)}
  className="capitalize whitespace-nowrap rounded-full px-5 py-2 text-xs font-bold italic border border-border/50"
  >
@@ -191,7 +190,7 @@ const ExploreComponents: React.FC = () => {
  <Link
  href={`/components/${item.type.toLowerCase()}/${item.slug}/${item.id}`}
  >
- <Button size="sm"variant="secondary"className="rounded-full">
+  <Button variant="outline" className="rounded-full">
  <Eye className="h-4 w-4 mr-2"/>
  Preview
  </Button>
@@ -221,7 +220,7 @@ const ExploreComponents: React.FC = () => {
  className="w-full"
  href={`/components/${item.type.toLowerCase()}/${item.slug}/${item.id}`}
  >
- <Button size="sm"variant="outline"className="w-full rounded-xl font-bold italic hover:bg-primary hover:text-primary-foreground transition-all duration-300">
+ <Button variant="outline"className="w-full rounded-xl font-bold italic hover:bg-primary hover:text-primary-foreground transition-all duration-300">
  View Details
  </Button>
  </Link>

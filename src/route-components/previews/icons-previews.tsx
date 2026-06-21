@@ -29,11 +29,13 @@ import {
 } from "@/icons";
 import * as PremiumIcons from "@/icons";
 import { Search as SearchComponent } from "@/components/ui/search";
-import { PreviewContainer } from "../preview-engine/PreviewContainer";
+import { PreviewContainer, DEFAULT_COLORS } from "../preview-engine/PreviewContainer";
 import { X, Check, Copy, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const IconsPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [animate, setAnimate] = useState(true);
   const [mounted, setMounted] = useState(false);
 
@@ -251,7 +253,7 @@ export const IconsPreview: React.FC = () => {
       title="Icons"
       description="Premium animated SVG icons — optimized for performance and aesthetic impact."
       isVirtualScreen={true}
-      align="start"
+      align="start" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
     >
       <div className="flex flex-col w-full p-4 md:p-10">
         {/* Search Header */}
@@ -266,7 +268,7 @@ export const IconsPreview: React.FC = () => {
           <div className="w-full relative px-2 sm:px-0">
             <SearchComponent
               variant="floating"
-              size="lg"
+             
               placeholder="Search icons (e.g., 'Aero', 'Arrow', 'Github')..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}

@@ -9,18 +9,54 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 
-export interface BoxyRotateLoaderProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type BoxyLoaderColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type BoxyLoaderShape = "default" | "square" | "rounded" | "sharp";
+export type BoxyLoaderSpacing = "default" | "2x" | "4x" | "6x" | "8x";
 
-export const BoxyRotateLoader: React.FC<BoxyRotateLoaderProps> = React.memo(({ className, ...props }) => {
-          return (
-            <div className={cn("flex flex-col items-center justify-center w-full h-full min-h-[inherit]", className)} {...props}>
-              <style>{`
+export interface BoxyRotateLoaderProps extends React.HTMLAttributes<HTMLDivElement> {
+  color?: BoxyLoaderColor;
+  shape?: BoxyLoaderShape;
+  spacing?: BoxyLoaderSpacing;
+}
+
+const colorThemeMap: Record<BoxyLoaderColor, { main: string; secondary: string }> = {
+  default: { main: "currentColor", secondary: "currentColor" }, // Uses currentColor with mask
+  blue: { main: "#3b82f6", secondary: "#60a5fa" },
+  emerald: { main: "#10b981", secondary: "#34d399" },
+  rose: { main: "#f43f5e", secondary: "#fb7185" },
+  amber: { main: "#f59e0b", secondary: "#fbbf24" },
+  violet: { main: "#8b5cf6", secondary: "#a78bfa" },
+  indigo: { main: "#6366f1", secondary: "#818cf8" },
+  sky: { main: "#0ea5e9", secondary: "#38bdf8" },
+  slate: { main: "#64748b", secondary: "#94a3b8" },
+  orange: { main: "#f97316", secondary: "#fb923c" },
+};
+
+export const BoxyRotateLoader: React.FC<BoxyRotateLoaderProps> = React.memo(({ 
+  className,
+  color = "default",
+  shape = "default",
+  spacing = "default",
+  ...props 
+}) => {
+  const activeColor = colorThemeMap[color];
+  
+  let rx = "8";
+  if (shape === "square") rx = "0";
+  if (shape === "sharp") rx = "2";
+  if (shape === "rounded") rx = "4";
+  if (shape === "default") rx = "8";
+
+  let scale = "scale-[1]";
+  if (spacing === "2x") scale = "scale-[0.5]";
+  if (spacing === "4x") scale = "scale-[0.75]";
+  if (spacing === "6x") scale = "scale-[1.25]";
+  if (spacing === "8x") scale = "scale-[1.5]";
+
+  return (
+    <div className={cn("flex flex-col items-center justify-center w-full h-full min-h-[inherit]", scale, className)} {...props}>
+      <style>{`
         .pl1-container {
-          --hue: 223;
-          --bg: hsl(var(--hue), 90%, 90%);
-          --fg: hsl(var(--hue), 90%, 10%);
-          --primary: hsl(var(--hue), 90%, 50%);
-          --trans-dur: 0.3s;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -54,48 +90,48 @@ export const BoxyRotateLoader: React.FC<BoxyRotateLoaderProps> = React.memo(({ c
           80%, to { width: 40px; height: 40px; transform: translate(48px, 0); }
         }
       `}</style>
-              <div className="pl1-container">
-                <svg className="pl1" viewBox="0 0 128 128" width="128" height="128">
-                  <defs>
-                    <linearGradient id="pl-grad" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#000" />
-                      <stop offset="100%" stopColor="#fff" />
-                    </linearGradient>
-                    <mask id="pl-mask">
-                      <rect x="0" y="0" width="128" height="128" fill="url(#pl-grad)" />
-                    </mask>
-                  </defs>
-                  <g fill="hsl(223, 90%, 50%)">
-                    <g className="pl1__g">
-                      <g transform="translate(20,20) rotate(0,44,44)">
-                        <g className="pl1__rect-g">
-                          <rect className="pl1__rect" rx="8" ry="8" width="40" height="40" />
-                          <rect className="pl1__rect" rx="8" ry="8" width="40" height="40" transform="translate(0,48)" />
-                        </g>
-                        <g className="pl1__rect-g" transform="rotate(180,44,44)">
-                          <rect className="pl1__rect" rx="8" ry="8" width="40" height="40" />
-                          <rect className="pl1__rect" rx="8" ry="8" width="40" height="40" transform="translate(0,48)" />
-                        </g>
-                      </g>
-                    </g>
-                  </g>
-                  <g fill="hsl(343,90%,50%)" mask="url(#pl-mask)">
-                    <g className="pl1__g">
-                      <g transform="translate(20,20) rotate(0,44,44)">
-                        <g className="pl1__rect-g">
-                          <rect className="pl1__rect" rx="8" ry="8" width="40" height="40" />
-                          <rect className="pl1__rect" rx="8" ry="8" width="40" height="40" transform="translate(0,48)" />
-                        </g>
-                        <g className="pl1__rect-g" transform="rotate(180,44,44)">
-                          <rect className="pl1__rect" rx="8" ry="8" width="40" height="40" />
-                          <rect className="pl1__rect" rx="8" ry="8" width="40" height="40" transform="translate(0,48)" />
-                        </g>
-                      </g>
-                    </g>
-                  </g>
-                </svg>
-              </div>
-            </div>
-          );
-        });
+      <div className="pl1-container">
+        <svg className="pl1" viewBox="0 0 128 128" width="128" height="128">
+          <defs>
+            <linearGradient id="pl-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#000" />
+              <stop offset="100%" stopColor="#fff" />
+            </linearGradient>
+            <mask id="pl-mask">
+              <rect x="0" y="0" width="128" height="128" fill="url(#pl-grad)" />
+            </mask>
+          </defs>
+          <g fill={activeColor.main} className={color === "default" ? "text-foreground" : ""}>
+            <g className="pl1__g">
+              <g transform="translate(20,20) rotate(0,44,44)">
+                <g className="pl1__rect-g">
+                  <rect className="pl1__rect" rx={rx} ry={rx} width="40" height="40" />
+                  <rect className="pl1__rect" rx={rx} ry={rx} width="40" height="40" transform="translate(0,48)" />
+                </g>
+                <g className="pl1__rect-g" transform="rotate(180,44,44)">
+                  <rect className="pl1__rect" rx={rx} ry={rx} width="40" height="40" />
+                  <rect className="pl1__rect" rx={rx} ry={rx} width="40" height="40" transform="translate(0,48)" />
+                </g>
+              </g>
+            </g>
+          </g>
+          <g fill={activeColor.secondary} mask="url(#pl-mask)" className={color === "default" ? "text-muted-foreground" : "opacity-80"}>
+            <g className="pl1__g">
+              <g transform="translate(20,20) rotate(0,44,44)">
+                <g className="pl1__rect-g">
+                  <rect className="pl1__rect" rx={rx} ry={rx} width="40" height="40" />
+                  <rect className="pl1__rect" rx={rx} ry={rx} width="40" height="40" transform="translate(0,48)" />
+                </g>
+                <g className="pl1__rect-g" transform="rotate(180,44,44)">
+                  <rect className="pl1__rect" rx={rx} ry={rx} width="40" height="40" />
+                  <rect className="pl1__rect" rx={rx} ry={rx} width="40" height="40" transform="translate(0,48)" />
+                </g>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+  );
+});
 BoxyRotateLoader.displayName = "BoxyRotateLoader";

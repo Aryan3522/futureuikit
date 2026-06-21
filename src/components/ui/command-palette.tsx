@@ -23,14 +23,61 @@ import { cn } from "@/lib/utils";
 // --- Context ---
 
 export type CommandVariant = "default" | "compact" | "floating" | "glass" | "spotlight";
+export type CommandColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type CommandShape = "default" | "square" | "rounded" | "sharp";
+export type CommandSpacing = "default" | "2x" | "4x" | "6x" | "8x";
 
 interface CommandContextValue {
   variant: CommandVariant;
+  color: CommandColor;
+  shape: CommandShape;
+  spacing: CommandSpacing;
 }
 
-const CommandContext = React.createContext<CommandContextValue>({ variant: "default" });
+const CommandContext = React.createContext<CommandContextValue>({ variant: "default", color: "default", shape: "default", spacing: "default" });
 
 const useCommandContext = () => React.useContext(CommandContext);
+
+const colorThemeMap: Record<CommandColor, { border: string; shadow: string; bgSelected: string; textSelected: string }> = {
+  default: { border: "border-primary/30", shadow: "shadow-[0_0_40px_-10px] shadow-primary/30", bgSelected: "data-[selected=true]:bg-primary/10", textSelected: "data-[selected=true]:text-primary" },
+  blue: { border: "border-blue-600/30 dark:border-blue-500/30", shadow: "shadow-[0_0_40px_-10px] shadow-blue-600/30 dark:shadow-blue-500/30", bgSelected: "data-[selected=true]:bg-blue-600/10 dark:data-[selected=true]:bg-blue-500/10", textSelected: "data-[selected=true]:text-blue-600 dark:data-[selected=true]:text-blue-500" },
+  emerald: { border: "border-emerald-600/30 dark:border-emerald-500/30", shadow: "shadow-[0_0_40px_-10px] shadow-emerald-600/30 dark:shadow-emerald-500/30", bgSelected: "data-[selected=true]:bg-emerald-600/10 dark:data-[selected=true]:bg-emerald-500/10", textSelected: "data-[selected=true]:text-emerald-600 dark:data-[selected=true]:text-emerald-500" },
+  rose: { border: "border-rose-600/30 dark:border-rose-500/30", shadow: "shadow-[0_0_40px_-10px] shadow-rose-600/30 dark:shadow-rose-500/30", bgSelected: "data-[selected=true]:bg-rose-600/10 dark:data-[selected=true]:bg-rose-500/10", textSelected: "data-[selected=true]:text-rose-600 dark:data-[selected=true]:text-rose-500" },
+  amber: { border: "border-amber-600/30 dark:border-amber-500/30", shadow: "shadow-[0_0_40px_-10px] shadow-amber-600/30 dark:shadow-amber-500/30", bgSelected: "data-[selected=true]:bg-amber-600/10 dark:data-[selected=true]:bg-amber-500/10", textSelected: "data-[selected=true]:text-amber-600 dark:data-[selected=true]:text-amber-500" },
+  violet: { border: "border-violet-600/30 dark:border-violet-500/30", shadow: "shadow-[0_0_40px_-10px] shadow-violet-600/30 dark:shadow-violet-500/30", bgSelected: "data-[selected=true]:bg-violet-600/10 dark:data-[selected=true]:bg-violet-500/10", textSelected: "data-[selected=true]:text-violet-600 dark:data-[selected=true]:text-violet-500" },
+  indigo: { border: "border-indigo-600/30 dark:border-indigo-500/30", shadow: "shadow-[0_0_40px_-10px] shadow-indigo-600/30 dark:shadow-indigo-500/30", bgSelected: "data-[selected=true]:bg-indigo-600/10 dark:data-[selected=true]:bg-indigo-500/10", textSelected: "data-[selected=true]:text-indigo-600 dark:data-[selected=true]:text-indigo-500" },
+  sky: { border: "border-sky-600/30 dark:border-sky-500/30", shadow: "shadow-[0_0_40px_-10px] shadow-sky-600/30 dark:shadow-sky-500/30", bgSelected: "data-[selected=true]:bg-sky-600/10 dark:data-[selected=true]:bg-sky-500/10", textSelected: "data-[selected=true]:text-sky-600 dark:data-[selected=true]:text-sky-500" },
+  slate: { border: "border-slate-600/30 dark:border-slate-500/30", shadow: "shadow-[0_0_40px_-10px] shadow-slate-600/30 dark:shadow-slate-500/30", bgSelected: "data-[selected=true]:bg-slate-600/10 dark:data-[selected=true]:bg-slate-500/10", textSelected: "data-[selected=true]:text-slate-600 dark:data-[selected=true]:text-slate-400" },
+  orange: { border: "border-orange-600/30 dark:border-orange-500/30", shadow: "shadow-[0_0_40px_-10px] shadow-orange-600/30 dark:shadow-orange-500/30", bgSelected: "data-[selected=true]:bg-orange-600/10 dark:data-[selected=true]:bg-orange-500/10", textSelected: "data-[selected=true]:text-orange-600 dark:data-[selected=true]:text-orange-500" },
+};
+
+const getShapeClass = (shape: CommandShape) => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-sm";
+    case "rounded": return "rounded-xl";
+    case "default": return "rounded-2xl";
+  }
+};
+
+const getItemShapeClass = (shape: CommandShape) => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-sm";
+    case "rounded": return "rounded-lg";
+    case "default": return "rounded-xl";
+  }
+};
+
+const getSpacingClass = (spacing: CommandSpacing) => {
+  switch (spacing) {
+    case "2x": return "p-2";
+    case "4x": return "p-4";
+    case "6x": return "p-6";
+    case "8x": return "p-8";
+    default: return "";
+  }
+};
 
 // --- Variants ---
 
@@ -57,11 +104,11 @@ const commandDialogContentVariants = cva(
   {
     variants: {
       variant: {
-        default: "rounded-xl border border-border/40 bg-background shadow-2xl",
-        compact: "rounded-lg border border-border/40 bg-background shadow-xl max-w-lg",
-        floating: "rounded-2xl border border-border/50 bg-background shadow-2xl ring-1 ring-black/5",
-        glass: "rounded-2xl border border-white/20 dark:border-white/10 bg-background/80 backdrop-blur-2xl shadow-2xl",
-        spotlight: "rounded-xl border border-primary/30 bg-background shadow-[0_0_40px_-10px_rgba(var(--primary),0.3)]",
+        default: "border border-border/40 bg-background shadow-2xl",
+        compact: "border border-border/40 bg-background shadow-xl max-w-lg",
+        floating: "border border-border/50 bg-background shadow-2xl ring-1 ring-black/5",
+        glass: "border border-white/20 dark:border-white/10 bg-background/80 backdrop-blur-2xl shadow-2xl",
+        spotlight: "border bg-background",
       },
     },
     defaultVariants: {
@@ -71,7 +118,7 @@ const commandDialogContentVariants = cva(
 );
 
 const commandInputVariants = cva(
-  "flex w-full rounded-md bg-transparent py-4 outline-none placeholder:text-muted-foreground/60 disabled:cursor-not-allowed disabled:opacity-50 font-medium tracking-tight",
+  "flex w-full bg-transparent py-4 outline-none placeholder:text-muted-foreground/60 disabled:cursor-not-allowed disabled:opacity-50 font-medium tracking-tight",
   {
     variants: {
       variant: {
@@ -89,15 +136,15 @@ const commandInputVariants = cva(
 );
 
 const commandItemVariants = cva(
-  "relative flex cursor-default select-none items-center outline-none data-[selected=true]:bg-accent/60 data-[selected=true]:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 transition-colors duration-200",
+  "relative flex cursor-default select-none items-center outline-none transition-colors duration-200",
   {
     variants: {
       variant: {
-        default: "px-3 py-3 text-sm sm:text-base mx-2 my-1 rounded-xl",
-        compact: "px-2.5 py-2 text-xs sm:text-sm mx-1.5 my-0.5 rounded-lg",
-        floating: "px-4 py-3.5 text-sm sm:text-base mx-3 my-1.5 rounded-xl",
-        glass: "px-3 py-3 text-sm sm:text-base mx-2 my-1 rounded-xl",
-        spotlight: "px-4 py-3.5 text-sm sm:text-base mx-2 my-1.5 rounded-xl data-[selected=true]:bg-primary/10 data-[selected=true]:text-primary font-medium",
+        default: "px-3 py-3 text-sm sm:text-base mx-2 my-1 data-[selected=true]:bg-accent/60 data-[selected=true]:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+        compact: "px-2.5 py-2 text-xs sm:text-sm mx-1.5 my-0.5 data-[selected=true]:bg-accent/60 data-[selected=true]:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+        floating: "px-4 py-3.5 text-sm sm:text-base mx-3 my-1.5 data-[selected=true]:bg-accent/60 data-[selected=true]:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+        glass: "px-3 py-3 text-sm sm:text-base mx-2 my-1 data-[selected=true]:bg-accent/60 data-[selected=true]:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+        spotlight: "px-4 py-3.5 text-sm sm:text-base mx-2 my-1.5 font-medium",
       },
     },
     defaultVariants: {
@@ -110,6 +157,9 @@ const commandItemVariants = cva(
 
 export interface CommandPaletteProps extends DialogPrimitive.DialogProps {
   variant?: CommandVariant;
+  color?: CommandColor;
+  shape?: CommandShape;
+  spacing?: CommandSpacing;
   className?: string;
   container?: HTMLElement | null;
   children: React.ReactNode;
@@ -117,11 +167,17 @@ export interface CommandPaletteProps extends DialogPrimitive.DialogProps {
 
 export const CommandPalette = React.memo(({
   variant = "default",
+  color = "default",
+  shape = "default",
+  spacing = "default",
   className,
   container,
   children,
   ...props
 }: CommandPaletteProps) => {
+  const activeTheme = colorThemeMap[color];
+  const shapeClass = getShapeClass(shape);
+
   return (
     <DialogPrimitive.Root {...props}>
       <DialogPrimitive.Portal container={container}>
@@ -129,12 +185,12 @@ export const CommandPalette = React.memo(({
           <div className={commandDialogOverlayVariants({ variant })}>
             <DialogPrimitive.Content
               onOpenAutoFocus={(e) => e.preventDefault()}
-              className={commandDialogContentVariants({ variant })}
+              className={cn(commandDialogContentVariants({ variant }), shapeClass, variant === "spotlight" && cn(activeTheme.border, activeTheme.shadow))}
             >
               <VisuallyHidden>
                 <DialogPrimitive.Title>Command Palette</DialogPrimitive.Title>
               </VisuallyHidden>
-              <CommandContext.Provider value={{ variant }}>
+              <CommandContext.Provider value={{ variant, color, shape, spacing }}>
                 <CommandPrimitive
                   className={cn(
                     "flex h-full w-full flex-col overflow-hidden bg-transparent text-foreground",
@@ -155,21 +211,27 @@ CommandPalette.displayName = "CommandPalette";
 
 export const Command = React.memo(React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive> & { variant?: CommandVariant }
->(({ className, variant = "default", ...props }, ref) => (
-  <CommandContext.Provider value={{ variant }}>
-    <CommandPrimitive
-      ref={ref}
-      className={cn(
-        "flex h-full w-full flex-col overflow-hidden rounded-xl bg-background text-foreground",
-        variant === "glass" && "bg-background/80 backdrop-blur-2xl border border-white/20 dark:border-white/10",
-        variant === "spotlight" && "border border-primary/20",
-        className
-      )}
-      {...props}
-    />
-  </CommandContext.Provider>
-)));
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive> & { variant?: CommandVariant, color?: CommandColor, shape?: CommandShape, spacing?: CommandSpacing }
+>(({ className, variant = "default", color = "default", shape = "default", spacing = "default", ...props }, ref) => {
+  const activeTheme = colorThemeMap[color];
+  const shapeClass = getShapeClass(shape);
+
+  return (
+    <CommandContext.Provider value={{ variant, color, shape, spacing }}>
+      <CommandPrimitive
+        ref={ref}
+        className={cn(
+          "flex h-full w-full flex-col overflow-hidden bg-background text-foreground",
+          shapeClass,
+          variant === "glass" && "bg-background/80 backdrop-blur-2xl border border-white/20 dark:border-white/10",
+          variant === "spotlight" && cn("border", activeTheme.border),
+          className
+        )}
+        {...props}
+      />
+    </CommandContext.Provider>
+  );
+}));
 Command.displayName = CommandPrimitive.displayName;
 
 export const CommandInput = React.memo(React.forwardRef<
@@ -183,7 +245,7 @@ export const CommandInput = React.memo(React.forwardRef<
       <Search className="mr-1 h-5 w-5 shrink-0 text-muted-foreground/50" />
       <CommandPrimitive.Input
         ref={ref}
-        className={cn(commandInputVariants({ variant }), "px-2 sm:px-3", className)}
+        className={cn(commandInputVariants({ variant }), "px-2 sm:px-3 rounded-md", className)}
         {...props}
       />
     </div>
@@ -206,10 +268,10 @@ CommandList.displayName = CommandPrimitive.List.displayName;
 export const CommandEmpty = React.memo(React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Empty>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>
->((props, ref) => (
+>(({ className, ...props }, ref) => (
   <CommandPrimitive.Empty
     ref={ref}
-    className="py-12 text-center text-sm text-muted-foreground"
+    className={cn("py-12 text-center text-sm text-muted-foreground", className)}
     {...props}
   />
 )));
@@ -219,7 +281,8 @@ export const CommandGroup = React.memo(React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Group>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group>
 >(({ className, ...props }, ref) => {
-  const { variant } = useCommandContext();
+  const { variant, spacing } = useCommandContext();
+  const spacingClass = getSpacingClass(spacing);
 
   return (
     <CommandPrimitive.Group
@@ -242,7 +305,7 @@ export const CommandGroup = React.memo(React.forwardRef<
         variant === "floating" && (
           "[[cmdk-group-heading]]:px-6"
         ),
-
+        spacingClass,
         className
       )}
       {...props}
@@ -267,12 +330,14 @@ export const CommandItem = React.memo(React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>
 >(({ className, ...props }, ref) => {
-  const { variant } = useCommandContext();
+  const { variant, color, shape } = useCommandContext();
+  const activeTheme = colorThemeMap[color];
+  const itemShapeClass = getItemShapeClass(shape);
 
   return (
     <CommandPrimitive.Item
       ref={ref}
-      className={cn(commandItemVariants({ variant }), className)}
+      className={cn(commandItemVariants({ variant }), itemShapeClass, variant === "spotlight" && cn(activeTheme.bgSelected, activeTheme.textSelected, "data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50"), className)}
       {...props}
     />
   );

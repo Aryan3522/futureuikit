@@ -13,15 +13,25 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Check, X } from "lucide-react";
 
+export type OtpShape = "default" | "square" | "rounded" | "sharp";
+export type OtpColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type OtpSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
 export interface OTPVerificationProps {
   length?: number;
   onVerify?: (otp: string) => Promise<boolean> | boolean;
+  color?: OtpColor;
+  shape?: OtpShape;
+  spacing?: OtpSpacing;
   className?: string;
 }
 
 export const OTPVerification = React.memo(function OTPVerification({
   length = 6,
   onVerify,
+  color = "default",
+  shape = "default",
+  spacing = "default",
   className,
 }: OTPVerificationProps) {
   const [otp, setOtp] = useState<string[]>(Array(length).fill(""));
@@ -175,6 +185,46 @@ export const OTPVerification = React.memo(function OTPVerification({
     };
   };
 
+  const ringColorMap: Record<OtpColor, string> = {
+    default: "border-foreground ring-ring/20 text-foreground",
+    blue: "border-blue-600 ring-blue-600/20 text-blue-600 dark:border-blue-500 dark:ring-blue-500/20 dark:text-blue-500",
+    emerald: "border-emerald-500 ring-emerald-500/20 text-emerald-500 dark:border-emerald-500 dark:ring-emerald-500/20 dark:text-emerald-500",
+    rose: "border-rose-500 ring-rose-500/20 text-rose-500 dark:border-rose-500 dark:ring-rose-500/20 dark:text-rose-500",
+    amber: "border-amber-500 ring-amber-500/20 text-amber-500 dark:border-amber-500 dark:ring-amber-500/20 dark:text-amber-500",
+    violet: "border-violet-600 ring-violet-600/20 text-violet-600 dark:border-violet-500 dark:ring-violet-500/20 dark:text-violet-500",
+    indigo: "border-indigo-600 ring-indigo-600/20 text-indigo-600 dark:border-indigo-500 dark:ring-indigo-500/20 dark:text-indigo-500",
+    sky: "border-sky-500 ring-sky-500/20 text-sky-600 dark:border-sky-500 dark:ring-sky-500/20 dark:text-sky-500",
+    slate: "border-slate-600 ring-slate-600/20 text-slate-600 dark:border-slate-500 dark:ring-slate-500/20 dark:text-slate-500",
+    orange: "border-orange-500 ring-orange-500/20 text-orange-600 dark:border-orange-500 dark:ring-orange-500/20 dark:text-orange-500",
+  };
+
+  const focusBorderMap: Record<OtpColor, string> = {
+    default: "focus:border-foreground/50",
+    blue: "focus:border-blue-600/50 dark:focus:border-blue-500/50",
+    emerald: "focus:border-emerald-500/50",
+    rose: "focus:border-rose-500/50",
+    amber: "focus:border-amber-500/50",
+    violet: "focus:border-violet-600/50 dark:focus:border-violet-500/50",
+    indigo: "focus:border-indigo-600/50 dark:focus:border-indigo-500/50",
+    sky: "focus:border-sky-500/50",
+    slate: "focus:border-slate-600/50 dark:focus:border-slate-500/50",
+    orange: "focus:border-orange-500/50",
+  };
+
+  const sizes = {
+    default: "w-12 h-14 md:w-14 md:h-16 text-xl md:text-2xl",
+    "2x": "w-8 h-10 md:w-10 md:h-12 text-sm md:text-base",
+    "4x": "w-12 h-14 md:w-14 md:h-16 text-xl md:text-2xl",
+    "6x": "w-14 h-16 md:w-16 md:h-20 text-2xl md:text-3xl",
+    "8x": "w-16 h-20 md:w-20 md:h-24 text-3xl md:text-4xl",
+  };
+
+  const shapeClass = 
+    shape === "square" ? "rounded-none" : 
+    shape === "rounded" ? "rounded-full" : 
+    shape === "sharp" ? "rounded-[2px]" : 
+    "rounded-xl";
+
   return (
     <div className={cn("flex flex-col items-center justify-center w-full min-h-[200px] p-8 bg-background relative", className)}>
       <motion.div 
@@ -227,13 +277,15 @@ export const OTPVerification = React.memo(function OTPVerification({
               onFocus={() => status === "idle" && setActiveIndex(index)}
               disabled={status !== "idle"}
               className={cn(
-                "w-12 h-14 md:w-14 md:h-16 flex items-center justify-center text-center text-xl md:text-2xl font-bold bg-card border rounded-xl shadow-sm outline-none transition-colors",
+                sizes[spacing] || sizes.default,
+                shapeClass,
+                "flex items-center justify-center text-center font-bold bg-background border-2 outline-none transition-colors",
                 activeIndex === index && status === "idle" 
-                  ? "border-primary ring-2 ring-primary/20 text-primary" 
-                  : "border-border text-foreground focus:border-primary/50",
-                status !== "idle" && "opacity-90 shadow-xl pointer-events-none bg-card/90 backdrop-blur-sm",
-                status === "success" && "border-emerald-500/50 bg-emerald-500/5",
-                status === "error" && "border-red-500/50 bg-red-500/5"
+                  ? `ring-2 ${ringColorMap[color]}` 
+                  : `border-border text-foreground ${focusBorderMap[color]}`,
+                status !== "idle" && "opacity-90 shadow-xl pointer-events-none bg-muted",
+                status === "success" && "border-emerald-500/50 bg-emerald-50 dark:bg-emerald-500/10",
+                status === "error" && "border-red-500/50 bg-red-50 dark:bg-red-500/10"
               )}
             />
           </motion.div>

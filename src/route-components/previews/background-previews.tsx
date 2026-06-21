@@ -7,11 +7,13 @@ import { PerspectiveGrid } from "@/components/ui/perspective-grid";
 import { PointCursor } from "@/components/ui/PointCursor";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { PreviewContainer } from "../preview-engine/PreviewContainer";
+import { PreviewContainer, DEFAULT_COLORS } from "../preview-engine/PreviewContainer";
 
 export const DotBackgroundPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Dot Background" description="A clean, dot-matrix style background component." contentClassName="p-0 border-none">
+    <PreviewContainer title="Dot Background" description="A clean, dot-matrix style background component." contentClassName="p-0 border-none" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <DotBackground dotColor="#6366f1" maskOpacity={0.5}>
         <div className="flex items-center justify-center w-full h-full min-h-100">
           <h3 className="text-xl md:text-3xl font-black italic tracking-tighter uppercase opacity-50 text-foreground">
@@ -24,8 +26,10 @@ export const DotBackgroundPreview: React.FC = () => {
 };
 
 export const ParticlesPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Particles" description="A dynamic particle system for beautiful backgrounds." contentClassName="bg-slate-950 dark:bg-background p-0 border-none">
+    <PreviewContainer title="Particles" description="A dynamic particle system for beautiful backgrounds." contentClassName="bg-slate-950 dark:bg-background p-0 border-none" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <div className="w-full h-full relative overflow-hidden min-h-100">
         <Particles quantity={150} color="#3b82f6" />
         <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
@@ -39,8 +43,10 @@ export const ParticlesPreview: React.FC = () => {
 };
 
 export const PerspectiveGridPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Perspective Grid" description="A 3D perspective grid horizon background." contentClassName="bg-slate-950 dark:bg-background p-0 border-none">
+    <PreviewContainer title="Perspective Grid" description="A 3D perspective grid horizon background." contentClassName="bg-slate-950 dark:bg-background p-0 border-none" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <div className="w-full h-full relative overflow-hidden min-h-100">
         <PerspectiveGrid gridLineGap={50} />
         <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
@@ -54,8 +60,10 @@ export const PerspectiveGridPreview: React.FC = () => {
 };
 
 export const PointCursorPreview: React.FC = () => {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Point Cursor" description="A custom interactive cursor.">
+    <PreviewContainer title="Point Cursor" description="A custom interactive cursor." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
       <PointCursor className="rounded-xl overflow-hidden border border-border bg-muted/10 w-full h-full">
         <div className="flex flex-col items-center justify-center w-full h-full min-h-75 sm:min-h-100 p-8 text-center space-y-8 relative overflow-hidden">
           {/* Decorative background to make it feel like a "playground" */}
@@ -79,12 +87,12 @@ export const PointCursorPreview: React.FC = () => {
           </div>
 
           <div className="flex flex-wrap gap-4 justify-center relative z-10">
-            <Button className="rounded-full px-8 shadow-lg shadow-primary/20">
+            <Button className="rounded-full px-8 shadow-lg shadow-primary/20" color={previewColor} variant={previewVariant}>
               Hover Me
             </Button>
             <Button
               variant="outline"
-              className="rounded-full px-8 bg-background/50 backdrop-blur-sm"
+              className="rounded-full px-8 bg-background/50 backdrop-blur-sm" color={previewColor}
             >
               Try This One
             </Button>

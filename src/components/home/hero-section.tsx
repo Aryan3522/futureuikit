@@ -53,7 +53,6 @@ export function HeroSection() {
  <Link href="/components"className="w-full sm:w-auto">
  <GlowyButton
  asDiv
- variant="primary"
  className="h-14 px-10 text-sm font-label-caps tracking-widest stellar-violet-glow w-full"
  >
  BROWSE COMPONENTS

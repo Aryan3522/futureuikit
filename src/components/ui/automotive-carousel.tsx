@@ -22,9 +22,6 @@ import { BasicLoader } from "@/components/ui/basic-loader";
 // PRELOAD MODELS
 // ─────────────────────────────────────────────────────────────────────────────
 try {
-  useGLTF.preload("/models/car.glb");
-  useGLTF.preload("/models/bike.glb");
-  useGLTF.preload("/models/chair.glb");
   useGLTF.preload("/models/m4.glb");
 } catch (_) { }
 
@@ -320,13 +317,12 @@ export interface CarouselSlide {
 export interface AutomotiveCarouselProps {
   slides: CarouselSlide[];
   className?: string;
-  objectVariant?: "car" | "bike" | "chair" | "m4";
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // AutomotiveCarousel
 // ─────────────────────────────────────────────────────────────────────────────
-export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: AutomotiveCarouselProps) => {
+export const AutomotiveCarousel = ({ slides, className }: AutomotiveCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isMobile, setIsMobile] = useState(() => {
@@ -405,12 +401,12 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
   return (
     <div
       className={cn(
-        "relative w-full h-full overflow-hidden bg-[#050505] select-none @container",
+        "relative w-full h-full overflow-hidden bg-background select-none @container",
         className
       )}
     >
       {/* ── Background ────────────────────────────────────────────────────── */}
-      <div className="absolute inset-0 bg-linear-to-b from-[#0a0a0f] via-[#050508] to-[#000000]" />
+      <div className="absolute inset-0 bg-linear-to-b from-foreground/5 via-background to-background" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_30%,rgba(30,30,60,0.2),transparent)]" />
 
       {/* ── Text (z-30 — ON TOP of the 3D model) ──────── */}
@@ -434,7 +430,7 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
                 </h2>
               )}
               {slides[currentIndex].description && (
-                <p className="mt-[clamp(0.75rem,2.5cqw,1.5rem)] text-[clamp(1rem,3cqw,1.5rem)] text-zinc-200 font-medium tracking-tight leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+                <p className="mt-[clamp(0.75rem,2.5cqw,1.5rem)] text-[clamp(1rem,3cqw,1.5rem)] text-white/80 font-medium tracking-tight leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
                   {slides[currentIndex].description}
                 </p>
               )}
@@ -459,7 +455,7 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
           style={{ width: "100%", height: "100%", background: "transparent" }}
         >
           <Scene
-            url={`/models/${objectVariant}.glb`}
+            url={"/models/m4.glb"}
             target={currentTarget}
             annotations={slides[currentIndex].annotations}
             layout={layout}
@@ -479,7 +475,7 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
               key={idx}
               className={cn(
                 "h-1 rounded-full transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]",
-                idx === currentIndex ? "w-8 sm:w-10 bg-white" : "w-2 sm:w-2.5 bg-white/20"
+                idx === currentIndex ? "w-8 sm:w-10 bg-foreground" : "w-2 sm:w-2.5 bg-foreground/20"
               )}
             />
           ))}
@@ -490,14 +486,14 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
       <div className="absolute bottom-6 sm:bottom-8 right-6 sm:right-8 z-50 flex items-center gap-3 sm:gap-4">
         <button
           onClick={() => go(-1)}
-          className="p-3 sm:p-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/20 backdrop-blur-md text-white transition-all active:scale-95"
+          className="p-3 sm:p-4 rounded-full bg-background/10 border border-border/20 hover:bg-background/20 backdrop-blur-md text-foreground transition-all active:scale-95"
           aria-label="Previous slide"
         >
           <ChevronLeft size={isMobile ? 20 : 24} />
         </button>
         <button
           onClick={() => go(1)}
-          className="p-3 sm:p-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/20 backdrop-blur-md text-white transition-all active:scale-95"
+          className="p-3 sm:p-4 rounded-full bg-background/10 border border-border/20 hover:bg-background/20 backdrop-blur-md text-foreground transition-all active:scale-95"
           aria-label="Next slide"
         >
           <ChevronRight size={isMobile ? 20 : 24} />

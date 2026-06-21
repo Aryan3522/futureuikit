@@ -41,15 +41,15 @@ export const AnimatedTerminal = React.memo(() => {
  await new Promise((r) => setTimeout(r, 400));
  };
 
- const renderOutputLineHTML = (text: string) => {
- if (text.startsWith("✓")) {
- return `<span class="text-[#00ffcc] mr-2">✓</span><span class="text-[#a1a1aa]">${text.substring(1)}</span>`;
- }
- if (text.startsWith("▲")) {
- return `<span class="text-white font-bold mr-2">▲</span><span class="text-[#a1a1aa]">${text.substring(1)}</span>`;
- }
- return `<span class="text-[#a1a1aa]">${text}</span>`;
- };
+const renderOutputLineHTML = (text: string) => {
+  if (text.startsWith("✓")) {
+    return `<span style="color: var(--color-primary); margin-right: 0.5rem;">✓</span><span style="color: var(--color-muted-foreground);">${text.substring(1)}</span>`;
+  }
+  if (text.startsWith("▲")) {
+    return `<span class="font-bold" style="color: var(--color-foreground); margin-right: 0.5rem;">▲</span><span style="color: var(--color-muted-foreground);">${text.substring(1)}</span>`;
+  }
+  return `<span style="color: var(--color-muted-foreground);">${text}</span>`;
+};
 
  const runSequence = async () => {
  while (!isCancelled) {
@@ -64,12 +64,12 @@ export const AnimatedTerminal = React.memo(() => {
  lineDiv.className ="flex gap-4 w-full";
  
  if (step.type ==="command") {
- const promptSpan = document.createElement("span");
- promptSpan.className ="text-[#8b5cf6] font-bold shrink-0";
- promptSpan.textContent ="$";
- 
- const textDiv = document.createElement("div");
- textDiv.className ="whitespace-pre-wrap leading-relaxed text-white";
+    const promptSpan = document.createElement("span");
+    promptSpan.className = "text-primary font-bold shrink-0";
+    promptSpan.textContent = "$";
+    
+    const textDiv = document.createElement("div");
+    textDiv.className = "whitespace-pre-wrap leading-relaxed text-foreground";
  
  lineDiv.appendChild(promptSpan);
  lineDiv.appendChild(textDiv);
@@ -117,10 +117,10 @@ export const AnimatedTerminal = React.memo(() => {
  return (
  <div
  ref={containerRef}
- className="w-full h-full bg-[#0a0a0a] rounded-xl overflow-y-auto overflow-x-hidden flex flex-col font-mono text-xs md:text-sm p-6 gap-3 text-left items-start shadow-inner"
- >
- <div ref={contentRef} className="w-full flex flex-col gap-3"></div>
- <span ref={cursorRef} className="w-2 h-4 bg-[#8b5cf6] animate-pulse ml-1 align-middle hidden"/>
+    className="w-full h-full bg-background border border-border rounded-xl overflow-y-auto overflow-x-hidden flex flex-col font-mono text-xs md:text-sm p-6 gap-3 text-left items-start shadow-inner"
+  >
+    <div ref={contentRef} className="w-full flex flex-col gap-3"></div>
+    <span ref={cursorRef} className="w-2 h-4 bg-primary animate-pulse ml-1 align-middle hidden"/>
  </div>
  );
 });

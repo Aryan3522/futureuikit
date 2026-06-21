@@ -41,6 +41,10 @@ import { cn } from "@/lib/utils";
 // TYPES & INTERFACES
 // ==========================================
 
+export type DynamicFormColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type DynamicFormShape = "default" | "square" | "rounded" | "sharp";
+export type DynamicFormSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
 export type FormVariant =
   | "minimal"
   | "modern"
@@ -120,6 +124,9 @@ export interface FormApiConfig {
 export interface DynamicFormProps {
   fields: FieldConfig[];
   variant?: FormVariant;
+  color?: DynamicFormColor;
+  shape?: DynamicFormShape;
+  spacing?: DynamicFormSpacing;
   steps?: FormStep[];
   api?: FormApiConfig;
   defaultValues?: Record<string, any>;
@@ -135,6 +142,67 @@ export interface DynamicFormProps {
   showResetButton?: boolean;
   submitButtonText?: string;
 }
+
+interface DynamicFormContextType {
+  color: DynamicFormColor;
+  shape: DynamicFormShape;
+  spacing: DynamicFormSpacing;
+  variant: FormVariant;
+}
+
+const DynamicFormContext = React.createContext<DynamicFormContextType>({ color: "default", shape: "default", spacing: "default", variant: "modern" });
+
+export const useDynamicForm = () => React.useContext(DynamicFormContext);
+
+const colorThemeMap: Record<DynamicFormColor, { bgActive: string; text: string; ring: string; border: string; borderActive: string; bgSoft: string }> = {
+  default: { bgActive: "bg-foreground", text: "text-foreground", ring: "focus:ring-ring/20", border: "border-border", borderActive: "border-foreground", bgSoft: "bg-muted" },
+  blue: { bgActive: "bg-blue-600", text: "text-blue-600", ring: "focus:ring-blue-500/20", border: "border-blue-200 dark:border-blue-900", borderActive: "border-blue-500", bgSoft: "bg-blue-50 dark:bg-blue-900/20" },
+  emerald: { bgActive: "bg-emerald-600", text: "text-emerald-600", ring: "focus:ring-emerald-500/20", border: "border-emerald-200 dark:border-emerald-900", borderActive: "border-emerald-500", bgSoft: "bg-emerald-50 dark:bg-emerald-900/20" },
+  rose: { bgActive: "bg-rose-600", text: "text-rose-600", ring: "focus:ring-rose-500/20", border: "border-rose-200 dark:border-rose-900", borderActive: "border-rose-500", bgSoft: "bg-rose-50 dark:bg-rose-900/20" },
+  amber: { bgActive: "bg-amber-500", text: "text-amber-600", ring: "focus:ring-amber-500/20", border: "border-amber-200 dark:border-amber-900", borderActive: "border-amber-500", bgSoft: "bg-amber-50 dark:bg-amber-900/20" },
+  violet: { bgActive: "bg-violet-600", text: "text-violet-600", ring: "focus:ring-violet-500/20", border: "border-violet-200 dark:border-violet-900", borderActive: "border-violet-500", bgSoft: "bg-violet-50 dark:bg-violet-900/20" },
+  indigo: { bgActive: "bg-indigo-600", text: "text-indigo-600", ring: "focus:ring-indigo-500/20", border: "border-indigo-200 dark:border-indigo-900", borderActive: "border-indigo-500", bgSoft: "bg-indigo-50 dark:bg-indigo-900/20" },
+  sky: { bgActive: "bg-sky-500", text: "text-sky-600", ring: "focus:ring-sky-500/20", border: "border-sky-200 dark:border-sky-900", borderActive: "border-sky-500", bgSoft: "bg-sky-50 dark:bg-sky-900/20" },
+  slate: { bgActive: "bg-slate-600", text: "text-slate-600", ring: "focus:ring-slate-500/20", border: "border-slate-200 dark:border-slate-900", borderActive: "border-slate-500", bgSoft: "bg-slate-50 dark:bg-slate-900/20" },
+  orange: { bgActive: "bg-orange-500", text: "text-orange-600", ring: "focus:ring-orange-500/20", border: "border-orange-200 dark:border-orange-900", borderActive: "border-orange-500", bgSoft: "bg-orange-50 dark:bg-orange-900/20" },
+};
+
+const getShapeClass = (shape: DynamicFormShape, element: "container" | "input" | "button" = "container") => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-[2px]";
+    case "rounded": return element === "container" ? "rounded-2xl" : "rounded-xl";
+    case "default": return element === "container" ? "rounded-xl" : "rounded-lg";
+  }
+};
+
+const getSpacingClass = (spacing: DynamicFormSpacing, element: "container" | "input" | "button" = "input") => {
+  if (element === "button") {
+    switch (spacing) {
+      case "2x": return "py-1.5 px-3 text-xs";
+      case "4x": return "py-2 px-4 text-sm";
+      case "6x": return "py-3 px-6 text-base";
+      case "8x": return "py-4 px-8 text-lg";
+      default: return "py-2.5 px-6 text-sm";
+    }
+  }
+  if (element === "container") {
+    switch (spacing) {
+      case "2x": return "p-2 space-y-2";
+      case "4x": return "p-4 space-y-4";
+      case "6x": return "p-8 space-y-8";
+      case "8x": return "p-12 space-y-10";
+      default: return "p-6 space-y-5";
+    }
+  }
+  switch (spacing) {
+    case "2x": return "px-2.5 py-1 text-xs";
+    case "4x": return "px-3 py-1.5 text-sm";
+    case "6x": return "px-4 py-3 text-base";
+    case "8x": return "px-5 py-4 text-lg";
+    default: return "px-3.5 py-2.5 text-sm";
+  }
+};
 
 // ==========================================
 // DYNAMIC ZOD SCHEMA BUILDER
@@ -264,7 +332,6 @@ interface OTPInputProps {
   length?: number;
   value?: string;
   onChange: (val: string) => void;
-  variant?: FormVariant;
   disabled?: boolean;
 }
 
@@ -272,9 +339,10 @@ export const OTPInput: React.FC<OTPInputProps> = React.memo(({
           length = 6,
           value = "",
           onChange,
-          variant = "modern",
           disabled = false
         }) => {
+          const { color, shape, variant } = useDynamicForm();
+          const activeTheme = colorThemeMap[color];
           const inputsRef = useRef<HTMLInputElement[]>([]);
           const otpArray = useMemo(() => {
             const arr = Array(length).fill("");
@@ -334,11 +402,13 @@ export const OTPInput: React.FC<OTPInputProps> = React.memo(({
                     onKeyDown={(e) => handleKeyDown(e, idx)}
                     onPaste={handlePaste}
                     className={cn(
-                      "w-12 h-14 text-center font-bold text-xl rounded-xl transition-all outline-none",
+                      "w-12 h-14 text-center font-bold text-xl transition-all outline-none",
+                      getShapeClass(shape, "input"),
+                      activeTheme.ring,
                       variant === "glass" && "bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 text-foreground focus:border-white/40 focus:ring-1 focus:ring-white/10",
                       variant === "minimal" && "bg-transparent border-b-2 border-border focus:border-primary rounded-none",
-                      variant === "dark" && "bg-card dark:bg-zinc-900 border border-border dark:border-zinc-800 text-foreground dark:text-zinc-100 focus:border-primary dark:focus:border-zinc-500",
-                      variant !== "glass" && variant !== "minimal" && variant !== "dark" && "bg-muted/40 border border-border/80 focus:border-primary focus:ring-2 focus:ring-primary/10"
+                      variant === "dark" && "bg-card border border-border text-foreground focus:border-primary",
+                      variant !== "glass" && variant !== "minimal" && variant !== "dark" && cn("bg-muted/40 border border-border/80 focus:border-primary focus:ring-2", activeTheme.borderActive)
                     )}
                   />
                 ))}
@@ -353,7 +423,6 @@ interface AutocompleteProps {
   value?: string;
   onChange: (val: string) => void;
   placeholder?: string;
-  variant?: FormVariant;
   disabled?: boolean;
 }
 
@@ -362,9 +431,10 @@ export const AutocompleteInput: React.FC<AutocompleteProps> = React.memo(({
           value = "",
           onChange,
           placeholder,
-          variant,
           disabled
         }) => {
+          const { color, shape, spacing, variant } = useDynamicForm();
+          const activeTheme = colorThemeMap[color];
           const [isOpen, setIsOpen] = useState(false);
           const [searchTerm, setSearchTerm] = useState("");
           const [focusedIdx, setFocusedIdx] = useState(-1);
@@ -380,6 +450,7 @@ export const AutocompleteInput: React.FC<AutocompleteProps> = React.memo(({
 
           useEffect(() => {
             const matched = options.find((opt) => opt.value === value);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setSearchTerm(matched ? matched.label : value);
           }, [value, options]);
 
@@ -439,15 +510,18 @@ export const AutocompleteInput: React.FC<AutocompleteProps> = React.memo(({
                 onFocus={() => setIsOpen(true)}
                 onKeyDown={handleKeyDown}
                 className={cn(
-                  "w-full text-sm",
-                  variant === "glass" && "bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 focus:border-white/30 rounded-2xl px-4 py-3 placeholder:text-muted-foreground/30",
-                  variant === "minimal" && "bg-transparent border-b border-border/50 focus:border-primary rounded-none py-1 px-0 focus:ring-0",
-                  variant === "dark" && "bg-card dark:bg-zinc-900 border border-border dark:border-zinc-800 text-foreground dark:text-zinc-100 rounded-xl px-3.5 py-2.5",
-                  variant !== "glass" && variant !== "minimal" && variant !== "dark" && "bg-muted/40 border border-border/50 rounded-xl px-3.5 py-2.5 focus:border-primary focus:ring-1 focus:ring-primary/20"
+                  "w-full text-sm outline-none transition-all",
+                  getShapeClass(shape, "input"),
+                  getSpacingClass(spacing, "input"),
+                  activeTheme.ring,
+                  variant === "glass" && "bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 focus:border-white/30 placeholder:text-muted-foreground/30",
+                  variant === "minimal" && "bg-transparent border-b border-border/50 rounded-none py-1 px-0 focus:ring-0",
+                  variant === "dark" && "bg-card border border-border text-foreground",
+                  variant !== "glass" && variant !== "minimal" && variant !== "dark" && cn("bg-muted/40 border border-border/50 focus:ring-1", activeTheme.borderActive)
                 )}
               />
               {isOpen && filtered.length > 0 && (
-                <div className="absolute z-50 w-full mt-2 rounded-xl overflow-hidden border border-border/50 bg-background/95 backdrop-blur-xl shadow-lg max-h-56 overflow-y-auto custom-scrollbar">
+                <div className={cn("absolute z-50 w-full mt-2 overflow-hidden border border-border/50 bg-background/95 backdrop-blur-xl shadow-lg max-h-56 overflow-y-auto custom-scrollbar", getShapeClass(shape, "container"))}>
                   {filtered.map((opt, idx) => (
                     <button
                       key={idx}
@@ -455,12 +529,12 @@ export const AutocompleteInput: React.FC<AutocompleteProps> = React.memo(({
                       onClick={() => handleSelect(opt)}
                       className={cn(
                         "w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between",
-                        idx === focusedIdx ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted/60 text-foreground/80",
-                        value === String(opt.value) && "bg-primary/5 text-primary"
+                        idx === focusedIdx ? cn(activeTheme.bgSoft, activeTheme.text, "font-medium") : "hover:bg-muted/60 text-foreground/80",
+                        value === String(opt.value) && cn(activeTheme.bgSoft, activeTheme.text)
                       )}
                     >
                       <span>{opt.label}</span>
-                      {value === String(opt.value) && <Check className="w-4 h-4 text-primary" />}
+                      {value === String(opt.value) && <Check className={cn("w-4 h-4", activeTheme.text)} />}
                     </button>
                   ))}
                 </div>
@@ -476,7 +550,6 @@ interface MultiSelectProps {
   value?: (string | number)[];
   onChange: (val: (string | number)[]) => void;
   placeholder?: string;
-  variant?: FormVariant;
   disabled?: boolean;
 }
 
@@ -485,9 +558,10 @@ export const MultiSelectInput: React.FC<MultiSelectProps> = React.memo(({
           value = [],
           onChange,
           placeholder = "Select options",
-          variant,
           disabled
         }) => {
+          const { color, shape, spacing, variant } = useDynamicForm();
+          const activeTheme = colorThemeMap[color];
           const [isOpen, setIsOpen] = useState(false);
           const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -520,11 +594,14 @@ export const MultiSelectInput: React.FC<MultiSelectProps> = React.memo(({
                 disabled={disabled}
                 onClick={() => setIsOpen(!isOpen)}
                 className={cn(
-                  "w-full text-sm text-left flex items-center justify-between min-h-[42px] transition-all",
-                  variant === "glass" && "bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 rounded-2xl px-4 py-2",
+                  "w-full text-sm text-left flex items-center justify-between min-h-[42px] transition-all outline-none",
+                  getShapeClass(shape, "input"),
+                  getSpacingClass(spacing, "input"),
+                  activeTheme.ring,
+                  variant === "glass" && "bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5",
                   variant === "minimal" && "bg-transparent border-b border-border/50 rounded-none py-1.5 px-0",
-                  variant === "dark" && "bg-card dark:bg-zinc-900 border border-border dark:border-zinc-800 text-foreground dark:text-zinc-100 rounded-xl px-3.5 py-2",
-                  variant !== "glass" && variant !== "minimal" && variant !== "dark" && "bg-muted/40 border border-border/50 rounded-xl px-3.5 py-2 focus:border-primary focus:ring-1 focus:ring-primary/20"
+                  variant === "dark" && "bg-card border border-border text-foreground",
+                  variant !== "glass" && variant !== "minimal" && variant !== "dark" && cn("bg-muted/40 border border-border/50 focus:ring-1", activeTheme.borderActive)
                 )}
               >
                 <div className="flex flex-wrap gap-1.5 items-center max-w-[90%]">
@@ -538,10 +615,15 @@ export const MultiSelectInput: React.FC<MultiSelectProps> = React.memo(({
                           e.stopPropagation();
                           toggleOption(opt.value);
                         }}
-                        className="inline-flex items-center gap-1 bg-primary/10 hover:bg-primary/20 text-primary rounded-full px-2.5 py-0.5 text-xs font-semibold select-none cursor-pointer border border-primary/20 transition-colors"
+                        className={cn(
+                          "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold select-none cursor-pointer border transition-colors",
+                          activeTheme.bgSoft,
+                          activeTheme.text,
+                          activeTheme.border
+                        )}
                       >
                         <span>{opt.label}</span>
-                        <X className="w-3 h-3 hover:text-primary/70 shrink-0" />
+                        <X className="w-3 h-3 shrink-0" />
                       </span>
                     ))
                   )}
@@ -549,7 +631,7 @@ export const MultiSelectInput: React.FC<MultiSelectProps> = React.memo(({
                 <ChevronDown className={cn("w-4 h-4 text-muted-foreground shrink-0 transition-transform", isOpen && "rotate-180")} />
               </button>
               {isOpen && (
-                <div className="absolute z-50 w-full mt-2 rounded-xl border border-border/50 bg-background/95 backdrop-blur-xl shadow-lg max-h-56 overflow-y-auto custom-scrollbar">
+                <div className={cn("absolute z-50 w-full mt-2 border border-border/50 bg-background/95 backdrop-blur-xl shadow-lg max-h-56 overflow-y-auto custom-scrollbar", getShapeClass(shape, "container"))}>
                   {options.map((opt) => {
                     const isSelected = value.includes(opt.value);
                     return (
@@ -559,11 +641,11 @@ export const MultiSelectInput: React.FC<MultiSelectProps> = React.memo(({
                         onClick={() => toggleOption(opt.value)}
                         className={cn(
                           "w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between",
-                          isSelected ? "bg-primary/10 text-primary font-semibold" : "hover:bg-muted/60 text-foreground/80"
+                          isSelected ? cn(activeTheme.bgSoft, activeTheme.text, "font-semibold") : "hover:bg-muted/60 text-foreground/80"
                         )}
                       >
                         <span>{opt.label}</span>
-                        {isSelected && <Check className="w-4 h-4 text-primary" />}
+                        {isSelected && <Check className={cn("w-4 h-4", activeTheme.text)} />}
                       </button>
                     );
                   })}
@@ -579,7 +661,6 @@ interface FileUploadProps {
   onChange: (val: File[] | null) => void;
   accept?: string;
   maxSizeMB?: number;
-  variant?: FormVariant;
   disabled?: boolean;
 }
 
@@ -587,9 +668,10 @@ export const FileUploadInput: React.FC<FileUploadProps> = React.memo(({
           onChange,
           accept,
           maxSizeMB = 5,
-          variant,
           disabled
         }) => {
+          const { color, shape, variant } = useDynamicForm();
+          const activeTheme = colorThemeMap[color];
           const [dragActive, setDragActive] = useState(false);
           const [files, setFiles] = useState<File[]>([]);
           const fileInputRef = useRef<HTMLInputElement>(null);
@@ -644,10 +726,11 @@ export const FileUploadInput: React.FC<FileUploadProps> = React.memo(({
                 onDrop={handleDrop}
                 onClick={() => !disabled && fileInputRef.current?.click()}
                 className={cn(
-                  "w-full rounded-2xl border-2 border-dashed flex flex-col items-center justify-center p-6 text-center cursor-pointer transition-all min-h-[140px]",
-                  dragActive ? "border-primary bg-primary/5" : "border-border/60 bg-muted/20 hover:bg-muted/30",
+                  "w-full border-2 border-dashed flex flex-col items-center justify-center p-6 text-center cursor-pointer transition-all min-h-[140px]",
+                  getShapeClass(shape, "container"),
+                  dragActive ? cn(activeTheme.borderActive, activeTheme.bgSoft) : "border-border/60 bg-muted/20 hover:bg-muted/30",
                   variant === "glass" && "border-white/10 dark:border-white/5 hover:bg-white/5 dark:hover:bg-black/20 bg-transparent",
-                  variant === "dark" && "border-border dark:border-zinc-800 bg-card dark:bg-zinc-900/30 hover:bg-muted dark:hover:bg-zinc-900/50",
+                  variant === "dark" && "border-border bg-card hover:bg-accent/50",
                   disabled && "opacity-50 cursor-not-allowed"
                 )}
               >
@@ -662,7 +745,7 @@ export const FileUploadInput: React.FC<FileUploadProps> = React.memo(({
                 />
                 <UploadCloud className="w-8 h-8 text-muted-foreground/60 mb-2" />
                 <p className="text-sm font-semibold text-foreground/90">
-                  Drag & Drop or <span className="text-primary hover:underline">Browse Files</span>
+                  Drag & Drop or <span className={cn("hover:underline", activeTheme.text)}>Browse Files</span>
                 </p>
                 <p className="text-xs text-muted-foreground/50 mt-1">
                   Max size {maxSizeMB}MB per file
@@ -675,12 +758,13 @@ export const FileUploadInput: React.FC<FileUploadProps> = React.memo(({
                     <div
                       key={idx}
                       className={cn(
-                        "flex items-center justify-between p-2.5 rounded-xl border border-border/40 text-xs bg-muted/40",
+                        "flex items-center justify-between p-2.5 border border-border/40 text-xs bg-muted/40",
+                        getShapeClass(shape, "input"),
                         variant === "glass" && "border-white/5 bg-white/5 text-white/80"
                       )}
                     >
                       <div className="flex items-center gap-2 max-w-[80%]">
-                        <FileCode className="w-4 h-4 text-primary shrink-0" />
+                        <FileCode className={cn("w-4 h-4 shrink-0", activeTheme.text)} />
                         <span className="truncate font-medium">{file.name}</span>
                         <span className="text-muted-foreground/60 shrink-0 select-none">
                           ({(file.size / (1024 * 1024)).toFixed(2)} MB)
@@ -715,18 +799,8 @@ const labelVariants = {
   glass: "text-xs font-semibold tracking-wider text-white/70 uppercase mb-1",
   outline: "text-sm font-medium text-foreground mb-1.5",
   elevated: "text-sm font-semibold text-foreground/95 mb-1.5",
-  dark: "text-xs font-bold tracking-wider text-muted-foreground dark:text-zinc-400 uppercase mb-1.5",
+  dark: "text-xs font-bold tracking-wider text-muted-foreground dark:text-muted-foreground uppercase mb-1.5",
   compact: "text-[11px] font-bold text-muted-foreground uppercase tracking-tight mb-1"
-};
-
-const inputStyles = {
-  minimal: "bg-transparent border-b border-border/50 focus:border-primary rounded-none px-0 py-1.5 focus:ring-0 focus-visible:outline-none transition-colors",
-  modern: "bg-muted/40 border border-border/50 focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-xl px-3.5 py-2.5 transition-all duration-200 focus-visible:outline-none",
-  glass: "bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 focus:border-white/30 focus:ring-1 focus:ring-white/10 rounded-2xl px-4 py-3 text-sm backdrop-blur-md placeholder:text-muted-foreground/30 transition-all duration-300 focus-visible:outline-none",
-  outline: "bg-background border border-border focus:border-primary focus:ring-2 focus:ring-primary/10 rounded-lg px-3 py-2 transition-all focus-visible:outline-none",
-  elevated: "bg-background border border-border/10 shadow-[0_2px_4px_rgba(0,0,0,0.02)] focus:border-primary focus:ring-2 focus:ring-primary/10 rounded-xl px-3.5 py-2.5 transition-all focus-visible:outline-none",
-  dark: "bg-card dark:bg-zinc-900 border border-border dark:border-zinc-800 focus:border-primary dark:focus:border-zinc-500 focus:ring-1 focus:ring-primary/20 dark:focus:ring-zinc-700 rounded-xl px-3.5 py-2.5 text-foreground dark:text-zinc-100 placeholder:text-muted-foreground dark:placeholder:text-zinc-600 transition-all focus-visible:outline-none",
-  compact: "bg-muted/20 border border-border/40 focus:border-primary rounded-lg px-2.5 py-1.5 text-xs transition-all focus-visible:outline-none"
 };
 
 const colSpans = {
@@ -739,17 +813,17 @@ const colSpans = {
 
 interface FieldWrapperProps {
   field: FieldConfig;
-  variant?: FormVariant;
   methods: UseFormReturn<any>;
   floatingLabel?: boolean;
 }
 
 export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
           field,
-          variant = "modern",
           methods,
           floatingLabel = false
         }) => {
+          const { color, shape, spacing, variant } = useDynamicForm();
+          const activeTheme = colorThemeMap[color];
           const {
             register,
             control,
@@ -760,9 +834,18 @@ export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
           const error = errors[field.name];
           const errorMessage = error?.message as string | undefined;
 
-          const inputClass = cn(
+          const baseInputClass = cn(
             "w-full text-sm placeholder:text-muted-foreground/40 transition-all focus-visible:outline-none",
-            inputStyles[variant],
+            getShapeClass(shape, "input"),
+            getSpacingClass(spacing, "input"),
+            activeTheme.ring,
+            variant === "minimal" && "bg-transparent border-b border-border/50 rounded-none py-1.5 px-0 focus:ring-0",
+            variant === "modern" && cn("bg-muted/40 border border-border/50 focus:ring-1", activeTheme.borderActive),
+            variant === "glass" && "bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 focus:border-white/30 focus:ring-1 focus:ring-white/10 backdrop-blur-md",
+            variant === "outline" && cn("bg-background border border-border focus:ring-2", activeTheme.borderActive),
+            variant === "elevated" && cn("bg-background border border-border/10 shadow-[0_2px_4px_rgba(0,0,0,0.02)] focus:ring-2", activeTheme.borderActive),
+            variant === "dark" && cn("bg-card border border-border text-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-ring", activeTheme.borderActive),
+            variant === "compact" && cn("bg-muted/20 border border-border/40", activeTheme.borderActive),
             field.icon && "pl-10",
             errorMessage && "border-destructive focus:border-destructive focus:ring-destructive/10 focus:ring-2"
           );
@@ -778,7 +861,7 @@ export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
                     placeholder={floatingLabel ? "" : field.placeholder}
                     {...register(field.name)}
                     rows={4}
-                    className={inputClass}
+                    className={baseInputClass}
                   />
                 );
 
@@ -790,7 +873,7 @@ export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
                       type={showPassword ? "text" : "password"}
                       placeholder={floatingLabel ? "" : field.placeholder}
                       {...register(field.name)}
-                      className={inputClass}
+                      className={baseInputClass}
                     />
                     <button
                       type="button"
@@ -804,7 +887,7 @@ export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
 
               case "select":
                 return (
-                  <select id={field.name} {...register(field.name)} className={inputClass}>
+                  <select id={field.name} {...register(field.name)} className={baseInputClass}>
                     {field.placeholder && <option value="">{field.placeholder}</option>}
                     {field.options?.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -821,7 +904,7 @@ export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
                       id={field.name}
                       type="checkbox"
                       {...register(field.name)}
-                      className="w-4 h-4 rounded border-border/80 text-primary focus:ring-primary focus:ring-offset-background"
+                      className={cn("w-4 h-4 rounded border-border/80 focus:ring-offset-background", activeTheme.text, activeTheme.ring)}
                     />
                     <label htmlFor={field.name} className="text-sm font-medium text-foreground/80 cursor-pointer">
                       {field.label}
@@ -841,8 +924,9 @@ export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
                           id={field.name}
                           onClick={() => onChange(!value)}
                           className={cn(
-                            "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary/20",
-                            value ? "bg-primary" : "bg-muted-foreground/30"
+                            "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2",
+                            activeTheme.ring,
+                            value ? activeTheme.bgActive : "bg-muted-foreground/30"
                           )}
                         >
                           <span
@@ -870,7 +954,7 @@ export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
                           id={`${field.name}-${opt.value}`}
                           value={opt.value}
                           {...register(field.name)}
-                          className="w-4 h-4 border-border/80 text-primary focus:ring-primary focus:ring-offset-background"
+                          className={cn("w-4 h-4 border-border/80 focus:ring-offset-background", activeTheme.text, activeTheme.ring)}
                         />
                         <label
                           htmlFor={`${field.name}-${opt.value}`}
@@ -893,7 +977,6 @@ export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
                         length={field.otpLength}
                         value={value}
                         onChange={onChange}
-                        variant={variant}
                       />
                     )}
                   />
@@ -910,7 +993,6 @@ export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
                         value={value}
                         onChange={onChange}
                         placeholder={field.placeholder}
-                        variant={variant}
                       />
                     )}
                   />
@@ -927,7 +1009,6 @@ export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
                         value={value}
                         onChange={onChange}
                         placeholder={field.placeholder}
-                        variant={variant}
                       />
                     )}
                   />
@@ -943,7 +1024,6 @@ export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
                         onChange={onChange}
                         accept={field.fileAccept}
                         maxSizeMB={field.fileMaxSizeMB}
-                        variant={variant}
                       />
                     )}
                   />
@@ -962,7 +1042,7 @@ export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
                     type={field.type}
                     placeholder={floatingLabel ? "" : field.placeholder}
                     {...register(field.name)}
-                    className={inputClass}
+                    className={baseInputClass}
                   />
                 );
             }
@@ -1007,7 +1087,8 @@ export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
                           "absolute pointer-events-none transition-all duration-300 font-medium",
                           // Placement when input is filled or focused
                           "peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:left-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-muted-foreground/60",
-                          "peer-focus:top-1.5 peer-focus:left-4 peer-focus:text-[10px] peer-focus:text-primary peer-focus:scale-95",
+                          "peer-focus:top-1.5 peer-focus:left-4 peer-focus:text-[10px] peer-focus:scale-95",
+                          activeTheme.text,
                           // If standard modern style or similar
                           "top-1.5 left-4 text-[10px] text-muted-foreground/50 scale-95"
                         )}
@@ -1049,19 +1130,20 @@ FieldWrapper.displayName = "FieldWrapper";
 interface FormStepWizardProps {
   steps: FormStep[];
   currentStep: number;
-  variant?: FormVariant;
 }
 
 export const FormStepWizard: React.FC<FormStepWizardProps> = React.memo(({
           steps,
-          currentStep,
-          variant = "modern"
+          currentStep
         }) => {
+          const { color } = useDynamicForm();
+          const activeTheme = colorThemeMap[color];
+
           return (
             <div className="w-full flex flex-col items-center gap-2 mb-6">
               {/* Label tracker */}
               <div className="flex justify-between w-full text-xs font-semibold text-muted-foreground/60 select-none px-1">
-                <span className="uppercase tracking-widest text-[10px] font-black text-primary">
+                <span className={cn("uppercase tracking-widest text-[10px] font-black", activeTheme.text)}>
                   Step {currentStep + 1} of {steps.length}
                 </span>
                 <span className="truncate max-w-[200px]">{steps[currentStep].title}</span>
@@ -1077,11 +1159,10 @@ export const FormStepWizard: React.FC<FormStepWizardProps> = React.memo(({
                     <motion.div
                       initial={false}
                       animate={{
-                        width: idx <= currentStep ? "100%" : "0%",
-                        backgroundColor: idx === currentStep ? "var(--primary)" : "rgba(var(--primary), 0.4)"
+                        width: idx <= currentStep ? "100%" : "0%"
                       }}
                       transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="absolute left-0 top-0 h-full bg-primary"
+                      className={cn("absolute left-0 top-0 h-full", activeTheme.bgActive, idx !== currentStep && idx < currentStep ? "opacity-40" : "")}
                     />
                   </div>
                 ))}
@@ -1108,6 +1189,9 @@ const containerVariants = {
 export const DynamicForm: React.FC<DynamicFormProps> = React.memo(({
           fields,
           variant = "modern",
+          color = "default",
+          shape = "default",
+          spacing = "default",
           steps,
           api,
           defaultValues = {},
@@ -1297,135 +1381,147 @@ export const DynamicForm: React.FC<DynamicFormProps> = React.memo(({
             return visibleFields;
           }, [visibleFields, isStepWizard, currentStepFields]);
 
+          const activeTheme = colorThemeMap[color];
+
           return (
-            <form
-              onSubmit={handleSubmit(handleFormSubmit)}
-              className={cn(
-                "w-full text-foreground transition-all duration-300 relative",
-                containerVariants[variant]
-              )}
-              style={accentColor ? ({ "--primary": accentColor } as React.CSSProperties) : undefined}
-            >
-              {/* Decorative glass orbs */}
-              {variant === "glass" && (
-                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
-              )}
-
-              {/* Stepper indicators */}
-              {isStepWizard && steps && (
-                <FormStepWizard steps={steps} currentStep={currentStepIdx} variant={variant} />
-              )}
-
-              {/* Submission Success Banner */}
-              {submissionState.isSuccess && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm font-semibold flex items-center gap-2 my-2 select-none"
-                >
-                  <Check className="w-5 h-5 shrink-0" />
-                  <span>{submissionState.message || "Submission complete!"}</span>
-                </motion.div>
-              )}
-
-              {/* Submission Error Banner */}
-              {submissionState.isError && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm font-semibold flex items-center gap-2 my-2 select-none"
-                >
-                  <AlertCircle className="w-5 h-5 shrink-0" />
-                  <span>{submissionState.message}</span>
-                </motion.div>
-              )}
-
-              {/* Form Fields Responsive Grid */}
-              <div className="grid grid-cols-1 @md:grid-cols-2 gap-4 @container w-full">
-                {fieldsToRender.map((field) => (
-                  <FieldWrapper
-                    key={field.name}
-                    field={field}
-                    variant={variant}
-                    methods={methods}
-                    floatingLabel={floatingLabel}
-                  />
-                ))}
-              </div>
-
-              {/* Actions Stepper / Submit Controls */}
-              <div className="flex gap-3 justify-end items-center mt-6 pt-4 border-t border-border/10">
-                {/* Reset Buttons */}
-                {showResetButton && !submissionState.isLoading && (
-                  <button
-                    type="button"
-                    onClick={handleFormReset}
-                    className={cn(
-                      "px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors border border-border bg-background/50 hover:bg-muted text-muted-foreground hover:text-foreground",
-                      variant === "glass" && "border-white/10 hover:bg-white/10 hover:text-white text-white/80 bg-transparent",
-                      variant === "dark" && "border-zinc-800 bg-zinc-950 hover:bg-zinc-900 text-zinc-400 hover:text-zinc-100",
-                      variant === "compact" && "py-1.5 px-3 text-xs"
-                    )}
-                  >
-                    Reset
-                  </button>
+            <DynamicFormContext.Provider value={{ color, shape, spacing, variant }}>
+              <form
+                onSubmit={handleSubmit(handleFormSubmit)}
+                className={cn(
+                  "w-full text-foreground transition-all duration-300 relative",
+                  containerVariants[variant],
+                  getShapeClass(shape, "container"),
+                  getSpacingClass(spacing, "container")
+                )}
+                style={accentColor ? ({ "--primary": accentColor } as React.CSSProperties) : undefined}
+              >
+                {/* Decorative glass orbs */}
+                {variant === "glass" && (
+                  <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
                 )}
 
-                {/* Wizard previous */}
-                {isStepWizard && currentStepIdx > 0 && !submissionState.isLoading && (
-                  <button
-                    type="button"
-                    onClick={handlePrevStep}
-                    className={cn(
-                      "px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors border border-border bg-background hover:bg-muted text-foreground",
-                      variant === "glass" && "border-white/10 hover:bg-white/10 text-white/80 bg-transparent",
-                      variant === "dark" && "border-zinc-800 hover:bg-zinc-900 text-zinc-300",
-                      variant === "compact" && "py-1.5 px-3 text-xs"
-                    )}
-                  >
-                    Back
-                  </button>
+                {/* Stepper indicators */}
+                {isStepWizard && steps && (
+                  <FormStepWizard steps={steps} currentStep={currentStepIdx} />
                 )}
 
-                {/* Wizard next or submit */}
-                {isStepWizard && steps && currentStepIdx < steps.length - 1 ? (
-                  <button
-                    type="button"
-                    onClick={handleNextStep}
-                    className={cn(
-                      "px-6 py-2.5 rounded-xl text-sm font-bold text-primary-foreground transition-all flex items-center gap-2",
-                      "bg-primary hover:bg-primary/95 hover:shadow-lg hover:shadow-primary/10 select-none",
-                      variant === "glass" && "bg-white text-black hover:bg-white/90 shadow-none border border-white/20",
-                      variant === "dark" && "bg-zinc-100 text-black hover:bg-zinc-200",
-                      variant === "compact" && "py-1.5 px-3 text-xs"
-                    )}
+                {/* Submission Success Banner */}
+                {submissionState.isSuccess && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm font-semibold flex items-center gap-2 my-2 select-none"
                   >
-                    Next Step
-                  </button>
-                ) : (
-                  <button
-                    type="submit"
-                    disabled={submissionState.isLoading}
-                    className={cn(
-                      "px-6 py-2.5 rounded-xl text-sm font-bold text-primary-foreground transition-all flex items-center gap-2 justify-center",
-                      "bg-primary hover:bg-primary/95 hover:shadow-lg hover:shadow-primary/10 select-none disabled:opacity-50 disabled:cursor-not-allowed min-w-[120px]",
-                      variant === "glass" && "bg-white text-black hover:bg-white/90 shadow-none border border-white/20",
-                      variant === "dark" && "bg-zinc-100 text-black hover:bg-zinc-200",
-                      variant === "compact" && "py-1.5 px-3 text-xs"
-                    )}
-                  >
-                    {submissionState.isLoading ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin shrink-0" />
-                        <span>Loading...</span>
-                      </>
-                    ) : (
-                      <span>{submitButtonText}</span>
-                    )}
-                  </button>
+                    <Check className="w-5 h-5 shrink-0" />
+                    <span>{submissionState.message || "Submission complete!"}</span>
+                  </motion.div>
                 )}
-              </div>
-            </form>
+
+                {/* Submission Error Banner */}
+                {submissionState.isError && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm font-semibold flex items-center gap-2 my-2 select-none"
+                  >
+                    <AlertCircle className="w-5 h-5 shrink-0" />
+                    <span>{submissionState.message}</span>
+                  </motion.div>
+                )}
+
+                {/* Form Fields Responsive Grid */}
+                <div className="grid grid-cols-1 @md:grid-cols-2 gap-4 @container w-full">
+                  {fieldsToRender.map((field) => (
+                    <FieldWrapper
+                      key={field.name}
+                      field={field}
+                      methods={methods}
+                      floatingLabel={floatingLabel}
+                    />
+                  ))}
+                </div>
+
+                {/* Actions Stepper / Submit Controls */}
+                <div className="flex gap-3 justify-end items-center mt-6 pt-4 border-t border-border/10">
+                  {/* Reset Buttons */}
+                  {showResetButton && !submissionState.isLoading && (
+                    <button
+                      type="button"
+                      onClick={handleFormReset}
+                      className={cn(
+                        "transition-colors border border-border bg-background/50 hover:bg-muted text-muted-foreground hover:text-foreground font-semibold",
+                        getShapeClass(shape, "button"),
+                        getSpacingClass(spacing, "button"),
+                        variant === "glass" && "border-white/10 hover:bg-white/10 hover:text-white text-white/80 bg-transparent",
+                        variant === "dark" && "border-zinc-800 bg-zinc-950 hover:bg-zinc-900 text-muted-foreground hover:text-zinc-100"
+                      )}
+                    >
+                      Reset
+                    </button>
+                  )}
+
+                  {/* Wizard previous */}
+                  {isStepWizard && currentStepIdx > 0 && !submissionState.isLoading && (
+                    <button
+                      type="button"
+                      onClick={handlePrevStep}
+                      className={cn(
+                        "transition-colors border border-border bg-background hover:bg-muted text-foreground font-semibold",
+                        getShapeClass(shape, "button"),
+                        getSpacingClass(spacing, "button"),
+                        variant === "glass" && "border-white/10 hover:bg-white/10 text-white/80 bg-transparent",
+                        variant === "dark" && "border-zinc-800 hover:bg-zinc-900 text-zinc-300"
+                      )}
+                    >
+                      Back
+                    </button>
+                  )}
+
+                  {/* Wizard next or submit */}
+                  {isStepWizard && steps && currentStepIdx < steps.length - 1 ? (
+                    <button
+                      type="button"
+                      onClick={handleNextStep}
+                      className={cn(
+                        "font-bold transition-all flex items-center gap-2 select-none",
+                        getShapeClass(shape, "button"),
+                        getSpacingClass(spacing, "button"),
+                        activeTheme.bgActive,
+                        activeTheme.text.replace("text-", "text-white dark:text-white "), // Fallback text color inside primary button usually white
+                        "text-white dark:text-white hover:opacity-90 shadow-sm",
+                        variant === "glass" && "bg-white text-black hover:bg-white/90 shadow-none border border-white/20",
+                        variant === "dark" && "bg-zinc-100 text-black hover:bg-zinc-200"
+                      )}
+                    >
+                      Next Step
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      disabled={submissionState.isLoading}
+                      className={cn(
+                        "font-bold transition-all flex items-center gap-2 justify-center disabled:opacity-50 disabled:cursor-not-allowed min-w-[120px]",
+                        getShapeClass(shape, "button"),
+                        getSpacingClass(spacing, "button"),
+                        activeTheme.bgActive,
+                        "text-white dark:text-white hover:opacity-90 shadow-sm",
+                        variant === "glass" && "bg-white text-black hover:bg-white/90 shadow-none border border-white/20",
+                        variant === "dark" && "bg-zinc-100 text-black hover:bg-zinc-200"
+                      )}
+                    >
+                      {submissionState.isLoading ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+                          <span>Loading...</span>
+                        </>
+                      ) : (
+                        <span>{submitButtonText}</span>
+                      )}
+                    </button>
+                  )}
+                </div>
+              </form>
+            </DynamicFormContext.Provider>
           );
         });
 DynamicForm.displayName = "DynamicForm";

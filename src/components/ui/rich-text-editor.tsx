@@ -61,9 +61,16 @@ import { cn } from "@/lib/utils";
 // TYPES & CONTEXT
 // ==========================================
 
+export type RichTextEditorColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type RichTextEditorShape = "default" | "square" | "rounded" | "sharp";
+export type RichTextEditorSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
 interface RichTextContextType {
   editor: Editor | null;
   variant: "default" | "minimal" | "writing" | "enterprise" | "glass";
+  color: RichTextEditorColor;
+  shape: RichTextEditorShape;
+  spacing: RichTextEditorSpacing;
 }
 
 const RichTextContext = createContext<RichTextContextType | null>(null);
@@ -73,6 +80,66 @@ export const useRichText = () => {
   if (!ctx) throw new Error("useRichText must be used within a RichTextEditor");
   return ctx;
 };
+
+// ==========================================
+// THEMING
+// ==========================================
+
+const colorThemeMap: Record<RichTextEditorColor, { ring: string; activeBg: string; activeText: string; proseClass: string }> = {
+  default: { 
+    ring: "focus-within:ring-zinc-900/20 dark:focus-within:ring-zinc-100/20", 
+    activeBg: "bg-muted", 
+    activeText: "text-foreground", 
+    proseClass: "prose-a:text-zinc-900 dark:prose-a:text-zinc-100 prose-a:decoration-zinc-900/50 dark:prose-a:decoration-zinc-100/50 hover:prose-a:decoration-zinc-900 dark:hover:prose-a:decoration-zinc-100" 
+  },
+  blue: { ring: "focus-within:ring-blue-500/20", activeBg: "bg-blue-50 dark:bg-blue-900/20", activeText: "text-blue-600", proseClass: "prose-a:text-blue-600 prose-a:decoration-blue-500/50 hover:prose-a:decoration-blue-600" },
+  emerald: { ring: "focus-within:ring-emerald-500/20", activeBg: "bg-emerald-50 dark:bg-emerald-900/20", activeText: "text-emerald-600", proseClass: "prose-a:text-emerald-600 prose-a:decoration-emerald-500/50 hover:prose-a:decoration-emerald-600" },
+  rose: { ring: "focus-within:ring-rose-500/20", activeBg: "bg-rose-50 dark:bg-rose-900/20", activeText: "text-rose-600", proseClass: "prose-a:text-rose-600 prose-a:decoration-rose-500/50 hover:prose-a:decoration-rose-600" },
+  amber: { ring: "focus-within:ring-amber-500/20", activeBg: "bg-amber-50 dark:bg-amber-900/20", activeText: "text-amber-600", proseClass: "prose-a:text-amber-600 prose-a:decoration-amber-500/50 hover:prose-a:decoration-amber-500" },
+  violet: { ring: "focus-within:ring-violet-500/20", activeBg: "bg-violet-50 dark:bg-violet-900/20", activeText: "text-violet-600", proseClass: "prose-a:text-violet-600 prose-a:decoration-violet-500/50 hover:prose-a:decoration-violet-600" },
+  indigo: { ring: "focus-within:ring-indigo-500/20", activeBg: "bg-indigo-50 dark:bg-indigo-900/20", activeText: "text-indigo-600", proseClass: "prose-a:text-indigo-600 prose-a:decoration-indigo-500/50 hover:prose-a:decoration-indigo-600" },
+  sky: { ring: "focus-within:ring-sky-500/20", activeBg: "bg-sky-50 dark:bg-sky-900/20", activeText: "text-sky-600", proseClass: "prose-a:text-sky-600 prose-a:decoration-sky-500/50 hover:prose-a:decoration-sky-500" },
+  slate: { ring: "focus-within:ring-slate-500/20", activeBg: "bg-slate-50 dark:bg-slate-900/20", activeText: "text-slate-600", proseClass: "prose-a:text-slate-600 prose-a:decoration-slate-500/50 hover:prose-a:decoration-slate-600" },
+  orange: { ring: "focus-within:ring-orange-500/20", activeBg: "bg-orange-50 dark:bg-orange-900/20", activeText: "text-orange-600", proseClass: "prose-a:text-orange-600 prose-a:decoration-orange-500/50 hover:prose-a:decoration-orange-500" },
+};
+
+const getShapeClass = (shape: RichTextEditorShape, element: "container" | "toolbar" | "button" = "container") => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-[2px]";
+    case "rounded": return element === "container" ? "rounded-2xl" : "rounded-xl";
+    case "default": return element === "container" ? "rounded-xl" : "rounded-md";
+  }
+};
+
+const getSpacingClass = (spacing: RichTextEditorSpacing, element: "container" | "toolbar" | "button" = "container") => {
+  if (element === "button") {
+    switch (spacing) {
+      case "2x": return "p-1.5";
+      case "4x": return "p-2";
+      case "6x": return "p-2.5";
+      case "8x": return "p-3";
+      default: return "p-2";
+    }
+  }
+  if (element === "toolbar") {
+    switch (spacing) {
+      case "2x": return "p-1.5 gap-0.5";
+      case "4x": return "p-2 gap-1";
+      case "6x": return "p-3 gap-2";
+      case "8x": return "p-4 gap-3";
+      default: return "p-2 gap-1";
+    }
+  }
+  switch (spacing) {
+    case "2x": return "p-2 sm:p-4";
+    case "4x": return "p-4 sm:p-6";
+    case "6x": return "p-6 sm:p-8";
+    case "8x": return "p-8 sm:p-12";
+    default: return "p-4 sm:p-6";
+  }
+};
+
 
 // ==========================================
 // SLASH COMMANDS EXTENSION
@@ -298,28 +365,13 @@ CommandList.displayName = "CommandList";
 // EDITOR COMPONENT
 // ==========================================
 
-const editorVariants = cva(
-  "w-full h-full min-h-[400px] flex flex-col focus-within:ring-0 transition-all",
-  {
-    variants: {
-      variant: {
-        default: "bg-background border rounded-xl overflow-hidden shadow-sm",
-        minimal: "bg-transparent border-none",
-        writing: "bg-background w-full max-w-[900px] mx-auto border-none",
-        enterprise: "bg-card border border-border rounded-sm shadow-sm",
-        glass: "bg-background/40 backdrop-blur-xl border border-border/50 rounded-2xl shadow-lg",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
-  }
-);
-
 export interface RichTextEditorProps {
   content?: string;
   onChange?: (html: string) => void;
   variant?: "default" | "minimal" | "writing" | "enterprise" | "glass";
+  color?: RichTextEditorColor;
+  shape?: RichTextEditorShape;
+  spacing?: RichTextEditorSpacing;
   className?: string;
   placeholder?: string;
   extensions?: Extension[];
@@ -330,18 +382,23 @@ export const RichTextEditor = React.memo(function RichTextEditor({
   content = "", 
   onChange, 
   variant = "default", 
+  color = "default",
+  shape = "default",
+  spacing = "default",
   className,
   placeholder = "Press '/' for commands, or start typing...",
   extensions = [],
   children 
 }: RichTextEditorProps) {
   
+  const activeTheme = colorThemeMap[color];
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
         heading: { levels: [1, 2, 3, 4, 5, 6] },
         codeBlock: { HTMLAttributes: { class: "bg-muted text-muted-foreground rounded-md p-4 font-mono text-sm my-4 overflow-x-auto" } },
-        blockquote: { HTMLAttributes: { class: "border-l-4 border-primary pl-4 py-1 italic text-muted-foreground my-4" } },
+        blockquote: { HTMLAttributes: { class: cn("border-l-4 pl-4 py-1 italic text-muted-foreground my-4", color === "default" ? "border-border" : `border-${color}-500`) } },
       }),
       Underline,
       TextStyle,
@@ -356,7 +413,7 @@ export const RichTextEditor = React.memo(function RichTextEditor({
       }),
       Link.configure({
         openOnClick: false,
-        HTMLAttributes: { class: "text-primary underline underline-offset-4 decoration-primary/50 hover:decoration-primary transition-all cursor-pointer" },
+        HTMLAttributes: { class: "underline underline-offset-4 transition-all cursor-pointer" },
       }),
       TaskList.configure({
         HTMLAttributes: { class: "not-prose pl-2 my-4 space-y-1" },
@@ -400,7 +457,8 @@ export const RichTextEditor = React.memo(function RichTextEditor({
           "prose-headings:font-bold prose-headings:tracking-tight prose-headings:mt-8 prose-headings:mb-4",
           "prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-h5:text-lg prose-h6:text-base",
           "prose-p:leading-relaxed prose-p:text-base prose-p:mt-2 prose-p:mb-4",
-          "prose-a:text-primary prose-a:no-underline hover:prose-a:underline",
+          "prose-a:no-underline hover:prose-a:underline",
+          activeTheme.proseClass,
           "prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-sm prose-code:before:content-none prose-code:after:content-none",
           "prose-img:rounded-xl prose-img:shadow-md",
           "prose-hr:border-border",
@@ -414,8 +472,18 @@ export const RichTextEditor = React.memo(function RichTextEditor({
   const hasChildren = React.Children.count(children) > 0;
 
   return (
-    <RichTextContext.Provider value={{ editor, variant }}>
-      <div className={cn(editorVariants({ variant }), className)}>
+    <RichTextContext.Provider value={{ editor, variant, color, shape, spacing }}>
+      <div className={cn(
+        "w-full h-full min-h-[400px] flex flex-col focus-within:ring-2 transition-all",
+        getShapeClass(shape, "container"),
+        variant === "default" && "bg-background border shadow-sm",
+        variant === "minimal" && "bg-transparent border-none",
+        variant === "writing" && "bg-background w-full max-w-[900px] mx-auto border-none",
+        variant === "enterprise" && "bg-card border border-border shadow-sm",
+        variant === "glass" && "bg-background/40 backdrop-blur-xl border border-border/50 shadow-lg",
+        variant !== "minimal" && variant !== "writing" && activeTheme.ring,
+        className
+      )}>
         {hasChildren ? children : (
           <>
             <EditorToolbar />
@@ -434,7 +502,7 @@ RichTextEditor.displayName = "RichTextEditor";
 // ==========================================
 
 export const EditorToolbar = React.memo(function EditorToolbar() {
-  const { editor, variant } = useRichText();
+  const { editor, variant, shape, spacing } = useRichText();
 
   const setLink = useCallback(() => {
     if (!editor) return;
@@ -459,10 +527,11 @@ export const EditorToolbar = React.memo(function EditorToolbar() {
 
   return (
     <div className={cn(
-      "flex flex-wrap items-center gap-1 p-2 border-b",
+      "flex flex-wrap items-center border-b",
+      getSpacingClass(spacing, "toolbar"),
       variant === "minimal" && "border-none px-0 pb-4",
       variant === "glass" && "border-border/30 bg-background/20 backdrop-blur-md",
-      variant === "enterprise" && "bg-muted/50 border-border p-1"
+      variant === "enterprise" && "bg-muted/50 border-border"
     )}>
       <ToolbarButton
         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -590,7 +659,8 @@ export const EditorToolbar = React.memo(function EditorToolbar() {
 EditorToolbar.displayName = "EditorToolbar";
 
 function ToolbarButton({ onClick, isActive, icon, title }: { onClick: () => void; isActive: boolean; icon: React.ReactNode; title: string }) {
-  const { variant } = useRichText();
+  const { variant, color, shape, spacing } = useRichText();
+  const activeTheme = colorThemeMap[color];
   
   return (
     <button
@@ -598,11 +668,12 @@ function ToolbarButton({ onClick, isActive, icon, title }: { onClick: () => void
       onClick={onClick}
       title={title}
       className={cn(
-        "p-2 rounded-md transition-colors flex items-center justify-center outline-none",
+        "transition-colors flex items-center justify-center outline-none",
+        getShapeClass(shape, "button"),
+        getSpacingClass(spacing, "button"),
         isActive 
-          ? "bg-muted text-foreground" 
-          : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
-        variant === "enterprise" && "rounded-sm p-1.5"
+          ? cn(activeTheme.activeBg, activeTheme.activeText)
+          : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
       )}
     >
       {icon}
@@ -615,16 +686,15 @@ function ToolbarButton({ onClick, isActive, icon, title }: { onClick: () => void
 // ==========================================
 
 export const EditorContent = React.memo(function EditorContent() {
-  const { editor, variant } = useRichText();
+  const { editor, variant, spacing } = useRichText();
   
   return (
     <div className={cn(
       "flex-1 overflow-y-auto w-full flex flex-col",
-      variant === "default" && "p-4 sm:p-6",
+      getSpacingClass(spacing, "container"),
       variant === "minimal" && "py-4",
       variant === "writing" && "py-12 px-4 sm:px-8 text-lg w-full max-w-[800px] mx-auto",
-      variant === "enterprise" && "p-4 sm:p-8 bg-card",
-      variant === "glass" && "p-6"
+      variant === "enterprise" && "bg-card"
     )}>
       <TiptapEditorContent editor={editor} className="flex-1 w-full" />
     </div>
@@ -637,12 +707,12 @@ EditorContent.displayName = "EditorContent";
 // ==========================================
 
 export const EditorBubbleMenu = React.memo(function EditorBubbleMenu() {
-  const { editor } = useRichText();
+  const { editor, shape } = useRichText();
 
   if (!editor) return null;
 
   return (
-    <TiptapBubbleMenu editor={editor} className="flex overflow-hidden items-center bg-popover text-popover-foreground border shadow-xl rounded-lg z-50">
+    <TiptapBubbleMenu editor={editor} className={cn("flex overflow-hidden items-center bg-popover text-popover-foreground border shadow-xl z-50", getShapeClass(shape, "container"))}>
       <BubbleButton
         onClick={() => editor.chain().focus().toggleBold().run()}
         isActive={editor.isActive("bold")}
@@ -674,6 +744,8 @@ export const EditorBubbleMenu = React.memo(function EditorBubbleMenu() {
 EditorBubbleMenu.displayName = "EditorBubbleMenu";
 
 function BubbleButton({ onClick, isActive, icon }: { onClick: () => void; isActive: boolean; icon: React.ReactNode }) {
+  const { color } = useRichText();
+  const activeTheme = colorThemeMap[color];
   return (
     <button
       type="button"
@@ -681,7 +753,7 @@ function BubbleButton({ onClick, isActive, icon }: { onClick: () => void; isActi
       className={cn(
         "p-2.5 transition-colors flex items-center justify-center outline-none",
         isActive 
-          ? "bg-accent text-accent-foreground" 
+          ? activeTheme.activeBg + " " + activeTheme.activeText
           : "text-muted-foreground hover:bg-muted hover:text-foreground"
       )}
     >

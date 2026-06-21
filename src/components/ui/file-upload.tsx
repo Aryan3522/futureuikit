@@ -19,6 +19,10 @@ import { cn } from "@/lib/utils";
 
 // --- Types ---
 
+export type FileUploadColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type FileUploadShape = "default" | "square" | "rounded" | "sharp";
+export type FileUploadSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
 export type FileStatus = "idle" | "uploading" | "success" | "error";
 
 export interface FileState {
@@ -39,6 +43,9 @@ interface FileUploadContextValue {
   maxSize: number; // in bytes
   accept?: Record<string, string[]>;
   variant: "default" | "compact" | "card" | "glass" | "minimal";
+  color: FileUploadColor;
+  shape: FileUploadShape;
+  spacing: FileUploadSpacing;
   disabled: boolean;
   onUpload?: (files: File[]) => void;
   handleRemoveFile: (id: string) => void;
@@ -73,6 +80,47 @@ const getFileIcon = (type: string) => {
   return FileIcon;
 };
 
+const colorMap: Record<FileUploadColor, { border: string; bg: string; text: string; bgActive: string; ring: string }> = {
+  default: { border: "border-border/50", bg: "bg-foreground", text: "text-foreground", bgActive: "bg-foreground/5", ring: "focus:ring-ring/20" },
+  blue: { border: "border-blue-500", bg: "bg-blue-600", text: "text-blue-600", bgActive: "bg-blue-600/5", ring: "focus:ring-blue-600/20" },
+  emerald: { border: "border-emerald-500", bg: "bg-emerald-600", text: "text-emerald-600", bgActive: "bg-emerald-600/5", ring: "focus:ring-emerald-600/20" },
+  rose: { border: "border-rose-500", bg: "bg-rose-600", text: "text-rose-600", bgActive: "bg-rose-600/5", ring: "focus:ring-rose-600/20" },
+  amber: { border: "border-amber-500", bg: "bg-amber-500", text: "text-amber-600", bgActive: "bg-amber-500/5", ring: "focus:ring-amber-500/20" },
+  violet: { border: "border-violet-500", bg: "bg-violet-600", text: "text-violet-600", bgActive: "bg-violet-600/5", ring: "focus:ring-violet-600/20" },
+  indigo: { border: "border-indigo-500", bg: "bg-indigo-600", text: "text-indigo-600", bgActive: "bg-indigo-600/5", ring: "focus:ring-indigo-600/20" },
+  sky: { border: "border-sky-500", bg: "bg-sky-500", text: "text-sky-600", bgActive: "bg-sky-500/5", ring: "focus:ring-sky-500/20" },
+  slate: { border: "border-slate-500", bg: "bg-slate-600", text: "text-slate-600", bgActive: "bg-slate-600/5", ring: "focus:ring-slate-600/20" },
+  orange: { border: "border-orange-500", bg: "bg-orange-500", text: "text-orange-600", bgActive: "bg-orange-500/5", ring: "focus:ring-orange-500/20" },
+};
+
+const getShapeClass = (shape: FileUploadShape) => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-[2px]";
+    case "rounded": return "rounded-2xl";
+    case "default": return "rounded-xl";
+  }
+};
+
+const getSpacingClass = (spacing: FileUploadSpacing, variant: string) => {
+  if (variant === "compact") {
+    switch (spacing) {
+      case "2x": return "p-2 gap-2";
+      case "4x": return "p-3 gap-3";
+      case "6x": return "p-5 gap-5";
+      case "8x": return "p-6 gap-6";
+      default: return "p-4 gap-4";
+    }
+  }
+  switch (spacing) {
+    case "2x": return "p-4";
+    case "4x": return "p-6";
+    case "6x": return "p-10";
+    case "8x": return "p-12";
+    default: return "p-8";
+  }
+};
+
 // --- Provider Component ---
 
 export interface FileUploadProps {
@@ -81,6 +129,9 @@ export interface FileUploadProps {
   maxSize?: number; // bytes
   accept?: Record<string, string[]>;
   variant?: "default" | "compact" | "card" | "glass" | "minimal";
+  color?: FileUploadColor;
+  shape?: FileUploadShape;
+  spacing?: FileUploadSpacing;
   disabled?: boolean;
   onUpload?: (files: File[]) => void;
   onFilesChange?: (files: FileState[]) => void;
@@ -93,6 +144,9 @@ export const FileUpload = React.memo(function FileUpload({
   maxSize = 10 * 1024 * 1024, // 10MB default
   accept,
   variant = "default",
+  color = "default",
+  shape = "default",
+  spacing = "default",
   disabled = false,
   onUpload,
   onFilesChange,
@@ -137,6 +191,9 @@ export const FileUpload = React.memo(function FileUpload({
         maxSize,
         accept,
         variant,
+        color,
+        shape,
+        spacing,
         disabled,
         onUpload,
         handleRemoveFile,
@@ -158,14 +215,14 @@ const dropzoneVariants = cva(
   {
     variants: {
       variant: {
-        default: "border-2 border-dashed border-border rounded-xl bg-background hover:bg-muted/50 hover:border-primary/50",
-        compact: "border border-border rounded-lg bg-muted/30 hover:bg-muted p-4 flex-row gap-4",
-        card: "border border-border shadow-sm rounded-2xl bg-card hover:shadow-md",
-        glass: "border border-white/20 bg-background/30 backdrop-blur-md rounded-2xl hover:bg-background/40 dark:bg-black/20 dark:border-white/10",
-        minimal: "border-b-2 border-transparent bg-transparent hover:border-primary rounded-none shadow-none py-8",
+        default: "border-2 border-dashed border-border bg-background hover:bg-muted/50",
+        compact: "border border-border bg-muted/30 hover:bg-muted flex-row",
+        card: "border border-border shadow-sm bg-card hover:shadow-md",
+        glass: "border border-white/20 bg-background/30 backdrop-blur-md hover:bg-background/40 dark:bg-black/20 dark:border-white/10",
+        minimal: "border-b-2 border-transparent bg-transparent rounded-none shadow-none py-8",
       },
       isDragging: {
-        true: "border-primary bg-primary/5 scale-[0.99]",
+        true: "scale-[0.99]",
         false: "",
       },
       disabled: {
@@ -193,7 +250,7 @@ export const UploadDropzone = React.memo(function UploadDropzone({
   ...props 
 }: UploadDropzoneProps) {
   const { 
-    isDragging, setIsDragging, disabled, variant, inputRef, 
+    isDragging, setIsDragging, disabled, variant, color, shape, spacing, inputRef, 
     setFiles, files, maxFiles, maxSize, accept, onUpload 
   } = useFileUpload();
 
@@ -320,6 +377,7 @@ export const UploadDropzone = React.memo(function UploadDropzone({
   }, [accept]);
 
   const defaultSubtitle = `Max file size: ${formatBytes(maxSize)} ${maxFiles > 1 ? `| Up to ${maxFiles} files` : ""}`;
+  const activeTheme = colorMap[color];
 
   return (
     <div
@@ -327,7 +385,16 @@ export const UploadDropzone = React.memo(function UploadDropzone({
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      className={cn(dropzoneVariants({ variant, isDragging, disabled }), variant !== 'compact' && "p-8", className)}
+      className={cn(
+        dropzoneVariants({ variant, isDragging, disabled }), 
+        variant !== "minimal" && getShapeClass(shape),
+        getSpacingClass(spacing, variant),
+        isDragging && activeTheme.border,
+        isDragging && activeTheme.bgActive,
+        !isDragging && variant === "minimal" && "hover:border-foreground",
+        !isDragging && variant !== "minimal" && "hover:border-zinc-300 dark:hover:border-zinc-700",
+        className
+      )}
       {...props}
     >
       <input
@@ -342,7 +409,9 @@ export const UploadDropzone = React.memo(function UploadDropzone({
       {variant === 'compact' ? (
         <>
           <div className={cn(
-            "p-3 rounded-full bg-primary/10 text-primary transition-transform", 
+            "p-3 rounded-full transition-transform", 
+            activeTheme.bgActive,
+            activeTheme.text,
             isDragging && "scale-110"
           )}>
             <UploadCloud className="h-5 w-5" />
@@ -355,8 +424,10 @@ export const UploadDropzone = React.memo(function UploadDropzone({
       ) : (
         <>
           <div className={cn(
-            "p-4 rounded-full bg-primary/10 text-primary mb-4 transition-transform duration-300", 
-            isDragging && "scale-110 shadow-lg shadow-primary/20"
+            "p-4 rounded-full mb-4 transition-transform duration-300", 
+            activeTheme.bgActive,
+            activeTheme.text,
+            isDragging && "scale-110 shadow-lg"
           )}>
             <UploadCloud className="h-6 w-6 sm:h-8 sm:w-8" />
           </div>
@@ -378,7 +449,7 @@ export const UploadDropzone = React.memo(function UploadDropzone({
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="absolute inset-0 pointer-events-none rounded-[inherit] bg-gradient-to-tr from-primary/10 to-transparent"
+            className={cn("absolute inset-0 pointer-events-none rounded-[inherit] bg-gradient-to-tr to-transparent", color === "default" ? "from-foreground/10" : `from-${color}-500/10`)}
           />
         )}
       </AnimatePresence>
@@ -390,7 +461,8 @@ UploadDropzone.displayName = "UploadDropzone";
 // --- Preview Component ---
 
 export const UploadPreview = React.memo(function UploadPreview({ className }: { className?: string }) {
-  const { files, handleRemoveFile, variant } = useFileUpload();
+  const { files, handleRemoveFile, variant, shape, color } = useFileUpload();
+  const activeTheme = colorMap[color];
 
   if (files.length === 0) return null;
 
@@ -408,13 +480,14 @@ export const UploadPreview = React.memo(function UploadPreview({ className }: { 
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, x: -10, scale: 0.98 }}
               className={cn(
-                "relative flex items-center gap-4 p-3 rounded-xl overflow-hidden group border",
+                "relative flex items-center gap-4 p-3 overflow-hidden group border",
+                getShapeClass(shape),
                 variant === "glass" ? "bg-background/20 backdrop-blur-sm border-white/10" : "bg-card border-border",
                 fileState.status === "error" && "border-destructive/50 bg-destructive/5"
               )}
             >
               {/* Thumbnail / Icon */}
-              <div className="relative shrink-0 h-10 w-10 sm:h-12 sm:w-12 rounded-lg bg-muted flex items-center justify-center overflow-hidden">
+              <div className={cn("relative shrink-0 h-10 w-10 sm:h-12 sm:w-12 bg-muted flex items-center justify-center overflow-hidden", shape === "rounded" ? "rounded-xl" : shape === "square" ? "rounded-none" : shape === "sharp" ? "rounded-sm" : "rounded-lg")}>
                 {fileState.previewUrl && fileState.file.type.startsWith("image/") ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={fileState.previewUrl} alt={fileState.file.name} className="h-full w-full object-cover" />
@@ -427,12 +500,12 @@ export const UploadPreview = React.memo(function UploadPreview({ className }: { 
                 {/* Status Overlay */}
                 {fileState.status === 'uploading' && (
                   <div className="absolute inset-0 bg-background/50 flex items-center justify-center backdrop-blur-[1px]">
-                    <div className="h-4 w-4 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+                    <div className={cn("h-4 w-4 rounded-full border-2 border-t-transparent animate-spin", activeTheme.border)} />
                   </div>
                 )}
                 {fileState.status === 'success' && (
                   <div className="absolute inset-0 bg-background/50 flex items-center justify-center backdrop-blur-[1px]">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                    <CheckCircle2 className={cn("h-4 w-4", activeTheme.text)} />
                   </div>
                 )}
               </div>
@@ -460,7 +533,7 @@ export const UploadPreview = React.memo(function UploadPreview({ className }: { 
                 whileTap={{ scale: 0.9 }}
                 type="button"
                 onClick={() => handleRemoveFile(fileState.id)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-muted opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring"
+                className={cn("absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-muted opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity focus:outline-none focus:ring-2", activeTheme.ring)}
               >
                 <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                 <span className="sr-only">Remove file</span>
@@ -470,7 +543,7 @@ export const UploadPreview = React.memo(function UploadPreview({ className }: { 
               {fileState.status === 'uploading' && (
                 <div className="absolute bottom-0 left-0 right-0 h-1 bg-muted/50">
                    <motion.div 
-                     className="h-full bg-primary"
+                     className={cn("h-full", activeTheme.bg)}
                      initial={{ width: 0 }}
                      animate={{ width: `${fileState.progress}%` }}
                      transition={{ ease: "linear" }}
@@ -489,7 +562,8 @@ UploadPreview.displayName = "UploadPreview";
 // --- Overall Progress Component ---
 
 export const UploadProgress = React.memo(function UploadProgress({ className }: { className?: string }) {
-  const { files } = useFileUpload();
+  const { files, color } = useFileUpload();
+  const activeTheme = colorMap[color];
 
   const uploadingFiles = files.filter(f => f.status === "uploading");
   if (uploadingFiles.length === 0) return null;
@@ -504,7 +578,7 @@ export const UploadProgress = React.memo(function UploadProgress({ className }: 
       </div>
       <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
         <motion.div
-          className="h-full bg-primary rounded-full"
+          className={cn("h-full rounded-full", activeTheme.bg)}
           initial={{ width: 0 }}
           animate={{ width: `${totalProgress}%` }}
           transition={{ ease: "linear" }}

@@ -5,12 +5,15 @@
  * @registry-category ui
  * @registry-type components:ui
  */
-// @ts-nocheck
 "use client";
 
 import React from 'react'
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
+
+export type GutterLinesColor = "default" | "primary" | "muted" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type GutterLinesShape = "default" | "square" | "rounded" | "sharp";
+export type GutterLinesSpacing = "default" | "2x" | "4x" | "6x" | "8x";
 
 const gutterLinesVariants = cva(
   "w-full h-full",
@@ -18,44 +21,77 @@ const gutterLinesVariants = cva(
     variants: {
       variant: {
         default: "",
-        dense: "",
-        wide: "",
         vertical: "",
       },
-      color: {
-        default: "[--pattern:var(--color-neutral-300)] dark:[--pattern:var(--color-neutral-800)]",
-        primary: "[--pattern:var(--color-primary)] opacity-20",
-        muted: "[--pattern:var(--color-neutral-200)] dark:[--pattern:var(--color-neutral-900)]",
-      }
     },
     defaultVariants: {
       variant: "default",
-      color: "default",
     },
   }
 )
 
 export interface GutterLinesProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof gutterLinesVariants> {}
+    VariantProps<typeof gutterLinesVariants> {
+  color?: GutterLinesColor;
+  shape?: GutterLinesShape;
+  spacing?: GutterLinesSpacing;
+}
+
+const colorThemeMap: Record<GutterLinesColor, { pattern: string; opacityClass: string }> = {
+  default: { pattern: "var(--color-primary)", opacityClass: "opacity-20 dark:opacity-30" },
+  primary: { pattern: "var(--color-primary)", opacityClass: "opacity-25 dark:opacity-35" },
+  muted: { pattern: "var(--color-muted-foreground)", opacityClass: "opacity-20 dark:opacity-25" },
+  blue: { pattern: "#2563eb", opacityClass: "opacity-20" },
+  emerald: { pattern: "#16a34a", opacityClass: "opacity-20" },
+  rose: { pattern: "#e11d48", opacityClass: "opacity-20" },
+  amber: { pattern: "#d97706", opacityClass: "opacity-20" },
+  violet: { pattern: "#7c3aed", opacityClass: "opacity-20" },
+  indigo: { pattern: "#4f46e5", opacityClass: "opacity-20" },
+  sky: { pattern: "#0284c7", opacityClass: "opacity-20" },
+  slate: { pattern: "#475569", opacityClass: "opacity-20" },
+  orange: { pattern: "#ea580c", opacityClass: "opacity-20" },
+};
+
+const getShapeClass = (shape: GutterLinesShape) => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-sm";
+    case "rounded": return "rounded-lg";
+    case "default": return "rounded-none"; // Typically full bleed
+  }
+};
+
+const getSpacingValue = (spacing: GutterLinesSpacing) => {
+  switch (spacing) {
+    case "2x": return "0.25rem";
+    case "4x": return "0.5rem";
+    case "6x": return "0.75rem";
+    case "8x": return "1rem";
+    default: return "0.5rem";
+  }
+};
 
 export const GutterLines = React.forwardRef<HTMLDivElement, GutterLinesProps>(
-  ({ className, variant, color, ...props }, ref) => {
-    const spacing = variant === "dense" ? "0.25rem" : variant === "wide" ? "1rem" : "0.5rem";
+  ({ className, variant, color = "default", shape = "default", spacing = "default", style, ...props }, ref) => {
+    const activeTheme = colorThemeMap[color];
+    const shapeClass = getShapeClass(shape);
+    const spacingValue = getSpacingValue(spacing);
+    
     const direction = variant === "vertical" ? "to right" : "to bottom";
     
     return (
       <div 
         ref={ref}
         style={{
-          backgroundImage: `repeating-linear-gradient(${direction}, var(--pattern) 0, var(--pattern) 1px, transparent 1px, transparent ${spacing})`,
-          ...props.style
-        }}
-        className={cn(gutterLinesVariants({ variant, color, className }))} 
+          '--pattern': activeTheme.pattern,
+          backgroundImage: `repeating-linear-gradient(${direction}, var(--pattern) 0, var(--pattern) 1px, transparent 1px, transparent ${spacingValue})`,
+          ...style
+        } as React.CSSProperties}
+        className={cn(gutterLinesVariants({ variant, className }), shapeClass, activeTheme.opacityClass)} 
         {...props} 
       />
     )
   }
 )
 GutterLines.displayName = "GutterLines"
-

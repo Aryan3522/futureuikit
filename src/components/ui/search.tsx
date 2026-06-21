@@ -19,16 +19,36 @@ const searchVariants = cva(
   {
     variants: {
       variant: {
-        standard: "bg-background border border-border/60 rounded-xl focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20",
-        compact: "bg-muted/40 border border-transparent rounded-lg focus-within:bg-background focus-within:border-border/60 focus-within:shadow-sm",
-        floating: "bg-background/60 backdrop-blur-xl border border-border/40 rounded-full shadow-lg hover:shadow-xl focus-within:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus-within:border-border",
-        command: "bg-muted/30 border-b border-border/50 rounded-none focus-within:bg-background",
-        icon: "bg-transparent hover:bg-muted/50 rounded-full",
+        standard: "bg-background border border-border",
+        compact: "bg-muted border border-transparent focus-within:bg-background focus-within:border-border",
+        floating: "bg-background/60 backdrop-blur-xl border border-border/40 shadow-lg hover:shadow-xl",
+        command: "bg-muted/50 border-b border-border/50 focus-within:bg-background",
+        icon: "bg-transparent hover:bg-muted",
       },
-      size: {
-        sm: "h-8 text-xs",
-        md: "h-10 text-sm",
-        lg: "h-12 text-base",
+      color: {
+        default: "focus-within:ring-foreground/20 focus-within:border-foreground",
+        blue: "focus-within:ring-blue-600/20 focus-within:border-blue-600 dark:focus-within:ring-blue-500/20 dark:focus-within:border-blue-500",
+        emerald: "focus-within:ring-emerald-500/20 focus-within:border-emerald-500",
+        rose: "focus-within:ring-rose-500/20 focus-within:border-rose-500",
+        amber: "focus-within:ring-amber-500/20 focus-within:border-amber-500",
+        violet: "focus-within:ring-violet-600/20 focus-within:border-violet-600 dark:focus-within:ring-violet-500/20 dark:focus-within:border-violet-500",
+        indigo: "focus-within:ring-indigo-600/20 focus-within:border-indigo-600 dark:focus-within:ring-indigo-500/20 dark:focus-within:border-indigo-500",
+        sky: "focus-within:ring-sky-500/20 focus-within:border-sky-500",
+        slate: "focus-within:ring-slate-600/20 focus-within:border-slate-600 dark:focus-within:ring-slate-500/20 dark:focus-within:border-slate-500",
+        orange: "focus-within:ring-orange-500/20 focus-within:border-orange-500",
+      },
+      shape: {
+        default: "rounded-xl",
+        square: "rounded-none",
+        rounded: "rounded-full",
+        sharp: "rounded-[2px]",
+      },
+      spacing: {
+        default: "h-10 text-sm",
+        "2x": "h-8 text-xs",
+        "4x": "h-10 text-sm",
+        "6x": "h-12 text-base",
+        "8x": "h-14 text-lg",
       },
       fullWidth: {
         true: "w-full",
@@ -41,7 +61,9 @@ const searchVariants = cva(
     },
     defaultVariants: {
       variant: "standard",
-      size: "md",
+      color: "default",
+      shape: "default",
+      spacing: "default",
       fullWidth: true,
       disabled: false,
     },
@@ -49,17 +71,19 @@ const searchVariants = cva(
 );
 
 const inputVariants = cva(
-  "w-full bg-transparent border-none outline-none placeholder:text-muted-foreground",
+  "w-full bg-transparent border-none outline-none placeholder:text-muted-foreground text-foreground",
   {
     variants: {
-      size: {
-        sm: "pr-12",
-        md: "pr-14",
-        lg: "pr-16",
+      spacing: {
+        default: "pr-14",
+        "2x": "pr-12",
+        "4x": "pr-14",
+        "6x": "pr-16",
+        "8x": "pr-20",
       }
     },
     defaultVariants: {
-      size: "md",
+      spacing: "default",
     }
   }
 );
@@ -68,20 +92,22 @@ const iconWrapperVariants = cva(
   "flex items-center justify-center shrink-0 text-muted-foreground transition-colors",
   {
     variants: {
-      size: {
-        sm: "w-8",
-        md: "w-10",
-        lg: "w-12",
+      spacing: {
+        default: "w-10",
+        "2x": "w-8",
+        "4x": "w-10",
+        "6x": "w-12",
+        "8x": "w-14",
       }
     },
     defaultVariants: {
-      size: "md",
+      spacing: "default",
     }
   }
 );
 
 export interface SearchProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "onSubmit" | "disabled">,
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "onSubmit" | "disabled" | "color">,
     VariantProps<typeof searchVariants> {
   onSearch?: (value: string) => void;
   animated?: boolean;
@@ -97,7 +123,9 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
     {
       className,
       variant,
-      size,
+      color,
+      shape,
+      spacing,
       fullWidth,
       disabled,
       loading,
@@ -174,8 +202,8 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
       props.onKeyDown?.(e);
     };
 
-    // Determine icon size based on component size
-    const iconSize = size === "lg" ? 20 : size === "sm" ? 14 : 16;
+    // Determine icon size based on component spacing
+    const iconSize = spacing === "6x" || spacing === "8x" ? 20 : spacing === "2x" ? 14 : 16;
     const defaultIcon = <SearchIcon size={iconSize} />;
 
     const isOverlayVariant = variant === "icon" && (inputVariant === "floating" || inputVariant === "command");
@@ -183,6 +211,23 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
 
     // Dynamic variant mapping for inline expansion
     const effectiveVariant = (isInlineVariant && isExpanded) ? inputVariant : variant;
+
+    // Resolve color focus text based on color palette
+    const getFocusIconColor = () => {
+      if (!isFocused) return "";
+      switch (color) {
+        case "blue": return "text-blue-600 dark:text-blue-500";
+        case "emerald": return "text-emerald-600 dark:text-emerald-500";
+        case "rose": return "text-rose-600 dark:text-rose-500";
+        case "amber": return "text-amber-600 dark:text-amber-500";
+        case "violet": return "text-violet-600 dark:text-violet-500";
+        case "indigo": return "text-indigo-600 dark:text-indigo-500";
+        case "sky": return "text-sky-600 dark:text-sky-500";
+        case "slate": return "text-slate-600 dark:text-slate-500";
+        case "orange": return "text-orange-600 dark:text-orange-500";
+        default: return "text-foreground";
+      }
+    };
 
     if (isOverlayVariant) {
       return (
@@ -194,13 +239,14 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
               setTimeout(() => inputRef.current?.focus(), 100);
             }}
             className={cn(
-              "flex items-center justify-center rounded-full bg-transparent hover:bg-muted/50 transition-colors",
-              size === "sm" ? "w-8 h-8" : size === "lg" ? "w-12 h-12" : "w-10 h-10",
+              "flex items-center justify-center bg-transparent hover:bg-muted transition-colors",
+              shape === "square" ? "rounded-none" : shape === "rounded" ? "rounded-full" : shape === "sharp" ? "rounded-[2px]" : "rounded-xl",
+              spacing === "2x" ? "w-8 h-8" : spacing === "6x" || spacing === "8x" ? "w-12 h-12" : "w-10 h-10",
               disabled && "opacity-50 cursor-not-allowed pointer-events-none",
               className
             )}
           >
-            <div className={cn(iconWrapperVariants({ size }))}>
+            <div className={cn(iconWrapperVariants({ spacing }))}>
                {icon || defaultIcon}
             </div>
           </button>
@@ -224,12 +270,12 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
                   className={cn("relative w-full px-4 z-10", inputVariant === "command" ? "max-w-3xl" : "max-w-2xl")}
                 >
                   <div className={cn(
-                    searchVariants({ variant: inputVariant, size: "lg", fullWidth: true }),
+                    searchVariants({ variant: inputVariant, spacing: "6x", color, shape, fullWidth: true }),
                     inputVariant === "floating" && "shadow-2xl",
-                    inputVariant === "command" && "border rounded-xl shadow-2xl overflow-hidden" // Command palette style
+                    inputVariant === "command" && "border rounded-xl shadow-2xl overflow-hidden focus-within:ring-0", // Command palette style has its own focus
                   )}>
-                    <div className={iconWrapperVariants({ size: "lg" })}>
-                       {loading ? <Loader2 className="animate-spin text-primary" size={20} /> : (icon || <SearchIcon size={20} />)}
+                    <div className={cn(iconWrapperVariants({ spacing: "6x" }), "text-muted-foreground")}>
+                       {loading ? <Loader2 className="animate-spin" size={20} /> : (icon || <SearchIcon size={20} />)}
                     </div>
                     
                     <input
@@ -242,7 +288,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
                          props.onKeyDown?.(e);
                        }}
                        className={cn(
-                         inputVariants({ size: "lg" }), 
+                         inputVariants({ spacing: "6x" }), 
                          inputVariant === "command" && "font-mono h-16",
                          "pr-12"
                        )}
@@ -275,18 +321,18 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
         layout={animated}
         initial={false}
         animate={{
-          width: fullWidth && effectiveVariant !== "icon" ? "100%" : isExpanded ? (size === "lg" ? 400 : size === "sm" ? 240 : 320) : (size === "lg" ? 48 : size === "sm" ? 32 : 40),
+          width: fullWidth && effectiveVariant !== "icon" ? "100%" : isExpanded ? (spacing === "6x" || spacing === "8x" ? 400 : spacing === "2x" ? 240 : 320) : (spacing === "6x" || spacing === "8x" ? 48 : spacing === "2x" ? 32 : 40),
         }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
         className={cn(
-          searchVariants({ variant: effectiveVariant, size, fullWidth: fullWidth && effectiveVariant !== "icon", disabled }),
-          isFocused && "ring-primary/20",
-          !isExpanded && effectiveVariant === "icon" && "cursor-pointer justify-center overflow-hidden",
+          searchVariants({ variant: effectiveVariant, spacing, color, shape, fullWidth: fullWidth && effectiveVariant !== "icon", disabled }),
+          isFocused && "ring-1", // trigger the color ring
+          !isExpanded && effectiveVariant === "icon" && "cursor-pointer justify-center overflow-hidden border-transparent",
           className
         )}
         onClick={handleContainerClick}
       >
-        <div className={cn(iconWrapperVariants({ size }), isFocused && "text-primary")}>
+        <div className={cn(iconWrapperVariants({ spacing }), getFocusIconColor())}>
           <AnimatePresence mode="wait">
             {loading ? (
               <motion.div
@@ -296,7 +342,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
                 exit={{ opacity: 0, scale: 0.5 }}
                 transition={{ duration: 0.2 }}
               >
-                <Loader2 size={iconSize} className="animate-spin text-primary" />
+                <Loader2 size={iconSize} className="animate-spin" />
               </motion.div>
             ) : (
               <motion.div
@@ -336,7 +382,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
               placeholder={placeholder}
               autoFocus={autoFocus}
               className={cn(
-                inputVariants({ size }),
+                inputVariants({ spacing }),
                 effectiveVariant === "command" && "font-mono"
               )}
               {...(props as any)}
@@ -345,7 +391,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
         </AnimatePresence>
 
         {effectiveVariant === "command" && !currentValue && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1 px-1.5 py-0.5 rounded border border-border/50 bg-muted/50 text-[10px] text-muted-foreground font-mono pointer-events-none">
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1 px-1.5 py-0.5 rounded border border-border bg-muted text-[10px] text-muted-foreground font-mono pointer-events-none">
             <span className="text-[10px]">⌘</span>K
           </div>
         )}

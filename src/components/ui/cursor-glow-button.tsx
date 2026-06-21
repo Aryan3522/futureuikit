@@ -15,33 +15,204 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "relative overflow-hidden inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+  "relative overflow-hidden inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
-        destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-        outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
-        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        solid: "border border-transparent",
+        outline: "border shadow-sm bg-transparent",
+        ghost: "bg-transparent border-transparent",
+        link: "bg-transparent underline-offset-4 hover:underline border-transparent",
       },
-      size: {
-        default: "h-11 px-6 py-2 rounded-xl",
-        sm: "h-9 rounded-lg px-4 text-xs",
-        lg: "h-12 rounded-2xl px-8",
-        icon: "h-11 w-11 rounded-xl",
+      color: {
+        default: "text-foreground border-border",
+        blue: "text-blue-600 dark:text-blue-500 border-blue-200 dark:border-blue-800",
+        emerald: "text-emerald-600 dark:text-emerald-500 border-emerald-200 dark:border-emerald-800",
+        rose: "text-rose-600 dark:text-rose-500 border-rose-200 dark:border-rose-800",
+        amber: "text-amber-600 dark:text-amber-500 border-amber-200 dark:border-amber-800",
+        violet: "text-violet-600 dark:text-violet-500 border-violet-200 dark:border-violet-800",
+        indigo: "text-indigo-600 dark:text-indigo-500 border-indigo-200 dark:border-indigo-800",
+        sky: "text-sky-600 dark:text-sky-500 border-sky-200 dark:border-sky-800",
+        slate: "text-slate-600 dark:text-slate-500 border-slate-200 dark:border-slate-800",
+        orange: "text-orange-600 dark:text-orange-500 border-orange-200 dark:border-orange-800",
+      },
+      shape: {
+        default: "rounded-full",
+        square: "rounded-none",
+        rounded: "rounded-xl",
+        sharp: "rounded-[2px]",
+      },
+      spacing: {
+        default: "h-10 px-5 py-2 text-sm",
+        "2x": "h-8 px-3 py-1 text-xs",
+        "4x": "h-10 px-5 py-2 text-sm",
+        "6x": "h-12 px-8 py-3 text-base",
+        "8x": "h-14 px-10 py-4 text-lg",
       },
     },
+    compoundVariants: [
+      {
+        variant: "solid",
+        color: "default",
+        className: "bg-foreground text-background hover:bg-foreground/90 shadow-sm",
+      },
+      {
+        variant: "solid",
+        color: "blue",
+        className: "bg-blue-600 text-white hover:bg-blue-700 shadow-sm",
+      },
+      {
+        variant: "solid",
+        color: "emerald",
+        className: "bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm",
+      },
+      {
+        variant: "solid",
+        color: "rose",
+        className: "bg-rose-600 text-white hover:bg-rose-700 shadow-sm",
+      },
+      {
+        variant: "solid",
+        color: "amber",
+        className: "bg-amber-500 text-zinc-950 hover:bg-amber-600 shadow-sm",
+      },
+      {
+        variant: "solid",
+        color: "violet",
+        className: "bg-violet-600 text-white hover:bg-violet-700 shadow-sm",
+      },
+      {
+        variant: "solid",
+        color: "indigo",
+        className: "bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm",
+      },
+      {
+        variant: "solid",
+        color: "sky",
+        className: "bg-sky-500 text-zinc-950 hover:bg-sky-600 shadow-sm",
+      },
+      {
+        variant: "solid",
+        color: "slate",
+        className: "bg-slate-600 text-white hover:bg-slate-700 shadow-sm",
+      },
+      {
+        variant: "solid",
+        color: "orange",
+        className: "bg-orange-500 text-white hover:bg-orange-600 shadow-sm",
+      },
+      {
+        variant: "outline",
+        color: "default",
+        className: "hover:bg-accent",
+      },
+      {
+        variant: "outline",
+        color: "blue",
+        className: "hover:bg-blue-50 dark:hover:bg-blue-950",
+      },
+      {
+        variant: "outline",
+        color: "emerald",
+        className: "hover:bg-emerald-50 dark:hover:bg-emerald-950",
+      },
+      {
+        variant: "outline",
+        color: "rose",
+        className: "hover:bg-rose-50 dark:hover:bg-rose-950",
+      },
+      {
+        variant: "outline",
+        color: "amber",
+        className: "hover:bg-amber-50 dark:hover:bg-amber-950",
+      },
+      {
+        variant: "outline",
+        color: "violet",
+        className: "hover:bg-violet-50 dark:hover:bg-violet-950",
+      },
+      {
+        variant: "outline",
+        color: "indigo",
+        className: "hover:bg-indigo-50 dark:hover:bg-indigo-950",
+      },
+      {
+        variant: "outline",
+        color: "sky",
+        className: "hover:bg-sky-50 dark:hover:bg-sky-950",
+      },
+      {
+        variant: "outline",
+        color: "slate",
+        className: "hover:bg-slate-50 dark:hover:bg-slate-950",
+      },
+      {
+        variant: "outline",
+        color: "orange",
+        className: "hover:bg-orange-50 dark:hover:bg-orange-950",
+      },
+      {
+        variant: "ghost",
+        color: "default",
+        className: "hover:bg-accent",
+      },
+      {
+        variant: "ghost",
+        color: "blue",
+        className: "hover:bg-blue-50 dark:hover:bg-blue-950",
+      },
+      {
+        variant: "ghost",
+        color: "emerald",
+        className: "hover:bg-emerald-50 dark:hover:bg-emerald-950",
+      },
+      {
+        variant: "ghost",
+        color: "rose",
+        className: "hover:bg-rose-50 dark:hover:bg-rose-950",
+      },
+      {
+        variant: "ghost",
+        color: "amber",
+        className: "hover:bg-amber-50 dark:hover:bg-amber-950",
+      },
+      {
+        variant: "ghost",
+        color: "violet",
+        className: "hover:bg-violet-50 dark:hover:bg-violet-950",
+      },
+      {
+        variant: "ghost",
+        color: "indigo",
+        className: "hover:bg-indigo-50 dark:hover:bg-indigo-950",
+      },
+      {
+        variant: "ghost",
+        color: "sky",
+        className: "hover:bg-sky-50 dark:hover:bg-sky-950",
+      },
+      {
+        variant: "ghost",
+        color: "slate",
+        className: "hover:bg-slate-50 dark:hover:bg-slate-950",
+      },
+      {
+        variant: "ghost",
+        color: "orange",
+        className: "hover:bg-orange-50 dark:hover:bg-orange-950",
+      },
+    ],
     defaultVariants: {
-      variant: "default",
-      size: "default",
+      variant: "solid",
+      color: "default",
+      shape: "default",
+      spacing: "default",
     },
   }
 );
 
 export interface CursorGlowButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "color">,
     VariantProps<typeof buttonVariants> {
   glowColor?: string;
   glowSize?: number;
@@ -53,8 +224,10 @@ export const CursorGlowButton = React.memo(React.forwardRef<HTMLButtonElement, C
           (
             {
               className,
-              variant,
-              size,
+              variant = "solid",
+              color = "default",
+              shape = "default",
+              spacing = "default",
               children,
               glowColor = "rgba(120, 119, 198, 0.5)", // Improved glow color for better cross-theme visibility
               glowSize = 160,
@@ -104,10 +277,9 @@ export const CursorGlowButton = React.memo(React.forwardRef<HTMLButtonElement, C
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className={cn(
-                  buttonVariants({ variant, size, className }), 
-                  "group relative overflow-hidden",
-                  "border border-border/40 hover:border-transparent transition-all duration-300",
-                  variant === "default" ? "bg-primary text-primary-foreground" : "bg-background text-foreground"
+                  buttonVariants({ variant, color, shape, spacing, className }), 
+                  "group relative overflow-hidden transition-all duration-300",
+                  variant === "solid" && "hover:border-transparent"
                 )}
                 {...(props as any)}
               >

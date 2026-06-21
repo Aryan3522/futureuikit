@@ -49,6 +49,10 @@ interface ViewportState {
   zoom: number;
 }
 
+export type WorkflowColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type WorkflowShape = "default" | "square" | "rounded" | "sharp";
+export type WorkflowSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+
 interface WorkflowContextType {
   nodes: WorkflowNodeData[];
   edges: WorkflowEdgeData[];
@@ -80,6 +84,9 @@ interface WorkflowContextType {
 
   // Theme
   variant: "default" | "enterprise" | "minimal" | "glass" | "compact";
+  color: WorkflowColor;
+  shape: WorkflowShape;
+  spacing: WorkflowSpacing;
   
   // Custom Node Types Registry
   nodeTypes: Record<string, React.ComponentType<any>>;
@@ -93,6 +100,46 @@ export const useWorkflow = () => {
   return ctx;
 };
 
+const colorThemeMap: Record<WorkflowColor, { primary: string; ring: string; bg: string; text: string; textActive: string; icon: string }> = {
+  default: { primary: "bg-primary text-primary-foreground", ring: "ring-primary", bg: "bg-primary/20", text: "text-foreground", textActive: "text-primary", icon: "text-primary/70" },
+  blue: { primary: "bg-blue-600 dark:bg-blue-500 text-white", ring: "ring-blue-600 dark:ring-blue-500", bg: "bg-blue-600/20 dark:bg-blue-500/20", text: "text-foreground", textActive: "text-blue-600 dark:text-blue-500", icon: "text-blue-600/70 dark:text-blue-500/70" },
+  emerald: { primary: "bg-emerald-600 dark:bg-emerald-500 text-white", ring: "ring-emerald-600 dark:ring-emerald-500", bg: "bg-emerald-600/20 dark:bg-emerald-500/20", text: "text-foreground", textActive: "text-emerald-600 dark:text-emerald-500", icon: "text-emerald-600/70 dark:text-emerald-500/70" },
+  rose: { primary: "bg-rose-600 dark:bg-rose-500 text-white", ring: "ring-rose-600 dark:ring-rose-500", bg: "bg-rose-600/20 dark:bg-rose-500/20", text: "text-foreground", textActive: "text-rose-600 dark:text-rose-500", icon: "text-rose-600/70 dark:text-rose-500/70" },
+  amber: { primary: "bg-amber-600 dark:bg-amber-500 text-white", ring: "ring-amber-600 dark:ring-amber-500", bg: "bg-amber-600/20 dark:bg-amber-500/20", text: "text-foreground", textActive: "text-amber-600 dark:text-amber-500", icon: "text-amber-600/70 dark:text-amber-500/70" },
+  violet: { primary: "bg-violet-600 dark:bg-violet-500 text-white", ring: "ring-violet-600 dark:ring-violet-500", bg: "bg-violet-600/20 dark:bg-violet-500/20", text: "text-foreground", textActive: "text-violet-600 dark:text-violet-500", icon: "text-violet-600/70 dark:text-violet-500/70" },
+  indigo: { primary: "bg-indigo-600 dark:bg-indigo-500 text-white", ring: "ring-indigo-600 dark:ring-indigo-500", bg: "bg-indigo-600/20 dark:bg-indigo-500/20", text: "text-foreground", textActive: "text-indigo-600 dark:text-indigo-500", icon: "text-indigo-600/70 dark:text-indigo-500/70" },
+  sky: { primary: "bg-sky-600 dark:bg-sky-500 text-white", ring: "ring-sky-600 dark:ring-sky-500", bg: "bg-sky-600/20 dark:bg-sky-500/20", text: "text-foreground", textActive: "text-sky-600 dark:text-sky-500", icon: "text-sky-600/70 dark:text-sky-500/70" },
+  slate: { primary: "bg-slate-600 dark:bg-slate-500 text-white", ring: "ring-slate-600 dark:ring-slate-500", bg: "bg-slate-600/20 dark:bg-slate-500/20", text: "text-foreground", textActive: "text-slate-600 dark:text-slate-500", icon: "text-slate-600/70 dark:text-slate-500/70" },
+  orange: { primary: "bg-orange-600 dark:bg-orange-500 text-white", ring: "ring-orange-600 dark:ring-orange-500", bg: "bg-orange-600/20 dark:bg-orange-500/20", text: "text-foreground", textActive: "text-orange-600 dark:text-orange-500", icon: "text-orange-600/70 dark:text-orange-500/70" },
+};
+
+const getShapeClass = (shape: WorkflowShape, isContainer = false) => {
+  if (isContainer) {
+    switch (shape) {
+      case "square": return "rounded-none";
+      case "sharp": return "rounded-sm";
+      case "rounded": return "rounded-2xl";
+      case "default": return "rounded-xl";
+    }
+  }
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-sm";
+    case "rounded": return "rounded-lg";
+    case "default": return "rounded-xl";
+  }
+};
+
+const getSpacingClass = (spacing: WorkflowSpacing) => {
+  switch (spacing) {
+    case "2x": return "p-2 gap-1";
+    case "4x": return "p-4 gap-2";
+    case "6x": return "p-6 gap-3";
+    case "8x": return "p-8 gap-4";
+    default: return "p-4 gap-2";
+  }
+};
+
 // ==========================================
 // BUILDER WRAPPER
 // ==========================================
@@ -102,6 +149,9 @@ export interface WorkflowBuilderProps {
   initialEdges?: WorkflowEdgeData[];
   nodeTypes?: Record<string, React.ComponentType<any>>;
   variant?: "default" | "enterprise" | "minimal" | "glass" | "compact";
+  color?: WorkflowColor;
+  shape?: WorkflowShape;
+  spacing?: WorkflowSpacing;
   className?: string;
   children?: React.ReactNode;
   onNodesChange?: (nodes: WorkflowNodeData[]) => void;
@@ -113,6 +163,9 @@ export const WorkflowBuilder = React.memo(function WorkflowBuilder({
   initialEdges = [],
   nodeTypes = {},
   variant = "default",
+  color = "default",
+  shape = "default",
+  spacing = "default",
   className,
   children,
   onNodesChange,
@@ -162,9 +215,8 @@ export const WorkflowBuilder = React.memo(function WorkflowBuilder({
     setHoveredHandle(null);
   }, []);
 
-  // Keep connection rendering in sync with mouse
   const updateConnection = useCallback((e: React.PointerEvent) => {
-    // Legacy inside container tracking, handled globally now
+    // Legacy
   }, []);
 
   const endConnection = useCallback((targetNodeId?: string, targetHandleId?: string, targetType?: "source" | "target", screenPos?: XYPosition) => {
@@ -196,7 +248,6 @@ export const WorkflowBuilder = React.memo(function WorkflowBuilder({
 
     if (isConnecting && connectionStart) {
       if (connectionStart.nodeId !== nodeId && connectionStart.type !== type) {
-        // Complete the connection
         const canvasEl = document.querySelector(".workflow-canvas-container");
         let screenX = e.clientX;
         let screenY = e.clientY;
@@ -211,7 +262,6 @@ export const WorkflowBuilder = React.memo(function WorkflowBuilder({
         cancelConnection();
         return;
       }
-      // If invalid connection type (e.g. source to source), start a new one from here instead
     }
 
     setIsConnecting(true);
@@ -226,7 +276,6 @@ export const WorkflowBuilder = React.memo(function WorkflowBuilder({
     }
   }, [isConnecting, connectionStart, endConnection, cancelConnection, viewport]);
 
-  // Global pointer move listeners when connecting (click-to-connect mode)
   useEffect(() => {
     if (!isConnecting) return;
 
@@ -247,6 +296,8 @@ export const WorkflowBuilder = React.memo(function WorkflowBuilder({
     };
   }, [isConnecting, viewport]);
 
+  const shapeClass = getShapeClass(shape, true);
+
   return (
     <WorkflowContext.Provider value={{
       nodes, setNodes, edges, setEdges,
@@ -256,10 +307,10 @@ export const WorkflowBuilder = React.memo(function WorkflowBuilder({
       hoveredHandle, setHoveredHandle,
       editingNode, setEditingNode,
       selectedNodes, selectedEdges, selectNode, selectEdge, clearSelection,
-      variant, nodeTypes
+      variant, color, shape, spacing, nodeTypes
     }}>
       <div 
-        className={cn("relative w-full h-full overflow-hidden bg-background rounded-xl border border-border/50 select-none workflow-canvas-container", className)}
+        className={cn("relative w-full h-full overflow-hidden bg-background border border-border/50 select-none workflow-canvas-container", shapeClass, className)}
         onKeyDown={(e) => {
           if ((e.target as HTMLElement).tagName === "INPUT" || (e.target as HTMLElement).tagName === "TEXTAREA") return;
           if (e.key === "Delete" || e.key === "Backspace") {
@@ -326,12 +377,13 @@ export const WorkflowCanvas = React.memo(function WorkflowCanvas() {
   const { 
     nodes, edges, viewport, setViewport, 
     clearSelection, isConnecting, connectionStart, connectionEnd, endConnection,
-    cancelConnection, variant, nodeTypes
+    cancelConnection, variant, nodeTypes, color
   } = useWorkflow();
 
   const canvasRef = useRef<HTMLDivElement>(null);
   const [isPanning, setIsPanning] = useState(false);
   const [panStart, setPanStart] = useState<XYPosition>({ x: 0, y: 0 });
+  const activeTheme = colorThemeMap[color];
 
   // Grid Background Pattern
   const bgPattern = useMemo(() => {
@@ -355,7 +407,6 @@ export const WorkflowCanvas = React.memo(function WorkflowCanvas() {
       setViewport(prev => {
         const newZoom = Math.min(Math.max(0.1, prev.zoom + delta), 2);
         
-        // Zoom to mouse pointer logic
         if (canvasRef.current) {
           const rect = canvasRef.current.getBoundingClientRect();
           const mouseX = e.clientX - rect.left;
@@ -370,7 +421,6 @@ export const WorkflowCanvas = React.memo(function WorkflowCanvas() {
         return { ...prev, zoom: newZoom };
       });
     } else {
-      // Pan
       setViewport(prev => ({
         ...prev,
         x: prev.x - e.deltaX,
@@ -379,7 +429,6 @@ export const WorkflowCanvas = React.memo(function WorkflowCanvas() {
     }
   }, [setViewport]);
 
-  // Handle Pan
   const handlePointerDown = (e: React.PointerEvent) => {
     if (e.button === 1 || e.button === 0) {
       if (isConnecting) {
@@ -405,7 +454,6 @@ export const WorkflowCanvas = React.memo(function WorkflowCanvas() {
     setIsPanning(false);
   };
 
-  // Helper to get actual standard handle coordinates on canvas
   const getHandlePosition = useCallback((nodeId: string, handleType: "source" | "target") => {
     const node = nodes.find(n => n.id === nodeId);
     if (!node) return { x: 0, y: 0 };
@@ -437,7 +485,6 @@ export const WorkflowCanvas = React.memo(function WorkflowCanvas() {
         className="absolute top-0 left-0 origin-top-left w-full h-full pointer-events-none"
         style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})` }}
       >
-        {/* EDGES LAYER */}
         <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none z-0">
           {edges.map(edge => {
             const start = getHandlePosition(edge.source, "source");
@@ -460,7 +507,6 @@ export const WorkflowCanvas = React.memo(function WorkflowCanvas() {
             );
           })}
 
-          {/* Active Connection Line (Bezier to mouse) */}
           {isConnecting && connectionStart && connectionEnd && (
             (() => {
               const start = getHandlePosition(connectionStart.nodeId, connectionStart.type);
@@ -470,9 +516,9 @@ export const WorkflowCanvas = React.memo(function WorkflowCanvas() {
                 <path 
                   d={d}
                   fill="none"
-                  stroke="currentColor"
                   strokeWidth={2}
-                  className="text-primary/70"
+                  className={cn(activeTheme.textActive, "opacity-70")}
+                  stroke="currentColor"
                   strokeDasharray="4 4"
                 />
               );
@@ -480,7 +526,6 @@ export const WorkflowCanvas = React.memo(function WorkflowCanvas() {
           )}
         </svg>
 
-        {/* NODES LAYER */}
         <div className="absolute inset-0 pointer-events-none z-10">
           {nodes.map(node => {
             const CustomNode = nodeTypes[node.type];
@@ -518,10 +563,10 @@ function WorkflowEdgeRenderer({
   end: XYPosition;
   cX: number;
 }) {
-  const { selectedEdges, selectEdge, setEdges } = useWorkflow();
+  const { selectedEdges, selectEdge, setEdges, color } = useWorkflow();
   const isSelected = selectedEdges.includes(id);
+  const activeTheme = colorThemeMap[color];
 
-  // Calculate cubic bezier midpoint at t=0.5
   const midX = 0.125 * start.x + 0.75 * cX + 0.125 * end.x;
   const midY = 0.5 * start.y + 0.5 * end.y;
 
@@ -532,22 +577,22 @@ function WorkflowEdgeRenderer({
 
   return (
     <g className="pointer-events-auto cursor-pointer" onPointerDown={(e) => { e.stopPropagation(); selectEdge(id); }}>
-      {/* Hit area */}
       <path d={d} fill="none" stroke="transparent" strokeWidth={24} />
       
-      {/* Selection outer glow */}
       {isSelected && (
-        <path d={d} fill="none" stroke="currentColor" strokeWidth={6} className="text-primary/20" />
+        <path d={d} fill="none" stroke="currentColor" strokeWidth={6} className={cn(activeTheme.textActive, "opacity-20")} />
       )}
 
-      {/* Visible Path */}
       <path 
         d={d} 
         fill="none" 
         className={cn(
           "transition-colors duration-200",
-          isSelected ? "stroke-primary" : "stroke-border hover:stroke-primary/50"
+          isSelected ? activeTheme.textActive : "stroke-border",
+          !isSelected && color === "default" && "hover:stroke-primary/50",
+          !isSelected && color !== "default" && "opacity-60 hover:opacity-100"
         )} 
+        stroke={isSelected || color !== "default" ? "currentColor" : undefined}
         strokeWidth={isSelected ? 3 : 2} 
         strokeDasharray={
           animated ? "5 5" : 
@@ -562,7 +607,6 @@ function WorkflowEdgeRenderer({
         )}
       </path>
 
-      {/* SVG Interactive Edge Delete Button */}
       {isSelected && (
         <g transform={`translate(${midX - 10}, ${midY - 10})`} onPointerDown={handleDelete} className="pointer-events-auto cursor-pointer z-50">
           <circle r={10} cx={10} cy={10} className="fill-destructive stroke-destructive-foreground stroke-1 shadow-sm hover:fill-destructive/90 transition-colors" />
@@ -578,9 +622,11 @@ function WorkflowEdgeRenderer({
 // ==========================================
 
 function WorkflowNodeWrapper({ node, children }: { node: WorkflowNodeData, children: React.ReactNode }) {
-  const { setNodes, setEdges, selectNode, selectedNodes, variant, setEditingNode } = useWorkflow();
+  const { setNodes, setEdges, selectNode, selectedNodes, variant, color, shape, setEditingNode } = useWorkflow();
   const isSelected = selectedNodes.includes(node.id);
   const [isHovered, setIsHovered] = useState(false);
+  const activeTheme = colorThemeMap[color];
+  const shapeClass = getShapeClass(shape);
 
   const handleDragEnd = (e: any, info: any) => {
     setNodes(prev => prev.map(n => {
@@ -607,20 +653,20 @@ function WorkflowNodeWrapper({ node, children }: { node: WorkflowNodeData, child
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={cn(
-        "absolute pointer-events-auto rounded-xl transition-shadow",
-        isSelected && "ring-2 ring-primary ring-offset-2 ring-offset-background z-20",
+        "absolute pointer-events-auto transition-shadow",
+        shapeClass,
+        isSelected && cn("ring-2 ring-offset-2 ring-offset-background z-20", activeTheme.ring),
         !isSelected && "z-10 hover:z-20"
       )}
       style={{
         x: node.position.x,
         y: node.position.y,
-        width: 240, // standard fixed width for simple hit boxes
+        width: 240,
       }}
       whileDrag={{ scale: 1.02, cursor: "grabbing" }}
     >
       {children}
 
-      {/* Action buttons shown on hover or when selected */}
       <AnimatePresence>
         {(isHovered || isSelected) && (
           <>
@@ -639,7 +685,7 @@ function WorkflowNodeWrapper({ node, children }: { node: WorkflowNodeData, child
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               onClick={(e) => { e.stopPropagation(); setEditingNode({ isNew: false, node }); }}
-              className="absolute -top-2.5 right-5 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:bg-primary/90 transition-colors z-40 pointer-events-auto cursor-pointer"
+              className={cn("absolute -top-2.5 right-5 w-6 h-6 rounded-full flex items-center justify-center shadow-md transition-colors z-40 pointer-events-auto cursor-pointer", activeTheme.primary)}
               title="Edit Node"
             >
               <Edit2 className="w-3.5 h-3.5" />
@@ -648,7 +694,6 @@ function WorkflowNodeWrapper({ node, children }: { node: WorkflowNodeData, child
         )}
       </AnimatePresence>
 
-      {/* Handles */}
       <WorkflowHandle type="target" position="left" nodeId={node.id} />
       <WorkflowHandle type="source" position="right" nodeId={node.id} />
     </motion.div>
@@ -656,7 +701,8 @@ function WorkflowNodeWrapper({ node, children }: { node: WorkflowNodeData, child
 }
 
 export const WorkflowHandle = React.memo(function WorkflowHandle({ type, position, nodeId, id = "default" }: { type: "source" | "target", position: "left" | "right" | "top" | "bottom", nodeId: string, id?: string }) {
-  const { startConnection, isConnecting, hoveredHandle, setHoveredHandle } = useWorkflow();
+  const { startConnection, isConnecting, hoveredHandle, setHoveredHandle, color } = useWorkflow();
+  const activeTheme = colorThemeMap[color];
 
   const handlePointerDown = (e: React.PointerEvent) => {
     e.stopPropagation();
@@ -680,8 +726,10 @@ export const WorkflowHandle = React.memo(function WorkflowHandle({ type, positio
   return (
     <div 
       className={cn(
-        "absolute w-4 h-4 bg-background border-2 border-primary rounded-full cursor-crosshair transition-all z-30",
-        isHovered ? "scale-150 bg-primary shadow-lg ring-4 ring-primary/20" : "hover:scale-125",
+        "absolute w-4 h-4 bg-background border-2 rounded-full cursor-crosshair transition-all z-30",
+        activeTheme.textActive,
+        "border-current",
+        isHovered ? "scale-150 shadow-lg ring-4 opacity-100 bg-current" : "hover:scale-125",
         position === "left" && "-left-2 top-1/2 -translate-y-1/2",
         position === "right" && "-right-2 top-1/2 -translate-y-1/2",
         position === "top" && "-top-2 left-1/2 -translate-x-1/2",
@@ -700,7 +748,10 @@ WorkflowHandle.displayName = "WorkflowHandle";
 // ==========================================
 
 function DefaultNode({ id, data, type }: { id: string, data: any, type: string }) {
-  const { variant } = useWorkflow();
+  const { variant, shape, spacing, color } = useWorkflow();
+  const activeTheme = colorThemeMap[color];
+  const shapeClass = getShapeClass(shape);
+  const spacingClass = getSpacingClass(spacing);
   
   const iconMap: any = {
     trigger: Play,
@@ -713,25 +764,29 @@ function DefaultNode({ id, data, type }: { id: string, data: any, type: string }
 
   return (
     <div className={cn(
-      "w-full p-4 flex flex-col gap-2 rounded-xl backdrop-blur-sm border shadow-sm",
+      "w-full flex flex-col backdrop-blur-sm border shadow-sm",
+      shapeClass,
+      spacingClass,
       variant === "default" && "bg-card border-border",
-      variant === "enterprise" && "bg-card border-border/50 shadow-md rounded-md",
-      variant === "minimal" && "bg-transparent border-border rounded-none border-l-4 border-l-primary",
+      variant === "enterprise" && "bg-card border-border/50 shadow-md",
+      variant === "minimal" && "bg-transparent border-border !rounded-none border-l-4",
       variant === "glass" && "bg-background/40 border-border/50 shadow-lg",
-      variant === "compact" && "p-2 gap-1 bg-card"
-    )}>
+      variant === "compact" && "bg-card"
+    )} style={variant === "minimal" && color !== "default" ? { borderLeftColor: "currentColor", color: activeTheme.textActive } : {}}>
       <div className="flex items-center gap-3">
         <div className={cn(
-          "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
-          type === "trigger" && "bg-emerald-500/20 text-emerald-500",
-          type === "action" && "bg-blue-500/20 text-blue-500",
-          type === "condition" && "bg-amber-500/20 text-amber-500",
-          type === "agent" && "bg-purple-500/20 text-purple-500",
-          !["trigger", "action", "condition", "agent"].includes(type) && "bg-primary/20 text-primary"
+          "w-8 h-8 flex items-center justify-center shrink-0",
+          shapeClass,
+          type === "trigger" && color === "default" && "bg-emerald-500/20 text-emerald-500",
+          type === "action" && color === "default" && "bg-blue-500/20 text-blue-500",
+          type === "condition" && color === "default" && "bg-amber-500/20 text-amber-500",
+          type === "agent" && color === "default" && "bg-purple-500/20 text-purple-500",
+          color !== "default" && cn(activeTheme.bg, activeTheme.textActive),
+          color === "default" && !["trigger", "action", "condition", "agent"].includes(type) && "bg-primary/20 text-primary"
         )}>
           <Icon className="w-4 h-4" />
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col text-foreground">
           <span className={cn(
             "font-semibold tracking-tight leading-none text-foreground",
             variant === "compact" && "text-sm"
@@ -750,7 +805,9 @@ function DefaultNode({ id, data, type }: { id: string, data: any, type: string }
 // ==========================================
 
 function WorkflowNodeEditor() {
-  const { editingNode, setEditingNode, setNodes } = useWorkflow();
+  const { editingNode, setEditingNode, setNodes, color, shape } = useWorkflow();
+  const activeTheme = colorThemeMap[color];
+  const shapeClass = getShapeClass(shape, true);
 
   if (!editingNode) return null;
 
@@ -786,7 +843,7 @@ function WorkflowNodeEditor() {
         initial={{ opacity: 0, scale: 0.95, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 10 }}
-        className="bg-card text-card-foreground border border-border/50 shadow-2xl rounded-2xl w-full max-w-md overflow-hidden flex flex-col"
+        className={cn("bg-card text-card-foreground border border-border/50 shadow-2xl w-full max-w-md overflow-hidden flex flex-col", shapeClass)}
       >
         <div className="px-6 py-4 border-b flex items-center justify-between bg-muted/30">
           <h3 className="font-semibold text-lg">{editingNode.isNew ? "Add New Node" : "Edit Node"}</h3>
@@ -797,7 +854,7 @@ function WorkflowNodeEditor() {
         <form onSubmit={handleSave} className="p-6 flex flex-col gap-5">
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Node Type</label>
-            <select name="type" defaultValue={editingNode.node.type} className="w-full bg-background border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow">
+            <select name="type" defaultValue={editingNode.node.type} className={cn("w-full bg-background border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 transition-shadow", shapeClass, activeTheme.ring)}>
               <option value="trigger">Trigger (Start)</option>
               <option value="action">Action (Task)</option>
               <option value="condition">Condition (Branch)</option>
@@ -806,16 +863,16 @@ function WorkflowNodeEditor() {
           </div>
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Label</label>
-            <input name="label" required defaultValue={editingNode.node.data.label} className="w-full bg-background border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow" placeholder="e.g. Fetch User Data" />
+            <input name="label" required defaultValue={editingNode.node.data.label} className={cn("w-full bg-background border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 transition-shadow", shapeClass, activeTheme.ring)} placeholder="e.g. Fetch User Data" />
           </div>
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Description</label>
-            <textarea name="description" defaultValue={editingNode.node.data.description} className="w-full bg-background border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow resize-none" rows={3} placeholder="Describe what this node does..." />
+            <textarea name="description" defaultValue={editingNode.node.data.description} className={cn("w-full bg-background border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 transition-shadow resize-none", shapeClass, activeTheme.ring)} rows={3} placeholder="Describe what this node does..." />
           </div>
           
           <div className="flex items-center justify-end gap-3 mt-2">
-            <button type="button" onClick={() => setEditingNode(null)} className="px-4 py-2 text-sm font-medium hover:bg-muted rounded-lg transition-colors">Cancel</button>
-            <button type="submit" className="px-6 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-lg shadow-sm hover:bg-primary/90 transition-colors">Save</button>
+            <button type="button" onClick={() => setEditingNode(null)} className={cn("px-4 py-2 text-sm font-medium hover:bg-muted transition-colors", shapeClass)}>Cancel</button>
+            <button type="submit" className={cn("px-6 py-2 text-sm font-medium shadow-sm transition-colors", activeTheme.primary, shapeClass)}>Save</button>
           </div>
         </form>
       </motion.div>
@@ -828,7 +885,8 @@ function WorkflowNodeEditor() {
 // ==========================================
 
 export const WorkflowToolbar = React.memo(function WorkflowToolbar() {
-  const { setViewport, setNodes, setEdges, variant, setEditingNode, viewport } = useWorkflow();
+  const { setViewport, setNodes, setEdges, variant, shape, setEditingNode, viewport } = useWorkflow();
+  const shapeClass = getShapeClass(shape, true);
 
   const handleZoomIn = () => setViewport(p => ({ ...p, zoom: Math.min(2, p.zoom + 0.2) }));
   const handleZoomOut = () => setViewport(p => ({ ...p, zoom: Math.max(0.1, p.zoom - 0.2) }));
@@ -853,9 +911,9 @@ export const WorkflowToolbar = React.memo(function WorkflowToolbar() {
 
   return (
     <div className={cn(
-      "absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1 p-1.5 rounded-full border shadow-sm backdrop-blur-md z-50",
+      "absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1 p-1.5 border shadow-sm backdrop-blur-md z-50",
       variant === "glass" ? "bg-background/20 border-border/30" : "bg-background border-border",
-      variant === "enterprise" && "rounded-lg"
+      shape === "rounded" || shape === "default" ? "rounded-full" : shapeClass
     )}>
       <button onClick={handleAddNode} className="p-2 hover:bg-muted rounded-full transition-colors group relative" title="Add Node">
         <Plus className="w-4 h-4" />
@@ -876,27 +934,30 @@ export const WorkflowToolbar = React.memo(function WorkflowToolbar() {
 WorkflowToolbar.displayName = "WorkflowToolbar";
 
 export const WorkflowMiniMap = React.memo(function WorkflowMiniMap() {
-  const { nodes, viewport, variant } = useWorkflow();
+  const { nodes, variant, shape, color } = useWorkflow();
+  const shapeClass = getShapeClass(shape, true);
+  const activeTheme = colorThemeMap[color];
   
   if (variant === "compact") return null;
 
   return (
     <div className={cn(
-      "absolute bottom-6 right-6 w-48 h-32 bg-background border rounded-xl shadow-sm overflow-hidden z-50 opacity-80 hover:opacity-100 transition-opacity",
+      "absolute bottom-6 right-6 w-48 h-32 bg-background border shadow-sm overflow-hidden z-50 opacity-80 hover:opacity-100 transition-opacity",
+      shapeClass,
       variant === "glass" && "bg-background/20 backdrop-blur-md",
-      variant === "enterprise" && "rounded-md border-slate-200 dark:border-slate-800"
+      variant === "enterprise" && "border-slate-200 dark:border-slate-800"
     )}>
       <div className="relative w-full h-full transform scale-[-1] hidden" />
-      {/* Mock rendering of nodes in minimap */}
       <div className="absolute inset-0 pointer-events-none">
         {nodes.map(n => (
           <div 
             key={`mini-${n.id}`} 
-            className="absolute bg-primary/50 rounded-sm"
+            className={cn("absolute rounded-sm", activeTheme.bg, activeTheme.textActive)}
             style={{
               left: `${(n.position.x / 2000) * 100 + 50}%`,
               top: `${(n.position.y / 1500) * 100 + 50}%`,
-              width: 8, height: 4
+              width: 8, height: 4,
+              backgroundColor: "currentColor"
             }}
           />
         ))}

@@ -3,7 +3,7 @@
 /**
  * @registry-slug toggle
  * @registry-name Toggle
- * @registry-description A Future UI Toggle component.
+ * @registry-description A Future UI Toggle component (Switch).
  * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency class-variance-authority
@@ -21,73 +21,92 @@ export const toggleVariants = cva(
   {
     variants: {
       variant: {
-        default: "data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
-        soft: "data-[state=checked]:bg-primary/20 data-[state=unchecked]:bg-secondary",
-        elevated: "data-[state=checked]:bg-primary data-[state=unchecked]:bg-input shadow-md border border-border/10",
-        glass: "data-[state=checked]:bg-primary/40 data-[state=unchecked]:bg-foreground/5 backdrop-blur-md border border-foreground/10",
-        modern: "data-[state=checked]:bg-primary data-[state=unchecked]:bg-muted border border-border",
-        enterprise: "data-[state=checked]:bg-blue-600 data-[state=unchecked]:bg-slate-300 dark:data-[state=unchecked]:bg-slate-700",
-        neon: "data-[state=checked]:bg-primary data-[state=unchecked]:bg-secondary data-[state=checked]:shadow-[0_0_15px_rgba(var(--primary),0.5)] border border-primary/20",
+        default: "data-[state=unchecked]:bg-muted data-[state=off]:bg-muted",
+        soft: "data-[state=unchecked]:bg-muted data-[state=off]:bg-muted",
+        elevated: "data-[state=unchecked]:bg-muted data-[state=off]:bg-muted shadow-md border border-border/10",
+        glass: "data-[state=unchecked]:bg-muted/20 data-[state=off]:bg-muted/20 backdrop-blur-md border border-border/10",
+        modern: "data-[state=unchecked]:bg-muted data-[state=off]:bg-muted border border-border",
+        enterprise: "data-[state=unchecked]:bg-muted data-[state=off]:bg-muted",
+        neon: "data-[state=unchecked]:bg-muted data-[state=off]:bg-muted border border-border",
         scenic: "border border-border/10 overflow-hidden shadow-inner",
       },
-      size: {
-        sm: "h-5 w-9 p-[2px]",
-        md: "h-6 w-11 p-[2px]",
-        lg: "h-7 w-12 p-[2px]",
-        xl: "h-8 w-14 p-[3px]",
+      color: {
+        default: "data-[state=checked]:bg-foreground data-[state=on]:bg-foreground data-[state=checked]:shadow-[0_0_15px_rgba(0,0,0,0.3)] dark:data-[state=checked]:shadow-[0_0_15px_rgba(255,255,255,0.3)] data-[state=on]:shadow-[0_0_15px_rgba(0,0,0,0.3)] dark:data-[state=on]:shadow-[0_0_15px_rgba(255,255,255,0.3)]",
+        blue: "data-[state=checked]:bg-blue-600 data-[state=on]:bg-blue-600 data-[state=checked]:shadow-[0_0_15px_rgba(37,99,235,0.4)] data-[state=on]:shadow-[0_0_15px_rgba(37,99,235,0.4)]",
+        emerald: "data-[state=checked]:bg-emerald-500 data-[state=on]:bg-emerald-500 data-[state=checked]:shadow-[0_0_15px_rgba(16,185,129,0.4)] data-[state=on]:shadow-[0_0_15px_rgba(16,185,129,0.4)]",
+        rose: "data-[state=checked]:bg-rose-500 data-[state=on]:bg-rose-500 data-[state=checked]:shadow-[0_0_15px_rgba(244,63,94,0.4)] data-[state=on]:shadow-[0_0_15px_rgba(244,63,94,0.4)]",
+        amber: "data-[state=checked]:bg-amber-500 data-[state=on]:bg-amber-500 data-[state=checked]:shadow-[0_0_15px_rgba(245,158,11,0.4)] data-[state=on]:shadow-[0_0_15px_rgba(245,158,11,0.4)]",
+        violet: "data-[state=checked]:bg-violet-600 data-[state=on]:bg-violet-600 data-[state=checked]:shadow-[0_0_15px_rgba(124,58,237,0.4)] data-[state=on]:shadow-[0_0_15px_rgba(124,58,237,0.4)]",
+        indigo: "data-[state=checked]:bg-indigo-600 data-[state=on]:bg-indigo-600 data-[state=checked]:shadow-[0_0_15px_rgba(79,70,229,0.4)] data-[state=on]:shadow-[0_0_15px_rgba(79,70,229,0.4)]",
+        sky: "data-[state=checked]:bg-sky-500 data-[state=on]:bg-sky-500 data-[state=checked]:shadow-[0_0_15px_rgba(14,165,233,0.4)] data-[state=on]:shadow-[0_0_15px_rgba(14,165,233,0.4)]",
+        slate: "data-[state=checked]:bg-slate-600 data-[state=on]:bg-slate-600 data-[state=checked]:shadow-[0_0_15px_rgba(71,85,105,0.4)] data-[state=on]:shadow-[0_0_15px_rgba(71,85,105,0.4)]",
+        orange: "data-[state=checked]:bg-orange-500 data-[state=on]:bg-orange-500 data-[state=checked]:shadow-[0_0_15px_rgba(249,115,22,0.4)] data-[state=on]:shadow-[0_0_15px_rgba(249,115,22,0.4)]",
       },
       shape: {
         rounded: "rounded-md",
         pill: "rounded-full",
         squircle: "rounded-[10px]",
-        square: "rounded-sm",
+        square: "rounded-none",
+        sharp: "rounded-[2px]",
+        default: "rounded-full",
+      },
+      spacing: {
+        default: "h-6 w-11 p-[2px]",
+        "2x": "h-5 w-9 p-[2px]",
+        "4x": "h-6 w-11 p-[2px]",
+        "6x": "h-7 w-12 p-[2px]",
+        "8x": "h-8 w-14 p-[3px]",
       }
     },
     defaultVariants: {
       variant: "default",
-      size: "md",
-      shape: "pill",
+      color: "default",
+      shape: "default",
+      spacing: "default",
     }
   }
 );
 
 const thumbVariants = cva(
-  "pointer-events-none flex items-center justify-center shadow-sm ring-0 transition-all overflow-hidden relative",
+  "pointer-events-none flex items-center justify-center shadow-sm ring-0 transition-all overflow-hidden relative bg-background",
   {
     variants: {
       variant: {
-        default: "bg-background",
-        soft: "data-[state=checked]:bg-primary data-[state=unchecked]:bg-muted-foreground",
-        elevated: "bg-background shadow-md",
-        glass: "bg-background shadow-[0_4px_12px_rgba(0,0,0,0.1)]",
-        modern: "bg-background",
-        enterprise: "bg-white",
-        neon: "bg-background shadow-[0_0_10px_rgba(255,255,255,0.5)]",
-        scenic: "bg-white/90 backdrop-blur-md shadow-[0_2px_8px_rgba(0,0,0,0.2)]",
-      },
-      size: {
-        sm: "h-4 w-4",
-        md: "h-5 w-5",
-        lg: "h-6 w-6",
-        xl: "h-[26px] w-[26px]",
+        default: "",
+        soft: "",
+        elevated: "shadow-md",
+        glass: "shadow-[0_4px_12px_rgba(0,0,0,0.1)]",
+        modern: "",
+        enterprise: "",
+        neon: "shadow-[0_0_10px_rgba(255,255,255,0.5)]",
+        scenic: "bg-background/90 backdrop-blur-md shadow-[0_2px_8px_rgba(0,0,0,0.2)]",
       },
       shape: {
         rounded: "rounded-[4px]",
         pill: "rounded-full",
         squircle: "rounded-[8px]",
-        square: "rounded-[2px]",
+        square: "rounded-none",
+        sharp: "rounded-[2px]",
+        default: "rounded-full",
+      },
+      spacing: {
+        default: "h-5 w-5",
+        "2x": "h-4 w-4",
+        "4x": "h-5 w-5",
+        "6x": "h-6 w-6",
+        "8x": "h-[26px] w-[26px]",
       }
     },
     defaultVariants: {
       variant: "default",
-      size: "md",
-      shape: "pill",
+      shape: "default",
+      spacing: "default",
     }
   }
 );
 
 export interface ToggleProps 
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "size" | "onChange">,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "size" | "onChange" | "color">,
     VariantProps<typeof toggleVariants> {
   checked?: boolean;
   defaultChecked?: boolean;
@@ -107,8 +126,9 @@ export const Toggle = React.memo(React.forwardRef<HTMLButtonElement, ToggleProps
           ({ 
             className, 
             variant = "default", 
-            size = "md", 
-            shape = "pill", 
+            color = "default",
+            spacing = "default", 
+            shape = "default", 
             checked, 
             defaultChecked = false, 
             onCheckedChange, 
@@ -161,7 +181,7 @@ export const Toggle = React.memo(React.forwardRef<HTMLButtonElement, ToggleProps
                 ref={ref}
                 id={toggleId}
                 onClick={handleToggle}
-                className={cn(toggleVariants({ variant, size, shape }), className)}
+                className={cn(toggleVariants({ variant, color, spacing, shape }), className)}
                 style={{
                   justifyContent: isChecked ? "flex-end" : "flex-start",
                 }}
@@ -204,7 +224,7 @@ export const Toggle = React.memo(React.forwardRef<HTMLButtonElement, ToggleProps
                     mass: 1,
                   }}
                   data-state={isChecked ? "checked" : "unchecked"}
-                  className={cn(thumbVariants({ variant, size, shape }), "z-10")}
+                  className={cn(thumbVariants({ variant, spacing, shape }), "z-10")}
                 >
                   <AnimatePresence mode="popLayout" initial={false}>
                     {loading ? (
@@ -227,7 +247,7 @@ export const Toggle = React.memo(React.forwardRef<HTMLButtonElement, ToggleProps
                         transition={{ duration: 0.2, type: "spring", stiffness: 300, damping: 20 }}
                         className={cn(
                           "absolute inset-0 flex items-center justify-center",
-                          isChecked ? "text-primary" : "text-muted-foreground"
+                          isChecked ? "text-foreground" : "text-muted-foreground"
                         )}
                       >
                         <div className="h-3/4 w-3/4 flex items-center justify-center [&>svg]:w-full [&>svg]:h-full">
@@ -254,7 +274,7 @@ export const Toggle = React.memo(React.forwardRef<HTMLButtonElement, ToggleProps
                     <label
                       htmlFor={toggleId}
                       className={cn(
-                        "text-sm font-medium leading-none cursor-pointer select-none",
+                        "text-sm font-medium leading-none cursor-pointer select-none text-foreground",
                         disabled || loading ? "opacity-50 cursor-not-allowed" : ""
                       )}
                       onClick={() => {
@@ -272,7 +292,7 @@ export const Toggle = React.memo(React.forwardRef<HTMLButtonElement, ToggleProps
                     </p>
                   )}
                   {helperText && (
-                    <p className="text-xs text-muted-foreground/80 mt-1">
+                    <p className="text-xs text-muted-foreground mt-1">
                       {helperText}
                     </p>
                   )}

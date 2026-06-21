@@ -13,7 +13,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
-export type OtpColor = "indigo" | "rose" | "emerald" | "amber" | "sky" | "violet" | "zinc";
+export type OtpShape = "default" | "square" | "rounded" | "sharp";
+export type OtpColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type OtpSpacing = "default" | "2x" | "4x" | "6x" | "8x";
 
 export interface OtpInputProps {
   /** Number of OTP digits (4-10) */
@@ -30,10 +32,12 @@ export interface OtpInputProps {
   autoFocus?: boolean;
   /** Visual theme */
   theme?: "light" | "dark";
-  /** Primary color vibe */
+  /** Component spacing */
+  spacing?: OtpSpacing;
+  /** Component shape */
+  shape?: OtpShape;
+  /** Primary color palette */
   color?: OtpColor;
-  /** Component size */
-  size?: "sm" | "md" | "lg";
   /** Additional CSS classes */
   className?: string;
 }
@@ -54,8 +58,9 @@ export const OtpInput = ({
   disabled = false,
   autoFocus = true,
   theme = "dark",
-  color = "indigo",
-  size = "md",
+  shape = "default",
+  spacing = "default",
+  color = "default",
   className,
 }: OtpInputProps) => {
   const otpLength = Math.max(4, Math.min(10, length));
@@ -173,35 +178,51 @@ export const OtpInput = ({
   };
 
   const sizes = {
-    sm: { width: 40, gap: 12, class: "w-10 h-12 text-lg" },
-    md: { width: 48, gap: 12, class: "w-12 h-14 text-xl" },
-    lg: { width: 56, gap: 12, class: "w-14 h-16 text-2xl" },
+    default: { width: 48, gap: 12, class: "w-12 h-14 text-xl" },
+    "2x": { width: 32, gap: 8, class: "w-8 h-10 text-sm" },
+    "4x": { width: 48, gap: 12, class: "w-12 h-14 text-xl" },
+    "6x": { width: 56, gap: 12, class: "w-14 h-16 text-2xl" },
+    "8x": { width: 64, gap: 16, class: "w-16 h-20 text-3xl" },
   };
 
-  const currentSize = sizes[size];
+  const currentSize = sizes[spacing] || sizes.default;
   const unitWidth = currentSize.width + currentSize.gap;
 
-  const colorHexMap = {
-    indigo: "#6366f1",
-    rose: "#f43f5e",
-    emerald: "#10b981",
-    amber: "#f59e0b",
-    sky: "#0ea5e9",
-    violet: "#8b5cf6",
-    zinc: "#71717a",
+  const shapeClass = 
+    shape === "square" ? "rounded-none" : 
+    shape === "rounded" ? "rounded-full" : 
+    shape === "sharp" ? "rounded-[2px]" : 
+    "rounded-[10px]";
+
+  const colorHexMap: Record<OtpColor, string> = {
+    default: theme === "dark" ? "#fafafa" : "#09090b",
+    blue: "#2563eb", // blue-600
+    emerald: "#10b981", // emerald-500
+    rose: "#f43f5e", // rose-500
+    amber: "#f59e0b", // amber-500
+    violet: "#7c3aed", // violet-600
+    indigo: "#4f46e5", // indigo-600
+    sky: "#0ea5e9", // sky-500
+    slate: "#475569", // slate-600
+    orange: "#f97316", // orange-500
   };
 
-  const colorTailwindMap = {
-    indigo: "from-indigo-500 to-blue-500",
-    rose: "from-rose-500 to-pink-500",
-    emerald: "from-emerald-500 to-teal-500",
-    amber: "from-amber-500 to-orange-500",
-    sky: "from-sky-500 to-blue-400",
-    violet: "from-violet-500 to-purple-500",
-    zinc: "from-zinc-400 to-zinc-600",
+  const buttonTailwindMap: Record<OtpColor, string> = {
+    default: "bg-foreground text-background hover:bg-foreground/90",
+    blue: "bg-blue-600 text-white hover:bg-blue-600/90 dark:bg-blue-500",
+    emerald: "bg-emerald-500 text-white hover:bg-emerald-500/90 dark:bg-emerald-600",
+    rose: "bg-rose-500 text-white hover:bg-rose-500/90 dark:bg-rose-600",
+    amber: "bg-amber-500 text-white hover:bg-amber-500/90 dark:bg-amber-600",
+    violet: "bg-violet-600 text-white hover:bg-violet-600/90 dark:bg-violet-500",
+    indigo: "bg-indigo-600 text-white hover:bg-indigo-600/90 dark:bg-indigo-500",
+    sky: "bg-sky-500 text-white hover:bg-sky-500/90 dark:bg-sky-600",
+    slate: "bg-slate-600 text-white hover:bg-slate-600/90 dark:bg-slate-500",
+    orange: "bg-orange-500 text-white hover:bg-orange-500/90 dark:bg-orange-600",
   };
 
   const vibeHex = colorHexMap[color];
+
+
   const isProcessing = status === "loading" || status === "merging" || status === "merged";
 
   const inputVariants = {
@@ -223,7 +244,6 @@ export const OtpInput = ({
       boxShadow: (i === 0) ? `0 0 30px ${vibeHex}60` : "none",
       transition: { 
         rotate: { duration: 0.4, repeat: Infinity, delay: i * 0.05 },
-        boxShadow: { duration: 0.2 }
       },
     }),
     merging: (i: number) => ({
@@ -250,14 +270,12 @@ export const OtpInput = ({
       x: ( (otpLength - 1) / 2 - i ) * unitWidth,
       scale: i === 0 ? 1 : 0.8,
       opacity: i === 0 ? 1 : 0,
-      boxShadow: "none",
       transition: { duration: 0.3 }
     }),
     error: (i: number) => ({
       x: ( (otpLength - 1) / 2 - i ) * unitWidth,
       scale: i === 0 ? 1 : 0.8,
       opacity: i === 0 ? 1 : 0,
-      boxShadow: "none",
       transition: { duration: 0.3 }
     })
   };
@@ -277,7 +295,7 @@ export const OtpInput = ({
               style={{
                 zIndex: activeIndex === idx && status === "idle" ? 10 : (idx === 0 && isProcessing ? 50 : 1),
               }}
-              className="relative p-[2px] rounded-xl overflow-hidden group"
+              className={cn("relative p-[2px] overflow-hidden group", shapeClass)}
             >
               {/* High-Intensity Moving Border (Glowy Streak) - PERSISTENT DURING PROCESSING */}
               {(digit !== "" || (idx === 0 && isProcessing)) && !isComplete && (
@@ -329,7 +347,8 @@ export const OtpInput = ({
                 disabled={status !== "idle" || disabled}
                 className={cn(
                   currentSize.class,
-                  "text-center font-black rounded-[10px] border-2 transition-all duration-300 outline-hidden relative z-10",
+                  shapeClass,
+                  "text-center font-black border-2 transition-all duration-300 outline-none relative z-10",
                   status === "loading" && "cursor-wait",
                   theme === "dark" ? "text-white" : "text-zinc-950"
                 )}
@@ -413,10 +432,10 @@ export const OtpInput = ({
               onClick={handleVerify}
               disabled={otp.some(d => d === "") || disabled}
               className={cn(
-                "px-8 py-3 rounded-full font-bold text-sm tracking-widest uppercase transition-all duration-300 shadow-lg",
+                "px-8 py-3 rounded-full font-bold text-sm tracking-widest uppercase transition-all duration-300",
                 otp.every(d => d !== "") 
-                  ? cn("text-white hover:opacity-90 shadow-lg bg-linear-to-r", colorTailwindMap[color])
-                  : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+                  ? buttonTailwindMap[color]
+                  : "bg-muted text-muted-foreground cursor-not-allowed"
               )}
             >
               Verify OTP
@@ -432,7 +451,7 @@ export const OtpInput = ({
           className="flex flex-col items-center gap-2"
         >
           <Loader2 className="w-6 h-6 animate-spin" style={{ color: vibeHex }} />
-          <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] animate-pulse">
+          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] animate-pulse">
             Secure Verification
           </span>
         </motion.div>

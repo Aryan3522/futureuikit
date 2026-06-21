@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
@@ -16,56 +16,21 @@ import { Loader2 } from "lucide-react";
 export type SkeuomorphicButtonVariant =
   | "primary"
   | "secondary"
-  | "success"
-  | "danger"
-  | "warning"
-  | "info"
-  | "neutral"
   | "ghost"
   | "outline"
   | "glass"
-  | "gradient"
   | "elevated"
   | "soft";
 
-export type SkeuomorphicButtonColor =
-  | "blue"
-  | "indigo"
-  | "purple"
-  | "violet"
-  | "pink"
-  | "rose"
-  | "red"
-  | "orange"
-  | "amber"
-  | "yellow"
-  | "lime"
-  | "green"
-  | "emerald"
-  | "teal"
-  | "cyan"
-  | "sky"
-  | "slate"
-  | "zinc"
-  | "stone"
-  | "gray"
-  | "black"
-  | "white";
-
-export type SkeuomorphicButtonSize = "xs" | "sm" | "md" | "lg" | "xl";
-
-export type SkeuomorphicButtonShape =
-  | "rounded"
-  | "pill"
-  | "square"
-  | "soft-rounded"
-  | "circle";
+export type SkeuomorphicButtonColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type SkeuomorphicButtonShape = "default" | "square" | "rounded" | "sharp";
+export type SkeuomorphicButtonSpacing = "default" | "2x" | "4x" | "6x" | "8x";
 
 export interface SkeuomorphicButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: SkeuomorphicButtonVariant;
   color?: SkeuomorphicButtonColor;
-  size?: SkeuomorphicButtonSize;
+  spacing?: SkeuomorphicButtonSpacing;
   shape?: SkeuomorphicButtonShape;
   loading?: boolean;
   fullWidth?: boolean;
@@ -77,66 +42,45 @@ export interface SkeuomorphicButtonProps
 }
 
 const colorMap: Record<SkeuomorphicButtonColor, string> = {
-  blue: "from-blue-500 to-blue-600 shadow-blue-900/40",
-  indigo: "from-indigo-500 to-indigo-600 shadow-indigo-900/40",
-  purple: "from-purple-500 to-purple-600 shadow-purple-900/40",
-  violet: "from-violet-500 to-violet-600 shadow-violet-900/40",
-  pink: "from-pink-500 to-pink-600 shadow-pink-900/40",
-  rose: "from-rose-500 to-rose-600 shadow-rose-900/40",
-  red: "from-red-500 to-red-600 shadow-red-900/40",
-  orange: "from-orange-500 to-orange-600 shadow-orange-900/40",
-  amber: "from-amber-500 to-amber-600 shadow-amber-900/40",
-  yellow: "from-yellow-400 to-yellow-500 shadow-yellow-900/40",
-  lime: "from-lime-500 to-lime-600 shadow-lime-900/40",
-  green: "from-green-500 to-green-600 shadow-green-900/40",
-  emerald: "from-emerald-500 to-emerald-600 shadow-emerald-900/40",
-  teal: "from-teal-500 to-teal-600 shadow-teal-900/40",
-  cyan: "from-cyan-500 to-cyan-600 shadow-cyan-900/40",
-  sky: "from-sky-500 to-sky-600 shadow-sky-900/40",
-  slate: "from-slate-500 to-slate-600 shadow-slate-900/40",
-  zinc: "from-zinc-500 to-zinc-600 shadow-zinc-900/40",
-  stone: "from-stone-500 to-stone-600 shadow-stone-900/40",
-  gray: "from-gray-500 to-gray-600 shadow-gray-900/40",
-  black: "from-black to-zinc-900 shadow-black/60",
-  white: "from-white to-gray-100 shadow-gray-300/40 text-gray-900",
+  default: "from-foreground/80 to-foreground shadow-black/40 dark:from-background dark:to-background/80 dark:shadow-white/20 dark:text-foreground text-background",
+  blue: "from-blue-500 to-blue-600 shadow-blue-900/40 text-white",
+  emerald: "from-emerald-500 to-emerald-600 shadow-emerald-900/40 text-white",
+  rose: "from-rose-500 to-rose-600 shadow-rose-900/40 text-white",
+  amber: "from-amber-400 to-amber-500 shadow-amber-900/40 text-amber-950",
+  violet: "from-violet-500 to-violet-600 shadow-violet-900/40 text-white",
+  indigo: "from-indigo-500 to-indigo-600 shadow-indigo-900/40 text-white",
+  sky: "from-sky-400 to-sky-500 shadow-sky-900/40 text-sky-950",
+  slate: "from-slate-500 to-slate-600 shadow-slate-900/40 text-white",
+  orange: "from-orange-500 to-orange-600 shadow-orange-900/40 text-white",
 };
 
-const shapeMap: Record<SkeuomorphicButtonShape, string> = {
-  rounded: "rounded-xl",
-  pill: "rounded-full",
-  square: "rounded-none",
-  "soft-rounded": "rounded-3xl",
-  circle: "rounded-full",
-};
-
-const getSizeStyles = (size: SkeuomorphicButtonSize, shape: SkeuomorphicButtonShape) => {
-  const isCircle = shape === "circle";
-  
-  switch (size) {
-    case "xs": return isCircle ? "w-7 h-7 text-xs p-0" : "px-2.5 py-1 text-xs";
-    case "sm": return isCircle ? "w-9 h-9 text-sm p-0" : "px-3 py-1.5 text-sm";
-    case "md": return isCircle ? "w-11 h-11 text-base p-0" : "px-5 py-2.5 text-base";
-    case "lg": return isCircle ? "w-14 h-14 text-lg p-0" : "px-8 py-3.5 text-lg";
-    case "xl": return isCircle ? "w-16 h-16 text-xl p-0" : "px-10 py-4.5 text-xl font-bold";
-    default: return "";
+const getShapeClass = (shape: SkeuomorphicButtonShape) => {
+  switch (shape) {
+    case "square": return "rounded-none";
+    case "sharp": return "rounded-[2px]";
+    case "rounded": return "rounded-xl";
+    case "default": return "rounded-md";
   }
 };
 
-const getIconSize = (size: SkeuomorphicButtonSize) => {
-  switch (size) {
-    case "xs": return "[&>svg]:w-3 [&>svg]:h-3";
-    case "sm": return "[&>svg]:w-4 [&>svg]:h-4";
-    case "md": return "[&>svg]:w-5 [&>svg]:h-5";
-    case "lg": return "[&>svg]:w-6 [&>svg]:h-6";
-    case "xl": return "[&>svg]:w-7 [&>svg]:h-7";
-    default: return "[&>svg]:w-5 [&>svg]:h-5";
+const getSpacingStyles = (spacing: SkeuomorphicButtonSpacing) => {
+  switch (spacing) {
+    case "2x": return "px-3 py-1.5 text-xs";
+    case "4x": return "px-4 py-2 text-sm";
+    case "6x": return "px-6 py-3 text-base";
+    case "8x": return "px-8 py-4 text-lg";
+    default: return "px-5 py-2.5 text-sm";
   }
 };
 
-const elevationMap = {
-  low: "shadow-sm",
-  medium: "shadow-md",
-  high: "shadow-lg",
+const getIconSize = (spacing: SkeuomorphicButtonSpacing) => {
+  switch (spacing) {
+    case "2x": return "[&>svg]:w-3.5 [&>svg]:h-3.5";
+    case "4x": return "[&>svg]:w-4 [&>svg]:h-4";
+    case "6x": return "[&>svg]:w-5 [&>svg]:h-5";
+    case "8x": return "[&>svg]:w-6 [&>svg]:h-6";
+    default: return "[&>svg]:w-4 [&>svg]:h-4";
+  }
 };
 
 export const SkeuomorphicButton = React.forwardRef<
@@ -146,9 +90,9 @@ export const SkeuomorphicButton = React.forwardRef<
   (
     {
       variant = "primary",
-      color = "blue",
-      size = "md",
-      shape = "rounded",
+      color = "default",
+      spacing = "default",
+      shape = "default",
       loading = false,
       fullWidth = false,
       icon,
@@ -166,55 +110,32 @@ export const SkeuomorphicButton = React.forwardRef<
     // Filter out props that might conflict with motion.button
     const { onDrag, onDragStart, onDragEnd, onAnimationStart, ...filteredProps } = props as any;
 
-    const isWhite = color === "white";
-    const isBlack = color === "black";
-
     const baseStyles = cn(
       "relative inline-flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer overflow-hidden",
       "font-medium tracking-tight select-none",
       "border-t border-white/20 border-l border-white/10",
       fullWidth && "w-full",
-      shapeMap[shape],
-      getSizeStyles(size, shape),
+      getShapeClass(shape),
+      getSpacingStyles(spacing),
       disabled && "opacity-50 cursor-not-allowed grayscale",
       className
     );
 
     const variantStyles = {
       primary: cn(
-        "bg-gradient-to-b text-white",
+        "bg-gradient-to-b",
         colorMap[color],
         "shadow-[0_4px_0_0_rgba(0,0,0,0.2),0_8px_16px_-4px_rgba(0,0,0,0.3)]",
         "active:shadow-[0_2px_0_0_rgba(0,0,0,0.2),0_4px_8px_-2px_rgba(0,0,0,0.3)]"
       ),
       secondary: cn(
-        "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white border-zinc-200 dark:border-zinc-700",
+        "bg-background text-foreground border-border",
         "shadow-[0_4px_0_0_rgba(0,0,0,0.1),0_8px_16px_-4px_rgba(0,0,0,0.1)]",
         "active:shadow-[0_2px_0_0_rgba(0,0,0,0.1),0_4px_8px_-2px_rgba(0,0,0,0.1)]"
       ),
-      success: cn(
-        "bg-gradient-to-b from-emerald-500 to-emerald-600 text-white shadow-emerald-900/40",
-        "shadow-[0_4px_0_0_rgba(0,0,0,0.2),0_8px_16px_-4px_rgba(0,0,0,0.3)]"
-      ),
-      danger: cn(
-        "bg-gradient-to-b from-red-500 to-red-600 text-white shadow-red-900/40",
-        "shadow-[0_4px_0_0_rgba(0,0,0,0.2),0_8px_16px_-4px_rgba(0,0,0,0.3)]"
-      ),
-      warning: cn(
-        "bg-gradient-to-b from-amber-400 to-amber-500 text-white shadow-amber-900/40",
-        "shadow-[0_4px_0_0_rgba(0,0,0,0.2),0_8px_16px_-4px_rgba(0,0,0,0.3)]"
-      ),
-      info: cn(
-        "bg-gradient-to-b from-sky-400 to-sky-500 text-white shadow-sky-900/40",
-        "shadow-[0_4px_0_0_rgba(0,0,0,0.2),0_8px_16px_-4px_rgba(0,0,0,0.3)]"
-      ),
-      neutral: cn(
-        "bg-gradient-to-b from-zinc-700 to-zinc-800 text-white shadow-zinc-900/40",
-        "shadow-[0_4px_0_0_rgba(0,0,0,0.2),0_8px_16px_-4px_rgba(0,0,0,0.3)]"
-      ),
-      ghost: "bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 border-none shadow-none text-zinc-600 dark:text-zinc-400",
+      ghost: "bg-transparent hover:bg-accent border-none shadow-none text-muted-foreground",
       outline: cn(
-        "bg-transparent border-2 border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white hover:bg-zinc-50 dark:hover:bg-zinc-800",
+        "bg-transparent border-2 border-border text-foreground hover:bg-accent",
         "shadow-[0_2px_0_0_rgba(0,0,0,0.05)] active:shadow-none"
       ),
       glass: cn(
@@ -222,16 +143,12 @@ export const SkeuomorphicButton = React.forwardRef<
         "shadow-[0_4px_30px_rgba(0,0,0,0.1),inset_0_0_0_1px_rgba(255,255,255,0.1)]",
         "hover:bg-white/20 transition-all"
       ),
-      gradient: cn(
-        "bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white",
-        "shadow-[0_4px_0_0_rgba(79,70,229,0.3),0_8px_20px_-4px_rgba(79,70,229,0.4)]"
-      ),
       elevated: cn(
-        "bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white",
+        "bg-muted text-foreground",
         "shadow-[0_10px_20px_-5px_rgba(0,0,0,0.2),0_6px_6px_-3px_rgba(0,0,0,0.1),inset_0_2px_0_0_rgba(255,255,255,0.5)] dark:shadow-[0_10px_20px_-5px_rgba(0,0,0,0.5),0_6px_6px_-3px_rgba(0,0,0,0.3),inset_0_1px_0_0_rgba(255,255,255,0.1)]"
       ),
       soft: cn(
-        "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white",
+        "bg-muted text-foreground",
         "shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] active:shadow-[inset_0_4px_8px_rgba(0,0,0,0.15)]"
       ),
     };
@@ -262,13 +179,13 @@ export const SkeuomorphicButton = React.forwardRef<
           )}
           
           {!loading && icon && iconPosition === "left" && (
-            <span className={cn("shrink-0 inline-flex items-center justify-center", getIconSize(size))}>{icon}</span>
+            <span className={cn("shrink-0 inline-flex items-center justify-center", getIconSize(spacing))}>{icon}</span>
           )}
           
           {children && <span className="truncate">{children}</span>}
           
           {!loading && icon && iconPosition === "right" && (
-            <span className={cn("shrink-0 inline-flex items-center justify-center", getIconSize(size))}>{icon}</span>
+            <span className={cn("shrink-0 inline-flex items-center justify-center", getIconSize(spacing))}>{icon}</span>
           )}
         </div>
 
