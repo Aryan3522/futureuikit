@@ -42,6 +42,11 @@ function parseDocblock(content) {
     description: "",
     category: "ui",
     type: "components:ui",
+    typeLabel: "",
+    details: [],
+    usage: [],
+    codeNext: "",
+    isNew: false,
     dependencies: [],
     files: [],
   };
@@ -71,6 +76,16 @@ function parseDocblock(content) {
       meta.category = value;
     } else if (tag === "@registry-type") {
       meta.type = value;
+    } else if (tag === "@registry-type-label") {
+      meta.typeLabel = value;
+    } else if (tag === "@registry-detail") {
+      meta.details.push(value);
+    } else if (tag === "@registry-usage") {
+      meta.usage.push(value);
+    } else if (tag === "@registry-code-next") {
+      meta.codeNext = value;
+    } else if (tag === "@registry-is-new") {
+      meta.isNew = true;
     } else if (tag === "@registry-dependency") {
       // Support space-separated dependencies on one line
       const deps = value.split(/\s+/).filter(Boolean);
@@ -128,6 +143,11 @@ function createRegistryEntry(filePath, metadata) {
     type: metadata.type,
     description: metadata.description,
     category: metadata.category,
+    typeLabel: metadata.typeLabel || undefined,
+    details: metadata.details.length > 0 ? metadata.details : undefined,
+    usage: metadata.usage.length > 0 ? metadata.usage : undefined,
+    codeNext: metadata.codeNext || undefined,
+    isNew: metadata.isNew || undefined,
     dependencies: Array.from(new Set(metadata.dependencies)),
     files,
   };

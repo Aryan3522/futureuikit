@@ -2345,17 +2345,54 @@ const dedupedManual = Array.from(new Map(rawComponentsList.map(item => [item.slu
 // Auto-generate missing components from registry
 const missingFromList = Object.keys(registry).filter(slug => !dedupedManual.some(c => c.slug === slug));
 
+const categoryToType: Record<string, string> = {
+  ui: "UI",
+  layout: "Layout",
+  button: "Button",
+  card: "Cards",
+  form: "Form",
+  navigation: "Navigation",
+  feedback: "Feedback",
+  loader: "Loader",
+  typography: "Typography",
+  background: "Background",
+  media: "Media",
+  data: "Data",
+  utility: "Utility",
+  animation: "Animation",
+  search: "Search",
+  overlay: "Overlay",
+  carousel: "Carousel",
+  board: "Board",
+  application: "Application",
+  icons: "Icons",
+  pages: "Pages",
+};
+
+function slugToTitle(slug: string): string {
+  return slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+}
+
 const generatedComponents: ComponentItem[] = missingFromList.map((slug, index) => {
+ const reg = registry[slug];
+ const title = reg?.name || slugToTitle(slug);
+ const typeLabel = reg?.typeLabel || (reg?.category ? categoryToType[reg.category] : null) || "Uncategorized";
+ const desc = reg?.description || `A dynamically discovered component.`;
+ const dets = reg?.details?.length ? reg.details : [desc];
+ const cNext = reg?.codeNext || `import { ${slugToTitle(slug)} } from"@/components/ui/${slug}";\n\nexport default function Example() {\n  return <${slugToTitle(slug)} />;\n}`;
+ const usg = reg?.usage?.length ? reg.usage : [`Install: Run 'npx futureuikit add ${slug}'.`, `Import: 'import { ${slugToTitle(slug)} } from \"@/components/ui/${slug}\";'`];
+
  return {
  id: 10000 + index,
- title: slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(''),
- type:"Uncategorized",
- slug: slug,
- category:"ui",
- description: `A dynamically discovered component.`,
- details: ["Generated metadata"],
- codes: { next: `import { ${slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('')} } from"@/components/ui/${slug}";` },
- usage: [`npx futureuikit add ${slug}`]
+ title,
+ type: typeLabel,
+ slug,
+ category: reg?.category || "ui",
+ isNew: reg?.isNew || undefined,
+ description: desc,
+ details: dets,
+ codes: { next: cNext },
+ usage: usg,
  };
 });
 

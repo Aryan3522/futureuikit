@@ -1,3 +1,11 @@
+/**
+ * @registry-slug card
+ * @registry-name Card
+ * @registry-description A set of modular card components including Header, Title, Description, Content, and Footer.
+ * @registry-category layout
+ * @registry-type components:ui
+ */
+
 "use client";
 
 import * as React from "react"

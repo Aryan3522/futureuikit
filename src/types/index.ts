@@ -33,6 +33,11 @@ export interface RegistryItem {
  description?: string;
  category?: string;
  tags?: string[];
+ typeLabel?: string;
+ details?: string[];
+ usage?: string[];
+ codeNext?: string;
+ isNew?: boolean;
  dependencies?: string[];
  files: RegistryFile[];
 }

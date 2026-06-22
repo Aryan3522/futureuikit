@@ -23,17 +23,15 @@ export async function GET(
  );
  }
 
- // Deep clone to avoid mutating the original registry object
- const cleanComponent = JSON.parse(JSON.stringify(component));
+  // Deep clone to avoid mutating the original registry object
+  const cleanComponent = JSON.parse(JSON.stringify(component));
 
- // Strip comments from all files
- cleanComponent.files = cleanComponent.files.map((file: any) => ({
- ...file,
- content: file.content
- .replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm,'$1')
- .replace(/\n\s*\n/g,'\n\n')
- .trim()
- }));
+  // Content is already stripped of DocBlocks by the sync script (sync.mjs).
+  // Only trim whitespace — do NOT strip code comments (they are useful for end users).
+  cleanComponent.files = cleanComponent.files.map((file: any) => ({
+  ...file,
+  content: file.content.trim()
+  }));
 
- return NextResponse.json(cleanComponent);
+  return NextResponse.json(cleanComponent);
 }
