@@ -1,6 +1,6 @@
 {
   "name": "futureuikit",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "A modern CLI-powered UI component library for Next.js — powered by Framer Motion, Tailwind CSS 4, and React 19.",
   "private": false,
   "license": "MIT",
