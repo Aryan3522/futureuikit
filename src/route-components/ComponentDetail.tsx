@@ -78,8 +78,8 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
 
     const registryComponent = (registry as any)[slug];
     const reusableCode = registryComponent?.files[0]?.content || "";
-    const cliCommand = `npx futureuikit add ${slug}`;
-    const importCommand = `import { ${component.title.replace(/[^a-zA-Z]/g, '')} } from"@/components/ui/${slug}"`;
+    const cliCommand = slug === "icons" ? "npm install futureuikit" : `npx futureuikit add ${slug}`;
+    const importCommand = slug === "icons" ? `import { GithubIcon } from "futureuikit/icons"` : `import { ${component.title.replace(/[^a-zA-Z]/g, '')} } from "@/components/ui/${slug}"`;
 
     return (
         <div className="w-full relative selection:bg-primary/30 min-h-screen">

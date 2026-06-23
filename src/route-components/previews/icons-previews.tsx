@@ -29,13 +29,11 @@ import {
 } from "@/icons";
 import * as PremiumIcons from "@/icons";
 import { Search as SearchComponent } from "@/components/ui/search";
-import { PreviewContainer, DEFAULT_COLORS } from "../preview-engine/PreviewContainer";
+import { PreviewContainer } from "../preview-engine/PreviewContainer";
 import { X, Check, Copy, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const IconsPreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [animate, setAnimate] = useState(true);
   const [mounted, setMounted] = useState(false);
 
@@ -245,15 +243,15 @@ export const IconsPreview: React.FC = () => {
     });
   };
 
-  const importLine = `import { ${selected?.name} } from "@/components/ui/icons"`;
+  const importLine = `import { ${selected?.name} } from "futureuikit/icons"`;
   const usageCode = `<${selected?.name} animate={${animate}} size={24} className="text-foreground" />`;
 
   return (
     <PreviewContainer
       title="Icons"
-      description="Premium animated SVG icons — optimized for performance and aesthetic impact."
+      description="Premium animated SVG icons. No separate download required—these icons are built-in and ready to use directly after initializing the component library."
       isVirtualScreen={true}
-      align="start" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
+      align="start"
     >
       <div className="flex flex-col w-full p-4 md:p-10">
         {/* Search Header */}
@@ -384,6 +382,28 @@ export const IconsPreview: React.FC = () => {
                           </div>
                         </div>
                       ))}
+                    </div>
+                  </div>
+
+                  {/* Installation Note */}
+                  <div className="space-y-3">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Installation</p>
+                    <div className="space-y-2">
+                      <div className="relative group">
+                        <div className="absolute -top-2 left-3 px-1.5 bg-background text-[9px] font-bold text-primary uppercase tracking-wider z-10 border border-border rounded">Install Library</div>
+                        <div className="flex items-center gap-3 bg-muted/30 border border-border/50 rounded-2xl px-4 py-3.5 group-hover:border-primary/30 transition-colors">
+                          <code className="text-[11px] font-mono text-foreground flex-1 truncate">npm install futureuikit</code>
+                          <button
+                            onClick={() => copy("npm install futureuikit", "install")}
+                            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-primary"
+                          >
+                            {copied === "install" ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                          </button>
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed px-1 mt-2">
+                        Icons are bundled directly with the Future UI library. Just install the package once, and all icons are ready to use.
+                      </p>
                     </div>
                   </div>
 
