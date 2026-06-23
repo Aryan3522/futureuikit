@@ -46,6 +46,11 @@ export type DynamicFormShape = "default" | "square" | "rounded" | "sharp";
 export type DynamicFormSpacing = "default" | "2x" | "4x" | "6x" | "8x";
 
 export type FormVariant =
+  | "default"
+  | "premium"
+  | "clean"
+  | "solid"
+  | "floating"
   | "minimal"
   | "modern"
   | "glass"
@@ -53,6 +58,8 @@ export type FormVariant =
   | "elevated"
   | "dark"
   | "compact";
+
+export type DynamicFormSize = "default" | "sm" | "md" | "lg" | "xl" | "2xl";
 
 export type FieldType =
   | "text"
@@ -127,6 +134,7 @@ export interface DynamicFormProps {
   color?: DynamicFormColor;
   shape?: DynamicFormShape;
   spacing?: DynamicFormSpacing;
+  size?: DynamicFormSize;
   steps?: FormStep[];
   api?: FormApiConfig;
   defaultValues?: Record<string, any>;
@@ -147,24 +155,28 @@ interface DynamicFormContextType {
   color: DynamicFormColor;
   shape: DynamicFormShape;
   spacing: DynamicFormSpacing;
+  size: DynamicFormSize;
   variant: FormVariant;
 }
 
-const DynamicFormContext = React.createContext<DynamicFormContextType>({ color: "default", shape: "default", spacing: "default", variant: "modern" });
+const DynamicFormContext = React.createContext<DynamicFormContextType>({ color: "default", shape: "default", spacing: "default", size: "default", variant: "modern" });
 
 export const useDynamicForm = () => React.useContext(DynamicFormContext);
 
-const colorThemeMap: Record<DynamicFormColor, { bgActive: string; text: string; ring: string; border: string; borderActive: string; bgSoft: string }> = {
-  default: { bgActive: "bg-foreground", text: "text-foreground", ring: "focus:ring-ring/20", border: "border-border", borderActive: "border-foreground", bgSoft: "bg-muted" },
-  blue: { bgActive: "bg-blue-600", text: "text-blue-600", ring: "focus:ring-blue-500/20", border: "border-blue-200 dark:border-blue-900", borderActive: "border-blue-500", bgSoft: "bg-blue-50 dark:bg-blue-900/20" },
-  emerald: { bgActive: "bg-emerald-600", text: "text-emerald-600", ring: "focus:ring-emerald-500/20", border: "border-emerald-200 dark:border-emerald-900", borderActive: "border-emerald-500", bgSoft: "bg-emerald-50 dark:bg-emerald-900/20" },
-  rose: { bgActive: "bg-rose-600", text: "text-rose-600", ring: "focus:ring-rose-500/20", border: "border-rose-200 dark:border-rose-900", borderActive: "border-rose-500", bgSoft: "bg-rose-50 dark:bg-rose-900/20" },
-  amber: { bgActive: "bg-amber-500", text: "text-amber-600", ring: "focus:ring-amber-500/20", border: "border-amber-200 dark:border-amber-900", borderActive: "border-amber-500", bgSoft: "bg-amber-50 dark:bg-amber-900/20" },
-  violet: { bgActive: "bg-violet-600", text: "text-violet-600", ring: "focus:ring-violet-500/20", border: "border-violet-200 dark:border-violet-900", borderActive: "border-violet-500", bgSoft: "bg-violet-50 dark:bg-violet-900/20" },
-  indigo: { bgActive: "bg-indigo-600", text: "text-indigo-600", ring: "focus:ring-indigo-500/20", border: "border-indigo-200 dark:border-indigo-900", borderActive: "border-indigo-500", bgSoft: "bg-indigo-50 dark:bg-indigo-900/20" },
-  sky: { bgActive: "bg-sky-500", text: "text-sky-600", ring: "focus:ring-sky-500/20", border: "border-sky-200 dark:border-sky-900", borderActive: "border-sky-500", bgSoft: "bg-sky-50 dark:bg-sky-900/20" },
-  slate: { bgActive: "bg-slate-600", text: "text-slate-600", ring: "focus:ring-slate-500/20", border: "border-slate-200 dark:border-slate-900", borderActive: "border-slate-500", bgSoft: "bg-slate-50 dark:bg-slate-900/20" },
-  orange: { bgActive: "bg-orange-500", text: "text-orange-600", ring: "focus:ring-orange-500/20", border: "border-orange-200 dark:border-orange-900", borderActive: "border-orange-500", bgSoft: "bg-orange-50 dark:bg-orange-900/20" },
+const colorThemeMap: Record<DynamicFormColor, { bgActive: string; text: string; ring: string; border: string; focusBorder: string; bgSoft: string; shadow: string; shadowLg: string; textActive: string }> = {
+  default: { 
+    bgActive: "bg-foreground", text: "text-foreground", textActive: "text-background", ring: "focus:ring-ring/20", border: "border-border", focusBorder: "focus:border-foreground/50", bgSoft: "bg-muted",
+    shadow: "shadow-black/10 dark:shadow-white/10", shadowLg: "shadow-[0_8px_40px_-12px_rgba(0,0,0,0.2)] dark:shadow-[0_8px_40px_-12px_rgba(255,255,255,0.1)]"
+  },
+  blue: { bgActive: "bg-blue-600", text: "text-blue-600", textActive: "text-white", ring: "focus:ring-blue-500/20", border: "border-blue-200 dark:border-blue-900/40", focusBorder: "focus:border-blue-500", bgSoft: "bg-blue-50 dark:bg-blue-900/20", shadow: "shadow-blue-500/20", shadowLg: "shadow-[0_8px_40px_-12px_rgba(37,99,235,0.3)]" },
+  emerald: { bgActive: "bg-emerald-600", text: "text-emerald-600", textActive: "text-white", ring: "focus:ring-emerald-500/20", border: "border-emerald-200 dark:border-emerald-900/40", focusBorder: "focus:border-emerald-500", bgSoft: "bg-emerald-50 dark:bg-emerald-900/20", shadow: "shadow-emerald-500/20", shadowLg: "shadow-[0_8px_40px_-12px_rgba(16,185,129,0.3)]" },
+  rose: { bgActive: "bg-rose-600", text: "text-rose-600", textActive: "text-white", ring: "focus:ring-rose-500/20", border: "border-rose-200 dark:border-rose-900/40", focusBorder: "focus:border-rose-500", bgSoft: "bg-rose-50 dark:bg-rose-900/20", shadow: "shadow-rose-500/20", shadowLg: "shadow-[0_8px_40px_-12px_rgba(244,63,94,0.3)]" },
+  amber: { bgActive: "bg-amber-500", text: "text-amber-600", textActive: "text-white", ring: "focus:ring-amber-500/20", border: "border-amber-200 dark:border-amber-900/40", focusBorder: "focus:border-amber-500", bgSoft: "bg-amber-50 dark:bg-amber-900/20", shadow: "shadow-amber-500/20", shadowLg: "shadow-[0_8px_40px_-12px_rgba(245,158,11,0.3)]" },
+  violet: { bgActive: "bg-violet-600", text: "text-violet-600", textActive: "text-white", ring: "focus:ring-violet-500/20", border: "border-violet-200 dark:border-violet-900/40", focusBorder: "focus:border-violet-500", bgSoft: "bg-violet-50 dark:bg-violet-900/20", shadow: "shadow-violet-500/20", shadowLg: "shadow-[0_8px_40px_-12px_rgba(139,92,246,0.3)]" },
+  indigo: { bgActive: "bg-indigo-600", text: "text-indigo-600", textActive: "text-white", ring: "focus:ring-indigo-500/20", border: "border-indigo-200 dark:border-indigo-900/40", focusBorder: "focus:border-indigo-500", bgSoft: "bg-indigo-50 dark:bg-indigo-900/20", shadow: "shadow-indigo-500/20", shadowLg: "shadow-[0_8px_40px_-12px_rgba(99,102,241,0.3)]" },
+  sky: { bgActive: "bg-sky-500", text: "text-sky-600", textActive: "text-white", ring: "focus:ring-sky-500/20", border: "border-sky-200 dark:border-sky-900/40", focusBorder: "focus:border-sky-500", bgSoft: "bg-sky-50 dark:bg-sky-900/20", shadow: "shadow-sky-500/20", shadowLg: "shadow-[0_8px_40px_-12px_rgba(14,165,233,0.3)]" },
+  slate: { bgActive: "bg-slate-600", text: "text-slate-600", textActive: "text-white", ring: "focus:ring-slate-500/20", border: "border-slate-200 dark:border-slate-900/40", focusBorder: "focus:border-slate-500", bgSoft: "bg-slate-50 dark:bg-slate-900/20", shadow: "shadow-slate-500/20", shadowLg: "shadow-[0_8px_40px_-12px_rgba(71,85,105,0.3)]" },
+  orange: { bgActive: "bg-orange-500", text: "text-orange-600", textActive: "text-white", ring: "focus:ring-orange-500/20", border: "border-orange-200 dark:border-orange-900/40", focusBorder: "focus:border-orange-500", bgSoft: "bg-orange-50 dark:bg-orange-900/20", shadow: "shadow-orange-500/20", shadowLg: "shadow-[0_8px_40px_-12px_rgba(249,115,22,0.3)]" },
 };
 
 const getShapeClass = (shape: DynamicFormShape, element: "container" | "input" | "button" = "container") => {
@@ -201,6 +213,47 @@ const getSpacingClass = (spacing: DynamicFormSpacing, element: "container" | "in
     case "6x": return "px-4 py-3 text-base";
     case "8x": return "px-5 py-4 text-lg";
     default: return "px-3.5 py-2.5 text-sm";
+  }
+};
+
+const getSizeClass = (size: DynamicFormSize, element: "container" | "input" | "button" | "text" = "input") => {
+  if (element === "text") {
+    switch (size) {
+      case "sm": return "text-xs";
+      case "md": return "text-sm";
+      case "lg": return "text-base";
+      case "xl": return "text-lg";
+      case "2xl": return "text-xl";
+      default: return "text-sm";
+    }
+  }
+  if (element === "container") {
+    switch (size) {
+      case "sm": return "max-w-md";
+      case "md": return "max-w-2xl";
+      case "lg": return "max-w-4xl";
+      case "xl": return "max-w-7xl";
+      case "2xl": return "max-w-[96rem]";
+      default: return "w-full";
+    }
+  }
+  if (element === "button") {
+    switch (size) {
+      case "sm": return "h-8 px-3 text-xs";
+      case "md": return "h-10 px-4 text-sm";
+      case "lg": return "h-12 px-6 text-base";
+      case "xl": return "h-14 px-8 text-lg";
+      case "2xl": return "h-16 px-10 text-xl";
+      default: return "h-10 px-4 text-sm";
+    }
+  }
+  switch (size) {
+    case "sm": return "h-8 text-xs";
+    case "md": return "h-10 text-sm";
+    case "lg": return "h-12 text-base";
+    case "xl": return "h-14 text-lg";
+    case "2xl": return "h-16 text-xl";
+    default: return "h-10 text-sm";
   }
 };
 
@@ -341,7 +394,7 @@ export const OTPInput: React.FC<OTPInputProps> = React.memo(({
           onChange,
           disabled = false
         }) => {
-          const { color, shape, variant } = useDynamicForm();
+          const { color, shape, size, variant } = useDynamicForm();
           const activeTheme = colorThemeMap[color];
           const inputsRef = useRef<HTMLInputElement[]>([]);
           const otpArray = useMemo(() => {
@@ -408,7 +461,7 @@ export const OTPInput: React.FC<OTPInputProps> = React.memo(({
                       variant === "glass" && "bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 text-foreground focus:border-white/40 focus:ring-1 focus:ring-white/10",
                       variant === "minimal" && "bg-transparent border-b-2 border-border focus:border-primary rounded-none",
                       variant === "dark" && "bg-card border border-border text-foreground focus:border-primary",
-                      variant !== "glass" && variant !== "minimal" && variant !== "dark" && cn("bg-muted/40 border border-border/80 focus:border-primary focus:ring-2", activeTheme.borderActive)
+                      variant !== "glass" && variant !== "minimal" && variant !== "dark" && cn("bg-muted/40 border border-border/80 focus:ring-2", activeTheme.focusBorder)
                     )}
                   />
                 ))}
@@ -433,7 +486,7 @@ export const AutocompleteInput: React.FC<AutocompleteProps> = React.memo(({
           placeholder,
           disabled
         }) => {
-          const { color, shape, spacing, variant } = useDynamicForm();
+          const { color, shape, spacing, size, variant } = useDynamicForm();
           const activeTheme = colorThemeMap[color];
           const [isOpen, setIsOpen] = useState(false);
           const [searchTerm, setSearchTerm] = useState("");
@@ -517,7 +570,7 @@ export const AutocompleteInput: React.FC<AutocompleteProps> = React.memo(({
                   variant === "glass" && "bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 focus:border-white/30 placeholder:text-muted-foreground/30",
                   variant === "minimal" && "bg-transparent border-b border-border/50 rounded-none py-1 px-0 focus:ring-0",
                   variant === "dark" && "bg-card border border-border text-foreground",
-                  variant !== "glass" && variant !== "minimal" && variant !== "dark" && cn("bg-muted/40 border border-border/50 focus:ring-1", activeTheme.borderActive)
+                  variant !== "glass" && variant !== "minimal" && variant !== "dark" && cn("bg-muted/40 border border-border/50 focus:ring-1", activeTheme.focusBorder)
                 )}
               />
               {isOpen && filtered.length > 0 && (
@@ -560,7 +613,7 @@ export const MultiSelectInput: React.FC<MultiSelectProps> = React.memo(({
           placeholder = "Select options",
           disabled
         }) => {
-          const { color, shape, spacing, variant } = useDynamicForm();
+          const { color, shape, spacing, size, variant } = useDynamicForm();
           const activeTheme = colorThemeMap[color];
           const [isOpen, setIsOpen] = useState(false);
           const dropdownRef = useRef<HTMLDivElement>(null);
@@ -601,7 +654,7 @@ export const MultiSelectInput: React.FC<MultiSelectProps> = React.memo(({
                   variant === "glass" && "bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5",
                   variant === "minimal" && "bg-transparent border-b border-border/50 rounded-none py-1.5 px-0",
                   variant === "dark" && "bg-card border border-border text-foreground",
-                  variant !== "glass" && variant !== "minimal" && variant !== "dark" && cn("bg-muted/40 border border-border/50 focus:ring-1", activeTheme.borderActive)
+                  variant !== "glass" && variant !== "minimal" && variant !== "dark" && cn("bg-muted/40 border border-border/50 focus:ring-1", activeTheme.focusBorder)
                 )}
               >
                 <div className="flex flex-wrap gap-1.5 items-center max-w-[90%]">
@@ -670,7 +723,7 @@ export const FileUploadInput: React.FC<FileUploadProps> = React.memo(({
           maxSizeMB = 5,
           disabled
         }) => {
-          const { color, shape, variant } = useDynamicForm();
+          const { color, shape, size, variant } = useDynamicForm();
           const activeTheme = colorThemeMap[color];
           const [dragActive, setDragActive] = useState(false);
           const [files, setFiles] = useState<File[]>([]);
@@ -728,7 +781,7 @@ export const FileUploadInput: React.FC<FileUploadProps> = React.memo(({
                 className={cn(
                   "w-full border-2 border-dashed flex flex-col items-center justify-center p-6 text-center cursor-pointer transition-all min-h-[140px]",
                   getShapeClass(shape, "container"),
-                  dragActive ? cn(activeTheme.borderActive, activeTheme.bgSoft) : "border-border/60 bg-muted/20 hover:bg-muted/30",
+                  dragActive ? cn(activeTheme.focusBorder, activeTheme.bgSoft) : "border-border/60 bg-muted/20 hover:bg-muted/30",
                   variant === "glass" && "border-white/10 dark:border-white/5 hover:bg-white/5 dark:hover:bg-black/20 bg-transparent",
                   variant === "dark" && "border-border bg-card hover:bg-accent/50",
                   disabled && "opacity-50 cursor-not-allowed"
@@ -793,7 +846,12 @@ FileUploadInput.displayName = "FileUploadInput";
 // FORM FIELD WRAPPER (Visual Frameworks)
 // ==========================================
 
-const labelVariants = {
+const labelVariants: Record<FormVariant, string> = {
+  default: "text-sm font-semibold text-foreground mb-1.5",
+  premium: "text-sm font-semibold text-foreground/90 tracking-tight mb-1.5",
+  clean: "text-sm font-medium text-foreground/80 mb-1.5",
+  solid: "text-sm font-semibold text-white/90 mb-1.5",
+  floating: "text-sm font-semibold text-foreground/90 mb-1.5",
   minimal: "text-xs font-bold tracking-wider text-muted-foreground uppercase mb-1",
   modern: "text-sm font-semibold tracking-tight text-foreground/90 mb-1.5",
   glass: "text-xs font-semibold tracking-wider text-white/70 uppercase mb-1",
@@ -822,7 +880,7 @@ export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
           methods,
           floatingLabel = false
         }) => {
-          const { color, shape, spacing, variant } = useDynamicForm();
+          const { color, shape, spacing, size, variant } = useDynamicForm();
           const activeTheme = colorThemeMap[color];
           const {
             register,
@@ -835,17 +893,27 @@ export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
           const errorMessage = error?.message as string | undefined;
 
           const baseInputClass = cn(
-            "w-full text-sm placeholder:text-muted-foreground/40 transition-all focus-visible:outline-none",
+            "w-full placeholder:text-muted-foreground/40 transition-all focus-visible:outline-none",
             getShapeClass(shape, "input"),
             getSpacingClass(spacing, "input"),
+            getSizeClass(size, "input"),
+            getSizeClass(size, "text"),
             activeTheme.ring,
-            variant === "minimal" && "bg-transparent border-b border-border/50 rounded-none py-1.5 px-0 focus:ring-0",
-            variant === "modern" && cn("bg-muted/40 border border-border/50 focus:ring-1", activeTheme.borderActive),
-            variant === "glass" && "bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 focus:border-white/30 focus:ring-1 focus:ring-white/10 backdrop-blur-md",
-            variant === "outline" && cn("bg-background border border-border focus:ring-2", activeTheme.borderActive),
-            variant === "elevated" && cn("bg-background border border-border/10 shadow-[0_2px_4px_rgba(0,0,0,0.02)] focus:ring-2", activeTheme.borderActive),
-            variant === "dark" && cn("bg-card border border-border text-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-ring", activeTheme.borderActive),
-            variant === "compact" && cn("bg-muted/20 border border-border/40", activeTheme.borderActive),
+            // Strictly neutral backgrounds that respect light/dark mode precisely
+            color !== "default" ? "bg-background text-foreground shadow-sm" : "",
+            
+            variant === "default" && cn("border border-border focus:ring-2", color === "default" && "bg-background", activeTheme.focusBorder),
+            variant === "minimal" && cn("border-b border-border/50 rounded-none py-1.5 px-0 focus:ring-0", color === "default" && "bg-transparent text-foreground", activeTheme.focusBorder),
+            variant === "modern" && cn("border border-border/50 focus:ring-1", color === "default" && "bg-muted/40", activeTheme.focusBorder),
+            variant === "glass" && cn("border border-white/10 dark:border-white/5 focus:ring-1 backdrop-blur-md", color === "default" && "bg-white/5 dark:bg-black/20 text-foreground", activeTheme.focusBorder),
+            variant === "outline" && cn("border border-border focus:ring-2", color === "default" && "bg-transparent text-foreground", activeTheme.focusBorder),
+            variant === "elevated" && cn("border border-border/10 focus:ring-2", color === "default" && "bg-background shadow-[0_2px_4px_rgba(0,0,0,0.02)]", activeTheme.focusBorder),
+            variant === "dark" && cn("border border-zinc-800 text-zinc-100 placeholder:text-zinc-500 focus:ring-1", color === "default" ? "bg-zinc-950" : "dark:bg-zinc-950", activeTheme.focusBorder),
+            variant === "compact" && cn("border border-border/40", color === "default" && "bg-muted/20", activeTheme.focusBorder),
+            variant === "premium" && cn("backdrop-blur-xl border border-white/20 dark:border-white/10 focus:ring-2", color === "default" ? "bg-background/40 shadow-lg" : "shadow-md", activeTheme.focusBorder),
+            variant === "clean" && cn("border-none focus:ring-2", color === "default" ? "bg-muted/10 shadow-[0_8px_20px_-8px_rgba(0,0,0,0.1)]" : "shadow-sm", activeTheme.ring),
+            variant === "solid" && cn("text-foreground border border-border focus:ring-2", color === "default" && "bg-muted/50", activeTheme.focusBorder),
+            variant === "floating" && cn("border border-border/50 focus:-translate-y-0.5 focus:shadow-lg focus:ring-2", color === "default" ? "bg-background shadow-md" : "shadow-sm", activeTheme.focusBorder),
             field.icon && "pl-10",
             errorMessage && "border-destructive focus:border-destructive focus:ring-destructive/10 focus:ring-2"
           );
@@ -1066,7 +1134,7 @@ export const FieldWrapper: React.FC<FieldWrapperProps> = React.memo(({
                   {!floatingLabel && field.label && (
                     <label htmlFor={field.name} className={labelVariants[variant]}>
                       {field.label}
-                      {field.required && <span className="text-destructive ml-0.5">*</span>}
+                      {field.required && <span className={cn("ml-0.5", activeTheme.text)}>*</span>}
                     </label>
                   )}
 
@@ -1176,14 +1244,54 @@ FormStepWizard.displayName = "FormStepWizard";
 // MAIN DYNAMIC FORM COMPONENT
 // ==========================================
 
-const containerVariants = {
-  minimal: "bg-transparent p-0 border-none space-y-4",
-  modern: "bg-card/40 border border-border/40 rounded-2xl p-6 shadow-sm backdrop-blur-md space-y-5",
-  glass: "bg-card/25 backdrop-blur-xl border border-white/10 dark:border-white/5 rounded-3xl p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.08)] space-y-6",
-  outline: "bg-background border-2 border-border/80 rounded-xl p-6 space-y-4",
-  elevated: "bg-card border border-border/20 rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.2)] space-y-5",
-  dark: "bg-zinc-950 border border-zinc-800 rounded-2xl p-8 text-zinc-100 space-y-6",
-  compact: "bg-card/50 border border-border/30 rounded-xl p-4 space-y-3"
+const getContainerClasses = (variant: FormVariant, color: DynamicFormColor) => {
+  const theme = colorThemeMap[color];
+
+  // Base backgrounds that strictly align with light/dark mode
+  const baseBg = "bg-background text-foreground";
+  const cardBg = "bg-card text-card-foreground";
+  const glassBg = "bg-background/40 text-foreground";
+
+  if (variant === "solid") {
+    // "light bg in light theme and dark bg in dark theme"
+    return cn("border shadow-xl space-y-4", baseBg, color !== "default" ? theme.border : "border-border", theme.shadow);
+  }
+
+  if (variant === "premium") {
+    return cn(
+      "backdrop-blur-[40px] border ring-1 ring-white/20 dark:ring-white/10 p-8 space-y-5",
+      color === "default" ? "bg-background/80" : cn(theme.bgSoft, "bg-opacity-80 dark:bg-opacity-80"),
+      color !== "default" ? theme.border : "border-foreground/10",
+      theme.shadowLg,
+      "text-foreground"
+    );
+  }
+
+  if (variant === "clean") {
+    return cn(
+      "border-none ring-1 ring-foreground/5 p-8 space-y-5",
+      baseBg,
+      color !== "default" ? cn("shadow-2xl", theme.shadowLg) : "shadow-[0_30px_60px_-15px_rgba(0,0,0,0.12)]"
+    );
+  }
+
+  if (variant === "floating") {
+    return cn(
+      "border border-border/50 translate-y-2 p-8 space-y-5",
+      baseBg,
+      color !== "default" ? cn("shadow-2xl", theme.shadowLg) : "shadow-[0_0_0_1px_rgba(0,0,0,0.05),0_30px_60px_-12px_rgba(0,0,0,0.2)]"
+    );
+  }
+
+  if (variant === "minimal") return "bg-transparent text-foreground p-0 border-none space-y-4";
+  if (variant === "modern") return cn("border p-6 shadow-sm backdrop-blur-md space-y-5", cardBg, color !== "default" ? theme.border : "border-border/40");
+  if (variant === "glass") return cn("backdrop-blur-xl border p-8 space-y-6 shadow-[0_8px_32px_0_rgba(0,0,0,0.08)]", glassBg, color !== "default" ? theme.border : "border-white/10 dark:border-white/5");
+  if (variant === "outline") return cn("bg-transparent text-foreground border-2 p-6 space-y-4", color !== "default" ? theme.border : "border-border/80");
+  if (variant === "elevated") return cn("border p-6 space-y-5", cardBg, color !== "default" ? theme.border : "border-border/20", color !== "default" ? theme.shadow : "shadow-[0_10px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.2)]");
+  if (variant === "dark") return cn("bg-zinc-950 border p-8 space-y-6 text-zinc-50", color !== "default" ? theme.border : "border-zinc-800");
+  if (variant === "compact") return cn("border p-4 space-y-3", cardBg, color !== "default" ? theme.border : "border-border/30");
+  
+  return cn("border p-6 shadow-sm space-y-4", baseBg, color !== "default" ? theme.border : "border-border");
 };
 
 export const DynamicForm: React.FC<DynamicFormProps> = React.memo(({
@@ -1192,6 +1300,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = React.memo(({
           color = "default",
           shape = "default",
           spacing = "default",
+          size = "default",
           steps,
           api,
           defaultValues = {},
@@ -1384,14 +1493,15 @@ export const DynamicForm: React.FC<DynamicFormProps> = React.memo(({
           const activeTheme = colorThemeMap[color];
 
           return (
-            <DynamicFormContext.Provider value={{ color, shape, spacing, variant }}>
+            <DynamicFormContext.Provider value={{ color, shape, spacing, size, variant }}>
               <form
                 onSubmit={handleSubmit(handleFormSubmit)}
                 className={cn(
-                  "w-full text-foreground transition-all duration-300 relative",
-                  containerVariants[variant],
+                  "text-foreground transition-all duration-300 relative w-full",
+                  getContainerClasses(variant, color),
                   getShapeClass(shape, "container"),
-                  getSpacingClass(spacing, "container")
+                  getSpacingClass(spacing, "container"),
+                  getSizeClass(size, "container")
                 )}
                 style={accentColor ? ({ "--primary": accentColor } as React.CSSProperties) : undefined}
               >
@@ -1452,8 +1562,10 @@ export const DynamicForm: React.FC<DynamicFormProps> = React.memo(({
                         "transition-colors border border-border bg-background/50 hover:bg-muted text-muted-foreground hover:text-foreground font-semibold",
                         getShapeClass(shape, "button"),
                         getSpacingClass(spacing, "button"),
-                        variant === "glass" && "border-white/10 hover:bg-white/10 hover:text-white text-white/80 bg-transparent",
-                        variant === "dark" && "border-zinc-800 bg-zinc-950 hover:bg-zinc-900 text-muted-foreground hover:text-zinc-100"
+                        getSizeClass(size, "button"),
+                        color !== "default" && cn("hover:border-transparent hover:text-white", activeTheme.bgActive.replace("bg-", "hover:bg-")),
+                        color === "default" && variant === "glass" && "border-white/10 hover:bg-white/10 hover:text-white text-white/80 bg-transparent",
+                        color === "default" && variant === "dark" && "border-zinc-800 bg-zinc-950 hover:bg-zinc-900 text-muted-foreground hover:text-zinc-100"
                       )}
                     >
                       Reset
@@ -1469,8 +1581,10 @@ export const DynamicForm: React.FC<DynamicFormProps> = React.memo(({
                         "transition-colors border border-border bg-background hover:bg-muted text-foreground font-semibold",
                         getShapeClass(shape, "button"),
                         getSpacingClass(spacing, "button"),
-                        variant === "glass" && "border-white/10 hover:bg-white/10 text-white/80 bg-transparent",
-                        variant === "dark" && "border-zinc-800 hover:bg-zinc-900 text-zinc-300"
+                        getSizeClass(size, "button"),
+                        color !== "default" && cn("hover:border-transparent hover:text-white", activeTheme.bgActive.replace("bg-", "hover:bg-")),
+                        color === "default" && variant === "glass" && "border-white/10 hover:bg-white/10 text-white/80 bg-transparent",
+                        color === "default" && variant === "dark" && "border-zinc-800 hover:bg-zinc-900 text-zinc-300"
                       )}
                     >
                       Back
@@ -1486,11 +1600,9 @@ export const DynamicForm: React.FC<DynamicFormProps> = React.memo(({
                         "font-bold transition-all flex items-center gap-2 select-none",
                         getShapeClass(shape, "button"),
                         getSpacingClass(spacing, "button"),
-                        activeTheme.bgActive,
-                        activeTheme.text.replace("text-", "text-white dark:text-white "), // Fallback text color inside primary button usually white
-                        "text-white dark:text-white hover:opacity-90 shadow-sm",
-                        variant === "glass" && "bg-white text-black hover:bg-white/90 shadow-none border border-white/20",
-                        variant === "dark" && "bg-zinc-100 text-black hover:bg-zinc-200"
+                        getSizeClass(size, "button"),
+                        color !== "default" ? cn(activeTheme.bgActive, activeTheme.textActive) : (variant === "glass" ? "bg-white text-black hover:bg-white/90 shadow-none border border-white/20" : variant === "dark" ? "bg-zinc-100 text-black hover:bg-zinc-200" : cn(activeTheme.bgActive, activeTheme.textActive)),
+                        "hover:opacity-90 shadow-sm"
                       )}
                     >
                       Next Step
@@ -1503,10 +1615,9 @@ export const DynamicForm: React.FC<DynamicFormProps> = React.memo(({
                         "font-bold transition-all flex items-center gap-2 justify-center disabled:opacity-50 disabled:cursor-not-allowed min-w-[120px]",
                         getShapeClass(shape, "button"),
                         getSpacingClass(spacing, "button"),
-                        activeTheme.bgActive,
-                        "text-white dark:text-white hover:opacity-90 shadow-sm",
-                        variant === "glass" && "bg-white text-black hover:bg-white/90 shadow-none border border-white/20",
-                        variant === "dark" && "bg-zinc-100 text-black hover:bg-zinc-200"
+                        getSizeClass(size, "button"),
+                        color !== "default" ? cn(activeTheme.bgActive, activeTheme.textActive) : (variant === "glass" ? "bg-white text-black hover:bg-white/90 shadow-none border border-white/20" : variant === "dark" ? "bg-zinc-100 text-black hover:bg-zinc-200" : cn(activeTheme.bgActive, activeTheme.textActive)),
+                        "hover:opacity-90 shadow-sm"
                       )}
                     >
                       {submissionState.isLoading ? (

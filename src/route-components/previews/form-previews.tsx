@@ -276,7 +276,11 @@ export const CalculatorPreview: React.FC = () => {
 };
 
 export const DynamicFormPreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
+  const [previewColor, setPreviewColor] = React.useState<any>("default");
+  const [previewVariant, setPreviewVariant] = React.useState<any>("modern");
+  const [previewShape, setPreviewShape] = React.useState<any>("default");
+  const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+  const [previewSize, setPreviewSize] = React.useState<any>("default");
   const [submittedData, setSubmittedData] = useState<any>(null);
   const [activeDemo, setActiveDemo] = useState("contact");
 
@@ -423,6 +427,43 @@ export const DynamicFormPreview: React.FC = () => {
     }
   ];
 
+  const extraControls = (
+    <div className="flex flex-col gap-4 w-full mt-4 border-t border-border/50 pt-6">
+      <div className="grid grid-cols-1 md:grid-cols-[100px_1fr] items-start md:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Style</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["solid", "premium", "clean", "floating", "minimal", "modern", "glass", "outline", "elevated", "dark", "compact"] as const).map(v => (
+            <button key={v} onClick={() => setPreviewVariant(v)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300", previewVariant === v ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{v}</button>
+          ))}
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-[100px_1fr] items-start md:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "square", "rounded", "sharp"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-[100px_1fr] items-start md:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "2x", "4x", "6x", "8x"] as const).map(sp => (
+            <button key={sp} onClick={() => setPreviewSpacing(sp)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg transition-all duration-300", previewSpacing === sp ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{sp === "default" ? "Default" : sp.toUpperCase()}</button>
+          ))}
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-[100px_1fr] items-start md:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "sm", "md", "lg", "xl", "full"] as const).map(sz => (
+            <button key={sz} onClick={() => setPreviewSize(sz)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg transition-all duration-300", previewSize === sz ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{sz === "default" ? "Default" : sz.toUpperCase()}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <PreviewContainer
       title="Dynamic Form"
@@ -431,6 +472,7 @@ export const DynamicFormPreview: React.FC = () => {
       activeVariant={activeDemo}
       contentClassName="items-start py-8"
       align="start"
+      extraControls={extraControls}
       onVariantChange={(v) => {
         setActiveDemo(v);
         setSubmittedData(null);
@@ -448,7 +490,11 @@ export const DynamicFormPreview: React.FC = () => {
                 className="w-full"
               >
                 <DynamicForm
-                  variant="modern"
+                  variant={previewVariant}
+                  color={previewColor}
+                  shape={previewShape}
+                  spacing={previewSpacing}
+                  size={previewSize}
                   fields={contactFields}
                   submitButtonText="Send Inquiry"
                   showResetButton={true}
@@ -468,7 +514,11 @@ export const DynamicFormPreview: React.FC = () => {
                 className="w-full"
               >
                 <DynamicForm
-                  variant="glass"
+                  variant={previewVariant}
+                  color={previewColor}
+                  shape={previewShape}
+                  spacing={previewSpacing}
+                  size={previewSize}
                   fields={wizardFields}
                   steps={wizardSteps}
                   onSubmit={(data) => setSubmittedData(data)}
@@ -485,7 +535,11 @@ export const DynamicFormPreview: React.FC = () => {
                 className="w-full"
               >
                 <DynamicForm
-                  variant="elevated"
+                  variant={previewVariant}
+                  color={previewColor}
+                  shape={previewShape}
+                  spacing={previewSpacing}
+                  size={previewSize}
                   fields={loginFields}
                   submitButtonText="Log In to Dashboard"
                   onSubmit={(data) => setSubmittedData(data)}

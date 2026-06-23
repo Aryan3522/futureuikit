@@ -160,6 +160,37 @@ export const DrawerPreview: React.FC = () => {
     const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [placement, setPlacement] = React.useState<"left" | "right" | "top" | "bottom">("right");
   const [variant, setVariant] = React.useState<"default" | "compact" | "glass" | "elevated" | "floating">("default");
+  const [size, setSize] = React.useState<"default" | "sm" | "md" | "lg" | "xl" | "full">("default");
+  const [spacing, setSpacing] = React.useState<"default" | "2x" | "4x" | "6x" | "8x">("default");
+
+  const extraControls = (
+    <div className="flex flex-col gap-4 w-full mt-4 border-t border-border/50 pt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Placement</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["left", "right", "top", "bottom"] as const).map(p => (
+            <button key={p} onClick={() => setPlacement(p)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", placement === p ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{p}</button>
+          ))}
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "sm", "md", "lg", "xl", "full"] as const).map(s => (
+            <button key={s} onClick={() => setSize(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", size === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+            <button key={s} onClick={() => setSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg uppercase transition-all duration-300 whitespace-nowrap", spacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <PreviewContainer
@@ -168,43 +199,37 @@ export const DrawerPreview: React.FC = () => {
       variants={["default", "compact", "glass", "elevated", "floating"]}
       activeVariant={variant}
       onVariantChange={setVariant}
-      contentClassName="relative overflow-hidden"
-      extraControls={
-        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
-          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Placement</span>
-          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
-            {(["left", "right", "top", "bottom"] as const).map(p => (
-              <button key={p} onClick={() => setPlacement(p)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", placement === p ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{p}</button>
-            ))}
-          </div>
-        </div>
-      } colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
+      contentClassName="relative overflow-hidden min-h-[500px]"
+      extraControls={extraControls} 
+      colors={DEFAULT_COLORS} 
+      activeColor={previewColor} 
+      onColorChange={setPreviewColor}
     >
-      <div className="flex-1 flex items-center justify-center w-full h-full min-h-75">
-        <Drawer placement={placement} variant={variant} color={previewColor}>
+      <div className="flex-1 flex items-center justify-center w-full h-full">
+        <Drawer placement={placement} variant={variant} color={previewColor} size={size} spacing={spacing}>
           <DrawerTrigger asChild>
-            <Button className="rounded-full px-8 shadow-lg shadow-primary/20">Open Drawer</Button>
+            <Button className="rounded-full px-8 shadow-lg shadow-primary/20" color={previewColor} variant={previewVariant}>Open Drawer</Button>
           </DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>Premium Drawer</DrawerTitle>
-            <DrawerDescription>A native feeling interaction powered by Framer Motion.</DrawerDescription>
-          </DrawerHeader>
-          <DrawerBody>
-            <div className="space-y-4 pt-4">
-              <div className="w-full h-32 rounded-xl bg-muted animate-pulse" />
-              <div className="w-3/4 h-8 rounded-lg bg-muted animate-pulse" />
-              <div className="w-1/2 h-8 rounded-lg bg-muted animate-pulse" />
-            </div>
-          </DrawerBody>
-          <DrawerFooter>
-            <Button className="w-full" color={previewColor} variant={previewVariant}>Confirm Action</Button>
-            <DrawerClose asChild>
-              <Button variant="outline" className="w-full" color={previewColor}>Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Premium Drawer</DrawerTitle>
+              <DrawerDescription>A native feeling interaction powered by Framer Motion.</DrawerDescription>
+            </DrawerHeader>
+            <DrawerBody>
+              <div className="space-y-4 pt-4">
+                <div className="w-full h-32 rounded-xl bg-muted animate-pulse border border-border" />
+                <div className="w-3/4 h-8 rounded-lg bg-muted animate-pulse border border-border" />
+                <div className="w-1/2 h-8 rounded-lg bg-muted animate-pulse border border-border" />
+              </div>
+            </DrawerBody>
+            <DrawerFooter>
+              <Button className="w-full" color={previewColor} variant={previewVariant}>Confirm Action</Button>
+              <DrawerClose asChild>
+                <Button variant="outline" className="w-full" color={previewColor}>Cancel</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
       </div>
     </PreviewContainer>
   );

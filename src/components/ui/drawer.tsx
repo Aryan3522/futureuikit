@@ -21,6 +21,8 @@ import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type DrawerColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type DrawerSize = "default" | "sm" | "md" | "lg" | "xl" | "full";
+export type DrawerSpacing = "default" | "2x" | "4x" | "6x" | "8x";
 
 const DrawerContext = React.createContext<{
   isOpen: boolean;
@@ -28,6 +30,8 @@ const DrawerContext = React.createContext<{
   placement: "left" | "right" | "top" | "bottom";
   variant: "default" | "floating" | "glass" | "compact" | "elevated";
   color: DrawerColor;
+  size: DrawerSize;
+  spacing: DrawerSpacing;
 } | null>(null);
 
 function useDrawer() {
@@ -46,6 +50,8 @@ export interface DrawerProps {
   placement?: "left" | "right" | "top" | "bottom";
   variant?: "default" | "floating" | "glass" | "compact" | "elevated";
   color?: DrawerColor;
+  size?: DrawerSize;
+  spacing?: DrawerSpacing;
 }
 
 export const Drawer = React.memo(function Drawer({
@@ -56,6 +62,8 @@ export const Drawer = React.memo(function Drawer({
   placement = "right",
   variant = "default",
   color = "default",
+  size = "default",
+  spacing = "default",
 }: DrawerProps) {
   const [uncontrolledIsOpen, setUncontrolledIsOpen] = React.useState(defaultIsOpen);
 
@@ -73,7 +81,7 @@ export const Drawer = React.memo(function Drawer({
   );
 
   return (
-    <DrawerContext.Provider value={{ isOpen, setIsOpen, placement, variant, color }}>
+    <DrawerContext.Provider value={{ isOpen, setIsOpen, placement, variant, color, size, spacing }}>
       {children}
     </DrawerContext.Provider>
   );
@@ -135,23 +143,47 @@ const drawerVariants = cva(
         slate: "border-slate-500/50 dark:border-slate-400/50",
         orange: "border-orange-500/50 dark:border-orange-400/50",
       },
+      size: {
+        default: "",
+        sm: "",
+        md: "",
+        lg: "",
+        xl: "",
+        full: "",
+      }
     },
     compoundVariants: [
-      {
-        placement: ["left", "right"],
-        variant: ["default", "glass", "elevated"],
-        className: "w-3/4 sm:w-[400px]",
-      },
+      { placement: ["left", "right"], size: ["default", "md"], className: "w-3/4 sm:w-[400px]" },
+      { placement: ["left", "right"], size: "sm", className: "w-[280px]" },
+      { placement: ["left", "right"], size: "lg", className: "w-5/6 sm:w-[600px]" },
+      { placement: ["left", "right"], size: "xl", className: "w-[90vw] sm:w-[800px]" },
+      { placement: ["left", "right"], size: "full", className: "w-screen" },
+
+      { placement: ["top", "bottom"], size: ["default", "md"], className: "h-auto max-h-[50vh]" },
+      { placement: ["top", "bottom"], size: "sm", className: "h-auto max-h-[30vh]" },
+      { placement: ["top", "bottom"], size: "lg", className: "h-auto max-h-[80vh]" },
+      { placement: ["top", "bottom"], size: "xl", className: "h-[90vh]" },
+      { placement: ["top", "bottom"], size: "full", className: "h-screen" },
+
       {
         placement: ["left", "right"],
         variant: "compact",
+        size: "default",
         className: "w-[280px]",
       },
       {
         placement: ["left", "right"],
         variant: "floating",
-        className: "w-3/4 sm:w-[400px] h-[calc(100%-2rem)] my-4 mx-4",
+        className: "h-[calc(100%-2rem)] my-4 mx-4",
       },
+      {
+        placement: ["top", "bottom"],
+        variant: "floating",
+        className: "mx-auto w-[calc(100%-2rem)]",
+      },
+      { placement: "top", variant: "floating", className: "mt-4" },
+      { placement: "bottom", variant: "floating", className: "mb-4" },
+
       {
         placement: "left",
         variant: ["default", "compact", "glass", "elevated"],
@@ -165,42 +197,56 @@ const drawerVariants = cva(
       {
         placement: "top",
         variant: ["default", "compact", "glass", "elevated"],
-        className: "border-b h-auto max-h-[80vh]",
+        className: "border-b",
       },
       {
         placement: "bottom",
         variant: ["default", "compact", "glass", "elevated"],
-        className: "border-t h-auto max-h-[80vh]",
+        className: "border-t",
       },
-      {
-        placement: ["top", "bottom"],
-        variant: "floating",
-        className: "h-auto max-h-[80vh] mx-auto w-[calc(100%-2rem)]",
-      },
-      {
-        placement: "top",
-        variant: "floating",
-        className: "mt-4",
-      },
-      {
-        placement: "bottom",
-        variant: "floating",
-        className: "mb-4",
-      }
     ],
     defaultVariants: {
       placement: "right",
       variant: "default",
       color: "default",
+      size: "default",
     },
   }
 );
+
+const getSpacingClass = (spacing: DrawerSpacing, component: "header" | "body" | "footer") => {
+  if (component === "header") {
+    switch (spacing) {
+      case "2x": return "p-2 pb-1";
+      case "4x": return "p-4 pb-2";
+      case "6x": return "p-6 pb-3";
+      case "8x": return "p-8 pb-4";
+      default: return "p-6";
+    }
+  } else if (component === "body") {
+    switch (spacing) {
+      case "2x": return "p-2 pt-0";
+      case "4x": return "p-4 pt-0";
+      case "6x": return "p-6 pt-0";
+      case "8x": return "p-8 pt-0";
+      default: return "p-6 pt-0";
+    }
+  } else {
+    switch (spacing) {
+      case "2x": return "p-2";
+      case "4x": return "p-4";
+      case "6x": return "p-6";
+      case "8x": return "p-8";
+      default: return "p-6";
+    }
+  }
+};
 
 export const DrawerContent = React.memo(React.forwardRef<
           HTMLDivElement,
           React.HTMLAttributes<HTMLDivElement> & { container?: HTMLElement | null }
         >(({ className, children, container, ...props }, ref) => {
-          const { isOpen, setIsOpen, placement, variant, color } = useDrawer();
+          const { isOpen, setIsOpen, placement, variant, color, size } = useDrawer();
           const contentRef = React.useRef<HTMLDivElement>(null);
           const [mounted, setMounted] = React.useState(false);
 
@@ -334,7 +380,7 @@ export const DrawerContent = React.memo(React.forwardRef<
                     role="dialog"
                     aria-modal="true"
                     tabIndex={-1}
-                    className={cn(drawerVariants({ placement, variant, color }).replace("fixed", positionClass), className)}
+                    className={cn(drawerVariants({ placement, variant, color, size }).replace("fixed", positionClass), className)}
                     {...(props as any)}
                   >
                     {children}
@@ -350,15 +396,18 @@ DrawerContent.displayName = "DrawerContent";
 export const DrawerHeader = React.memo(React.forwardRef<
           HTMLDivElement,
           React.HTMLAttributes<HTMLDivElement>
-        >(({ className, children, ...props }, ref) => (
+        >(({ className, children, ...props }, ref) => {
+          const { spacing } = useDrawer();
+          return (
           <div
             ref={ref}
-            className={cn("flex flex-col space-y-1.5 p-6", className)}
+            className={cn("flex flex-col space-y-1.5", getSpacingClass(spacing, "header"), className)}
             {...props}
           >
             {children}
           </div>
-        )));
+          );
+        }));
 DrawerHeader.displayName = "DrawerHeader";
 
 export const DrawerTitle = React.memo(React.forwardRef<
@@ -391,25 +440,31 @@ DrawerDescription.displayName = "DrawerDescription";
 export const DrawerBody = React.memo(React.forwardRef<
           HTMLDivElement,
           React.HTMLAttributes<HTMLDivElement>
-        >(({ className, ...props }, ref) => (
+        >(({ className, ...props }, ref) => {
+          const { spacing } = useDrawer();
+          return (
           <div
             ref={ref}
-            className={cn("flex-1 overflow-y-auto p-6 pt-0", className)}
+            className={cn("flex-1 overflow-y-auto", getSpacingClass(spacing, "body"), className)}
             {...props}
           />
-        )));
+          );
+        }));
 DrawerBody.displayName = "DrawerBody";
 
 export const DrawerFooter = React.memo(React.forwardRef<
           HTMLDivElement,
           React.HTMLAttributes<HTMLDivElement>
-        >(({ className, ...props }, ref) => (
+        >(({ className, ...props }, ref) => {
+          const { spacing } = useDrawer();
+          return (
           <div
             ref={ref}
-            className={cn("mt-auto flex flex-col gap-2 p-6", className)}
+            className={cn("mt-auto flex flex-col gap-2", getSpacingClass(spacing, "footer"), className)}
             {...props}
           />
-        )));
+          );
+        }));
 DrawerFooter.displayName = "DrawerFooter";
 
 export const DrawerClose = React.memo(React.forwardRef<

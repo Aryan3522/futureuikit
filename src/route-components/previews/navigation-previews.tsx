@@ -154,35 +154,108 @@ export const AccordionPreview: React.FC = () => {
 
 export const DockPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
-  const [variant, setVariant] = useState<"modern" | "clean" | "interactive">("modern");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("ghost");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+    const [previewTheme, setPreviewTheme] = React.useState<any>("macos");
+    const [previewLayout, setPreviewLayout] = React.useState<any>("horizontal");
+
   return (
     <PreviewContainer 
-      title="Interactive Dock" 
-      description="A fluid, macOS-inspired interactive dock with hover scaling."
-      variants={["modern", "clean", "interactive"]}
-      activeVariant={variant}
-      onVariantChange={setVariant as any} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
+      title="Dock Navigation" 
+      description="A fluid, macOS-inspired interactive dock with premium layouts."
+      variants={["solid", "outline", "ghost", "link"]}
+      activeVariant={previewVariant}
+      onVariantChange={setPreviewVariant} 
+      colors={DEFAULT_COLORS} 
+      activeColor={previewColor} 
+      onColorChange={setPreviewColor}
+      extraControls={
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Theme</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "modern", "clean", "futuristic", "brutal", "halftone", "macos"] as const).map(t => (
+                <button key={t} onClick={() => setPreviewTheme(t)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewTheme === t ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{t}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Layout</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["horizontal", "vertical"] as const).map(l => (
+                <button key={l} onClick={() => setPreviewLayout(l)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewLayout === l ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{l}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewShape(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+        </>
+      }
     >
-      <div className="w-full flex items-center justify-center min-h-75">
-        <Dock className="mb-4" variant={variant} color={previewColor}>
-          <DockItem label="Home">
-            <Home className="w-5 h-5" />
-          </DockItem>
-          <DockItem label="Search">
-            <Search className="w-5 h-5" />
-          </DockItem>
-          <DockDivider />
-          <DockItem label="Messages">
-            <MessageSquare className="w-5 h-5" />
-          </DockItem>
-          <DockItem label="Notifications">
-            <Bell className="w-5 h-5" />
-          </DockItem>
-          <DockDivider />
-          <DockItem label="Settings">
-            <Settings className="w-5 h-5" />
-          </DockItem>
+      <div className="w-full flex items-center justify-center min-h-75 p-12">
+        <Dock variant={previewVariant} color={previewColor} shape={previewShape} spacing={previewSpacing} theme={previewTheme} layout={previewLayout}>
+          {previewTheme === "macos" ? (
+            <>
+              <DockItem label="Finder" active>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c9/Finder_Icon_macOS_Big_Sur.png" className="w-full h-full object-contain drop-shadow-md" alt="Finder" />
+              </DockItem>
+              <DockItem label="Chrome">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Google_Chrome_icon_%282011%29.png" className="w-full h-full object-contain drop-shadow-md" alt="Chrome" />
+              </DockItem>
+              <DockItem label="Brave">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Brave_icon_lionface.png" className="w-full h-full object-contain drop-shadow-md" alt="Brave" />
+              </DockItem>
+              <DockItem label="VSCode" active>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/9a/Visual_Studio_Code_1.35_icon.svg" className="w-full h-full object-contain drop-shadow-md" alt="VSCode" />
+              </DockItem>
+              <DockDivider />
+              <DockItem label="Terminal">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Terminalicon2.png" className="w-full h-full object-contain drop-shadow-md" alt="Terminal" />
+              </DockItem>
+              <DockItem label="Trash">
+                <img src="https://raw.githubusercontent.com/vinceliuice/WhiteSur-icon-theme/master/src/places/scalable/user-trash.svg" className="w-full h-full object-contain drop-shadow-md opacity-90" alt="Trash" />
+              </DockItem>
+            </>
+          ) : (
+            <>
+              <DockItem label="Home" active>
+                <Home className="w-5 h-5" />
+              </DockItem>
+              <DockItem label="Search">
+                <Search className="w-5 h-5" />
+              </DockItem>
+              <DockDivider />
+              <DockItem label="Messages">
+                <MessageSquare className="w-5 h-5" />
+              </DockItem>
+              <DockItem label="Notifications">
+                <Bell className="w-5 h-5" />
+              </DockItem>
+              <DockDivider />
+              <DockItem label="Settings">
+                <Settings className="w-5 h-5" />
+              </DockItem>
+            </>
+          )}
         </Dock>
       </div>
     </PreviewContainer>
