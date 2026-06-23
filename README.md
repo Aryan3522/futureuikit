@@ -17,7 +17,7 @@
 - 🌗 **Theme-adaptive** — Full dark/light mode support using CSS variables
 - ⚡ **CLI-powered** — Install individual components directly into your codebase (like shadcn/ui)
 - 🔒 **Zero lock-in** — You own the code. No runtime dependency on Future UI after install
-- 🧩 **29+ components** — Buttons, loaders, cards, particles, calendars, error pages, and more
+- 🧩 **90+ components** — Buttons, loaders, cards, particles, calendars, error pages, and more
 - 🏗️ **App Router ready** — Built for Next.js 16 App Router
 
 ---
@@ -58,35 +58,97 @@ The CLI will:
 
 | Slug | Component | Category |
 |------|-----------|----------|
-| `primary` | Primary Button | Form |
-| `glowy` | Glowy Button | Form |
-| `calculator` | Calculator | Utility |
-| `calendar` | Calendar | Utility |
-| `cinematic-error` | Cinematic Error Page | Feedback |
-| `error-page` | Neon Error Page | Feedback |
-| `particles` | Particle Background | Background |
-| `dot-background` | Dot Background | Background |
-| `perspective-grid` | Perspective Grid | Background |
-| `infinite-slider` | Carousel Slider | Display |
-| `expanding-card` | Expanding Flex Card | Display |
-| `basic-card` | Basic Card | Display |
 | `accordion` | Accordion | Layout |
-| `search-input` | Search Input | Form |
-| `toast` | Toast Notification | Feedback |
-| `scroll-progress` | Scroll Progress Bar | UI |
-| `point-cursor` | Custom Cursor | UI |
-| `basic` | Basic Loader | Loader |
+| `ai-chat` | AI Chat Interface | Application |
+| `alert-dialog` | Alert Dialog | Feedback |
+| `aspect-ratio` | Aspect Ratio | Layout |
+| `automotive-carousel` | Automotive Carousel | Display |
+| `badge` | Badge | Display |
+| `basic-card` | Basic Card | Display |
+| `basic-loader` | Basic Loader | Loader |
+| `bmw-m4` | BMW M4 | UI |
 | `boxy-bounce` | Bouncy Loader | Loader |
 | `boxy-rotate` | Rotating Loader | Loader |
 | `boxy-shift` | Boxy Loader | Loader |
-| `menu` | Circle Navigation Menu | Navigation |
-| `badge` | Badge | Display |
-| `button` | Base Button | Form |
+| `browser-window` | Browser Window | Application |
+| `button` | Button | Form |
+| `calculator` | Calculator | Utility |
+| `calendar` | Calendar | Utility |
 | `card` | Card | Layout |
+| `cinematic-error` | Cinematic Error | Feedback |
+| `clay-morph-button` | Clay Morphism Button | Form |
+| `collapsible` | Collapsible | Layout |
+| `command-palette` | Command Palette | Navigation |
+| `component-page-sidebar` | Component Page Sidebar | Navigation |
+| `components-grid` | Components Grid | Display |
+| `context-menu` | Context Menu | Navigation |
+| `cursor-glow-button` | Cursor Glow Button | Form |
+| `dock` | Dock | Navigation |
+| `dot-background` | Dot Background | Background |
+| `drawer` | Drawer | Feedback |
+| `dropdown-menu` | Dropdown Menu | Navigation |
+| `dynamic-form` | Dynamic Form System | Form |
+| `error-page` | Error Page | Feedback |
+| `expanding-card` | Expanding Flex Card | Display |
+| `file-upload` | FileUpload | Form |
+| `filter-builder` | Filter Builder | Form |
+| `footer` | Footer | Layout |
+| `form-builder` | FormBuilder | Form |
+| `glass-panel` | Glass Panel | Display |
+| `global-breadcrumb` | Global Breadcrumb | Navigation |
+| `glowy` | Glowy Button | Form |
+| `GutterLines` | GutterLines | Background |
+| `header` | Header | Navigation |
+| `highlighter` | Highlighter | Typography |
+| `hover-card` | Hover Card | Navigation |
+| `hover-glare-card` | Hover Glare Card | Display |
+| `icon-cloud` | Icon Cloud | Display |
+| `infinite-slider` | Infinite Carousel Slider | Display |
+| `input-otp` | Input Otp | Form |
+| `kanban` | Kanban Board | Board |
+| `menu` | Circle Navigation Menu | Navigation |
+| `menubar` | Menubar | Navigation |
+| `minimal-button` | Minimal Button | Form |
+| `modal` | Modal | Feedback |
+| `nexus-card` | Nexus Card | Display |
+| `noir-hero-3d` | Noir Hero 3D | Display |
+| `otp-input` | Premium OTP Input | Form |
+| `otp-verification` | OTP Verification | Form |
+| `pagination` | Pagination | Navigation |
+| `particles` | Particles | Background |
+| `perspective-grid` | Perspective Grid | Background |
+| `point-cursor` | Point Cursor | UI |
+| `premium-upload-button` | Premium Upload Button | Form |
+| `primary` | Primary Button | Form |
+| `project-deck` | Project Deck | Display |
+| `puzzle-video` | Puzzle Video | Display |
+| `radio-group` | Radio Group | Form |
+| `resizable` | Resizable | Layout |
+| `rich-text-editor` | Rich Text Editor | Editor |
+| `scifi-helmet` | Sci-Fi Helmet | Display |
+| `scroll-area` | Scroll Area | Layout |
+| `scroll-progress` | Scroll Progress | UI |
+| `scroll-text-reveal` | Scroll Text Reveal | Typography |
+| `search` | Search | Form |
+| `search-input` | Search Input | Form |
+| `select` | Select | Form |
 | `sidebar-button` | Sidebar Button | Navigation |
+| `skeleton` | Skeleton | Loader |
+| `skeuomorphic-button` | Skeuomorphic Button | Form |
+| `slide-up-reveal` | Slide Up Reveal | Typography |
+| `slider` | Slider | Form |
+| `sonner` | Sonner | Feedback |
+| `terminal` | Terminal | Application |
+| `text-3d-flip` | Text 3d Flip | Typography |
 | `text-system` | Typography System | Typography |
-| `github-icon` | GitHub Icon | Icon |
-| `linkedin-icon` | LinkedIn Icon | Icon |
+| `toast` | Toast Notification | Feedback |
+| `toggle` | Toggle | Form |
+| `toggle-group` | Toggle Group | Form |
+| `tooltip` | Tooltip | Navigation |
+| `typing-animation` | Typing Animation | Typography |
+| `velocity-marquee` | Velocity Marquee | Display |
+| `workflow-builder` | Workflow Builder | Board |
+
 
 > Browse live previews and copy-paste code at **[futureuikit.vercel.app/components](https://futureuikit.vercel.app/components)**
 

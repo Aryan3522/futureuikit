@@ -67,11 +67,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "sync": "node ./bin/sync.mjs",
+    "sync": "node ./bin/sync.mjs && node ./bin/generate-readme.mjs",
+    "generate-readme": "node ./bin/generate-readme.mjs",
     "lint": "eslint",
     "cli:version": "node ./bin/cli.mjs --version",
     "build:icons": "tsup && tsc --project tsconfig.icons.json",
-    "prepack": "npm run build:icons"
+    "prepack": "npm run build:icons && npm run generate-readme"
   },
   "peerDependencies": {
     "clsx": ">=2.0.0",
