@@ -15,7 +15,6 @@
 import React, { createContext, useContext, useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, X, ChevronDown, GripVertical, Check, Filter } from "lucide-react";
-import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 // ==========================================
@@ -25,6 +24,10 @@ import { cn } from "@/lib/utils";
 export type FilterBuilderColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
 export type FilterBuilderShape = "default" | "square" | "rounded" | "sharp";
 export type FilterBuilderSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+export type FilterBuilderTheme = "default" | "modern" | "clean" | "futuristic" | "brutal" | "halftone";
+export type FilterBuilderVariant = "solid" | "outline" | "ghost" | "link";
+export type FilterBuilderSize = "default" | "sm" | "md" | "lg" | "xl" | "full";
+export type FilterBuilderLayout = "default" | "compact" | "minimal" | "card";
 
 export type FieldType = "text" | "number" | "date" | "select" | "multiselect" | "boolean" | "currency" | "percentage" | "user" | "tags";
 
@@ -63,15 +66,16 @@ export interface FilterGroup {
 
 export type FilterNode = FilterRule | FilterGroup;
 
-type VariantType = "default" | "minimal" | "enterprise" | "compact" | "glass";
-
 interface FilterBuilderContextType {
   fields: FilterField[];
   operators: FilterOperator[];
-  variant: VariantType;
+  layout: FilterBuilderLayout;
+  variant: FilterBuilderVariant;
+  theme: FilterBuilderTheme;
   color: FilterBuilderColor;
   shape: FilterBuilderShape;
   spacing: FilterBuilderSpacing;
+  size: FilterBuilderSize;
   onUpdateNode: (id: string, updates: any) => void;
   onDeleteNode: (id: string) => void;
   onAddRule: (parentId: string) => void;
@@ -93,17 +97,17 @@ const useFilterBuilder = () => {
 // THEMING
 // ==========================================
 
-const colorThemeMap: Record<FilterBuilderColor, { text: string; bgActive: string; ring: string; borderActive: string }> = {
-  default: { text: "text-foreground", bgActive: "bg-muted", ring: "focus:ring-ring/20", borderActive: "border-foreground" },
-  blue: { text: "text-blue-600", bgActive: "bg-blue-50 dark:bg-blue-900/20", ring: "focus:ring-blue-600/20", borderActive: "border-blue-600" },
-  emerald: { text: "text-emerald-600", bgActive: "bg-emerald-50 dark:bg-emerald-900/20", ring: "focus:ring-emerald-600/20", borderActive: "border-emerald-600" },
-  rose: { text: "text-rose-600", bgActive: "bg-rose-50 dark:bg-rose-900/20", ring: "focus:ring-rose-600/20", borderActive: "border-rose-600" },
-  amber: { text: "text-amber-600", bgActive: "bg-amber-50 dark:bg-amber-900/20", ring: "focus:ring-amber-500/20", borderActive: "border-amber-500" },
-  violet: { text: "text-violet-600", bgActive: "bg-violet-50 dark:bg-violet-900/20", ring: "focus:ring-violet-600/20", borderActive: "border-violet-600" },
-  indigo: { text: "text-indigo-600", bgActive: "bg-indigo-50 dark:bg-indigo-900/20", ring: "focus:ring-indigo-600/20", borderActive: "border-indigo-600" },
-  sky: { text: "text-sky-600", bgActive: "bg-sky-50 dark:bg-sky-900/20", ring: "focus:ring-sky-500/20", borderActive: "border-sky-500" },
-  slate: { text: "text-slate-600", bgActive: "bg-slate-50 dark:bg-slate-900/20", ring: "focus:ring-slate-600/20", borderActive: "border-slate-600" },
-  orange: { text: "text-orange-600", bgActive: "bg-orange-50 dark:bg-orange-900/20", ring: "focus:ring-orange-500/20", borderActive: "border-orange-500" },
+const colorMap: Record<FilterBuilderColor, { border: string; bg: string; text: string; bgActive: string; bgHover: string; ring: string; gradient: string }> = {
+  default: { border: "border-foreground/50", bg: "bg-foreground", text: "text-foreground", bgActive: "bg-foreground/5", bgHover: "hover:bg-foreground/5", ring: "focus:ring-ring/20", gradient: "from-foreground/10" },
+  blue: { border: "border-blue-500", bg: "bg-blue-600", text: "text-blue-600", bgActive: "bg-blue-600/5", bgHover: "hover:bg-blue-600/5", ring: "focus:ring-blue-600/20", gradient: "from-blue-500/10" },
+  emerald: { border: "border-emerald-500", bg: "bg-emerald-600", text: "text-emerald-600", bgActive: "bg-emerald-600/5", bgHover: "hover:bg-emerald-600/5", ring: "focus:ring-emerald-600/20", gradient: "from-emerald-500/10" },
+  rose: { border: "border-rose-500", bg: "bg-rose-600", text: "text-rose-600", bgActive: "bg-rose-600/5", bgHover: "hover:bg-rose-600/5", ring: "focus:ring-rose-600/20", gradient: "from-rose-500/10" },
+  amber: { border: "border-amber-500", bg: "bg-amber-500", text: "text-amber-600", bgActive: "bg-amber-500/5", bgHover: "hover:bg-amber-500/5", ring: "focus:ring-amber-500/20", gradient: "from-amber-500/10" },
+  violet: { border: "border-violet-500", bg: "bg-violet-600", text: "text-violet-600", bgActive: "bg-violet-600/5", bgHover: "hover:bg-violet-600/5", ring: "focus:ring-violet-600/20", gradient: "from-violet-500/10" },
+  indigo: { border: "border-indigo-500", bg: "bg-indigo-600", text: "text-indigo-600", bgActive: "bg-indigo-600/5", bgHover: "hover:bg-indigo-600/5", ring: "focus:ring-indigo-600/20", gradient: "from-indigo-500/10" },
+  sky: { border: "border-sky-500", bg: "bg-sky-500", text: "text-sky-600", bgActive: "bg-sky-500/5", bgHover: "hover:bg-sky-500/5", ring: "focus:ring-sky-500/20", gradient: "from-sky-500/10" },
+  slate: { border: "border-slate-500", bg: "bg-slate-600", text: "text-slate-600", bgActive: "bg-slate-600/5", bgHover: "hover:bg-slate-600/5", ring: "focus:ring-slate-600/20", gradient: "from-slate-500/10" },
+  orange: { border: "border-orange-500", bg: "bg-orange-500", text: "text-orange-600", bgActive: "bg-orange-500/5", bgHover: "hover:bg-orange-500/5", ring: "focus:ring-orange-500/20", gradient: "from-orange-500/10" },
 };
 
 const getShapeClass = (shape: FilterBuilderShape, element: "container" | "button" | "input" = "container") => {
@@ -115,14 +119,23 @@ const getShapeClass = (shape: FilterBuilderShape, element: "container" | "button
   }
 };
 
-const getSpacingClass = (spacing: FilterBuilderSpacing, element: "container" | "button" | "input" = "input") => {
+const getSpacingClass = (spacing: FilterBuilderSpacing, size: FilterBuilderSize, element: "container" | "button" | "input" | "rule" = "input") => {
   if (element === "button") {
     switch (spacing) {
-      case "2x": return "px-2 py-1 text-xs";
-      case "4x": return "px-2.5 py-1.5 text-xs";
-      case "6x": return "px-4 py-2 text-sm";
-      case "8x": return "px-5 py-2.5 text-base";
-      default: return "px-3 py-1 text-xs";
+      case "2x": return size === "sm" ? "px-1 py-0.5 text-[10px]" : "px-2 py-1 text-xs";
+      case "4x": return size === "sm" ? "px-1.5 py-1 text-[10px]" : "px-2.5 py-1.5 text-xs";
+      case "6x": return size === "sm" ? "px-2 py-1.5 text-xs" : size === "lg" ? "px-5 py-2.5 text-base" : "px-4 py-2 text-sm";
+      case "8x": return size === "sm" ? "px-3 py-2 text-sm" : size === "lg" ? "px-6 py-3 text-lg" : "px-5 py-2.5 text-base";
+      default: return size === "sm" ? "px-2 py-1 text-xs" : size === "lg" ? "px-4 py-2 text-base" : "px-3 py-1 text-sm";
+    }
+  }
+  if (element === "input") {
+    switch (spacing) {
+      case "2x": return size === "sm" ? "px-1 py-0.5 text-[10px]" : "px-2 py-1 text-xs";
+      case "4x": return size === "sm" ? "px-1.5 py-1 text-[10px]" : "px-2.5 py-1.5 text-xs";
+      case "6x": return size === "sm" ? "px-2 py-1.5 text-xs" : size === "lg" ? "px-5 py-2.5 text-base" : "px-4 py-2 text-sm";
+      case "8x": return size === "sm" ? "px-3 py-2 text-sm" : size === "lg" ? "px-6 py-3 text-lg" : "px-5 py-2.5 text-base";
+      default: return size === "sm" ? "px-2 py-1 text-xs" : size === "lg" ? "px-4 py-2 text-base" : "px-3 py-1.5 text-sm";
     }
   }
   if (element === "container") {
@@ -134,12 +147,41 @@ const getSpacingClass = (spacing: FilterBuilderSpacing, element: "container" | "
       default: return "p-4 md:p-6";
     }
   }
-  switch (spacing) {
-    case "2x": return "px-2 py-1 text-xs";
-    case "4x": return "px-2.5 py-1.5 text-xs";
-    case "6x": return "px-4 py-2 text-sm";
-    case "8x": return "px-5 py-2.5 text-base";
-    default: return "px-3 py-1.5 text-sm";
+  if (element === "rule") {
+    switch (spacing) {
+      case "2x": return "gap-1 p-1";
+      case "4x": return "gap-1.5 p-1.5";
+      case "6x": return "gap-3 p-3";
+      case "8x": return "gap-4 p-4";
+      default: return "gap-2 p-1.5";
+    }
+  }
+  return "";
+};
+
+const getThemeClasses = (theme: FilterBuilderTheme, colorInfo: any, layout: FilterBuilderLayout) => {
+  if (layout === "minimal") return `bg-transparent border-none shadow-none ${theme === "futuristic" ? "text-white" : ""}`;
+  switch (theme) {
+    case "modern": return `backdrop-blur-md bg-muted/30 border border-border/50 shadow-xl ${colorInfo.text}`;
+    case "clean": return `bg-transparent border border-transparent shadow-none`;
+    case "futuristic": return `bg-black/80 backdrop-blur-md border ${colorInfo.border} shadow-[0_0_15px_rgba(255,255,255,0.05)] text-white`;
+    case "brutal": return `bg-background border-4 ${colorInfo.border} shadow-[4px_4px_0px_0px_currentColor]`;
+    case "halftone": return `bg-[radial-gradient(circle,rgba(0,0,0,0.1)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:16px_16px] border-2 border-dashed ${colorInfo.border}`;
+    default: return layout === "card" ? "bg-card border border-border shadow-sm" : "bg-background border border-border/60 shadow-sm";
+  }
+};
+
+const getRuleVariantClasses = (variant: FilterBuilderVariant, theme: FilterBuilderTheme, colorInfo: any) => {
+  if (theme === "futuristic") return "bg-white/5 border border-white/10 hover:bg-white/10";
+  if (theme === "brutal") return `bg-background border-2 ${colorInfo.border} shadow-[2px_2px_0px_0px_currentColor]`;
+  if (theme === "modern") return "bg-background/20 backdrop-blur-sm border border-border/40 hover:bg-background/40";
+  
+  switch (variant) {
+    case "solid": return `bg-muted/30 border-transparent hover:bg-muted/50`;
+    case "outline": return `border border-dashed ${colorInfo.border} bg-transparent ${colorInfo.bgHover}`;
+    case "ghost": return `bg-transparent border-transparent ${colorInfo.bgHover}`;
+    case "link": return `bg-transparent border-transparent`;
+    default: return "bg-muted/30 border border-border/50 hover:bg-muted/50";
   }
 };
 
@@ -190,10 +232,13 @@ export interface FilterBuilderProps {
   onChange?: (data: FilterGroup) => void;
   fields: FilterField[];
   operators?: FilterOperator[];
-  variant?: VariantType;
+  layout?: FilterBuilderLayout;
+  variant?: FilterBuilderVariant;
+  theme?: FilterBuilderTheme;
   color?: FilterBuilderColor;
   shape?: FilterBuilderShape;
   spacing?: FilterBuilderSpacing;
+  size?: FilterBuilderSize;
   className?: string;
 }
 
@@ -202,30 +247,17 @@ export const FilterBuilder = React.memo(function FilterBuilder({
   onChange,
   fields,
   operators = DEFAULT_OPERATORS,
-  variant = "default",
+  layout = "default",
+  variant = "outline",
+  theme = "default",
   color = "default",
   shape = "default",
   spacing = "default",
+  size = "md",
   className,
 }: FilterBuilderProps) {
   const [data, setData] = useState<FilterGroup>(initialData);
   const [draggedNodeId, setDraggedNodeId] = useState<string | null>(null);
-
-  // Helper to deep clone and modify the tree
-  const modifyTree = useCallback((
-    tree: FilterGroup,
-    modifier: (node: FilterGroup, parent: FilterGroup | null) => FilterGroup | null
-  ): FilterGroup => {
-    const processNode = (node: FilterGroup, parent: FilterGroup | null): FilterGroup | null => {
-      const modifiedNode = modifier({ ...node }, parent);
-      if (!modifiedNode) return null;
-      modifiedNode.children = modifiedNode.children
-        .map(child => child.type === "group" ? processNode(child, modifiedNode) : child)
-        .filter(Boolean) as (FilterRule | FilterGroup)[];
-      return modifiedNode;
-    };
-    return processNode(tree, null) || tree;
-  }, []);
 
   const isFirstRender = useRef(true);
 
@@ -326,20 +358,19 @@ export const FilterBuilder = React.memo(function FilterBuilder({
     });
   }, []);
 
+  const activeTheme = colorMap[color];
+
   return (
     <FilterBuilderContext.Provider value={{
-      fields, operators, variant, color, shape, spacing,
+      fields, operators, layout, variant, theme, color, shape, spacing, size,
       onUpdateNode, onDeleteNode, onAddRule, onAddGroup, onMoveNode,
       draggedNodeId, setDraggedNodeId
     }}>
       <div className={cn(
         "flex flex-col w-full transition-colors duration-300",
         getShapeClass(shape, "container"),
-        variant === "default" && "bg-background border border-border/60 shadow-sm",
-        variant === "enterprise" && "bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800",
-        variant === "glass" && "bg-background/40 backdrop-blur-md border border-border/40 shadow-lg",
-        variant === "minimal" && "bg-transparent",
-        variant === "compact" && "bg-background border border-border/60 text-sm",
+        getThemeClasses(theme, activeTheme, layout),
+        layout === "compact" && "text-sm",
         className
       )}>
         <FilterGroupComponent group={data} isRoot={true} />
@@ -354,7 +385,7 @@ FilterBuilder.displayName = "FilterBuilder";
 // ==========================================
 
 function FilterGroupComponent({ group, isRoot }: { group: FilterGroup; isRoot?: boolean }) {
-  const { variant, color, shape, spacing, onUpdateNode, onAddRule, onAddGroup, onDeleteNode, onMoveNode, draggedNodeId, setDraggedNodeId } = useFilterBuilder();
+  const { layout, variant, theme, color, shape, spacing, size, onUpdateNode, onAddRule, onAddGroup, onDeleteNode, onMoveNode, draggedNodeId, setDraggedNodeId } = useFilterBuilder();
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -374,20 +405,20 @@ function FilterGroupComponent({ group, isRoot }: { group: FilterGroup; isRoot?: 
     setDraggedNodeId(null);
   };
 
-  const activeTheme = colorThemeMap[color];
+  const activeTheme = colorMap[color];
 
   return (
     <div 
       className={cn(
         "flex flex-col relative transition-all duration-300",
         !isRoot && "ml-4 md:ml-6 mt-3 pl-4 md:pl-6 border-l-2",
-        !isRoot && variant === "default" && "border-border/50",
-        !isRoot && variant === "enterprise" && "border-slate-300 dark:border-slate-700",
-        !isRoot && variant === "minimal" && "border-muted",
-        !isRoot && variant === "glass" && "border-primary/20",
-        !isRoot && variant === "compact" && "ml-3 pl-3 mt-2",
-        isRoot && getSpacingClass(spacing, "container"),
-        isRoot && variant === "compact" && "p-3"
+        !isRoot && theme === "default" && "border-border/50",
+        !isRoot && theme === "brutal" && "border-foreground",
+        !isRoot && theme === "modern" && "border-primary/20",
+        !isRoot && theme === "futuristic" && "border-white/20",
+        !isRoot && layout === "compact" && "ml-3 pl-3 mt-2",
+        isRoot && getSpacingClass(spacing, size, "container"),
+        isRoot && layout === "compact" && "p-3"
       )}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
@@ -397,21 +428,18 @@ function FilterGroupComponent({ group, isRoot }: { group: FilterGroup; isRoot?: 
         <div className={cn(
           "flex items-center border overflow-hidden p-0.5",
           getShapeClass(shape, "button"),
-          variant === "default" && "bg-muted/50 border-border/50",
-          variant === "enterprise" && "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm",
-          variant === "minimal" && "bg-transparent border-transparent",
-          variant === "glass" && "bg-background/50 border-border/30",
-          variant === "compact" && "bg-muted/50 border-border/50"
+          theme === "futuristic" ? "bg-white/5 border-white/10" : theme === "brutal" ? "bg-background border-2 border-foreground" : "bg-muted/50 border-border/50",
+          layout === "minimal" && "bg-transparent border-transparent"
         )}>
           <button
             onClick={() => onUpdateNode(group.id, { logicalOperator: "AND" })}
             className={cn(
               "transition-all",
-              getSpacingClass(spacing, "button"),
+              getSpacingClass(spacing, size, "button"),
               getShapeClass(shape, "button"),
               group.logicalOperator === "AND" 
-                ? cn("bg-background shadow-sm font-bold", activeTheme.text) 
-                : "text-muted-foreground hover:text-foreground font-semibold"
+                ? cn("bg-background shadow-sm font-bold", theme === "futuristic" ? "bg-white/20 text-white" : activeTheme.text) 
+                : cn("font-semibold hover:text-foreground", theme === "futuristic" ? "text-white/50 hover:text-white" : "text-muted-foreground")
             )}
           >
             AND
@@ -420,11 +448,11 @@ function FilterGroupComponent({ group, isRoot }: { group: FilterGroup; isRoot?: 
             onClick={() => onUpdateNode(group.id, { logicalOperator: "OR" })}
             className={cn(
               "transition-all",
-              getSpacingClass(spacing, "button"),
+              getSpacingClass(spacing, size, "button"),
               getShapeClass(shape, "button"),
               group.logicalOperator === "OR" 
-                ? cn("bg-background shadow-sm font-bold", activeTheme.text) 
-                : "text-muted-foreground hover:text-foreground font-semibold"
+                ? cn("bg-background shadow-sm font-bold", theme === "futuristic" ? "bg-white/20 text-white" : activeTheme.text) 
+                : cn("font-semibold hover:text-foreground", theme === "futuristic" ? "text-white/50 hover:text-white" : "text-muted-foreground")
             )}
           >
             OR
@@ -436,20 +464,30 @@ function FilterGroupComponent({ group, isRoot }: { group: FilterGroup; isRoot?: 
         <div className="flex items-center gap-1.5 opacity-0 hover:opacity-100 transition-opacity focus-within:opacity-100 sm:opacity-100">
           <button
             onClick={() => onAddRule(group.id)}
-            className={cn("flex items-center gap-1 font-medium text-muted-foreground transition-colors", getSpacingClass(spacing, "button"), getShapeClass(shape, "button"), `hover:${activeTheme.bgActive} hover:${activeTheme.text}`)}
+            className={cn(
+              "flex items-center gap-1 font-medium transition-colors", 
+              getSpacingClass(spacing, size, "button"), 
+              getShapeClass(shape, "button"), 
+              theme === "futuristic" ? "text-white/70 hover:bg-white/10 hover:text-white" : `text-muted-foreground ${activeTheme.bgHover} hover:${activeTheme.text}`
+            )}
           >
             <Plus className="w-3.5 h-3.5" /> Rule
           </button>
           <button
             onClick={() => onAddGroup(group.id)}
-            className={cn("flex items-center gap-1 font-medium text-muted-foreground transition-colors", getSpacingClass(spacing, "button"), getShapeClass(shape, "button"), `hover:${activeTheme.bgActive} hover:${activeTheme.text}`)}
+            className={cn(
+              "flex items-center gap-1 font-medium transition-colors", 
+              getSpacingClass(spacing, size, "button"), 
+              getShapeClass(shape, "button"), 
+              theme === "futuristic" ? "text-white/70 hover:bg-white/10 hover:text-white" : `text-muted-foreground ${activeTheme.bgHover} hover:${activeTheme.text}`
+            )}
           >
             <Filter className="w-3.5 h-3.5" /> Group
           </button>
           {!isRoot && (
             <button
               onClick={() => onDeleteNode(group.id)}
-              className={cn("p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors ml-1")}
+              className={cn("p-1.5 rounded-lg transition-colors ml-1", theme === "futuristic" ? "text-white/50 hover:bg-red-500/20 hover:text-red-400" : "hover:bg-destructive/10 text-muted-foreground hover:text-destructive")}
             >
               <X className="w-4 h-4" />
             </button>
@@ -465,7 +503,7 @@ function FilterGroupComponent({ group, isRoot }: { group: FilterGroup; isRoot?: 
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="text-sm text-muted-foreground italic py-4 px-2"
+              className={cn("text-sm italic py-4 px-2", theme === "futuristic" ? "text-white/40" : "text-muted-foreground")}
             >
               No rules in this group.
             </motion.div>
@@ -497,8 +535,9 @@ function FilterGroupComponent({ group, isRoot }: { group: FilterGroup; isRoot?: 
 // ==========================================
 
 function FilterRuleComponent({ rule }: { rule: FilterRule }) {
-  const { fields, operators, variant, shape, onUpdateNode, onDeleteNode, onMoveNode, setDraggedNodeId, draggedNodeId } = useFilterBuilder();
+  const { fields, operators, variant, theme, color, shape, spacing, size, onUpdateNode, onDeleteNode, onMoveNode, setDraggedNodeId, draggedNodeId } = useFilterBuilder();
   const [isDragOver, setIsDragOver] = useState<"top" | "bottom" | null>(null);
+  const activeTheme = colorMap[color];
 
   const selectedField = fields.find(f => f.id === rule.fieldId);
   const availableOperators = operators.filter(o => selectedField && o.types.includes(selectedField.type));
@@ -557,8 +596,8 @@ function FilterRuleComponent({ rule }: { rule: FilterRule }) {
     <div 
       className={cn(
         "relative flex flex-col sm:flex-row sm:items-center gap-2 group transition-all",
-        isDragOver === "top" && "pt-6 border-t-2 border-primary",
-        isDragOver === "bottom" && "pb-6 border-b-2 border-primary",
+        isDragOver === "top" && cn("pt-6 border-t-2", activeTheme.border),
+        isDragOver === "bottom" && cn("pb-6 border-b-2", activeTheme.border),
         draggedNodeId === rule.id && "opacity-50"
       )}
       onDragOver={handleDragOver}
@@ -569,19 +608,16 @@ function FilterRuleComponent({ rule }: { rule: FilterRule }) {
         draggable
         onDragStart={handleDragStart}
         onDragEnd={() => setDraggedNodeId(null)}
-        className="cursor-grab active:cursor-grabbing p-1.5 text-muted-foreground/30 hover:text-muted-foreground transition-colors absolute -left-7 top-1/2 -translate-y-1/2 hidden md:block"
+        className={cn("cursor-grab active:cursor-grabbing p-1.5 transition-colors absolute -left-7 top-1/2 -translate-y-1/2 hidden md:block", theme === "futuristic" ? "text-white/20 hover:text-white/60" : "text-muted-foreground/30 hover:text-muted-foreground")}
       >
         <GripVertical className="w-4 h-4" />
       </div>
 
       <div className={cn(
-        "flex flex-wrap items-center gap-2 flex-1 p-1.5 transition-colors",
+        "flex flex-wrap items-center flex-1 transition-colors",
         getShapeClass(shape, "container"),
-        variant === "default" && "bg-muted/30 hover:bg-muted/50 border border-border/50",
-        variant === "enterprise" && "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm",
-        variant === "minimal" && "hover:bg-muted/40 -mx-2 px-2 border border-transparent hover:border-border/50",
-        variant === "glass" && "bg-background/20 hover:bg-background/40 border border-border/20",
-        variant === "compact" && "bg-muted/30 border border-border/50 p-1"
+        getSpacingClass(spacing, size, "rule"),
+        getRuleVariantClasses(variant, theme, activeTheme)
       )}>
         
         {/* Field Select */}
@@ -612,7 +648,7 @@ function FilterRuleComponent({ rule }: { rule: FilterRule }) {
 
       <button
         onClick={() => onDeleteNode(rule.id)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 sm:static sm:translate-y-0 p-2 rounded-lg text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+        className={cn("absolute right-3 top-1/2 -translate-y-1/2 sm:static sm:translate-y-0 p-2 rounded-lg transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100", theme === "futuristic" ? "text-white/30 hover:text-red-400 hover:bg-red-500/20" : "text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10")}
       >
         <X className="w-4 h-4" />
       </button>
@@ -625,18 +661,17 @@ function FilterRuleComponent({ rule }: { rule: FilterRule }) {
 // ==========================================
 
 function ValueRenderer({ rule, field, onUpdate }: { rule: FilterRule, field: FilterField, onUpdate: (val: any) => void }) {
-  const { variant, color, shape, spacing } = useFilterBuilder();
-  const activeTheme = colorThemeMap[color];
+  const { layout, theme, color, shape, spacing, size } = useFilterBuilder();
+  const activeTheme = colorMap[color];
 
   const baseInputClass = cn(
     "w-full focus:outline-none transition-shadow",
     getShapeClass(shape, "input"),
-    getSpacingClass(spacing, "input"),
-    variant === "default" && cn("bg-background border border-border/60 focus:border-primary/50 focus:ring-2", activeTheme.ring),
-    variant === "enterprise" && cn("bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:ring-2", activeTheme.ring),
-    variant === "minimal" && "bg-transparent border-b border-border hover:border-foreground/50 focus:border-primary rounded-none px-0 py-1",
-    variant === "glass" && cn("bg-background/50 border border-border/40 focus:ring-2", activeTheme.ring),
-    variant === "compact" && "bg-background border border-border/60"
+    getSpacingClass(spacing, size, "input"),
+    theme === "futuristic" ? cn("bg-black/40 border border-white/10 text-white focus:border-white/30 placeholder:text-white/30", activeTheme.ring) :
+    theme === "brutal" ? cn("bg-background border-2 border-foreground shadow-[2px_2px_0px_0px_currentColor]", activeTheme.ring) :
+    layout === "minimal" ? "bg-transparent border-b border-border hover:border-foreground/50 focus:border-primary rounded-none px-0 py-1" :
+    cn("bg-background border border-border/60 hover:border-border focus:ring-2", activeTheme.ring, theme === "modern" && "shadow-inner")
   );
 
   if (field.type === "select" || field.type === "boolean") {
@@ -708,8 +743,8 @@ function CustomSelect({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { variant, color, shape, spacing } = useFilterBuilder();
-  const activeTheme = colorThemeMap[color];
+  const { layout, theme, color, shape, spacing, size } = useFilterBuilder();
+  const activeTheme = colorMap[color];
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -731,17 +766,16 @@ function CustomSelect({
         className={cn(
           "w-full flex items-center justify-between transition-all focus:outline-none focus:ring-2",
           getShapeClass(shape, "input"),
-          getSpacingClass(spacing, "input"),
+          getSpacingClass(spacing, size, "input"),
           activeTheme.ring,
-          variant === "default" && "bg-background border border-border/60 hover:bg-muted/50",
-          variant === "enterprise" && "bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-900 shadow-sm",
-          variant === "minimal" && "bg-transparent border-b border-border hover:border-foreground/50 rounded-none px-0 py-1",
-          variant === "glass" && "bg-background/50 border border-border/40 hover:bg-background/80",
-          variant === "compact" && "bg-background border border-border/60"
+          theme === "futuristic" ? "bg-black/40 border border-white/10 text-white hover:bg-white/5" :
+          theme === "brutal" ? "bg-background border-2 border-foreground shadow-[2px_2px_0px_0px_currentColor] hover:bg-muted/50" :
+          layout === "minimal" ? "bg-transparent border-b border-border hover:border-foreground/50 rounded-none px-0 py-1" :
+          "bg-background border border-border/60 hover:bg-muted/50 shadow-sm"
         )}
       >
-        <span className="truncate pr-2">{selectedOption ? selectedOption.label : <span className="text-muted-foreground">{placeholder}</span>}</span>
-        <ChevronDown className="w-3.5 h-3.5 opacity-50 shrink-0" />
+        <span className="truncate pr-2">{selectedOption ? selectedOption.label : <span className={cn(theme === "futuristic" ? "text-white/40" : "text-muted-foreground")}>{placeholder}</span>}</span>
+        <ChevronDown className={cn("w-3.5 h-3.5 shrink-0 transition-transform", isOpen && "rotate-180", theme === "futuristic" ? "text-white/50" : "opacity-50")} />
       </button>
 
       <AnimatePresence>
@@ -752,9 +786,12 @@ function CustomSelect({
             exit={{ opacity: 0, y: 4, scale: 0.98 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
             className={cn(
-              "absolute z-50 mt-1 w-full min-w-[160px] rounded-xl border bg-popover text-popover-foreground shadow-lg overflow-hidden py-1 max-h-[280px] overflow-y-auto",
-              variant === "glass" && "backdrop-blur-xl bg-background/80",
-              variant === "enterprise" && "shadow-xl border-slate-200 dark:border-slate-800"
+              "absolute z-50 mt-1 w-full min-w-[160px] border shadow-lg overflow-hidden py-1 max-h-[280px] overflow-y-auto",
+              getShapeClass(shape, "container"),
+              theme === "futuristic" ? "bg-black/90 border-white/10 text-white backdrop-blur-xl shadow-[0_0_20px_rgba(255,255,255,0.1)]" :
+              theme === "brutal" ? "bg-background border-2 border-foreground shadow-[4px_4px_0px_0px_currentColor]" :
+              theme === "modern" ? "backdrop-blur-xl bg-background/90 border-border/50 shadow-xl" :
+              "bg-popover text-popover-foreground border-border rounded-xl"
             )}
           >
             {options.map((opt) => (
@@ -764,10 +801,14 @@ function CustomSelect({
                   onChange(opt.value);
                   setIsOpen(false);
                 }}
-                className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-muted transition-colors text-left"
+                className={cn(
+                  "w-full flex items-center justify-between px-3 py-2 text-sm transition-colors text-left",
+                  theme === "futuristic" ? "hover:bg-white/10" :
+                  activeTheme.bgHover
+                )}
               >
                 <span className="truncate">{opt.label}</span>
-                {value === opt.value && <Check className={cn("w-3.5 h-3.5 shrink-0", activeTheme.text)} />}
+                {value === opt.value && <Check className={cn("w-3.5 h-3.5 shrink-0", theme === "futuristic" ? "text-white" : activeTheme.text)} />}
               </button>
             ))}
           </motion.div>

@@ -3,22 +3,58 @@
  * @registry-name Error Page
  * @registry-description A Future UI Error Page component.
  * @registry-category ui
+ * @registry-dependency class-variance-authority
  */
 "use client";
 import React, { useId } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export type ErrorPageColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
-export type ErrorPageShape = "default" | "square" | "rounded" | "sharp";
-export type ErrorPageSpacing = "default" | "2x" | "4x" | "6x" | "8x";
 
-export interface ErrorPageProps {
-  className?: string;
+const errorPageVariants = cva(
+  "w-full h-full flex-1 flex flex-col items-center justify-center text-center transition-all duration-300",
+  {
+    variants: {
+      variant: {
+        solid: "bg-background text-foreground",
+        outline: "border-2 border-border bg-transparent",
+        ghost: "bg-transparent hover:bg-accent/10",
+        link: "bg-transparent",
+      },
+      theme: {
+        default: "",
+        modern: "bg-muted/30 backdrop-blur-md border border-border/50 shadow-xl",
+        clean: "bg-transparent border-0 shadow-none",
+        futuristic: "bg-black/90 border border-white/10 relative overflow-hidden",
+        brutal: "bg-background border-4 border-foreground shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)]",
+        halftone: "bg-[radial-gradient(circle,rgba(0,0,0,0.1)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:16px_16px]",
+      },
+      size: {
+        sm: "",
+        md: "",
+        lg: "",
+        xl: "",
+        full: "",
+      },
+    },
+    defaultVariants: {
+      variant: "solid",
+      theme: "default",
+      size: "md",
+    }
+  }
+);
+
+export interface ErrorPageProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof errorPageVariants> {
   errorCode?: string;
   errorText?: string;
   color?: ErrorPageColor;
-  shape?: ErrorPageShape;
-  spacing?: ErrorPageSpacing;
+  homeUrl?: string;
+  homeText?: string;
+  showHomeButton?: boolean;
 }
 
 const colorThemeMap: Record<ErrorPageColor, { main: string; glow1: string; glow2: string; glow3: string }> = {
@@ -34,47 +70,75 @@ const colorThemeMap: Record<ErrorPageColor, { main: string; glow1: string; glow2
   orange: { main: "#f97316", glow1: "#f97316", glow2: "#ea580c", glow3: "#c2410c" },
 };
 
-const getShapeClass = (shape: ErrorPageShape) => {
-  switch (shape) {
-    case "square": return "rounded-none";
-    case "sharp": return "rounded-md";
-    case "rounded": return "rounded-2xl";
-    case "default": return "rounded-3xl";
+const getSizeStyles = (size: ErrorPageProps["size"]) => {
+  switch (size) {
+    case "sm": return "40px";
+    case "lg": return "80px";
+    case "xl": return "100px";
+    case "full": return "min(10vw, 120px)";
+    default: return "60px";
   }
 };
 
-const getSpacingClass = (spacing: ErrorPageSpacing) => {
-  switch (spacing) {
-    case "2x": return "p-4 gap-2";
-    case "4x": return "p-8 gap-4";
-    case "6x": return "p-12 gap-6";
-    case "8x": return "p-16 gap-8";
-    default: return "p-8 gap-4"; // Default
+const getButtonSize = (size: ErrorPageProps["size"]) => {
+  switch (size) {
+    case "sm": return "sm";
+    case "lg": return "lg";
+    case "xl": return "lg";
+    case "full": return "lg";
+    default: return "md";
   }
 };
 
-export const ErrorPage: React.FC<ErrorPageProps> = React.memo(({ 
-          className, 
-          errorCode = "404", 
-          errorText = "ERROR",
-          color = "default",
-          shape = "default",
-          spacing = "default"
-        }) => {
-          const activeTheme = colorThemeMap[color];
-          const shapeClass = getShapeClass(shape);
-          const spacingClass = getSpacingClass(spacing);
-          const id = useId().replace(/:/g, "");
+export const ErrorPage = React.forwardRef<HTMLDivElement, ErrorPageProps>(({ 
+  className, 
+  errorCode = "404", 
+  errorText = "ERROR",
+  color = "default",
+  variant,
+  theme,
+  size,
+  homeUrl = "/",
+  homeText = "RETURN HOME",
+  showHomeButton = true,
+  ...props
+}, ref) => {
+  const activeTheme = colorThemeMap[color] || colorThemeMap.default;
+  const id = useId().replace(/:/g, "");
+  const fontSize = getSizeStyles(size);
+  const btnSize = getButtonSize(size);
 
-          return (
-            <div className={cn("w-full h-full flex flex-col items-center justify-center text-center", shapeClass, spacingClass, className)}>
-              <style>{`
+  let btnVariant = "solid";
+  if (theme === "clean") btnVariant = "link";
+  else if (theme === "modern" || theme === "brutal" || theme === "futuristic") btnVariant = "outline";
+
+  const btnClass = cn(
+    "mt-12 tracking-widest font-bold transition-all duration-300 z-10",
+    theme === "modern" && "backdrop-blur-md bg-white/5 border-white/10 hover:bg-white/10 text-white",
+    theme === "futuristic" && "bg-black/40 hover:bg-black/60",
+    theme === "brutal" && "border-2 border-foreground shadow-[4px_4px_0px_0px_currentColor] hover:translate-y-1 hover:shadow-none transition-transform",
+    theme === "halftone" && "border-2 border-dashed"
+  );
+
+  const futuristicStyle = theme === "futuristic" ? {
+    borderColor: activeTheme.main,
+    color: activeTheme.main,
+    boxShadow: `0 0 15px ${activeTheme.glow3}`,
+  } : {};
+
+  return (
+    <div 
+      ref={ref}
+      className={cn(errorPageVariants({ variant, theme, size, className }))}
+      {...props}
+    >
+      <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
         .error-neon-container-${id} {
           font-family: 'Monoton', cursive;
           text-align: center;
           text-transform: uppercase;
-          font-size: 60px;
+          font-size: ${fontSize};
           color: ${activeTheme.main};
           text-shadow: 0 0 80px ${activeTheme.glow1}, 0 0 30px ${activeTheme.glow2}, 0 0 6px ${activeTheme.glow3};
           line-height: 1;
@@ -109,21 +173,34 @@ export const ErrorPage: React.FC<ErrorPageProps> = React.memo(({
           19%, 22.99%, 32%, 36.999%, 45%, 45.999%, 50%, 50.99%, 59%, 60.999%, 69%, 70.999%, 86%, 95.999% { opacity: 0.4; text-shadow: none; }
         }
       `}</style>
-              <div className={`error-neon-container-${id}`}>
-                <div className={`neon-error-${id} flex justify-center`}>
-                  {errorText.split("").map((char, i) => (
-                    <React.Fragment key={i}>
-                      {i === 1 ? <span>{char}</span> : char}
-                    </React.Fragment>
-                  ))}
-                </div>
-                <div className={`neon-code-${id} flex justify-center`}>
-                  {errorCode.split("").map((char, i) => (
-                    <span key={i}>{char}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          );
-        });
+      <div className={`error-neon-container-${id}`}>
+        <div className={`neon-error-${id} flex justify-center`}>
+          {errorText.split("").map((char, i) => (
+            <React.Fragment key={i}>
+              {i === 1 ? <span>{char}</span> : char}
+            </React.Fragment>
+          ))}
+        </div>
+        <div className={`neon-code-${id} flex justify-center`}>
+          {errorCode.split("").map((char, i) => (
+            <span key={i}>{char}</span>
+          ))}
+        </div>
+      </div>
+      
+      {showHomeButton && (
+        <Button 
+          asChild
+          variant={btnVariant as any} 
+          color={theme === "modern" || theme === "futuristic" ? "default" : color} 
+          size={btnSize as any} 
+          className={btnClass}
+          style={futuristicStyle}
+        >
+          <Link href={homeUrl}>{homeText}</Link>
+        </Button>
+      )}
+    </div>
+  );
+});
 ErrorPage.displayName = "ErrorPage";

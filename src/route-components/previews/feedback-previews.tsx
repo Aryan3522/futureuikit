@@ -277,11 +277,56 @@ export const TogglePreview: React.FC = () => {
 };
 
 export const ErrorPagePreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+  const [previewColor, setPreviewColor] = React.useState<any>("default");
+  const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+  const [previewTheme, setPreviewTheme] = React.useState<any>("default");
+  const [previewSize, setPreviewSize] = React.useState<any>("md");
+
+  const extraControls = (
+    <div className="flex flex-col gap-4 w-full mt-4 border-t border-border/50 pt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Theme</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "modern", "clean", "futuristic", "brutal", "halftone"] as const).map(t => (
+            <button key={t} onClick={() => setPreviewTheme(t)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewTheme === t ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{t}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["sm", "md", "lg", "xl", "full"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewSize(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSize === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <PreviewContainer title="Error Page" description="A clean, full-screen error component." contentClassName="p-0" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
-      <ErrorPage errorCode="404" errorText="ERROR" />
+    <PreviewContainer 
+      title="Error Page" 
+      description="A dynamic and highly customizable error component." 
+      contentClassName="p-0 bg-transparent border-0 shadow-none min-h-[500px]" 
+      colors={DEFAULT_COLORS} 
+      activeColor={previewColor} 
+      onColorChange={setPreviewColor} 
+      variants={["solid", "outline", "ghost", "link"]} 
+      activeVariant={previewVariant} 
+      onVariantChange={setPreviewVariant}
+      extraControls={extraControls}
+    >
+      <div className="w-full h-full absolute inset-0 overflow-hidden rounded-xl border border-border">
+        <ErrorPage 
+          errorCode="404" 
+          errorText="ERROR" 
+          color={previewColor}
+          variant={previewVariant}
+          theme={previewTheme}
+          size={previewSize}
+        />
+      </div>
     </PreviewContainer>
   );
 };
