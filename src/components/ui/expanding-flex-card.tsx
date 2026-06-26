@@ -15,6 +15,8 @@ import { cn } from "@/lib/utils";
 export type ExpandingCardColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
 export type ExpandingCardShape = "default" | "square" | "rounded" | "sharp";
 export type ExpandingCardSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+export type ExpandingCardTheme = "default" | "modern" | "clean" | "futuristic" | "brutal" | "halftone";
+export type ExpandingCardVariant = "solid" | "outline" | "ghost" | "link";
 
 export interface ExpandingCardOption {
   id: string | number;
@@ -30,19 +32,21 @@ export interface ExpandingFlexCardProps {
   color?: ExpandingCardColor;
   shape?: ExpandingCardShape;
   spacing?: ExpandingCardSpacing;
+  theme?: ExpandingCardTheme;
+  variant?: ExpandingCardVariant;
 }
 
-const colorThemeMap: Record<ExpandingCardColor, { bg: string; text: string; iconBg: string; iconText: string; gradient: string }> = {
-  default: { bg: "bg-white/70 dark:bg-black/50 border-white/50 dark:border-white/10", text: "text-slate-900 dark:text-white", iconBg: "bg-white dark:bg-white", iconText: "text-slate-900 dark:text-black", gradient: "from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90" },
-  blue: { bg: "bg-blue-600/80 dark:bg-blue-900/80 border-blue-500/50 dark:border-blue-700/50", text: "text-white", iconBg: "bg-blue-500", iconText: "text-white", gradient: "from-blue-500/10 via-blue-500/40 to-blue-600/90 dark:from-blue-900/10 dark:via-blue-900/40 dark:to-blue-900/90" },
-  emerald: { bg: "bg-emerald-600/80 dark:bg-emerald-900/80 border-emerald-500/50 dark:border-emerald-700/50", text: "text-white", iconBg: "bg-emerald-500", iconText: "text-white", gradient: "from-emerald-500/10 via-emerald-500/40 to-emerald-600/90 dark:from-emerald-900/10 dark:via-emerald-900/40 dark:to-emerald-900/90" },
-  rose: { bg: "bg-rose-600/80 dark:bg-rose-900/80 border-rose-500/50 dark:border-rose-700/50", text: "text-white", iconBg: "bg-rose-500", iconText: "text-white", gradient: "from-rose-500/10 via-rose-500/40 to-rose-600/90 dark:from-rose-900/10 dark:via-rose-900/40 dark:to-rose-900/90" },
-  amber: { bg: "bg-amber-500/80 dark:bg-amber-900/80 border-amber-400/50 dark:border-amber-700/50", text: "text-white", iconBg: "bg-amber-400", iconText: "text-slate-900", gradient: "from-amber-500/10 via-amber-500/40 to-amber-600/90 dark:from-amber-900/10 dark:via-amber-900/40 dark:to-amber-900/90" },
-  violet: { bg: "bg-violet-600/80 dark:bg-violet-900/80 border-violet-500/50 dark:border-violet-700/50", text: "text-white", iconBg: "bg-violet-500", iconText: "text-white", gradient: "from-violet-500/10 via-violet-500/40 to-violet-600/90 dark:from-violet-900/10 dark:via-violet-900/40 dark:to-violet-900/90" },
-  indigo: { bg: "bg-indigo-600/80 dark:bg-indigo-900/80 border-indigo-500/50 dark:border-indigo-700/50", text: "text-white", iconBg: "bg-indigo-500", iconText: "text-white", gradient: "from-indigo-500/10 via-indigo-500/40 to-indigo-600/90 dark:from-indigo-900/10 dark:via-indigo-900/40 dark:to-indigo-900/90" },
-  sky: { bg: "bg-sky-500/80 dark:bg-sky-900/80 border-sky-400/50 dark:border-sky-700/50", text: "text-white", iconBg: "bg-sky-400", iconText: "text-slate-900", gradient: "from-sky-500/10 via-sky-500/40 to-sky-600/90 dark:from-sky-900/10 dark:via-sky-900/40 dark:to-sky-900/90" },
-  slate: { bg: "bg-slate-600/80 dark:bg-slate-900/80 border-slate-500/50 dark:border-slate-700/50", text: "text-white", iconBg: "bg-slate-500", iconText: "text-white", gradient: "from-slate-500/10 via-slate-500/40 to-slate-600/90 dark:from-slate-900/10 dark:via-slate-900/40 dark:to-slate-900/90" },
-  orange: { bg: "bg-orange-500/80 dark:bg-orange-900/80 border-orange-400/50 dark:border-orange-700/50", text: "text-white", iconBg: "bg-orange-400", iconText: "text-slate-900", gradient: "from-orange-500/10 via-orange-500/40 to-orange-600/90 dark:from-orange-900/10 dark:via-orange-900/40 dark:to-orange-900/90" }
+const colorThemeMap: Record<ExpandingCardColor, { bg: string; text: string; iconBg: string; iconText: string; gradient: string; border: string }> = {
+  default: { bg: "bg-white/70 dark:bg-black/50", border: "border-white/50 dark:border-white/10", text: "text-slate-900 dark:text-white", iconBg: "bg-white dark:bg-white", iconText: "text-slate-900 dark:text-black", gradient: "from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90" },
+  blue: { bg: "bg-blue-600/80 dark:bg-blue-900/80", border: "border-blue-500/50 dark:border-blue-700/50", text: "text-white", iconBg: "bg-blue-500", iconText: "text-white", gradient: "from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90" },
+  emerald: { bg: "bg-emerald-600/80 dark:bg-emerald-900/80", border: "border-emerald-500/50 dark:border-emerald-700/50", text: "text-white", iconBg: "bg-emerald-500", iconText: "text-white", gradient: "from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90" },
+  rose: { bg: "bg-rose-600/80 dark:bg-rose-900/80", border: "border-rose-500/50 dark:border-rose-700/50", text: "text-white", iconBg: "bg-rose-500", iconText: "text-white", gradient: "from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90" },
+  amber: { bg: "bg-amber-500/80 dark:bg-amber-900/80", border: "border-amber-400/50 dark:border-amber-700/50", text: "text-white", iconBg: "bg-amber-400", iconText: "text-slate-900", gradient: "from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90" },
+  violet: { bg: "bg-violet-600/80 dark:bg-violet-900/80", border: "border-violet-500/50 dark:border-violet-700/50", text: "text-white", iconBg: "bg-violet-500", iconText: "text-white", gradient: "from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90" },
+  indigo: { bg: "bg-indigo-600/80 dark:bg-indigo-900/80", border: "border-indigo-500/50 dark:border-indigo-700/50", text: "text-white", iconBg: "bg-indigo-500", iconText: "text-white", gradient: "from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90" },
+  sky: { bg: "bg-sky-500/80 dark:bg-sky-900/80", border: "border-sky-400/50 dark:border-sky-700/50", text: "text-white", iconBg: "bg-sky-400", iconText: "text-slate-900", gradient: "from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90" },
+  slate: { bg: "bg-slate-600/80 dark:bg-slate-900/80", border: "border-slate-500/50 dark:border-slate-700/50", text: "text-white", iconBg: "bg-slate-500", iconText: "text-white", gradient: "from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90" },
+  orange: { bg: "bg-orange-500/80 dark:bg-orange-900/80", border: "border-orange-400/50 dark:border-orange-700/50", text: "text-white", iconBg: "bg-orange-400", iconText: "text-slate-900", gradient: "from-white/10 via-white/40 to-white/80 dark:from-black/10 dark:via-black/40 dark:to-black/90" }
 };
 
 const getShapeClass = (shape: ExpandingCardShape, state: "open" | "closed" | "mobile" | "content" | "icon") => {
@@ -108,12 +112,49 @@ const getSpacingClass = (spacing: ExpandingCardSpacing, element: "container" | "
   }
 };
 
+const getThemeClasses = (theme: ExpandingCardTheme) => {
+  switch (theme) {
+    case "modern": return "border border-border/50 shadow-xl backdrop-blur-sm";
+    case "clean": return "border-none shadow-none";
+    case "futuristic": return "border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.1)]";
+    case "brutal": return "border-4 border-foreground shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)]";
+    case "halftone": return "border-2 border-dashed bg-[radial-gradient(circle,rgba(0,0,0,0.2)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.2)_1px,transparent_1px)] bg-[size:16px_16px]";
+    default: return "border-none shadow-none";
+  }
+};
+
+const getContentVariantClasses = (variant: ExpandingCardVariant, themeInfo: any, theme: ExpandingCardTheme) => {
+  const isSolid = variant === "solid" || !variant;
+  
+  if (variant === "outline") {
+    return `bg-background/20 backdrop-blur-md border-2 ${themeInfo.border} ${themeInfo.text}`;
+  }
+  if (variant === "ghost") {
+    return `bg-transparent border-transparent ${themeInfo.text} hover:bg-black/10 dark:hover:bg-white/10`;
+  }
+  if (variant === "link") {
+    return `bg-transparent border-transparent ${themeInfo.text} hover:underline underline-offset-4`;
+  }
+  
+  // Solid variant responds to theme
+  switch(theme) {
+    case "modern": return `backdrop-blur-xl bg-background/60 border border-white/20 shadow-2xl ${themeInfo.text}`;
+    case "clean": return `bg-transparent ${themeInfo.text}`;
+    case "futuristic": return `bg-black/80 backdrop-blur-md border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.1)] ${themeInfo.text}`;
+    case "brutal": return `bg-background border-2 border-foreground shadow-[4px_4px_0px_0px_currentColor] text-foreground`;
+    case "halftone": return `bg-background/90 backdrop-blur-sm border-2 border-dashed border-foreground text-foreground`;
+    default: return `${themeInfo.bg} ${themeInfo.border} ${themeInfo.text}`;
+  }
+};
+
 export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = React.memo(({ 
   options = [], 
   className,
   color = "default",
   shape = "default",
-  spacing = "default"
+  spacing = "default",
+  theme = "default",
+  variant = "solid"
 }) => {
   const [activeOption, setActiveOption] = useState<string | number | undefined>(options[0]?.id);
   const [isMobile, setIsMobile] = useState(false);
@@ -133,6 +174,8 @@ export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = React.memo(({
 
   // Limit to 8 cards
   const displayOptions = options.slice(0, 8);
+  const themeContainerClasses = getThemeClasses(theme);
+  const contentVariantClasses = getContentVariantClasses(variant, activeTheme, theme);
 
   return (
     <div className={cn("w-full max-w-6xl mx-auto px-4 py-8", className)} ref={containerRef}>
@@ -157,10 +200,9 @@ export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = React.memo(({
           position: absolute;
           display: flex;
           align-items: center;
-          backdrop-filter: blur(12px);
           pointer-events: none;
           z-index: 20;
-          border-width: 1px;
+          transition: all 0.3s ease;
         }
         
         .card-icon-wrapper {
@@ -233,11 +275,11 @@ export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = React.memo(({
             {displayOptions.map((opt) => (
               <div
                 key={opt.id}
-                className={cn("mobile-card snap-center shrink-0 w-[85%] sm:w-[60%]", getShapeClass(shape, "mobile"))}
+                className={cn("mobile-card snap-center shrink-0 w-[85%] sm:w-[60%]", getShapeClass(shape, "mobile"), themeContainerClasses)}
                 style={{ backgroundImage: `url("${opt.img}")` }}
               >
-                <div className={cn("absolute inset-0 bg-linear-to-b pointer-events-none z-10", activeTheme.gradient)} />
-                <div className={cn("card-content opacity-100 transform-none shadow-lg", getShapeClass(shape, "content"), getSpacingClass(spacing, "content"), getSpacingClass(spacing, "bottomOffset"), activeTheme.bg, activeTheme.text)}>
+                {theme !== "clean" && <div className={cn("absolute inset-0 bg-linear-to-b pointer-events-none z-10", activeTheme.gradient)} />}
+                <div className={cn("card-content opacity-100 transform-none", getShapeClass(shape, "content"), getSpacingClass(spacing, "content"), getSpacingClass(spacing, "bottomOffset"), contentVariantClasses)}>
                   <div className={cn("card-icon-wrapper", getShapeClass(shape, "icon"), activeTheme.iconBg, activeTheme.iconText)}>
                     {opt.icon}
                   </div>
@@ -258,16 +300,17 @@ export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = React.memo(({
               onClick={() => setActiveOption(opt.id)}
               className={cn(
                 "expanding-card",
+                themeContainerClasses,
                 activeOption === opt.id ? "open" : "closed",
                 activeOption === opt.id ? getShapeClass(shape, "open") : getShapeClass(shape, "closed")
               )}
               style={{ backgroundImage: `url("${opt.img}")` }}
             >
-              <div className={cn("absolute inset-0 bg-linear-to-b pointer-events-none z-10", activeTheme.gradient)} />
+              {theme !== "clean" && <div className={cn("absolute inset-0 bg-linear-to-b pointer-events-none z-10", activeTheme.gradient)} />}
               
-              <div className={cn("closed-icon drop-shadow-sm dark:drop-shadow-md", color === "default" ? "text-slate-900 dark:text-white" : "text-white")}>{opt.icon}</div>
+              <div className={cn("closed-icon drop-shadow-sm dark:drop-shadow-md", color === "default" || theme === "brutal" ? "text-slate-900 dark:text-white" : "text-white", theme === "clean" && "drop-shadow-lg")}>{opt.icon}</div>
               
-              <div className={cn("card-content desktop-only-content shadow-lg", getShapeClass(shape, "content"), getSpacingClass(spacing, "content"), getSpacingClass(spacing, "bottomOffset"), activeTheme.bg, activeTheme.text)}>
+              <div className={cn("card-content desktop-only-content", getShapeClass(shape, "content"), getSpacingClass(spacing, "content"), getSpacingClass(spacing, "bottomOffset"), contentVariantClasses)}>
                 <div className={cn("card-icon-wrapper", getShapeClass(shape, "icon"), activeTheme.iconBg, activeTheme.iconText)}>
                   {opt.icon}
                 </div>

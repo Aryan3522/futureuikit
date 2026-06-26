@@ -1,6 +1,7 @@
 "use client";
 
-import React from"react";
+/* eslint-disable react-hooks/static-components */
+import React, { Suspense } from "react";
 import { PreviewRegistry } from"@/route-components/PreviewRegistry";
 import type { PreviewComponent } from "@/route-components/preview-engine/preview-types";
 

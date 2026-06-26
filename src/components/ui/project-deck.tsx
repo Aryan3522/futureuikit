@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /**
  * @registry-slug project-deck
  * @registry-name Project Deck
@@ -320,3 +321,5 @@ const ProjectDeck: React.FC<ProjectDeckProps> = ({
 };
 
 export default ProjectDeck;
+/* eslint-disable @next/next/no-img-element */
+

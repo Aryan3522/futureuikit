@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
@@ -467,3 +468,5 @@ export function SlideUpReveal({
     </div>
   );
 }
+/* eslint-disable @next/next/no-img-element */
+

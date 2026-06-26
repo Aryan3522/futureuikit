@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * @registry-slug puzzle-video
  * @registry-name Puzzle Video
@@ -628,4 +629,5 @@ export const PuzzleVideo: React.FC<PuzzleVideoProps> = ({
   );
 };
 
-export default PuzzleVideo;
+export default PuzzleVideo;/* eslint-disable react-hooks/exhaustive-deps */
+

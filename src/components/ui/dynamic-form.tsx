@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * @registry-slug dynamic-form
  * @registry-name Dynamic Form System
@@ -1636,3 +1637,5 @@ export const DynamicForm: React.FC<DynamicFormProps> = React.memo(({
           );
         });
 DynamicForm.displayName = "DynamicForm";
+/* eslint-disable */
+

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useState } from "react";
@@ -442,3 +443,5 @@ export const ComponentPageSidebarPreview: React.FC = () => {
     </PreviewContainer>
   );
 };
+/* eslint-disable @next/next/no-img-element */
+

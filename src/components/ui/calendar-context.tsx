@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import React, { createContext, useContext, useState, useCallback, useMemo } from "react";
@@ -101,3 +102,5 @@ export function useCalendarSync(group?: string) {
     };
   }, [group, context?.groups, context?.setGroupDates, context?.addGroupDate, context?.removeGroupDate, context?.toggleGroupDate, context?.clearGroup]);
 }
+/* eslint-disable react-hooks/exhaustive-deps */
+

@@ -665,56 +665,161 @@ export const FileUploadPreview: React.FC = () => {
   );
 };
 
+const sampleSchema: SchemaField[] = [
+  {
+    name: "personalInfo",
+    type: "group",
+    label: "Personal Information",
+    description: "Please provide your basic details.",
+    colSpan: "full",
+    fields: [
+      { name: "firstName", type: "text", label: "First Name", placeholder: "John", required: true, colSpan: 2 },
+      { name: "lastName", type: "text", label: "Last Name", placeholder: "Doe", required: true, colSpan: 2 },
+      { name: "email", type: "email", label: "Email Address", placeholder: "john@example.com", required: true, colSpan: "full" },
+    ]
+  },
+  {
+    name: "role",
+    type: "select",
+    label: "Role",
+    placeholder: "Select a role",
+    required: true,
+    colSpan: 2,
+    options: [
+      { label: "Developer", value: "developer" },
+      { label: "Designer", value: "designer" },
+      { label: "Manager", value: "manager" },
+    ]
+  },
+  {
+    name: "experience",
+    type: "number",
+    label: "Years of Experience",
+    placeholder: "e.g. 5",
+    required: true,
+    colSpan: 2,
+    validation: { min: 0, max: 50 }
+  },
+  {
+    name: "teamMembers",
+    type: "array",
+    label: "Team Members",
+    description: "Add members who will report to you.",
+    colSpan: "full",
+    showIf: (values) => values.role === "manager",
+    fields: [
+      { name: "name", type: "text", label: "Member Name", placeholder: "Jane Doe", required: true, colSpan: 2 },
+      { name: "title", type: "text", label: "Title", placeholder: "Engineer", required: true, colSpan: 2 },
+    ]
+  },
+  {
+    name: "terms",
+    type: "checkbox",
+    label: "I agree to the terms and conditions",
+    required: true,
+    colSpan: "full"
+  }
+];
+
 export const FormBuilderPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
-  const [data, setData] = useState<any>(null);
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+    const [previewLayout, setPreviewLayout] = React.useState<any>("auto");
+    const [data, setData] = useState<any>(null);
 
-  const schema: SchemaField[] = [
-    {
-      name: "personalInfo",
-      type: "group",
-      label: "Personal Information",
-      fields: [
-        { name: "firstName", type: "text", label: "First Name", required: true, colSpan: 1 },
-        { name: "lastName", type: "text", label: "Last Name", required: true, colSpan: 1 },
-        { name: "email", type: "email", label: "Email", required: true, colSpan: 2 },
-      ]
-    },
-    {
-      name: "experience",
-      type: "array",
-      label: "Work Experience",
-      fields: [
-        { name: "company", type: "text", label: "Company", required: true },
-        { name: "position", type: "text", label: "Position", required: true },
-        { name: "startDate", type: "text", label: "Start Date" },
-      ]
-    }
-  ];
+    return (
+      <PreviewContainer
+        title="Schema Form Builder"
+        description="Build complex nested forms with a simple JSON schema."
+        colors={DEFAULT_COLORS} 
+        activeColor={previewColor} 
+        onColorChange={setPreviewColor}
+        extraControls={
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "square", "rounded", "sharp"] as const).map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setPreviewShape(s)}
+                    className={cn(
+                      "px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300",
+                      previewShape === s
+                        ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                    )}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-  return (
-    <PreviewContainer
-      title="Schema Form Builder"
-      description="Build complex nested forms with a simple JSON schema." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
-    >
-      <div className="w-full max-w-4xl m-auto grid grid-cols-1 @2xl:grid-cols-[1fr_300px] gap-8 @container">
-        <div className="bg-card border rounded-2xl p-6 shadow-sm">
-          <FormBuilder
-            schema={schema}
-            onSubmit={(val) => setData(val)}
-          />
-        </div>
-        <div className="space-y-4">
-          <div className="p-5 rounded-2xl border bg-muted/30">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Live Result</h4>
-            <pre className="text-[10px] font-mono overflow-auto max-h-[400px]">
-              {JSON.stringify(data, null, 2)}
-            </pre>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full mt-2">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "2x", "4x", "6x", "8x"] as const).map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setPreviewSpacing(s)}
+                    className={cn(
+                      "px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300",
+                      previewSpacing === s
+                        ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                    )}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full mt-2">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Layout</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["auto", "single", "two", "three"] as const).map((l) => (
+                  <button
+                    key={l}
+                    onClick={() => setPreviewLayout(l)}
+                    className={cn(
+                      "px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300",
+                      previewLayout === l
+                        ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                    )}
+                  >
+                    {l}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </>
+        }
+      >
+        <div className="w-full max-w-4xl m-auto grid grid-cols-1 @2xl:grid-cols-[1fr_300px] gap-8 @container">
+          <div className="bg-card border rounded-2xl p-6 shadow-sm">
+            <FormBuilder
+              schema={sampleSchema}
+              color={previewColor}
+              shape={previewShape}
+              spacing={previewSpacing}
+              layout={previewLayout}
+              onSubmit={(val) => setData(val)}
+            />
+          </div>
+          <div className="space-y-4">
+            <div className="p-5 rounded-2xl border bg-muted/30">
+              <h4 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Live Result</h4>
+              <pre className="text-[10px] font-mono overflow-auto max-h-[400px]">
+                {JSON.stringify(data, null, 2)}
+              </pre>
+            </div>
           </div>
         </div>
-      </div>
-    </PreviewContainer>
+      </PreviewContainer>
   );
 };
 

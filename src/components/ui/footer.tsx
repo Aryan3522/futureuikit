@@ -20,17 +20,17 @@ export interface FooterProps extends React.HTMLAttributes<HTMLElement> {
   spacing?: FooterSpacing;
 }
 
-const colorThemeMap: Record<FooterColor, { hoverText: string }> = {
-  default: { hoverText: "hover:text-foreground" },
-  blue: { hoverText: "hover:text-blue-600 dark:hover:text-blue-500" },
-  emerald: { hoverText: "hover:text-emerald-600 dark:hover:text-emerald-500" },
-  rose: { hoverText: "hover:text-rose-600 dark:hover:text-rose-500" },
-  amber: { hoverText: "hover:text-amber-600 dark:hover:text-amber-500" },
-  violet: { hoverText: "hover:text-violet-600 dark:hover:text-violet-500" },
-  indigo: { hoverText: "hover:text-indigo-600 dark:hover:text-indigo-500" },
-  sky: { hoverText: "hover:text-sky-600 dark:hover:text-sky-500" },
-  slate: { hoverText: "hover:text-slate-600 dark:hover:text-slate-400" },
-  orange: { hoverText: "hover:text-orange-600 dark:hover:text-orange-500" },
+const colorThemeMap: Record<FooterColor, { hoverText: string; text: string }> = {
+  default: { hoverText: "hover:text-foreground", text: "text-foreground" },
+  blue: { hoverText: "hover:text-blue-600 dark:hover:text-blue-500", text: "text-blue-600 dark:text-blue-500" },
+  emerald: { hoverText: "hover:text-emerald-600 dark:hover:text-emerald-500", text: "text-emerald-600 dark:text-emerald-500" },
+  rose: { hoverText: "hover:text-rose-600 dark:hover:text-rose-500", text: "text-rose-600 dark:text-rose-500" },
+  amber: { hoverText: "hover:text-amber-600 dark:hover:text-amber-500", text: "text-amber-600 dark:text-amber-500" },
+  violet: { hoverText: "hover:text-violet-600 dark:hover:text-violet-500", text: "text-violet-600 dark:text-violet-500" },
+  indigo: { hoverText: "hover:text-indigo-600 dark:hover:text-indigo-500", text: "text-indigo-600 dark:text-indigo-500" },
+  sky: { hoverText: "hover:text-sky-600 dark:hover:text-sky-500", text: "text-sky-600 dark:text-sky-500" },
+  slate: { hoverText: "hover:text-slate-600 dark:hover:text-slate-400", text: "text-slate-600 dark:text-slate-400" },
+  orange: { hoverText: "hover:text-orange-600 dark:hover:text-orange-500", text: "text-orange-600 dark:text-orange-500" },
 };
 
 const getShapeClass = (shape: FooterShape) => {
@@ -62,7 +62,7 @@ export const Footer = React.memo(React.forwardRef<HTMLElement, FooterProps>(
       <footer ref={ref} className={cn("w-full border-t border-white/5 bg-background relative z-10 mt-auto", shapeClass, className)} {...props}>
         <div className={cn("max-w-350 mx-auto flex flex-col md:flex-row justify-between items-center", spacingClass)}>
           <div className="flex flex-col items-center md:items-start gap-2">
-            <span className="font-display text-xl font-bold tracking-tighter text-foreground">FUTURE_UI</span>
+            <span className={cn("font-display text-xl font-bold tracking-tighter", activeTheme.text)}>FUTURE_UI</span>
             <span className="font-mono text-[13px] text-muted-foreground/60">© {new Date().getFullYear()} FUTURE UI. PRECISION ENGINEERED.</span>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8">

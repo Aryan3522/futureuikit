@@ -297,7 +297,7 @@ const BaseField: React.FC<FieldProps> = ({ field, path, methods, color, shape, s
     <div className={cn("w-full flex flex-col", colSpanClass)}>
       {field.label && field.type !== 'checkbox' && (
         <label className={cn("block font-medium text-foreground", getSpacingStyles(spacing, "label"))}>
-          {field.label} {field.required && <span className="text-destructive">*</span>}
+          {field.label} {field.required && <span className={activeTheme.text}>*</span>}
         </label>
       )}
       {field.description && <p className="text-xs text-muted-foreground mb-2">{field.description}</p>}
@@ -345,7 +345,7 @@ const BaseField: React.FC<FieldProps> = ({ field, path, methods, color, shape, s
             className={cn("w-4 h-4 rounded border-border transition-colors", activeTheme.text, activeTheme.ring)}
           />
           <label htmlFor={path} className={cn("text-sm cursor-pointer", errorMessage ? "text-destructive" : "text-foreground")}>
-            {field.label} {field.required && <span className="text-destructive">*</span>}
+            {field.label} {field.required && <span className={activeTheme.text}>*</span>}
           </label>
         </div>
       ) : field.type === "radio" ? (
