@@ -703,7 +703,9 @@ export const MigratedPreviews = {
 
   "GutterLines": function GutterLinesPreview() {
     const [variant, setVariant] = React.useState<"default" | "dense" | "wide" | "vertical">("default");
-    const [color, setColor] = React.useState<"default" | "primary" | "muted">("default");
+    const [color, setColor] = React.useState<any>("default");
+    const [spacing, setSpacing] = React.useState<"default" | "2x" | "4x" | "6x" | "8x">("default");
+    const [size, setSize] = React.useState<"default" | "sm" | "md" | "lg">("default");
 
     return (
       <PreviewContainer 
@@ -714,30 +716,31 @@ export const MigratedPreviews = {
         onVariantChange={setVariant as any}
         isVirtualScreen={true}
         contentClassName="p-0 border-none relative overflow-hidden h-[100vh]"
+        colors={DEFAULT_COLORS}
+        activeColor={color}
+        onColorChange={setColor}
         extraControls={
-          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
-            <span className="text-xs uppercase font-bold tracking-widest text-muted-foreground">
-              Color Variant
-            </span>
-            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
-              {(["default", "primary", "muted"] as const).map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setColor(c)}
-                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${
-                    color === c
-                      ? "bg-primary text-primary-foreground shadow-sm ring-1 ring-primary/20"
-                      : "text-muted-foreground hover:bg-muted/80 hover:text-foreground"
-                  }`}
-                >
-                  {c}
-                </button>
-              ))}
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                  <button key={s} onClick={() => setSpacing(s)} className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${spacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+                ))}
+              </div>
             </div>
-          </div>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size / Thickness</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "sm", "md", "lg"] as const).map(s => (
+                  <button key={s} onClick={() => setSize(s)} className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${size === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+                ))}
+              </div>
+            </div>
+          </>
         }
       >
-        <GutterLines variant={variant as "default" | "vertical"} color={color} className="absolute inset-0 w-full h-full pointer-events-none" />
+        <GutterLines variant={variant as "default" | "vertical"} color={color} spacing={spacing} size={size} className="absolute inset-0 w-full h-full pointer-events-none" />
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="bg-background/80 backdrop-blur-sm border border-border p-6 rounded-xl shadow-lg">
             <h3 className="text-xl font-semibold tracking-tight">Content Layer</h3>

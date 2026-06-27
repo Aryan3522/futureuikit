@@ -144,12 +144,12 @@ export const GlowyButton = React.memo(
 
           <motion.div
             variants={{
-              initial: { width: "100%", height: "100%", right: "0px", top: "0px", borderRadius: borderRadius },
-              hover:   { width: circleSize, height: "100%", right: "0px", top: "0px", borderRadius: borderRadius },
+              initial: { width: "100%", height: "100%", right: "0px", top: "0px" },
+              hover:   { width: circleSize, height: "100%", right: "0px", top: "0px" },
             }}
             transition={{ type: "spring", stiffness: 300, damping: 24, mass: 0.8 }}
             className="absolute z-20 flex items-center justify-center backdrop-blur-md pointer-events-none m-0 p-0"
-            style={{ backgroundColor: finalGlass }}
+            style={{ backgroundColor: finalGlass, borderRadius: borderRadius }}
           >
             <motion.div
               variants={{ initial: { opacity: 0, scale: 0.8, x: -10, rotate: -45 }, hover: { opacity: 1, scale: 1, x: 0, rotate: 0 } }}

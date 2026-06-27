@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils"
 export type GutterLinesColor = "default" | "primary" | "muted" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
 export type GutterLinesShape = "default" | "square" | "rounded" | "sharp";
 export type GutterLinesSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+export type GutterLinesSize = "default" | "sm" | "md" | "lg";
 
 const gutterLinesVariants = cva(
   "w-full h-full",
@@ -36,6 +37,7 @@ export interface GutterLinesProps
   color?: GutterLinesColor;
   shape?: GutterLinesShape;
   spacing?: GutterLinesSpacing;
+  size?: GutterLinesSize;
 }
 
 const colorThemeMap: Record<GutterLinesColor, { pattern: string; opacityClass: string }> = {
@@ -72,11 +74,21 @@ const getSpacingValue = (spacing: GutterLinesSpacing) => {
   }
 };
 
+const getSizeValue = (size: GutterLinesSize) => {
+  switch (size) {
+    case "sm": return "1px";
+    case "md": return "2px";
+    case "lg": return "4px";
+    default: return "1px";
+  }
+};
+
 export const GutterLines = React.forwardRef<HTMLDivElement, GutterLinesProps>(
-  ({ className, variant, color = "default", shape = "default", spacing = "default", style, ...props }, ref) => {
+  ({ className, variant, color = "default", shape = "default", spacing = "default", size = "default", style, ...props }, ref) => {
     const activeTheme = colorThemeMap[color];
     const shapeClass = getShapeClass(shape);
     const spacingValue = getSpacingValue(spacing);
+    const sizeValue = getSizeValue(size);
     
     const direction = variant === "vertical" ? "to right" : "to bottom";
     
@@ -85,7 +97,7 @@ export const GutterLines = React.forwardRef<HTMLDivElement, GutterLinesProps>(
         ref={ref}
         style={{
           '--pattern': activeTheme.pattern,
-          backgroundImage: `repeating-linear-gradient(${direction}, var(--pattern) 0, var(--pattern) 1px, transparent 1px, transparent ${spacingValue})`,
+          backgroundImage: `repeating-linear-gradient(${direction}, var(--pattern) 0, var(--pattern) ${sizeValue}, transparent ${sizeValue}, transparent ${spacingValue})`,
           ...style
         } as React.CSSProperties}
         className={cn(gutterLinesVariants({ variant, className }), shapeClass, activeTheme.opacityClass)} 

@@ -280,7 +280,6 @@ export const StandardCardPreview: React.FC = () => {
 
 export const GlassPanelPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [variant, setVariant] = React.useState<"mantle" | "heavy" | "subtle" | "frost">("heavy");
   const [glow, setGlow] = React.useState<"none" | "subtle" | "luminous">("subtle");
 
@@ -309,7 +308,7 @@ export const GlassPanelPreview: React.FC = () => {
             </div>
           </div>
         </>
-      } colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
+      } colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className="w-full h-full flex flex-col items-center justify-center p-4 md:p-12 min-h-[400px] relative overflow-hidden bg-[radial-gradient(circle_at_center,_var(--tw-colors-muted-foreground)_1px,_transparent_1px)] bg-[size:16px_16px] dark:bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.15)_1px,_transparent_1px)]">
         {/* Colorful Blobs to show off the glass blur effect */}
