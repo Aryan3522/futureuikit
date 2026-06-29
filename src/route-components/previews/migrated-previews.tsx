@@ -382,14 +382,20 @@ export const MigratedPreviews = {
         colors={DEFAULT_COLORS}
         activeColor={previewColor}
         onColorChange={setPreviewColor}
-        themes={["default", "modern", "clean", "futuristic", "brutal", "halftone"]}
-        activeTheme={previewTheme}
-        onThemeChange={setPreviewTheme}
         variants={["solid", "outline", "ghost", "link"]}
         activeVariant={previewVariant}
         onVariantChange={setPreviewVariant}
         extraControls={
           <>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Theme</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "modern", "clean", "futuristic", "brutal", "halftone"] as const).map(s => (
+                  <button key={s} onClick={() => setPreviewTheme(s)}
+                    className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewTheme === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+                ))}
+              </div>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
               <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
               <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
