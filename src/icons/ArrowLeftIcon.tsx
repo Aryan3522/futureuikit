@@ -4,18 +4,14 @@ import React from"react";
 import { motion } from"framer-motion";
 import { IconProps } from"./GithubIcon";
 
-let hasAnimated = false;
+
 
 export const ArrowLeftIcon: React.FC<IconProps> = React.memo(
  ({ size, width, height, animate = false, ...props }) => {
  const resolvedSize = size ?? 24;
- const [shouldAnimate] = React.useState(() => animate && !hasAnimated);
+ const shouldAnimate = animate;
 
- React.useEffect(() => {
- if (shouldAnimate) {
- hasAnimated = true;
- }
- }, [shouldAnimate]);
+ 
  return (
  <motion.svg
  xmlns="http://www.w3.org/2000/svg"

@@ -126,7 +126,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
       color,
       shape,
       spacing,
-      fullWidth,
+      fullWidth = true,
       disabled,
       loading,
       animated = true,

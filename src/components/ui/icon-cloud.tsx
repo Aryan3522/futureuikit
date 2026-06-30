@@ -7,36 +7,39 @@
  */
 "use client";
 
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState, useMemo } from "react"
 import { renderToString } from "react-dom/server"
+import { cn } from "@/lib/utils";
 
 export type IconCloudColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
 export type IconCloudShape = "default" | "square" | "rounded" | "sharp";
 export type IconCloudSpacing = "default" | "2x" | "4x" | "6x" | "8x";
 
 export interface IconCloudProps {
-  icons?: any[];
+  icons?: React.ReactNode[];
   images?: string[];
+  count?: number;
   color?: IconCloudColor;
   shape?: IconCloudShape;
   spacing?: IconCloudSpacing;
+  className?: string;
 }
 
 function easeOutCubic(t: number) {
   return 1 - Math.pow(1 - t, 3);
 }
 
-const colorThemeMap: Record<IconCloudColor, { hex: string }> = {
-  default: { hex: "#18181b" }, // zinc-900 — B&W default, pure dark (canvas can't use CSS vars)
-  blue: { hex: "#2563eb" },
-  emerald: { hex: "#16a34a" },
-  rose: { hex: "#e11d48" },
-  amber: { hex: "#d97706" },
-  violet: { hex: "#7c3aed" },
-  indigo: { hex: "#4f46e5" },
-  sky: { hex: "#0284c7" },
-  slate: { hex: "#475569" },
-  orange: { hex: "#ea580c" },
+const colorThemeMap: Record<IconCloudColor, { hex: string, bgHex: string }> = {
+  default: { hex: "#18181b", bgHex: "rgba(24, 24, 27, 0.1)" }, // Overridden dynamically based on dark mode
+  blue: { hex: "#2563eb", bgHex: "rgba(37, 99, 235, 0.15)" },
+  emerald: { hex: "#16a34a", bgHex: "rgba(22, 163, 74, 0.15)" },
+  rose: { hex: "#e11d48", bgHex: "rgba(225, 29, 72, 0.15)" },
+  amber: { hex: "#d97706", bgHex: "rgba(217, 119, 6, 0.15)" },
+  violet: { hex: "#7c3aed", bgHex: "rgba(124, 58, 237, 0.15)" },
+  indigo: { hex: "#4f46e5", bgHex: "rgba(79, 70, 229, 0.15)" },
+  sky: { hex: "#0284c7", bgHex: "rgba(2, 132, 199, 0.15)" },
+  slate: { hex: "#475569", bgHex: "rgba(71, 85, 105, 0.15)" },
+  orange: { hex: "#ea580c", bgHex: "rgba(234, 88, 12, 0.15)" },
 };
 
 const getCanvasSize = (spacing: IconCloudSpacing) => {
@@ -65,7 +68,7 @@ const applyShapeToCanvas = (ctx: CanvasRenderingContext2D, shape: IconCloudShape
       break;
     case "rounded":
       if (ctx.roundRect) {
-        ctx.roundRect(x, y, size, size, 12);
+        ctx.roundRect(x, y, size, size, Math.max(2, size * 0.25));
       } else {
         ctx.rect(x, y, size, size);
       }
@@ -80,9 +83,11 @@ const applyShapeToCanvas = (ctx: CanvasRenderingContext2D, shape: IconCloudShape
 export default function IconCloud({
   icons,
   images,
+  count,
   color = "default",
   shape = "default",
-  spacing = "default"
+  spacing = "default",
+  className
 }: IconCloudProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [iconPositions, setIconPositions] = useState<any[]>([])
@@ -94,65 +99,123 @@ export default function IconCloud({
   const rotationRef = useRef({ x: 0, y: 0 })
   const iconCanvasesRef = useRef<any[]>([])
   const imagesLoadedRef = useRef<boolean[]>([])
+  
+  const [isDark, setIsDark] = useState(false);
 
-  const activeTheme = colorThemeMap[color];
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsDark(document.documentElement.classList.contains("dark"));
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  const activeTheme = useMemo(() => {
+    if (color === "default") {
+      return {
+        hex: isDark ? "#ffffff" : "#18181b",
+        bgHex: isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)"
+      };
+    }
+    return colorThemeMap[color];
+  }, [color, isDark]);
+
   const canvasSize = getCanvasSize(spacing);
 
-  // Create icon canvases once when icons/images change
-  useEffect(() => {
-    if (!icons && !images) return
+  const items = useMemo(() => {
+    const list: { type: 'icon' | 'image' | 'number', data: any }[] = [];
+    if (images && images.length > 0) {
+      images.forEach(img => list.push({ type: 'image', data: img }));
+    }
+    if (icons && icons.length > 0) {
+      icons.forEach(icon => list.push({ type: 'icon', data: icon }));
+    }
+    if (list.length === 0) {
+      const num = count || 20;
+      for (let i = 0; i < num; i++) {
+        list.push({ type: 'number', data: i + 1 });
+      }
+    }
+    return list;
+  }, [icons, images, count]);
 
-    const items = icons ?? images ?? []
+  const numIcons = items.length;
+  // Calculate dynamic sphere radius leaving a margin
+  const sphereRadius = (canvasSize / 2) * 0.7; 
+  // Base icon size on available surface area
+  const baseSize = Math.sqrt((4 * Math.PI * sphereRadius * sphereRadius) / numIcons) * 0.6;
+  const iconSize = Math.max(16, Math.min(64, baseSize)); // Clamp size
+
+  // Create icon canvases once when items change
+  useEffect(() => {
     imagesLoadedRef.current = new Array(items.length).fill(false)
 
-    const newIconCanvases = items.map((item: any, index: number) => {
+    const newIconCanvases = items.map((item, index) => {
       const offscreen = document.createElement("canvas")
-      offscreen.width = 40
-      offscreen.height = 40
+      offscreen.width = iconSize
+      offscreen.height = iconSize
       const offCtx = offscreen.getContext("2d")
 
       if (offCtx) {
-        if (images) {
-          // Handle image URLs directly
+        // Draw soft background
+        offCtx.clearRect(0, 0, iconSize, iconSize)
+        applyShapeToCanvas(offCtx, shape, 0, 0, iconSize)
+        offCtx.fillStyle = activeTheme.bgHex
+        offCtx.fill()
+
+        const innerSize = iconSize * 0.6;
+        const offset = (iconSize - innerSize) / 2;
+
+        if (item.type === 'image') {
           const img = new Image()
           img.crossOrigin = "anonymous"
-          img.src = items[index]
+          img.src = item.data
           img.onload = () => {
-            offCtx.clearRect(0, 0, offscreen.width, offscreen.height)
+            // Draw image on temp canvas to tint it properly
+            const tempCanvas = document.createElement("canvas")
+            tempCanvas.width = innerSize
+            tempCanvas.height = innerSize
+            const tempCtx = tempCanvas.getContext("2d")
+            
+            if (tempCtx) {
+              tempCtx.drawImage(img, 0, 0, innerSize, innerSize)
+              tempCtx.globalCompositeOperation = "source-in"
+              tempCtx.fillStyle = activeTheme.hex
+              tempCtx.fillRect(0, 0, innerSize, innerSize)
+              offCtx.drawImage(tempCanvas, offset, offset)
+            }
+            imagesLoadedRef.current[index] = true
+          }
+        } else if (item.type === 'icon') {
+          let svgString = renderToString(item.data as React.ReactElement)
+          svgString = svgString.replace(/currentColor/g, activeTheme.hex)
 
-            // Create shape clipping path
-            applyShapeToCanvas(offCtx, shape, 0, 0, 40)
-            offCtx.clip()
-
-            // Draw the image
-            offCtx.drawImage(img, 0, 0, 40, 40)
-
+          const img = new Image()
+          img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgString)))
+          img.onload = () => {
+            offCtx.drawImage(img, offset, offset, innerSize, innerSize)
             imagesLoadedRef.current[index] = true
           }
         } else {
-          // Handle SVG icons
-          offCtx.scale(0.4, 0.4)
-          const svgString = renderToString(item)
-          const img = new Image()
-          img.src = "data:image/svg+xml;base64," + btoa(svgString)
-          img.onload = () => {
-            offCtx.clearRect(0, 0, offscreen.width, offscreen.height)
-            offCtx.drawImage(img, 0, 0)
-            imagesLoadedRef.current[index] = true
-          }
+          offCtx.fillStyle = activeTheme.hex
+          offCtx.textAlign = "center"
+          offCtx.textBaseline = "middle"
+          offCtx.font = `bold ${Math.max(10, innerSize * 0.6)}px Arial`
+          offCtx.fillText(`${item.data}`, iconSize / 2, iconSize / 2)
+          imagesLoadedRef.current[index] = true
         }
       }
       return offscreen
     })
 
     iconCanvasesRef.current = newIconCanvases
-  }, [icons, images, shape])
+  }, [items, shape, iconSize, activeTheme.hex, activeTheme.bgHex])
 
   // Generate initial icon positions on a sphere
   useEffect(() => {
-    const items = icons ?? images ?? []
     const newIcons = []
-    const numIcons = items.length || 20
 
     // Fibonacci sphere parameters
     const offset = 2 / numIcons
@@ -167,9 +230,9 @@ export default function IconCloud({
       const z = Math.sin(phi) * r
 
       newIcons.push({
-        x: x * 100,
-        y: y * 100,
-        z: z * 100,
+        x: x * sphereRadius,
+        y: y * sphereRadius,
+        z: z * sphereRadius,
         scale: 1,
         opacity: 1,
         id: i,
@@ -177,7 +240,7 @@ export default function IconCloud({
     }
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIconPositions(newIcons)
-  }, [icons, images])
+  }, [numIcons, sphereRadius])
 
   // Handle mouse events
   const handleMouseDown = (e: any) => {
@@ -205,12 +268,12 @@ export default function IconCloud({
       const screenX = canvas.width / 2 + rotatedX
       const screenY = canvas.height / 2 + rotatedY
 
-      const scale = (rotatedZ + 200) / 300
-      const radius = 20 * scale
+      const perspectiveScale = (rotatedZ + sphereRadius * 2) / (sphereRadius * 3)
+      const currentRadius = (iconSize / 2) * perspectiveScale
       const dx = x - screenX
       const dy = y - screenY
 
-      if (dx * dx + dy * dy < radius * radius) {
+      if (dx * dx + dy * dy < currentRadius * currentRadius) {
         const targetX = -Math.atan2(icon.y, Math.sqrt(icon.x * icon.x + icon.z * icon.z))
         const targetY = Math.atan2(icon.x, icon.z)
 
@@ -312,32 +375,16 @@ export default function IconCloud({
           const rotatedZ = icon.x * sinY + icon.z * cosY
           const rotatedY = icon.y * cosX + rotatedZ * sinX
 
-          const scale = (rotatedZ + 200) / 300
-          const opacity = Math.max(0.2, Math.min(1, (rotatedZ + 150) / 200))
+          const perspectiveScale = (rotatedZ + sphereRadius * 2) / (sphereRadius * 3)
+          const opacity = Math.max(0.2, Math.min(1, (rotatedZ + sphereRadius * 1.5) / (sphereRadius * 2)))
 
           ctx.save()
           ctx.translate(canvas.width / 2 + rotatedX, canvas.height / 2 + rotatedY)
-          ctx.scale(scale, scale)
+          ctx.scale(perspectiveScale, perspectiveScale)
           ctx.globalAlpha = opacity
 
-          if (icons || images) {
-            // Only try to render icons/images if they exist
-            if (
-              iconCanvasesRef.current[index] &&
-              imagesLoadedRef.current[index]
-            ) {
-              ctx.drawImage(iconCanvasesRef.current[index], -20, -20, 40, 40)
-            }
-          } else {
-            // Show numbered circles if no icons/images are provided
-            applyShapeToCanvas(ctx, shape, -20, -20, 40)
-            ctx.fillStyle = activeTheme.hex
-            ctx.fill()
-            ctx.fillStyle = "white"
-            ctx.textAlign = "center"
-            ctx.textBaseline = "middle"
-            ctx.font = "16px Arial"
-            ctx.fillText(`${icon.id + 1}`, 0, 0)
+          if (iconCanvasesRef.current[index] && imagesLoadedRef.current[index]) {
+            ctx.drawImage(iconCanvasesRef.current[index], -iconSize / 2, -iconSize / 2, iconSize, iconSize)
           }
 
           ctx.restore()
@@ -353,7 +400,7 @@ export default function IconCloud({
         cancelAnimationFrame(animationFrameRef.current)
       }
     };
-  }, [icons, images, iconPositions, isDragging, mousePos, targetRotation, activeTheme.hex, shape])
+  }, [iconPositions, isDragging, mousePos, targetRotation, sphereRadius, iconSize])
 
   return (
     <canvas
@@ -364,6 +411,8 @@ export default function IconCloud({
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      className={cn("outline-none", className)}
+      style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
       aria-label="Interactive 3D Icon Cloud"
       role="img" />
   );

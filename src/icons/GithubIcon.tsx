@@ -8,18 +8,14 @@ export interface IconProps extends SVGMotionProps<SVGSVGElement> {
  animate?: boolean;
 }
 
-let hasAnimated = false;
+
 
 export const GithubIcon: React.FC<IconProps> = React.memo(
  ({ size, width, height, animate = false, ...props }) => {
  const resolvedSize = size ?? 24;
- const [shouldAnimate] = React.useState(() => animate && !hasAnimated);
+ const shouldAnimate = animate;
 
- React.useEffect(() => {
- if (shouldAnimate) {
- hasAnimated = true;
- }
- }, [shouldAnimate]);
+ 
  return (
  <motion.svg
  xmlns="http://www.w3.org/2000/svg"

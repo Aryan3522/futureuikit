@@ -21,14 +21,16 @@ export type MinimalButtonVariant =
   | "link";
 
 export type MinimalButtonColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
-export type MinimalButtonShape = "default" | "square" | "rounded" | "sharp";
+export type MinimalButtonShape = "default" | "square" | "rounded" | "sharp" | "cut-tl-br" | "cut-tr-bl" | "cut-all";
 export type MinimalButtonSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+export type MinimalButtonTheme = "default" | "modern" | "clean" | "futuristic" | "brutal" | "halftone";
 
 export interface MinimalButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: MinimalButtonVariant;
   color?: MinimalButtonColor;
   spacing?: MinimalButtonSpacing;
   shape?: MinimalButtonShape;
+  theme?: MinimalButtonTheme;
   loading?: boolean;
   fullWidth?: boolean;
   icon?: React.ReactNode;
@@ -58,6 +60,9 @@ const getShapeClass = (shape: MinimalButtonShape) => {
     case "square": return "rounded-none";
     case "rounded": return "rounded-xl";
     case "sharp": return "rounded-[2px]";
+    case "cut-tl-br": return "rounded-none [clip-path:polygon(12px_0,100%_0,100%_calc(100%-12px),calc(100%-12px)_100%,0_100%,0_12px)]";
+    case "cut-tr-bl": return "rounded-none [clip-path:polygon(0_0,calc(100%-12px)_0,100%_12px,100%_100%,12px_100%,0_calc(100%-12px))]";
+    case "cut-all": return "rounded-none [clip-path:polygon(12px_0,calc(100%-12px)_0,100%_12px,100%_calc(100%-12px),calc(100%-12px)_100%,12px_100%,0_calc(100%-12px),0_12px)]";
     case "default": return "rounded-full";
   }
 };
@@ -89,6 +94,7 @@ export const MinimalButton = React.forwardRef<HTMLButtonElement, MinimalButtonPr
       color = "default",
       spacing = "default",
       shape = "default",
+      theme = "default",
       loading = false,
       fullWidth = false,
       icon,
@@ -100,6 +106,23 @@ export const MinimalButton = React.forwardRef<HTMLButtonElement, MinimalButtonPr
     },
     ref
   ) => {
+    const getThemeClass = (currentTheme: MinimalButtonTheme) => {
+      switch (currentTheme) {
+        case "modern": 
+          return "shadow-xl shadow-black/10 dark:shadow-white/5 backdrop-blur-md hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300";
+        case "clean": 
+          return "shadow-none border-transparent hover:border-foreground/10 hover:bg-muted/50 rounded-none font-medium transition-colors duration-500";
+        case "futuristic": 
+          return "uppercase tracking-widest rounded-tl-xl rounded-br-xl rounded-tr-sm rounded-bl-sm hover:shadow-[0_0_20px_rgba(var(--primary),0.3)] transition-all duration-300";
+        case "brutal": 
+          return "border-2 border-foreground shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] rounded-none font-mono hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[2px_2px_0_0_rgba(255,255,255,1)] transition-all";
+        case "halftone": 
+          return "bg-[radial-gradient(circle_at_center,var(--primary)_1.5px,transparent_1.5px)] bg-[size:6px_6px] bg-background/90 hover:bg-background/95 shadow-sm";
+        default: 
+          return "";
+      }
+    };
+
     let styleVariant: "solid" | "soft" | "ghost" | "outline" = "solid";
 
     if (variant === "outline" || variant === "ghost" || variant === "soft") {
@@ -121,6 +144,7 @@ export const MinimalButton = React.forwardRef<HTMLButtonElement, MinimalButtonPr
       variant === "link" ? "hover:underline bg-transparent hover:bg-transparent px-0" : "",
       variant === "outline" ? "border" : "border border-transparent", 
       colorVariants[color]?.[styleVariant] || colorVariants.default.solid,
+      getThemeClass(theme),
       className
     );
 

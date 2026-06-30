@@ -321,5 +321,4 @@ const ProjectDeck: React.FC<ProjectDeckProps> = ({
 };
 
 export default ProjectDeck;
-/* eslint-disable @next/next/no-img-element */
 

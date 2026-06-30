@@ -4,18 +4,14 @@ import React, { useId } from"react";
 import { motion, SVGMotionProps } from"framer-motion";
 import { IconProps } from"./GithubIcon";
 
-let hasAnimated = false;
+
 
 export const SunIcon: React.FC<IconProps> = React.memo(
  ({ size, width, height, animate = false, ...props }) => {
  const resolvedSize = size ?? 24;
- const [shouldAnimate] = React.useState(() => animate && !hasAnimated);
+ const shouldAnimate = animate;
 
- React.useEffect(() => {
- if (shouldAnimate) {
- hasAnimated = true;
- }
- }, [shouldAnimate]);
+ 
 
  return (
  <motion.svg

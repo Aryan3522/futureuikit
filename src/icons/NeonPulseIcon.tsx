@@ -9,7 +9,7 @@ interface IconProps extends SVGMotionProps<SVGSVGElement> {
  size?: number | string;
 }
 
-let hasAnimated = false;
+
 
 export const NeonPulseIcon: React.FC<IconProps> = React.memo(
  ({ size, width, height, animate, animated, strokeWidth, ...props }) => {
@@ -17,13 +17,9 @@ export const NeonPulseIcon: React.FC<IconProps> = React.memo(
  const isAnimatedProp = animated !== undefined ? animated : animate;
  const isAnimated = isAnimatedProp === true;
  
- const [shouldAnimate] = React.useState(() => isAnimated && !hasAnimated);
+ const shouldAnimate = isAnimated;
 
- React.useEffect(() => {
- if (shouldAnimate) {
- hasAnimated = true;
- }
- }, [shouldAnimate]);
+ 
 
  return (
  <motion.svg

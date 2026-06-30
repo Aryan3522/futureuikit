@@ -38,17 +38,17 @@ const HoverGlareCardContext = React.createContext<HoverGlareCardContextType>({
 
 export const useHoverGlareCard = () => React.useContext(HoverGlareCardContext);
 
-export const hoverColorThemeMap: Record<HoverGlareCardColor, { glow: string; text: string; gradient: string; actionHover: string; badgeText: string; badgeBorder: string; badgeShadow: string; }> = {
-  default: { glow: "hover:shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:border-white/50", text: "text-white", gradient: "from-white/10 via-white/5 to-transparent", actionHover: "hover:bg-white/10", badgeText: "text-foreground", badgeBorder: "border-white/10", badgeShadow: "shadow-[0_0_10px_rgba(255,255,255,0.1)]" },
-  blue: { glow: "hover:shadow-[0_0_40px_rgba(59,130,246,0.2)] hover:border-blue-500/50", text: "text-blue-400", gradient: "from-blue-500/20 via-blue-500/5 to-transparent", actionHover: "hover:bg-blue-500/10", badgeText: "text-blue-400", badgeBorder: "border-blue-500/20", badgeShadow: "shadow-[0_0_10px_rgba(59,130,246,0.1)]" },
-  emerald: { glow: "hover:shadow-[0_0_40px_rgba(16,185,129,0.2)] hover:border-emerald-500/50", text: "text-emerald-400", gradient: "from-emerald-500/20 via-emerald-500/5 to-transparent", actionHover: "hover:bg-emerald-500/10", badgeText: "text-emerald-400", badgeBorder: "border-emerald-500/20", badgeShadow: "shadow-[0_0_10px_rgba(16,185,129,0.1)]" },
-  rose: { glow: "hover:shadow-[0_0_40px_rgba(244,63,94,0.2)] hover:border-rose-500/50", text: "text-rose-400", gradient: "from-rose-500/20 via-rose-500/5 to-transparent", actionHover: "hover:bg-rose-500/10", badgeText: "text-rose-400", badgeBorder: "border-rose-500/20", badgeShadow: "shadow-[0_0_10px_rgba(244,63,94,0.1)]" },
-  amber: { glow: "hover:shadow-[0_0_40px_rgba(245,158,11,0.2)] hover:border-amber-500/50", text: "text-amber-400", gradient: "from-amber-500/20 via-amber-500/5 to-transparent", actionHover: "hover:bg-amber-500/10", badgeText: "text-amber-400", badgeBorder: "border-amber-500/20", badgeShadow: "shadow-[0_0_10px_rgba(245,158,11,0.1)]" },
-  violet: { glow: "hover:shadow-[0_0_40px_rgba(139,92,246,0.2)] hover:border-violet-500/50", text: "text-violet-400", gradient: "from-violet-500/20 via-violet-500/5 to-transparent", actionHover: "hover:bg-violet-500/10", badgeText: "text-violet-400", badgeBorder: "border-violet-500/20", badgeShadow: "shadow-[0_0_10px_rgba(139,92,246,0.1)]" },
-  indigo: { glow: "hover:shadow-[0_0_40px_rgba(99,102,241,0.2)] hover:border-indigo-500/50", text: "text-indigo-400", gradient: "from-indigo-500/20 via-indigo-500/5 to-transparent", actionHover: "hover:bg-indigo-500/10", badgeText: "text-indigo-400", badgeBorder: "border-indigo-500/20", badgeShadow: "shadow-[0_0_10px_rgba(99,102,241,0.1)]" },
-  sky: { glow: "hover:shadow-[0_0_40px_rgba(14,165,233,0.2)] hover:border-sky-500/50", text: "text-sky-400", gradient: "from-sky-500/20 via-sky-500/5 to-transparent", actionHover: "hover:bg-sky-500/10", badgeText: "text-sky-400", badgeBorder: "border-sky-500/20", badgeShadow: "shadow-[0_0_10px_rgba(14,165,233,0.1)]" },
-  slate: { glow: "hover:shadow-[0_0_40px_rgba(100,116,139,0.2)] hover:border-slate-500/50", text: "text-slate-400", gradient: "from-slate-500/20 via-slate-500/5 to-transparent", actionHover: "hover:bg-slate-500/10", badgeText: "text-slate-400", badgeBorder: "border-slate-500/20", badgeShadow: "shadow-[0_0_10px_rgba(100,116,139,0.1)]" },
-  orange: { glow: "hover:shadow-[0_0_40px_rgba(249,115,22,0.2)] hover:border-orange-500/50", text: "text-orange-400", gradient: "from-orange-500/20 via-orange-500/5 to-transparent", actionHover: "hover:bg-orange-500/10", badgeText: "text-orange-400", badgeBorder: "border-orange-500/20", badgeShadow: "shadow-[0_0_10px_rgba(249,115,22,0.1)]" },
+export const hoverColorThemeMap: Record<HoverGlareCardColor, { glow: string; glowSecondary: string; text: string; textGlow: string; gradient: string; bgSoft: string; iconShadow: string; actionPrimary: string; actionSecondary: string; actionGhost: string; actionLink: string; actionHover: string; badgeText: string; badgeBorder: string; badgeShadow: string; }> = {
+  default: { glow: "hover:shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:border-white/50", glowSecondary: "hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:border-white/30", text: "text-white", textGlow: "0 0 20px rgba(255,255,255,0.8)", gradient: "from-white/40 via-white/10 to-transparent", bgSoft: "bg-white/10", iconShadow: "shadow-[0_0_20px_rgba(255,255,255,0.15)]", actionPrimary: "bg-white text-black hover:bg-white/90 shadow-[0_0_20px_rgba(255,255,255,0.2)]", actionSecondary: "bg-white/5 border border-white/10 text-white hover:bg-white/10", actionGhost: "hover:text-white", actionLink: "hover:text-white hover:border-white/50", actionHover: "hover:bg-white/10", badgeText: "text-foreground", badgeBorder: "border-white/10", badgeShadow: "shadow-[0_0_10px_rgba(255,255,255,0.1)]" },
+  blue: { glow: "hover:shadow-[0_0_40px_rgba(59,130,246,0.2)] hover:border-blue-500/50", glowSecondary: "hover:shadow-[0_0_20px_rgba(59,130,246,0.1)] hover:border-blue-500/30", text: "text-blue-400", textGlow: "0 0 20px rgba(59,130,246,0.8)", gradient: "from-blue-500 via-blue-400/20 to-transparent", bgSoft: "bg-blue-500/20", iconShadow: "shadow-[0_0_20px_rgba(59,130,246,0.15)]", actionPrimary: "bg-blue-500 text-white hover:bg-blue-600 shadow-[0_0_20px_rgba(59,130,246,0.2)]", actionSecondary: "bg-white/5 border border-blue-500/20 text-blue-400 hover:bg-blue-500/10", actionGhost: "hover:text-blue-400", actionLink: "text-blue-400/70 hover:text-blue-400 hover:border-blue-500/50", actionHover: "hover:bg-blue-500/10", badgeText: "text-blue-400", badgeBorder: "border-blue-500/20", badgeShadow: "shadow-[0_0_10px_rgba(59,130,246,0.1)]" },
+  emerald: { glow: "hover:shadow-[0_0_40px_rgba(16,185,129,0.2)] hover:border-emerald-500/50", glowSecondary: "hover:shadow-[0_0_20px_rgba(16,185,129,0.1)] hover:border-emerald-500/30", text: "text-emerald-400", textGlow: "0 0 20px rgba(16,185,129,0.8)", gradient: "from-emerald-500 via-emerald-400/20 to-transparent", bgSoft: "bg-emerald-500/20", iconShadow: "shadow-[0_0_20px_rgba(16,185,129,0.15)]", actionPrimary: "bg-emerald-500 text-white hover:bg-emerald-600 shadow-[0_0_20px_rgba(16,185,129,0.2)]", actionSecondary: "bg-white/5 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10", actionGhost: "hover:text-emerald-400", actionLink: "text-emerald-400/70 hover:text-emerald-400 hover:border-emerald-500/50", actionHover: "hover:bg-emerald-500/10", badgeText: "text-emerald-400", badgeBorder: "border-emerald-500/20", badgeShadow: "shadow-[0_0_10px_rgba(16,185,129,0.1)]" },
+  rose: { glow: "hover:shadow-[0_0_40px_rgba(244,63,94,0.2)] hover:border-rose-500/50", glowSecondary: "hover:shadow-[0_0_20px_rgba(244,63,94,0.1)] hover:border-rose-500/30", text: "text-rose-400", textGlow: "0 0 20px rgba(244,63,94,0.8)", gradient: "from-rose-500 via-rose-400/20 to-transparent", bgSoft: "bg-rose-500/20", iconShadow: "shadow-[0_0_20px_rgba(244,63,94,0.15)]", actionPrimary: "bg-rose-500 text-white hover:bg-rose-600 shadow-[0_0_20px_rgba(244,63,94,0.2)]", actionSecondary: "bg-white/5 border border-rose-500/20 text-rose-400 hover:bg-rose-500/10", actionGhost: "hover:text-rose-400", actionLink: "text-rose-400/70 hover:text-rose-400 hover:border-rose-500/50", actionHover: "hover:bg-rose-500/10", badgeText: "text-rose-400", badgeBorder: "border-rose-500/20", badgeShadow: "shadow-[0_0_10px_rgba(244,63,94,0.1)]" },
+  amber: { glow: "hover:shadow-[0_0_40px_rgba(245,158,11,0.2)] hover:border-amber-500/50", glowSecondary: "hover:shadow-[0_0_20px_rgba(245,158,11,0.1)] hover:border-amber-500/30", text: "text-amber-400", textGlow: "0 0 20px rgba(245,158,11,0.8)", gradient: "from-amber-500 via-amber-400/20 to-transparent", bgSoft: "bg-amber-500/20", iconShadow: "shadow-[0_0_20px_rgba(245,158,11,0.15)]", actionPrimary: "bg-amber-500 text-white hover:bg-amber-600 shadow-[0_0_20px_rgba(245,158,11,0.2)]", actionSecondary: "bg-white/5 border border-amber-500/20 text-amber-400 hover:bg-amber-500/10", actionGhost: "hover:text-amber-400", actionLink: "text-amber-400/70 hover:text-amber-400 hover:border-amber-500/50", actionHover: "hover:bg-amber-500/10", badgeText: "text-amber-400", badgeBorder: "border-amber-500/20", badgeShadow: "shadow-[0_0_10px_rgba(245,158,11,0.1)]" },
+  violet: { glow: "hover:shadow-[0_0_40px_rgba(139,92,246,0.2)] hover:border-violet-500/50", glowSecondary: "hover:shadow-[0_0_20px_rgba(139,92,246,0.1)] hover:border-violet-500/30", text: "text-violet-400", textGlow: "0 0 20px rgba(139,92,246,0.8)", gradient: "from-violet-500 via-violet-400/20 to-transparent", bgSoft: "bg-violet-500/20", iconShadow: "shadow-[0_0_20px_rgba(139,92,246,0.15)]", actionPrimary: "bg-violet-500 text-white hover:bg-violet-600 shadow-[0_0_20px_rgba(139,92,246,0.2)]", actionSecondary: "bg-white/5 border border-violet-500/20 text-violet-400 hover:bg-violet-500/10", actionGhost: "hover:text-violet-400", actionLink: "text-violet-400/70 hover:text-violet-400 hover:border-violet-500/50", actionHover: "hover:bg-violet-500/10", badgeText: "text-violet-400", badgeBorder: "border-violet-500/20", badgeShadow: "shadow-[0_0_10px_rgba(139,92,246,0.1)]" },
+  indigo: { glow: "hover:shadow-[0_0_40px_rgba(99,102,241,0.2)] hover:border-indigo-500/50", glowSecondary: "hover:shadow-[0_0_20px_rgba(99,102,241,0.1)] hover:border-indigo-500/30", text: "text-indigo-400", textGlow: "0 0 20px rgba(99,102,241,0.8)", gradient: "from-indigo-500 via-indigo-400/20 to-transparent", bgSoft: "bg-indigo-500/20", iconShadow: "shadow-[0_0_20px_rgba(99,102,241,0.15)]", actionPrimary: "bg-indigo-500 text-white hover:bg-indigo-600 shadow-[0_0_20px_rgba(99,102,241,0.2)]", actionSecondary: "bg-white/5 border border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/10", actionGhost: "hover:text-indigo-400", actionLink: "text-indigo-400/70 hover:text-indigo-400 hover:border-indigo-500/50", actionHover: "hover:bg-indigo-500/10", badgeText: "text-indigo-400", badgeBorder: "border-indigo-500/20", badgeShadow: "shadow-[0_0_10px_rgba(99,102,241,0.1)]" },
+  sky: { glow: "hover:shadow-[0_0_40px_rgba(14,165,233,0.2)] hover:border-sky-500/50", glowSecondary: "hover:shadow-[0_0_20px_rgba(14,165,233,0.1)] hover:border-sky-500/30", text: "text-sky-400", textGlow: "0 0 20px rgba(14,165,233,0.8)", gradient: "from-sky-500 via-sky-400/20 to-transparent", bgSoft: "bg-sky-500/20", iconShadow: "shadow-[0_0_20px_rgba(14,165,233,0.15)]", actionPrimary: "bg-sky-500 text-white hover:bg-sky-600 shadow-[0_0_20px_rgba(14,165,233,0.2)]", actionSecondary: "bg-white/5 border border-sky-500/20 text-sky-400 hover:bg-sky-500/10", actionGhost: "hover:text-sky-400", actionLink: "text-sky-400/70 hover:text-sky-400 hover:border-sky-500/50", actionHover: "hover:bg-sky-500/10", badgeText: "text-sky-400", badgeBorder: "border-sky-500/20", badgeShadow: "shadow-[0_0_10px_rgba(14,165,233,0.1)]" },
+  slate: { glow: "hover:shadow-[0_0_40px_rgba(100,116,139,0.2)] hover:border-slate-500/50", glowSecondary: "hover:shadow-[0_0_20px_rgba(100,116,139,0.1)] hover:border-slate-500/30", text: "text-slate-400", textGlow: "0 0 20px rgba(100,116,139,0.8)", gradient: "from-slate-500 via-slate-400/20 to-transparent", bgSoft: "bg-slate-500/20", iconShadow: "shadow-[0_0_20px_rgba(100,116,139,0.15)]", actionPrimary: "bg-slate-500 text-white hover:bg-slate-600 shadow-[0_0_20px_rgba(100,116,139,0.2)]", actionSecondary: "bg-white/5 border border-slate-500/20 text-slate-400 hover:bg-slate-500/10", actionGhost: "hover:text-slate-400", actionLink: "text-slate-400/70 hover:text-slate-400 hover:border-slate-500/50", actionHover: "hover:bg-slate-500/10", badgeText: "text-slate-400", badgeBorder: "border-slate-500/20", badgeShadow: "shadow-[0_0_10px_rgba(100,116,139,0.1)]" },
+  orange: { glow: "hover:shadow-[0_0_40px_rgba(249,115,22,0.2)] hover:border-orange-500/50", glowSecondary: "hover:shadow-[0_0_20px_rgba(249,115,22,0.1)] hover:border-orange-500/30", text: "text-orange-400", textGlow: "0 0 20px rgba(249,115,22,0.8)", gradient: "from-orange-500 via-orange-400/20 to-transparent", bgSoft: "bg-orange-500/20", iconShadow: "shadow-[0_0_20px_rgba(249,115,22,0.15)]", actionPrimary: "bg-orange-500 text-white hover:bg-orange-600 shadow-[0_0_20px_rgba(249,115,22,0.2)]", actionSecondary: "bg-white/5 border border-orange-500/20 text-orange-400 hover:bg-orange-500/10", actionGhost: "hover:text-orange-400", actionLink: "text-orange-400/70 hover:text-orange-400 hover:border-orange-500/50", actionHover: "hover:bg-orange-500/10", badgeText: "text-orange-400", badgeBorder: "border-orange-500/20", badgeShadow: "shadow-[0_0_10px_rgba(249,115,22,0.1)]" },
 };
 
 const getShapeClass = (shape: HoverGlareCardShape, element: "container" | "inner" | "action" | "avatar" | "badge" = "container") => {
@@ -163,7 +163,15 @@ export interface HoverGlareCardRootProps
 export const HoverGlareCardRoot = React.forwardRef<HTMLDivElement, HoverGlareCardRootProps>(
   ({ className, variant = "glass", glow = "none", glareOpacity = 0.15, color = "default", shape = "default", spacing = "default", children, ...props }, ref) => {
     const activeTheme = hoverColorThemeMap[color];
-    const hoverBorderGlow = color !== "default" ? activeTheme.glow : (glow === "none" ? activeTheme.glow : "");
+    
+    let hoverBorderGlow = "";
+    if (color !== "default") {
+      hoverBorderGlow = activeTheme.glow;
+    } else {
+      if (glow === "primary") hoverBorderGlow = "hover:shadow-[0_0_40px_rgba(139,92,246,0.2)] hover:border-[#8b5cf6]/50";
+      else if (glow === "secondary") hoverBorderGlow = "hover:shadow-[0_0_40px_rgba(0,255,204,0.15)] hover:border-[#00ffcc]/50";
+      else if (glow === "white") hoverBorderGlow = "hover:shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:border-white/50";
+    }
 
     return (
       <HoverGlareCardContext.Provider value={{ color, shape, spacing }}>
@@ -171,7 +179,7 @@ export const HoverGlareCardRoot = React.forwardRef<HTMLDivElement, HoverGlareCar
           ref={ref}
           initial="initial"
           whileHover="hover"
-          className={cn(hoverGlareCardVariants({ variant, glow: color !== "default" ? "none" : glow }), getShapeClass(shape, "container"), hoverBorderGlow, className)}
+          className={cn(hoverGlareCardVariants({ variant, glow: "none" }), getShapeClass(shape, "container"), hoverBorderGlow, className)}
           {...props}
         >
           {/* Premium Diagonal Glare Layer */}
@@ -223,7 +231,7 @@ export const CardTitle = React.forwardRef<HTMLHeadingElement, Omit<HTMLMotionPro
           initial: { color: "var(--foreground)" },
           hover: { color: "var(--foreground)", textShadow: "0 0 15px rgba(255,255,255,0.3)" }
         }}
-        className={cn("text-lg font-bold leading-snug tracking-wide", color === "default" ? "" : "text-white", className)} 
+        className={cn("text-lg font-bold leading-snug tracking-wide", color === "default" ? "" : activeTheme.text, className)} 
         {...props}
       >
         {children}
@@ -428,11 +436,10 @@ export const CardAction = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAt
 
     let actionToneClass = "";
     if (color !== "default") {
-      if (tone === "primary") {
-        actionToneClass = `bg-white text-black hover:bg-white/90 shadow-[0_0_20px_rgba(255,255,255,0.2)]`;
-      } else if (tone === "secondary") {
-        actionToneClass = `bg-white/5 border ${activeTheme.badgeBorder} ${activeTheme.text} ${activeTheme.actionHover}`;
-      }
+      if (tone === "primary") actionToneClass = activeTheme.actionPrimary;
+      else if (tone === "secondary") actionToneClass = activeTheme.actionSecondary;
+      else if (tone === "ghost") actionToneClass = activeTheme.actionGhost;
+      else if (tone === "link") actionToneClass = activeTheme.actionLink;
     } else {
       if (tone === "secondary") {
          actionToneClass = "hover:bg-white/10 hover:border-white/20";
@@ -568,18 +575,18 @@ export const HoverGlareCard = React.forwardRef<HTMLDivElement, HoverGlareCardPro
           {/* Cyber Timeline Line */}
           <motion.div 
             variants={{
-              initial: { opacity: 0.2, height: "0%" },
-              hover: { opacity: 1, height: "100%" }
+              initial: { height: "0%" },
+              hover: { height: "100%" }
             }}
-            transition={{ duration: 0.5, ease: "circOut" }}
-            className="absolute left-0 top-0 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-transparent z-10"
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className={cn("absolute left-0 top-0 w-0.5 bg-gradient-to-b z-10", hoverColorThemeMap[color].gradient)}
           />
           
           <div className={cn("flex flex-col relative z-10 flex-1 pl-2", getSpacingClass(spacing, "container"))}>
             <CardHeader>
               <CardBadge tone="info" className="w-fit mb-3">INTELLIGENCE</CardBadge>
-              <CardTitle className="text-xl">Artificial Sentience Protocol</CardTitle>
-              <CardDescription className="text-[10px] uppercase tracking-widest text-blue-400 mt-2">SYS.ADMIN • 10:42 PM</CardDescription>
+              <CardTitle className="text-xl">{name}</CardTitle>
+              <CardDescription className={cn("text-[10px] uppercase tracking-widest mt-2", hoverColorThemeMap[color].text)}>SYS.ADMIN • 10:42 PM</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
               <CardDescription className="text-white/60">{description}</CardDescription>
@@ -613,7 +620,7 @@ export const HoverGlareCard = React.forwardRef<HTMLDivElement, HoverGlareCardPro
                     initial: { textShadow: "0 0 0px rgba(16,185,129,0)" },
                     hover: { textShadow: "0 0 20px rgba(16,185,129,0.8)" }
                   }}
-                  className="text-5xl font-bold tracking-tighter tabular-nums font-mono text-emerald-400"
+                  className={cn("text-5xl font-bold tracking-tighter tabular-nums font-mono", hoverColorThemeMap[color].text)}
                 >
                   99.9%
                 </motion.span>
@@ -639,7 +646,7 @@ export const HoverGlareCard = React.forwardRef<HTMLDivElement, HoverGlareCardPro
             <CardAvatar initials={avatarInitials} src={avatarSrc} size="md" />
             <div className="flex flex-col flex-1 gap-1">
               <CardTitle className="text-sm">{name}</CardTitle>
-              <CardDescription className="text-[10px] uppercase tracking-widest text-emerald-400">{title}</CardDescription>
+              <CardDescription className={cn("text-[10px] uppercase tracking-widest", hoverColorThemeMap[color].text)}>{title}</CardDescription>
             </div>
             <CardAction tone="secondary" showIcon={false} onClick={onSecondaryClick} className="px-3 py-1.5 border-white/20">
               CONNECT
@@ -659,7 +666,7 @@ export const HoverGlareCard = React.forwardRef<HTMLDivElement, HoverGlareCardPro
               hover: { opacity: 1, scale: 1 }
             }}
             transition={{ duration: 0.8 }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-blue-500/20 rounded-full blur-[40px] z-0 pointer-events-none"
+            className={cn("absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full blur-[40px] z-0 pointer-events-none", hoverColorThemeMap[color].bgSoft)}
           />
           
           <motion.div 
@@ -668,7 +675,7 @@ export const HoverGlareCard = React.forwardRef<HTMLDivElement, HoverGlareCardPro
               hover: { y: -5 }
             }}
             transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
-            className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-blue-400 mb-6 relative z-10 shadow-[0_0_20px_rgba(59,130,246,0.15)]"
+            className={cn("w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 relative z-10", hoverColorThemeMap[color].text, hoverColorThemeMap[color].iconShadow)}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
           </motion.div>
@@ -698,7 +705,7 @@ export const HoverGlareCard = React.forwardRef<HTMLDivElement, HoverGlareCardPro
                 <CardAvatar initials={avatarInitials} src={avatarSrc} size="lg" />
                 <div className="flex flex-col gap-1.5">
                   <CardTitle className="text-xl tracking-wider">{name}</CardTitle>
-                  <CardDescription className="text-[10px] font-mono text-emerald-400 uppercase tracking-[0.2em]">{title}</CardDescription>
+                  <CardDescription className={cn("text-[10px] font-mono uppercase tracking-[0.2em]", hoverColorThemeMap[color].text)}>{title}</CardDescription>
                 </div>
               </div>
             </div>

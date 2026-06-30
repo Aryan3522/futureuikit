@@ -629,5 +629,4 @@ export const PuzzleVideo: React.FC<PuzzleVideoProps> = ({
   );
 };
 
-export default PuzzleVideo;/* eslint-disable react-hooks/exhaustive-deps */
 

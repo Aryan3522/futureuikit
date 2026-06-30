@@ -74,6 +74,7 @@ import {
   SearchPreview,
   SearchInputPreview,
   IconsPreview,
+  InputOTPPreview,
 } from "./previews";
 
 /**
@@ -81,6 +82,7 @@ import {
  * Previews are extracted into category-based files in ./previews/
  */
 export const PreviewRegistry: PreviewRegistryMap = {
+  "input-otp": InputOTPPreview,
   ...MigratedPreviews,
   // Feedback
   toast: function ToastWrapper() {
@@ -535,7 +537,7 @@ export const PreviewRegistry: PreviewRegistryMap = {
     );
   },
   "puzzle-video": function PuzzleVideoPreview() {
-    const PuzzleVideo = React.useMemo(() => dynamic(() => import('@/components/ui/puzzle-video').then(mod => mod.default || mod.PuzzleVideo), { ssr: false }), []);
+    const PuzzleVideo = React.useMemo(() => dynamic(() => import('@/components/ui/puzzle-video').then((mod) => mod.PuzzleVideo), { ssr: false }), []);
     const scrollRef = React.useRef<HTMLDivElement>(null);
     const [variant, setVariant] = React.useState<"jigsaw" | "jigsaw-uneven" | "glass">("jigsaw");
     const [aspectRatio, setAspectRatio] = React.useState<"landscape" | "portrait" | "square" | "video">("video");

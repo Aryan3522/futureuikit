@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { PreviewContainer, DEFAULT_COLORS } from "../preview-engine/PreviewContainer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Activity, Code, Cpu, Database, Cloud, Zap, Shield, Rocket, Globe, Mail, Fingerprint, Layers, Blocks, Box } from "lucide-react";
 
 import {
   AlertDialog,
@@ -436,33 +437,57 @@ export const MigratedPreviews = {
     );
   },
 
-  "input-otp": function InputOTPPreview() {
-    return (
-      <PreviewContainer title="Input OTP" description="Accessible one-time password component with copy paste functionality.">
-        <div className="flex flex-col items-center gap-8 justify-center min-h-[300px]">
-          <InputOTP maxLength={6}>
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-            </InputOTPGroup>
-            <InputOTPSeparator />
-            <InputOTPGroup>
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP>
-        </div>
-      </PreviewContainer>
-    );
-  },
 
   "menubar": function MenubarPreview() {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("outline");
+    const [previewTheme, setPreviewTheme] = React.useState<any>("default");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+
+    const extraControls = (
+      <div className="flex flex-col gap-4 w-full mt-4 border-t border-border/50 pt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Theme</span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {(["default", "modern", "clean", "futuristic", "brutal", "halftone"] as const).map(t => (
+              <button key={t} onClick={() => setPreviewTheme(t)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewTheme === t ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{t}</button>
+            ))}
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {(["default", "square", "rounded", "sharp"] as const).map(s => (
+              <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+            ))}
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+              <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg uppercase transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+
     return (
-      <PreviewContainer title="Menubar" description="A visually persistent menu common in desktop applications.">
+      <PreviewContainer 
+        title="Menubar" 
+        description="A visually persistent menu common in desktop applications."
+        colors={DEFAULT_COLORS} 
+        activeColor={previewColor} 
+        onColorChange={setPreviewColor} 
+        variants={["solid", "outline", "ghost", "link"]} 
+        activeVariant={previewVariant} 
+        onVariantChange={setPreviewVariant} 
+        extraControls={extraControls}
+      >
         <div className="flex items-center justify-center min-h-[300px]">
-          <Menubar>
+          <Menubar color={previewColor} variant={previewVariant} theme={previewTheme} shape={previewShape} spacing={previewSpacing}>
             <MenubarMenu>
               <MenubarTrigger>File</MenubarTrigger>
               <MenubarContent>
@@ -671,27 +696,91 @@ export const MigratedPreviews = {
   },
 
   "icon-cloud": function IconCloudPreview() {
+    const [previewContent, setPreviewContent] = React.useState<any>("images");
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+
     const slugs = [
-      "typescript",
-      "javascript",
-      "react",
-      "nodedotjs",
-      "nextdotjs",
-      "tailwindcss",
-      "framer",
-      "vercel",
-      "github",
-      "figma",
+      "typescript", "javascript", "react", "nodedotjs", "nextdotjs",
+      "tailwindcss", "framer", "vercel", "github", "figma",
+      "supabase", "stripe", "prisma", "graphql", "python",
+      "rust", "go", "docker", "kubernetes", "amazonaws"
     ];
 
-    const images = slugs.map(
-      (slug) => `https://cdn.simpleicons.org/${slug}/white`
-    );
+    const images = slugs.map((slug) => `https://cdn.simpleicons.org/${slug}/white`);
+    
+    const icons = [
+      <Activity key="1" />, <Code key="2" />, <Cpu key="3" />, <Database key="4" />,
+      <Cloud key="5" />, <Zap key="6" />, <Shield key="7" />, <Rocket key="8" />,
+      <Globe key="9" />, <Mail key="10" />, <Fingerprint key="11" />, <Layers key="12" />,
+      <Blocks key="13" />, <Box key="14" />, <Activity key="15" />, <Code key="16" />
+    ];
+
+    let currentProps: any = {};
+    if (previewContent === "images") {
+      currentProps.images = images.slice(0, 15);
+    } else if (previewContent === "icons") {
+      currentProps.icons = icons.slice(0, 15);
+    } else if (previewContent === "mixed") {
+      currentProps.images = images.slice(0, 8);
+      currentProps.icons = icons.slice(0, 8);
+    } else if (previewContent === "numbers (10)") {
+      currentProps.count = 10;
+    } else if (previewContent === "numbers (20)") {
+      currentProps.count = 20;
+    } else if (previewContent === "numbers (50)") {
+      currentProps.count = 50;
+    }
 
     return (
-      <PreviewContainer title="Icon Cloud" description="A 3D interactive icon cloud.">
+      <PreviewContainer 
+        title="Icon Cloud" 
+        description="A dynamic, fully data-driven 3D interactive icon cloud."
+        colors={DEFAULT_COLORS}
+        activeColor={previewColor}
+        onColorChange={setPreviewColor}
+        extraControls={
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Content</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["images", "icons", "mixed", "numbers (10)", "numbers (20)", "numbers (50)"] as const).map(s => (
+                  <button key={s} onClick={() => setPreviewContent(s)}
+                    className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewContent === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                  <button key={s} onClick={() => setPreviewShape(s)}
+                    className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                  <button key={s} onClick={() => setPreviewSpacing(s)}
+                    className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+                ))}
+              </div>
+            </div>
+          </>
+        }
+      >
         <div className="flex items-center justify-center min-h-[500px]">
-          <IconCloud images={images} />
+          {/* Key is used to force re-render when changing sizes for a fresh spin effect (optional) */}
+          <IconCloud 
+            key={`${previewContent}-${previewSpacing}`}
+            color={previewColor} 
+            shape={previewShape} 
+            spacing={previewSpacing}
+            {...currentProps} 
+          />
         </div>
       </PreviewContainer>
     );
