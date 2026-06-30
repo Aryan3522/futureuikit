@@ -102,5 +102,4 @@ export function useCalendarSync(group?: string) {
     };
   }, [group, context?.groups, context?.setGroupDates, context?.addGroupDate, context?.removeGroupDate, context?.toggleGroupDate, context?.clearGroup]);
 }
-/* eslint-disable react-hooks/exhaustive-deps */
 

@@ -25,6 +25,9 @@ import { cn } from "@/lib/utils";
 export type KanbanColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
 export type KanbanShape = "default" | "square" | "rounded" | "sharp";
 export type KanbanSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+export type KanbanTheme = "default" | "modern" | "clean" | "futuristic" | "brutal" | "halftone";
+export type KanbanLayout = "default" | "compact" | "enterprise" | "minimal";
+export type KanbanVariant = "solid" | "outline" | "ghost" | "link";
 
 export interface KanbanCardData {
   id: string;
@@ -47,7 +50,9 @@ export interface KanbanColumnData {
 type DragType = "card" | "column" | null;
 
 interface KanbanContextType {
-  variant: "default" | "compact" | "enterprise" | "minimal";
+  layout: KanbanLayout;
+  variant: KanbanVariant;
+  theme: KanbanTheme;
   color: KanbanColor;
   shape: KanbanShape;
   spacing: KanbanSpacing;
@@ -106,6 +111,23 @@ const getShapeClass = (shape: KanbanShape, isCard?: boolean) => {
   }
 };
 
+const getThemeClass = (theme: KanbanTheme) => {
+  switch (theme) {
+    case "modern": 
+      return "p-5 gap-4 rounded-3xl backdrop-blur-2xl bg-gradient-to-br from-background/90 to-muted/40 shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgb(255,255,255,0.03)] border border-foreground/5 hover:border-foreground/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out";
+    case "clean": 
+      return "p-2 gap-1 rounded-sm bg-transparent border-foreground/10 hover:border-foreground/40 hover:bg-foreground/5 shadow-none transition-all duration-500 hover:scale-[1.01]";
+    case "futuristic": 
+      return "p-6 gap-5 rounded-tl-3xl rounded-br-3xl rounded-tr-md rounded-bl-md bg-background/80 backdrop-blur-3xl shadow-[0_0_15px_rgba(var(--primary),0.15)] border-l-4 border-primary/30 hover:shadow-[0_0_30px_rgba(var(--primary),0.3)] hover:bg-primary/5 hover:border-primary/60 transition-all duration-300 uppercase tracking-wider";
+    case "brutal": 
+      return "p-4 gap-3 border-4 border-foreground shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:shadow-[6px_6px_0_0_rgba(255,255,255,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:hover:shadow-[2px_2px_0px_rgba(255,255,255,1)] transition-all rounded-none font-mono";
+    case "halftone": 
+      return "p-4 gap-3 rounded-xl bg-[radial-gradient(circle_at_center,var(--primary)_1.5px,transparent_1.5px)] bg-[size:6px_6px] bg-background/90 hover:bg-background/60 transition-all duration-300";
+    default: 
+      return "p-3 gap-2.5 transition-all duration-200";
+  }
+};
+
 const getSpacingClass = (spacing: KanbanSpacing) => {
   switch (spacing) {
     case "2x": return "gap-2";
@@ -122,7 +144,9 @@ const getSpacingClass = (spacing: KanbanSpacing) => {
 
 export interface KanbanBoardProps {
   initialColumns?: KanbanColumnData[];
-  variant?: "default" | "compact" | "enterprise" | "minimal";
+  layout?: KanbanLayout;
+  variant?: KanbanVariant;
+  theme?: KanbanTheme;
   color?: KanbanColor;
   shape?: KanbanShape;
   spacing?: KanbanSpacing;
@@ -132,7 +156,9 @@ export interface KanbanBoardProps {
 
 export const KanbanBoard = React.memo(function KanbanBoard({
   initialColumns = [],
-  variant = "default",
+  layout = "default",
+  variant = "solid",
+  theme = "default",
   color = "default",
   shape = "default",
   spacing = "default",
@@ -319,7 +345,9 @@ export const KanbanBoard = React.memo(function KanbanBoard({
 
   return (
     <KanbanContext.Provider value={{
+      layout,
       variant,
+      theme,
       color,
       shape,
       spacing,
@@ -358,8 +386,8 @@ export const KanbanBoard = React.memo(function KanbanBoard({
             "flex items-center justify-center gap-2 shrink-0 w-full md:w-80 h-16 border-2 border-dashed border-border/50 text-muted-foreground hover:text-foreground transition-all bg-background/30",
             shapeClass,
             activeTheme.hoverBorder,
-            variant === "minimal" && "border-none bg-transparent hover:bg-muted/30 h-10 w-full md:w-40 justify-start px-2",
-            variant === "compact" && "md:w-72"
+            layout === "minimal" && "border-none bg-transparent hover:bg-muted/30 h-10 w-full md:w-40 justify-start px-2",
+            layout === "compact" && "md:w-72"
           )}
         >
           <Plus className="w-5 h-5" />
@@ -396,7 +424,9 @@ export interface KanbanColumnProps {
 
 export const KanbanColumn = React.memo(function KanbanColumn({ id, title, count, children, className }: KanbanColumnProps) {
   const { 
+    layout,
     variant, 
+    theme,
     color,
     shape,
     handleDragStart, 
@@ -416,6 +446,7 @@ export const KanbanColumn = React.memo(function KanbanColumn({ id, title, count,
 
   const activeTheme = colorThemeMap[color];
   const shapeClass = getShapeClass(shape);
+  const themeClass = getThemeClass(theme);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -457,31 +488,33 @@ export const KanbanColumn = React.memo(function KanbanColumn({ id, title, count,
       className={cn(
         "flex flex-col shrink-0 w-full md:w-80 max-w-full h-full max-h-full transition-all duration-200 md:snap-center",
         shapeClass,
-        variant === "default" && "bg-muted/40 border border-border/50",
-        variant === "compact" && "md:w-72 bg-muted/20 border-border/30",
-        variant === "enterprise" && "bg-muted/30 border border-border shadow-sm",
-        variant === "minimal" && "bg-transparent border-transparent",
+        themeClass,
+        layout === "compact" && "md:w-72",
+        variant === "solid" && cn("border", activeTheme.bgSoft, activeTheme.borderIndicator),
+        variant === "outline" && cn("bg-transparent border", activeTheme.borderIndicator),
+        variant === "ghost" && cn("bg-transparent border-transparent", activeTheme.hoverBorder),
+        variant === "link" && "bg-transparent border-transparent",
         isDraggedCol && "opacity-30 scale-95",
         className
       )}
     >
       <div className={cn(
         "flex items-center justify-between p-3 cursor-grab active:cursor-grabbing",
-        variant === "minimal" && "px-1 border-b border-border/50 mb-3"
+        layout === "minimal" && "px-1 border-b border-border/50 mb-3"
       )}>
         <div className="flex items-center gap-2">
           <GripVertical className="w-4 h-4 text-muted-foreground/50 hidden md:block" />
           <h3 className={cn(
             "font-semibold tracking-tight",
-            variant === "enterprise" && "text-foreground text-sm",
-            variant === "compact" && "text-sm",
-            variant === "minimal" && "text-xs uppercase tracking-wider text-muted-foreground font-bold"
+            layout === "enterprise" && "text-foreground text-sm",
+            layout === "compact" && "text-sm",
+            layout === "minimal" && "text-xs uppercase tracking-wider text-muted-foreground font-bold"
           )}>{title}</h3>
           {count !== undefined && (
             <span className={cn(
               "text-xs px-2 py-0.5 rounded-full font-medium",
-              variant === "enterprise" && "bg-muted text-muted-foreground",
-              variant !== "enterprise" && "bg-muted text-muted-foreground"
+              layout === "enterprise" && "bg-muted text-muted-foreground",
+              layout !== "enterprise" && "bg-muted text-muted-foreground"
             )}>
               {count}
             </span>
@@ -531,7 +564,7 @@ export const KanbanColumn = React.memo(function KanbanColumn({ id, title, count,
       
       <div className={cn(
         "flex-1 overflow-y-auto overflow-x-hidden p-3 pt-0 flex flex-col gap-2 custom-scrollbar",
-        variant === "minimal" && "px-0",
+        layout === "minimal" && "px-0",
         isDropTarget && activeTheme.bgSoft
       )}>
         {children}
@@ -544,7 +577,7 @@ export const KanbanColumn = React.memo(function KanbanColumn({ id, title, count,
           onClick={() => openModal("add", id)}
           className={cn(
             "flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 mt-1",
-            variant === "minimal" && "px-1"
+            layout === "minimal" && "px-1"
           )}
         >
           <Plus className="w-4 h-4" />
@@ -572,7 +605,9 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
   } = props;
   
   const { 
+    layout,
     variant, 
+    theme,
     color,
     shape,
     handleDragStart, 
@@ -591,6 +626,7 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
   const activeTheme = colorThemeMap[color];
   const shapeClass = getShapeClass(shape, true);
   const modalShapeClass = getShapeClass(shape);
+  const themeClass = getThemeClass(theme);
 
   const isDragging = activeDragId === id;
   const isDropTarget = dropTargetId === id;
@@ -646,11 +682,14 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
         className={cn(
           "group relative cursor-grab active:cursor-grabbing p-3 flex flex-col gap-2.5 transition-all",
           shapeClass,
-          variant === "default" && "bg-background border border-border shadow-sm hover:shadow-md",
-          variant === "compact" && "bg-background border border-border/50 p-2 text-sm",
-          variant === "enterprise" && "bg-card border border-border/50 shadow-[0_1px_2px_rgba(0,0,0,0.05)]",
-          variant === "minimal" && "bg-background border-l-2 border-l-border border-y border-y-transparent border-r border-r-transparent hover:bg-muted/30 rounded-none",
-          (variant === "enterprise" || variant === "minimal") && activeTheme.borderIndicator,
+          themeClass,
+          layout === "compact" && "p-2 text-sm",
+          layout === "minimal" && "rounded-none",
+          variant === "solid" && cn("bg-background border shadow-sm hover:shadow-md", activeTheme.borderIndicator, activeTheme.hoverBorder),
+          variant === "outline" && cn("bg-transparent border hover:bg-muted/10", activeTheme.borderIndicator, activeTheme.bgSoft),
+          variant === "ghost" && cn("bg-transparent border-transparent hover:bg-muted/20", activeTheme.hoverBorder),
+          variant === "link" && cn("bg-transparent border-transparent hover:bg-muted/10", activeTheme.textIndicator),
+          (layout === "enterprise" || layout === "minimal") && activeTheme.borderIndicator,
           isDragging && "opacity-40 scale-95 shadow-xl rotate-1 z-50",
           className
         )}
@@ -710,13 +749,13 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
         {/* Title & Desc */}
         <div className="pr-4">
           <h4 className={cn(
-            "font-medium leading-tight text-foreground",
-            variant === "compact" && "text-sm",
-            variant === "minimal" && "font-semibold text-sm"
+            "font-medium tracking-tight",
+            layout === "compact" && "text-sm",
+            layout === "minimal" && "font-semibold text-sm"
           )}>
             {title}
           </h4>
-          {description && variant !== "compact" && (
+          {description && layout !== "compact" && (
             <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
               {description}
             </p>
@@ -815,7 +854,7 @@ function KanbanModal({
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className={cn("relative w-full max-w-lg bg-background border border-border shadow-2xl p-6 flex flex-col gap-6", shapeClass)}
+        className={cn("relative w-full max-w-lg bg-background border border-border shadow-2xl p-6 flex flex-col gap-6", shapeClass, getThemeClass(useKanban().theme))}
       >
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold tracking-tight">

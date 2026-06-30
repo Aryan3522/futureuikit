@@ -9,3 +9,4 @@ export * from "./background-previews";
 export * from "./advanced-previews";
 export * from "./search-previews";
 export * from "./icons-previews";
+export * from "./input-otp-previews";

@@ -468,5 +468,4 @@ export function SlideUpReveal({
     </div>
   );
 }
-/* eslint-disable @next/next/no-img-element */
 

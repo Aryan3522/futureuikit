@@ -336,6 +336,8 @@ export const HoverGlareCardPreview: React.FC = () => {
   const [layout, setLayout] = React.useState<"default" | "media" | "content" | "stats" | "compact" | "feature">("default");
   const [styleVariant, setStyleVariant] = React.useState<"default" | "glass" | "solid" | "ghost">("glass");
   const [glow, setGlow] = React.useState<"none" | "primary" | "secondary" | "white">("primary");
+  const [previewShape, setPreviewShape] = React.useState<any>("default");
+  const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
   return (
     <PreviewContainer
       title="Hover Glare Card"
@@ -344,22 +346,40 @@ export const HoverGlareCardPreview: React.FC = () => {
       activeVariant={layout}
       onVariantChange={setLayout as any}
       extraControls={
-        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
-          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Style & Glow</span>
-          <div className="flex flex-wrap items-center gap-4 w-full">
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Style</span>
             <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
               {(["default", "glass", "solid", "ghost"] as const).map(v => (
                 <button key={v} onClick={() => setStyleVariant(v)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", styleVariant === v ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{v}</button>
               ))}
             </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Glow</span>
             <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
-              <span className="text-[10px] uppercase font-bold text-muted-foreground mx-2">Glow:</span>
               {(["none", "primary", "secondary", "white"] as const).map(g => (
                 <button key={g} onClick={() => setGlow(g)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", glow === g ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{g}</button>
               ))}
             </div>
           </div>
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+              ))}
+            </div>
+          </div>
+        </>
       } colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className="flex items-center justify-center w-full h-full p-4 sm:p-8 min-h-100">
@@ -367,6 +387,8 @@ export const HoverGlareCardPreview: React.FC = () => {
           layout={layout}
           variant={styleVariant}
           glow={glow} color={previewColor}
+          shape={previewShape}
+          spacing={previewSpacing}
         />
       </div>
     </PreviewContainer>

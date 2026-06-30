@@ -498,5 +498,4 @@ export const ComponentPageSidebarPreview: React.FC = () => {
     </PreviewContainer>
   );
 };
-/* eslint-disable @next/next/no-img-element */
 

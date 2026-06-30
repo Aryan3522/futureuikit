@@ -504,7 +504,6 @@ export const AutocompleteInput: React.FC<AutocompleteProps> = React.memo(({
 
           useEffect(() => {
             const matched = options.find((opt) => opt.value === value);
-            // eslint-disable-next-line react-hooks/set-state-in-effect
             setSearchTerm(matched ? matched.label : value);
           }, [value, options]);
 
@@ -1637,5 +1636,4 @@ export const DynamicForm: React.FC<DynamicFormProps> = React.memo(({
           );
         });
 DynamicForm.displayName = "DynamicForm";
-/* eslint-disable */
 

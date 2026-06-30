@@ -362,71 +362,67 @@ export const ClayMorphButtonPreview: React.FC = () => {
   );
 }
 export const MinimalButtonPreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-  const [activeVariant, setActiveVariant] = React.useState<string>("primary");
+  const [previewColor, setPreviewColor] = React.useState<any>("default");
+  const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+  const [previewTheme, setPreviewTheme] = React.useState<any>("default");
+  const [previewShape, setPreviewShape] = React.useState<any>("default");
+  const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+
+  const extraControls = (
+    <div className="flex flex-col gap-4 w-full mt-4 border-t border-border/50 pt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Theme</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "modern", "clean", "futuristic", "brutal", "halftone"] as const).map(t => (
+            <button key={t} onClick={() => setPreviewTheme(t)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewTheme === t ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{t}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "square", "rounded", "sharp", "cut-tl-br", "cut-tr-bl", "cut-all"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing / Size</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg uppercase transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <PreviewContainer
       title="Minimal Button"
-      description="An ultra-clean, premium button inspired by Vercel and Linear. Focuses on typography, precise spacing, and subtle interactions."
-      variants={["primary", "secondary", "ghost", "outline", "soft", "text", "elevated", "success", "danger", "warning"]}
-      activeVariant={activeVariant}
-      onVariantChange={setActiveVariant}
+      description="An ultra-clean, premium button inspired by modern trends. Focuses on typography, precise spacing, and subtle interactions."
+      variants={["solid", "outline", "ghost", "soft", "link"]}
+      activeVariant={previewVariant}
+      onVariantChange={setPreviewVariant}
       isVirtualScreen={true} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
+      extraControls={extraControls}
     >
       <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[400px]">
-        <div className="flex flex-col items-center gap-10 w-full max-w-4xl border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-12 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm">
-          
-          <div className="text-center space-y-2 mb-2 w-full">
-            <h3 className="text-xl font-bold capitalize text-zinc-900 dark:text-white">{activeVariant} Variant</h3>
-            <p className="text-zinc-500 dark:text-zinc-400 text-sm">Responsive Sizes & Shapes</p>
-          </div>
-
-          {/* Sizes Showcase */}
-          <div className="flex flex-wrap items-end justify-center gap-6 w-full">
-            <MinimalButton variant={activeVariant as any} color="slate">Extra Small</MinimalButton>
-            <MinimalButton variant={activeVariant as any} color="slate">Small Size</MinimalButton>
-            <MinimalButton variant={activeVariant as any} color="slate">Medium Default</MinimalButton>
+        <div className="flex flex-col items-center gap-10 w-full max-w-4xl border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-12 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm shadow-xl">
+          <div className="flex flex-wrap items-center justify-center gap-8 w-full">
+            <MinimalButton variant={previewVariant as any} color={previewColor} shape={previewShape} spacing={previewSpacing} theme={previewTheme}>Minimal Button</MinimalButton>
+            <MinimalButton variant={previewVariant as any} color={previewColor} shape={previewShape} spacing={previewSpacing} theme={previewTheme} icon={<Star />}>Left Icon</MinimalButton>
+            <MinimalButton variant={previewVariant as any} color={previewColor} shape={previewShape} spacing={previewSpacing} theme={previewTheme} icon={<Star />} iconPosition="right">Tail Icon</MinimalButton>
           </div>
           
-          <div className="flex flex-wrap items-end justify-center gap-8 w-full mt-2">
-            <MinimalButton variant={activeVariant as any} color="slate">Large Size</MinimalButton>
-            <MinimalButton variant={activeVariant as any} color="slate">Extra Large</MinimalButton>
-          </div>
-
           <div className="w-full max-w-2xl h-px bg-zinc-200 dark:bg-zinc-800 my-2" />
 
-          {/* Shapes Showcase */}
-          <div className="flex flex-wrap items-center justify-center gap-6 w-full">
-             <MinimalButton variant={activeVariant as any} shape="rounded" color="slate">Rounded</MinimalButton>
-             <MinimalButton variant={activeVariant as any} shape="rounded" color="slate">Soft Rounded</MinimalButton>
-             <MinimalButton variant={activeVariant as any} shape="rounded" color="slate">Pill Shape</MinimalButton>
-             <MinimalButton variant={activeVariant as any} shape="rounded" color="slate">Squircle</MinimalButton>
+          <div className="flex flex-wrap items-center justify-center gap-8 w-full">
+            <MinimalButton variant={previewVariant as any} color={previewColor} shape={previewShape} spacing={previewSpacing} theme={previewTheme} loading>Processing</MinimalButton>
+            <MinimalButton variant={previewVariant as any} color={previewColor} shape={previewShape} spacing={previewSpacing} theme={previewTheme} disabled>Disabled State</MinimalButton>
           </div>
-          
-          <div className="flex flex-wrap items-center justify-center gap-8 w-full mt-2">
-             <MinimalButton variant={activeVariant as any} shape="square" color="slate">Square</MinimalButton>
-             <MinimalButton variant={activeVariant as any} shape="rounded" color="slate">Stadium</MinimalButton>
-             <MinimalButton variant={activeVariant as any} shape="sharp" color="slate">Cut Corners</MinimalButton>
-          </div>
-
-          {/* Icons & Circles Showcase */}
-          <div className="flex flex-wrap items-center justify-center gap-6 w-full mt-2">
-             <MinimalButton variant={activeVariant as any} shape="rounded" color="slate" icon={<Star />} aria-label="Star XS" />
-             <MinimalButton variant={activeVariant as any} shape="rounded" color="slate" icon={<Star />} aria-label="Star SM" />
-             <MinimalButton variant={activeVariant as any} shape="rounded" color="slate" icon={<Star />} aria-label="Star MD" />
-             <MinimalButton variant={activeVariant as any} shape="rounded" color="slate" icon={<Star />} aria-label="Star LG" />
-             <MinimalButton variant={activeVariant as any} shape="rounded" color="slate" icon={<Star />} aria-label="Star XL" />
-          </div>
-
-          {/* Loading & Disabled */}
-          <div className="w-full max-w-2xl h-px bg-zinc-200 dark:bg-zinc-800 my-2" />
-          <div className="flex flex-wrap items-center justify-center gap-6 w-full">
-            <MinimalButton variant={activeVariant as any} loading color="slate">Loading State</MinimalButton>
-            <MinimalButton variant={activeVariant as any} disabled color="slate">Disabled State</MinimalButton>
-            <MinimalButton variant={activeVariant as any} icon={<Star />} iconPosition="right" color="slate">Icon Right</MinimalButton>
-          </div>
-
         </div>
       </div>
     </PreviewContainer>
