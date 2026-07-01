@@ -13,6 +13,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Check, X } from "lucide-react";
 
+export type OtpVariant = "default" | "solid" | "glass" | "neon";
 export type OtpShape = "default" | "square" | "rounded" | "sharp";
 export type OtpColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
 export type OtpSpacing = "default" | "2x" | "4x" | "6x" | "8x";
@@ -21,6 +22,7 @@ export interface OTPVerificationProps {
   length?: number;
   onVerify?: (otp: string) => Promise<boolean> | boolean;
   color?: OtpColor;
+  variant?: OtpVariant;
   shape?: OtpShape;
   spacing?: OtpSpacing;
   className?: string;
@@ -30,6 +32,7 @@ export const OTPVerification = React.memo(function OTPVerification({
   length = 6,
   onVerify,
   color = "default",
+  variant = "default",
   shape = "default",
   spacing = "default",
   className,
@@ -225,71 +228,94 @@ export const OTPVerification = React.memo(function OTPVerification({
     shape === "sharp" ? "rounded-[2px]" : 
     "rounded-xl";
 
+  const isGlass = variant === "glass";
+  const isNeon = variant === "neon";
+  const isSolid = variant === "solid";
+
   return (
-    <div className={cn("flex flex-col items-center justify-center w-full min-h-[200px] p-8 bg-background relative", className)}>
+    <div className={cn("flex flex-col items-center justify-center w-full min-h-[200px] p-8 relative", !isGlass && "bg-background", className)}>
       <motion.div 
         className="flex items-center gap-3 relative"
         animate={getContainerAnimation()}
       >
-        {otp.map((digit, index) => (
-          <motion.div
-            key={index}
-            className="relative z-10"
-            initial={false}
-            animate={getBoxAnimation(index)}
-            style={{ zIndex: status !== "idle" ? index : 10 }}
-          >
-            {/* Glow effect for active or success state */}
-            <AnimatePresence>
-              {(activeIndex === index && status === "idle") && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  className="absolute inset-0 bg-primary/20 rounded-xl blur-md -z-10"
-                />
-              )}
-              {status === "success" && index === Math.floor(centerIndex) && (
-                 <motion.div
-                 initial={{ opacity: 0, scale: 0.8 }}
-                 animate={{ opacity: 1, scale: 1.5 }}
-                 className="absolute inset-0 bg-emerald-500/30 rounded-full blur-xl -z-10"
-               />
-              )}
-               {status === "error" && index === Math.floor(centerIndex) && (
-                 <motion.div
-                 initial={{ opacity: 0, scale: 0.8 }}
-                 animate={{ opacity: 1, scale: 1.5 }}
-                 className="absolute inset-0 bg-red-500/30 rounded-full blur-xl -z-10"
-               />
-              )}
-            </AnimatePresence>
+        {otp.map((digit, index) => {
+          const isActive = activeIndex === index && status === "idle";
+          const neonGlow = isActive && isNeon ? "drop-shadow-[0_0_8px_var(--primary)]" : "";
 
-            <input
-              ref={(el) => {
-                inputRefs.current[index] = el;
-              }}
-              type="text"
-              value={digit}
-              onChange={(e) => handleChange(e, index)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-              onPaste={handlePaste}
-              onFocus={() => status === "idle" && setActiveIndex(index)}
-              disabled={status !== "idle"}
-              className={cn(
-                sizes[spacing] || sizes.default,
-                shapeClass,
-                "flex items-center justify-center text-center font-bold bg-background border-2 outline-none transition-colors",
-                activeIndex === index && status === "idle" 
-                  ? `ring-2 ${ringColorMap[color]}` 
-                  : `border-border text-foreground ${focusBorderMap[color]}`,
-                status !== "idle" && "opacity-90 shadow-xl pointer-events-none bg-muted",
-                status === "success" && "border-emerald-500/50 bg-emerald-50 dark:bg-emerald-500/10",
-                status === "error" && "border-red-500/50 bg-red-50 dark:bg-red-500/10"
-              )}
-            />
-          </motion.div>
-        ))}
+          return (
+            <motion.div
+              key={index}
+              className="relative z-10"
+              initial={false}
+              animate={getBoxAnimation(index)}
+              style={{ zIndex: status !== "idle" ? index : 10 }}
+            >
+              {/* Glow effect for active or success state */}
+              <AnimatePresence>
+                {isActive && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    className={cn("absolute inset-0 bg-primary/20 blur-md -z-10", shapeClass)}
+                  />
+                )}
+                {status === "success" && index === Math.floor(centerIndex) && (
+                   <motion.div
+                   initial={{ opacity: 0, scale: 0.8 }}
+                   animate={{ opacity: 1, scale: 1.5 }}
+                   className="absolute inset-0 bg-emerald-500/30 rounded-full blur-xl -z-10"
+                 />
+                )}
+                 {status === "error" && index === Math.floor(centerIndex) && (
+                   <motion.div
+                   initial={{ opacity: 0, scale: 0.8 }}
+                   animate={{ opacity: 1, scale: 1.5 }}
+                   className="absolute inset-0 bg-red-500/30 rounded-full blur-xl -z-10"
+                 />
+                )}
+              </AnimatePresence>
+
+              <input
+                ref={(el) => {
+                  inputRefs.current[index] = el;
+                }}
+                type="text"
+                value={digit}
+                onChange={(e) => handleChange(e, index)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                onPaste={handlePaste}
+                onFocus={() => status === "idle" && setActiveIndex(index)}
+                disabled={status !== "idle"}
+                className={cn(
+                  sizes[spacing] || sizes.default,
+                  shapeClass,
+                  neonGlow,
+                  "flex items-center justify-center text-center font-bold outline-none transition-all duration-300",
+                  
+                  // Base Styles based on variant
+                  (!isGlass && !isSolid) && "bg-background",
+                  isSolid && "bg-muted border-transparent",
+                  isGlass && "bg-background/40 backdrop-blur-md border-foreground/10 text-foreground shadow-sm",
+                  (!isGlass && !isSolid) && "border-2",
+                  isSolid && "border-2",
+                  isGlass && "border",
+                  isNeon && "border-foreground/30",
+
+                  // Active / Inactive Border
+                  isActive 
+                    ? `ring-2 ${ringColorMap[color]}` 
+                    : `border-border text-foreground ${focusBorderMap[color]}`,
+                  
+                  // State Styles
+                  status !== "idle" && "opacity-90 shadow-xl pointer-events-none bg-muted",
+                  status === "success" && "border-emerald-500/50 bg-emerald-50 dark:bg-emerald-500/10",
+                  status === "error" && "border-red-500/50 bg-red-50 dark:bg-red-500/10"
+                )}
+              />
+            </motion.div>
+          );
+        })}
 
         {/* Overlay Status Icons */}
         <AnimatePresence>
