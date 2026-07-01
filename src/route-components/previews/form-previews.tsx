@@ -824,25 +824,68 @@ export const FormBuilderPreview: React.FC = () => {
 };
 
 export const OTPVerificationPreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+  const [previewColor, setPreviewColor] = React.useState<any>("default");
+  const [previewVariant, setPreviewVariant] = React.useState<any>("default");
+  const [previewShape, setPreviewShape] = React.useState<any>("default");
+  const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+
   return (
     <PreviewContainer
       title="OTP Verification"
-      description="Animated multi-field OTP input with various verification states." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
+      description="Animated multi-field OTP input with various verification states and premium styles."
+      colors={DEFAULT_COLORS}
+      activeColor={previewColor}
+      onColorChange={setPreviewColor}
+      variants={["default", "solid", "glass", "neon"]}
+      activeVariant={previewVariant}
+      onVariantChange={setPreviewVariant}
+      extraControls={
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+              ))}
+            </div>
+          </div>
+        </>
+      }
     >
-      <div className="w-full max-w-md m-auto flex flex-col items-center gap-12">
-        <div className="text-center space-y-2">
-          <h3 className="text-2xl font-bold">Verify Access</h3>
-          <p className="text-sm text-muted-foreground">Enter the 6-digit code sent to your email.</p>
+      <div className={cn("w-full h-full min-h-[400px] flex flex-col items-center justify-center relative p-8", previewVariant === "glass" && "bg-[radial-gradient(circle_at_center,_var(--tw-colors-muted-foreground)_1px,_transparent_1px)] bg-[size:16px_16px] dark:bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.15)_1px,_transparent_1px)]")}>
+        {/* Colorful blobs to demonstrate glass effect */}
+        {previewVariant === "glass" && (
+          <>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-primary/30 rounded-full blur-3xl mix-blend-screen pointer-events-none" />
+            <div className="absolute bottom-1/4 right-1/4 translate-x-1/4 translate-y-1/4 w-32 h-32 bg-purple-500/30 rounded-full blur-3xl mix-blend-screen pointer-events-none" />
+          </>
+        )}
+
+        <div className="w-full max-w-md m-auto flex flex-col items-center gap-12 relative z-10">
+          <div className="text-center space-y-2">
+            <h3 className="text-2xl font-bold">Verify Access</h3>
+            <p className="text-sm text-muted-foreground">Enter the 6-digit code sent to your email.</p>
+          </div>
+          <OTPVerification
+            length={6}
+            color={previewColor}
+            variant={previewVariant}
+            shape={previewShape}
+            spacing={previewSpacing}
+            onVerify={async (code) => {
+              console.log("OTP Code:", code);
+              return new Promise((resolve) => setTimeout(() => resolve(code === "123456"), 1500));
+            }}
+          />
         </div>
-        <OTPVerification
-          length={6}
-          onVerify={async (code) => {
-            console.log("OTP Code:", code);
-            return new Promise((resolve) => setTimeout(() => resolve(code === "123456"), 1500));
-          }}
-        />
       </div>
     </PreviewContainer>
   );

@@ -103,9 +103,118 @@ export const HeaderPreview: React.FC = () => {
 export const NavMenuPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
     const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+    const [previewItemCount, setPreviewItemCount] = React.useState<number>(8);
+    const [previewPosition, setPreviewPosition] = React.useState<string>("center");
+    const [previewType, setPreviewType] = React.useState<"mixed" | "text">("mixed");
+    const boundsRef = React.useRef<HTMLDivElement>(null);
+
+    const generateItems = (count: number, type: "mixed" | "text") => {
+      if (type === "text") {
+        const textItems = ["Home", "About", "Services", "Portfolio", "Contact", "Blog", "Careers", "FAQ", "Terms", "Privacy"];
+        const result = [];
+        for (let i = 0; i < count; i++) {
+          result.push({ title: textItems[i % textItems.length] });
+        }
+        return result;
+      }
+      const baseItems = [
+        { title: "Home", icon: <Home className="w-5 h-5" /> },
+        { title: "User", image: "https://github.com/shadcn.png" },
+        { title: "Settings", icon: <Settings className="w-5 h-5" /> },
+        { title: "Messages", icon: <Mail className="w-5 h-5" /> },
+        { title: "Notifications", icon: <Bell className="w-5 h-5" /> },
+        { title: "Search", icon: <Search className="w-5 h-5" /> },
+      ];
+      const result = [];
+      for (let i = 0; i < count; i++) {
+        result.push(baseItems[i % baseItems.length]);
+      }
+      return result;
+    };
+
   return (
-    <PreviewContainer title="Navigation Menu" description="A dynamic floating menu." contentClassName="relative" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
-      <NavMenu />
+    <PreviewContainer 
+      title="Navigation Menu" 
+      description="A dynamic floating menu." 
+      contentClassName="relative" 
+      colors={DEFAULT_COLORS} 
+      activeColor={previewColor} 
+      onColorChange={setPreviewColor} 
+      variants={["solid", "outline", "ghost", "link"]} 
+      activeVariant={previewVariant} 
+      onVariantChange={setPreviewVariant}
+      extraControls={
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Type</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["mixed", "text"] as const).map(t => (
+                <button key={t} onClick={() => setPreviewType(t)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewType === t ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{t}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Items</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {([6, 8, 16, 24] as const).map(c => (
+                <button key={c} onClick={() => setPreviewItemCount(c)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewItemCount === c ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{c} Items</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Position</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["center", "top-left", "top-right", "bottom-left", "bottom-right"] as const).map(p => (
+                <button key={p} onClick={() => setPreviewPosition(p)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewPosition === p ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{p.replace("-", " ")}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewShape(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+        </>
+      }
+    >
+      {/* Preview Display Area */}
+      <div ref={boundsRef} className="w-full h-[600px] relative overflow-hidden bg-muted/5 border border-border/20 rounded-xl">
+        <div className={`absolute transition-all duration-500 ease-in-out z-50
+          ${previewPosition === 'center' ? 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2' : ''}
+          ${previewPosition === 'top-left' ? 'top-2 left-2' : ''}
+          ${previewPosition === 'top-right' ? 'top-2 right-2' : ''}
+          ${previewPosition === 'bottom-left' ? 'bottom-2 left-2' : ''}
+          ${previewPosition === 'bottom-right' ? 'bottom-2 right-2' : ''}
+        `}>
+          <NavMenu 
+            color={previewColor} 
+            shape={previewShape} 
+            spacing={previewSpacing}
+            variant={previewVariant}
+            boundsContainer={boundsRef}
+            items={generateItems(previewItemCount, previewType)}
+          />
+        </div>
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
+      </div>
     </PreviewContainer>
   );
 };

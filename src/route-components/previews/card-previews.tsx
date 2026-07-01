@@ -485,9 +485,10 @@ export const ExpandingCardPreview: React.FC = () => {
 };
 
 export const NexusCardPreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+  const [previewColor, setPreviewColor] = React.useState<any>("default");
   const [variant, setVariant] = React.useState<"default" | "glass" | "solid" | "neon">("default");
+  const [previewShape, setPreviewShape] = React.useState<any>("default");
+  const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
 
   return (
     <PreviewContainer
@@ -495,10 +496,33 @@ export const NexusCardPreview: React.FC = () => {
       description="A premium 3D parallax card with reactive spotlight."
       variants={["default", "glass", "solid", "neon"]}
       activeVariant={variant}
-      onVariantChange={setVariant as any} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
+      onVariantChange={setVariant as any}
+      colors={DEFAULT_COLORS}
+      activeColor={previewColor}
+      onColorChange={setPreviewColor}
+      extraControls={
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+              ))}
+            </div>
+          </div>
+        </>
+      }
     >
       <div className="flex items-center justify-center w-full h-full p-4 sm:p-8">
-        <NexusCard className="w-80 h-96" variant={variant} color={previewColor}>
+        <NexusCard className="w-80 h-96" variant={variant} color={previewColor} shape={previewShape} spacing={previewSpacing}>
           <h2 className="text-2xl font-bold text-foreground mb-2">Nexus Design</h2>
           <p className="text-muted-foreground">Hover over this card to experience the premium tactile feel, reactive spotlight, and 3D parallax tilt.</p>
         </NexusCard>
