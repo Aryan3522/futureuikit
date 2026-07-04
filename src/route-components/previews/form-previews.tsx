@@ -35,18 +35,7 @@ export const PremiumOtpInputPreview: React.FC = () => {
     const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const { theme } = useTheme();
   const [length, setLength] = useState<number>(6);
-  const [size, setSize] = useState<"sm" | "md" | "lg">("md");
-  const [otpColor, setOtpColor] = useState<"indigo" | "rose" | "emerald" | "amber" | "sky" | "violet" | "slate">("indigo");
-
-  const colors = [
-    { name: "indigo", class: "bg-indigo-500" },
-    { name: "rose", class: "bg-rose-500" },
-    { name: "emerald", class: "bg-emerald-500" },
-    { name: "amber", class: "bg-amber-500" },
-    { name: "sky", class: "bg-sky-500" },
-    { name: "violet", class: "bg-violet-500" },
-    { name: "slate", class: "bg-zinc-500" },
-  ] as const;
+  const [spacing, setSpacing] = useState<"default" | "2x" | "4x" | "6x" | "8x">("default");
 
   return (
     <PreviewContainer
@@ -58,32 +47,15 @@ export const PremiumOtpInputPreview: React.FC = () => {
       extraControls={
         <div className="flex flex-col gap-6 w-full">
           <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
-            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Vibe Color</span>
-            <div className="flex items-center flex-wrap gap-3 p-2 bg-muted/30 rounded-xl w-full">
-              {colors.map((c) => (
-                <button 
-                  key={c.name} 
-                  onClick={() => setOtpColor(c.name)} 
-                  className={cn(
-                    "w-6 h-6 rounded-full transition-all duration-300 ring-offset-2 ring-offset-background hover:scale-125",
-                    c.class,
-                    otpColor === c.name ? "ring-2 ring-foreground scale-110 shadow-lg" : "opacity-60"
-                  )}
-                  title={c.name}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
-            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
             <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
-              {(["sm", "md", "lg"] as const).map((s) => (
+              {(["default", "2x", "4x", "6x", "8x"] as const).map((s) => (
                 <button 
                   key={s} 
-                  onClick={() => setSize(s)} 
+                  onClick={() => setSpacing(s)} 
                   className={cn(
                     "px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", 
-                    size === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                    spacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
                   )}
                 >
                   {s}
@@ -100,7 +72,7 @@ export const PremiumOtpInputPreview: React.FC = () => {
       )}>
         <div className="w-full max-w-2xl flex flex-col items-center gap-12">
           <div className="text-center space-y-4">
-            <Badge variant="outline" className={cn("mb-2 px-3 py-1 border-indigo-500/20 text-indigo-500 animate-pulse", `text-${otpColor}-500 border-${otpColor}-500/20`)}>
+            <Badge variant="outline" className={cn("mb-2 px-3 py-1 animate-pulse", previewColor === "default" ? "text-foreground border-border" : `text-${previewColor}-500 border-${previewColor}-500/20`)}>
               Security Protocol Alpha
             </Badge>
             <h3 className={cn(
@@ -113,17 +85,17 @@ export const PremiumOtpInputPreview: React.FC = () => {
               "text-sm md:text-base max-w-md mx-auto leading-relaxed",
               theme === "dark" ? "text-zinc-500" : "text-zinc-600"
             )}>
-              We&apos;ve sent a <span className={cn("font-bold", `text-${otpColor}-500`)}>{length}-digit</span> verification code to your registered device.
+              We&apos;ve sent a <span className={cn("font-bold", previewColor === "default" ? "text-foreground" : `text-${previewColor}-500`)}>{length}-digit</span> verification code to your registered device.
             </p>
           </div>
           
           <div className="w-full flex justify-center py-4">
             <OtpInput 
-              key={`${length}-${theme}-${size}-${otpColor}`}
+              key={`${length}-${theme}-${spacing}-${previewColor}`}
               length={length} 
               theme={theme}
-              
-              color={otpColor}
+              spacing={spacing}
+              color={previewColor}
               onVerify={async (code) => {
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 return code === "1234" || code === "123456" || code === "12345678" || code === "1234567890";
@@ -136,7 +108,7 @@ export const PremiumOtpInputPreview: React.FC = () => {
             <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold opacity-40">
               Didn&apos;t receive the code?
             </p>
-            <button className={cn("text-xs font-black uppercase tracking-tighter transition-colors underline underline-offset-8 decoration-indigo-500/30", `text-${otpColor}-500 decoration-${otpColor}-500/30 hover:text-${otpColor}-400`)}>
+            <button className={cn("text-xs font-black uppercase tracking-tighter transition-colors underline underline-offset-8", previewColor === "default" ? "text-foreground decoration-border hover:text-muted-foreground" : `text-${previewColor}-500 decoration-${previewColor}-500/30 hover:text-${previewColor}-400`)}>
               Resend Verification Code
             </button>
           </div>
