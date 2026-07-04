@@ -107,18 +107,88 @@ const getSpacingStyles = (spacing: PremiumUploadSpacing, element: "container" | 
 
 const getColorMap = (color: PremiumUploadColor) => {
   const map = {
-    default: { action: "bg-foreground text-background", idleHover: "hover:bg-accent text-foreground" },
-    blue: { action: "bg-blue-600 text-white", idleHover: "hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-700 dark:text-blue-300" },
-    emerald: { action: "bg-emerald-600 text-white", idleHover: "hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300" },
-    rose: { action: "bg-rose-600 text-white", idleHover: "hover:bg-rose-50 dark:hover:bg-rose-900/20 text-rose-700 dark:text-rose-300" },
-    amber: { action: "bg-amber-500 text-zinc-950", idleHover: "hover:bg-amber-50 dark:hover:bg-amber-900/20 text-amber-700 dark:text-amber-300" },
-    violet: { action: "bg-violet-600 text-white", idleHover: "hover:bg-violet-50 dark:hover:bg-violet-900/20 text-violet-700 dark:text-violet-300" },
-    indigo: { action: "bg-indigo-600 text-white", idleHover: "hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300" },
-    sky: { action: "bg-sky-500 text-zinc-950", idleHover: "hover:bg-sky-50 dark:hover:bg-sky-900/20 text-sky-700 dark:text-sky-300" },
-    slate: { action: "bg-slate-600 text-white", idleHover: "hover:bg-slate-50 dark:hover:bg-slate-900/20 text-slate-700 dark:text-slate-300" },
-    orange: { action: "bg-orange-500 text-white", idleHover: "hover:bg-orange-50 dark:hover:bg-orange-900/20 text-orange-700 dark:text-orange-300" },
+    default: { 
+      action: "bg-foreground text-background", 
+      idleHover: "hover:bg-accent text-foreground",
+      lightBg: "bg-zinc-100 dark:bg-white/10",
+      lightBorder: "border-zinc-200 dark:border-white/20",
+      glow: "shadow-[0_0_15px_rgba(0,0,0,0.1)] dark:shadow-[0_0_15px_rgba(255,255,255,0.1)]",
+      text: "text-zinc-900 dark:text-zinc-100"
+    },
+    blue: { 
+      action: "bg-blue-600 text-white dark:bg-blue-500", 
+      idleHover: "hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-700 dark:text-blue-300",
+      lightBg: "bg-blue-50 dark:bg-blue-900/10",
+      lightBorder: "border-blue-200 dark:border-blue-500/30",
+      glow: "shadow-[0_0_15px_rgba(37,99,235,0.15)]",
+      text: "text-blue-900 dark:text-blue-50"
+    },
+    emerald: { 
+      action: "bg-emerald-600 text-white dark:bg-emerald-500", 
+      idleHover: "hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300",
+      lightBg: "bg-emerald-50 dark:bg-emerald-900/10",
+      lightBorder: "border-emerald-200 dark:border-emerald-500/30",
+      glow: "shadow-[0_0_15px_rgba(16,185,129,0.15)]",
+      text: "text-emerald-900 dark:text-emerald-50"
+    },
+    rose: { 
+      action: "bg-rose-600 text-white dark:bg-rose-500", 
+      idleHover: "hover:bg-rose-50 dark:hover:bg-rose-900/20 text-rose-700 dark:text-rose-300",
+      lightBg: "bg-rose-50 dark:bg-rose-900/10",
+      lightBorder: "border-rose-200 dark:border-rose-500/30",
+      glow: "shadow-[0_0_15px_rgba(244,63,94,0.15)]",
+      text: "text-rose-900 dark:text-rose-50"
+    },
+    amber: { 
+      action: "bg-amber-500 text-zinc-950 dark:bg-amber-400", 
+      idleHover: "hover:bg-amber-50 dark:hover:bg-amber-900/20 text-amber-700 dark:text-amber-300",
+      lightBg: "bg-amber-50 dark:bg-amber-900/10",
+      lightBorder: "border-amber-200 dark:border-amber-500/30",
+      glow: "shadow-[0_0_15px_rgba(245,158,11,0.15)]",
+      text: "text-amber-900 dark:text-amber-50"
+    },
+    violet: { 
+      action: "bg-violet-600 text-white dark:bg-violet-500", 
+      idleHover: "hover:bg-violet-50 dark:hover:bg-violet-900/20 text-violet-700 dark:text-violet-300",
+      lightBg: "bg-violet-50 dark:bg-violet-900/10",
+      lightBorder: "border-violet-200 dark:border-violet-500/30",
+      glow: "shadow-[0_0_15px_rgba(124,58,237,0.15)]",
+      text: "text-violet-900 dark:text-violet-50"
+    },
+    indigo: { 
+      action: "bg-indigo-600 text-white dark:bg-indigo-500", 
+      idleHover: "hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300",
+      lightBg: "bg-indigo-50 dark:bg-indigo-900/10",
+      lightBorder: "border-indigo-200 dark:border-indigo-500/30",
+      glow: "shadow-[0_0_15px_rgba(79,70,229,0.15)]",
+      text: "text-indigo-900 dark:text-indigo-50"
+    },
+    sky: { 
+      action: "bg-sky-500 text-white dark:bg-sky-400 dark:text-zinc-950", 
+      idleHover: "hover:bg-sky-50 dark:hover:bg-sky-900/20 text-sky-700 dark:text-sky-300",
+      lightBg: "bg-sky-50 dark:bg-sky-900/10",
+      lightBorder: "border-sky-200 dark:border-sky-500/30",
+      glow: "shadow-[0_0_15px_rgba(14,165,233,0.15)]",
+      text: "text-sky-900 dark:text-sky-50"
+    },
+    slate: { 
+      action: "bg-slate-600 text-white dark:bg-slate-500", 
+      idleHover: "hover:bg-slate-50 dark:hover:bg-slate-900/20 text-slate-700 dark:text-slate-300",
+      lightBg: "bg-slate-50 dark:bg-slate-900/10",
+      lightBorder: "border-slate-200 dark:border-slate-500/30",
+      glow: "shadow-[0_0_15px_rgba(71,85,105,0.15)]",
+      text: "text-slate-900 dark:text-slate-50"
+    },
+    orange: { 
+      action: "bg-orange-500 text-white dark:bg-orange-400 dark:text-zinc-950", 
+      idleHover: "hover:bg-orange-50 dark:hover:bg-orange-900/20 text-orange-700 dark:text-orange-300",
+      lightBg: "bg-orange-50 dark:bg-orange-900/10",
+      lightBorder: "border-orange-200 dark:border-orange-500/30",
+      glow: "shadow-[0_0_15px_rgba(249,115,22,0.15)]",
+      text: "text-orange-900 dark:text-orange-50"
+    },
   };
-  return map[color];
+  return map[color] || map.default;
 };
 
 export function PremiumUploadButton({
@@ -383,13 +453,13 @@ export function PremiumUploadButton({
       icon: <FileIcon size={18} />
     },
     futuristic: {
-      container: "bg-white dark:bg-[#0a0a0f] border border-cyan-200 dark:border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)]",
+      container: `bg-white dark:bg-[#0a0a0f] border ${activeColorSet.lightBorder} ${activeColorSet.glow}`,
       actionBg: activeColorSet.action,
-      idleBg: `bg-cyan-50 dark:bg-cyan-950 ${activeColorSet.idleHover}`,
-      iconBg: "bg-cyan-50 dark:bg-cyan-950",
+      idleBg: `${activeColorSet.lightBg} ${activeColorSet.idleHover}`,
+      iconBg: activeColorSet.lightBg,
       progressBg: "bg-muted",
       successBg: "bg-green-500 text-white",
-      text: "text-zinc-900 dark:text-cyan-50",
+      text: activeColorSet.text,
       icon: <CloudUpload size={18} />
     },
     enterprise: {
@@ -433,13 +503,13 @@ export function PremiumUploadButton({
       icon: <Upload size={18} />
     },
     ai: {
-      container: "bg-white dark:bg-background border border-zinc-200 dark:border-fuchsia-500/30 shadow-[0_0_30px_rgba(217,70,239,0.1)]",
+      container: `bg-white dark:bg-background border ${activeColorSet.lightBorder} ${activeColorSet.glow}`,
       actionBg: activeColorSet.action,
-      idleBg: `bg-fuchsia-50/50 dark:bg-fuchsia-500/10 ${activeColorSet.idleHover} border border-fuchsia-100 dark:border-transparent`,
-      iconBg: "bg-fuchsia-50/50 dark:bg-fuchsia-500/10 border border-fuchsia-100 dark:border-transparent",
+      idleBg: `${activeColorSet.lightBg} ${activeColorSet.idleHover} border border-transparent`,
+      iconBg: `${activeColorSet.lightBg} border border-transparent`,
       progressBg: "bg-muted",
       successBg: "bg-green-500 text-white",
-      text: "text-zinc-900 dark:text-fuchsia-50",
+      text: activeColorSet.text,
       icon: <BrainCircuit size={18} />
     }
   };

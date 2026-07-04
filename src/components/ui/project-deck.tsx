@@ -103,11 +103,11 @@ const getSpacingClass = (spacing: ProjectDeckSpacing, element: "container" | "in
      }
   }
   switch (spacing) {
-    case "2x": return "py-4 md:py-8 lg:py-12";
-    case "4x": return "py-8 md:py-16 lg:py-24";
-    case "6x": return "py-16 md:py-32 lg:py-40";
-    case "8x": return "py-24 md:py-40 lg:py-48";
-    default: return "py-12 md:py-24 lg:py-32";
+    case "2x": return "p-2 md:p-4";
+    case "4x": return "p-4 md:p-8";
+    case "6x": return "p-6 md:p-12";
+    case "8x": return "p-8 md:p-16";
+    default: return "p-4 md:p-10";
   }
 };
 
@@ -121,6 +121,7 @@ const ProjectDeck: React.FC<ProjectDeckProps> = ({
   const [flipped, setFlipped] = useState(false);
   const [isHoveringStack, setIsHoveringStack] = useState(false);
   const [cards, setCards] = useState<number[]>(projects.map((_, i) => i));
+  const [movingCard, setMovingCard] = useState<{ id: string, direction: 'left' | 'right', type: 'to-back' | 'to-front' } | null>(null);
 
   // Mouse parallax
   const mouseX = useMotionValue(0);
@@ -136,16 +137,36 @@ const ProjectDeck: React.FC<ProjectDeckProps> = ({
     mouseY.set(e.clientY - rect.top - rect.height / 2);
   };
 
-  const nextCard = (e?: React.MouseEvent) => {
+  const nextCard = (e?: React.MouseEvent, forceDirection?: 'left' | 'right') => {
     if (e) e.stopPropagation();
     setFlipped(false);
-    setCards((prev) => { const n = [...prev]; const t = n.shift(); if (t !== undefined) n.push(t); return n; });
+    const dir = forceDirection || 'right';
+    setCards((prev) => { 
+      const n = [...prev]; 
+      const t = n.shift(); 
+      if (t !== undefined) {
+        n.push(t); 
+        setMovingCard({ id: projects[t].id, direction: dir, type: 'to-back' });
+        setTimeout(() => setMovingCard(null), 600);
+      }
+      return n; 
+    });
   };
 
-  const prevCard = (e?: React.MouseEvent) => {
+  const prevCard = (e?: React.MouseEvent, forceDirection?: 'left' | 'right') => {
     if (e) e.stopPropagation();
     setFlipped(false);
-    setCards((prev) => { const n = [...prev]; const b = n.pop(); if (b !== undefined) n.unshift(b); return n; });
+    const dir = forceDirection || 'left';
+    setCards((prev) => { 
+      const n = [...prev]; 
+      const b = n.pop(); 
+      if (b !== undefined) {
+        n.unshift(b); 
+        setMovingCard({ id: projects[b].id, direction: dir, type: 'to-front' });
+        setTimeout(() => setMovingCard(null), 600);
+      }
+      return n; 
+    });
   };
 
   if (!projects || projects.length === 0) return null;
@@ -154,12 +175,12 @@ const ProjectDeck: React.FC<ProjectDeckProps> = ({
 
   return (
     <section
-      className={cn("overflow-hidden relative w-full", getSpacingClass(spacing, "container"), className)}
+      className={cn("overflow-hidden relative w-full h-full flex flex-col justify-center", getSpacingClass(spacing, "container"), className)}
       onMouseMove={handleMouseMove}
     >
-      <div className="max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="w-full h-full mx-auto px-2 sm:px-4 lg:px-8 relative z-10 flex flex-col items-center justify-center">
         {/* Deck */}
-        <div className="relative w-full max-w-5xl mx-auto h-[65vh] min-h-[400px] max-h-[600px] flex items-center justify-center perspective-[1200px]">
+        <div className="relative w-full h-full max-w-5xl mx-auto flex-grow flex items-center justify-center perspective-[1200px]">
           {/* Prev button */}
           <div className="absolute left-0 top-1/2 -translate-y-1/2 hidden md:flex flex-col items-center gap-4">
             <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-muted-foreground -rotate-90 mb-12 whitespace-nowrap">
@@ -207,17 +228,42 @@ const ProjectDeck: React.FC<ProjectDeckProps> = ({
                 }
               }
 
+              let animateX: number | number[] = xOffset;
+              let animateY: number | number[] = yOffset;
+              let animateRotate: number | number[] = rotateZ;
+
+              if (movingCard && movingCard.id === project.id) {
+                const swingX = movingCard.direction === 'right' ? 400 : -400;
+                if (movingCard.type === 'to-back') {
+                  animateX = [0, swingX, xOffset];
+                  animateY = [0, -50, yOffset];
+                  animateRotate = [0, movingCard.direction === 'right' ? 20 : -20, rotateZ];
+                } else if (movingCard.type === 'to-front') {
+                  animateX = [0, swingX, xOffset];
+                  animateY = [maxStack * 30, -50, yOffset];
+                  animateRotate = [0, movingCard.direction === 'right' ? 20 : -20, rotateZ];
+                }
+              }
+
               return (
                 <motion.div
                   key={project.id}
                   layout
-                  onClick={() => {
+                  onClick={(e) => {
                     if (isTop) setFlipped(!flipped);
-                    else if (!isTop) nextCard();
+                    else if (!isTop) {
+                      if (xOffset > 0) nextCard(e, 'right');
+                      else if (xOffset < 0) nextCard(e, 'left');
+                      else nextCard(e);
+                    }
                   }}
                   initial={false}
-                  animate={{ scale, y: yOffset, x: xOffset, rotateZ, opacity, zIndex }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 40, mass: 0.8 }}
+                  animate={{ scale, y: animateY, x: animateX, rotateZ: animateRotate, opacity, zIndex }}
+                  transition={
+                    (movingCard && movingCard.id === project.id)
+                      ? { duration: 0.5, ease: "easeInOut", times: [0, 0.5, 1] }
+                      : { type: 'spring', stiffness: 400, damping: 40, mass: 0.8 }
+                  }
                   className="absolute w-full max-w-[320px] sm:max-w-[400px] md:max-w-[500px] aspect-[3/4] max-h-[100%] cursor-pointer"
                   style={{ perspective: 1500 }}
                 >

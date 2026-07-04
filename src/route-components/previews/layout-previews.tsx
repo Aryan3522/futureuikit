@@ -81,8 +81,49 @@ export const FooterPreview: React.FC = () => {
 
 export const PremiumUploadButtonPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [variant, setVariant] = React.useState<"clean" | "modern" | "minimal" | "enterprise" | "windows" | "futuristic" | "apple" | "ai">("modern");
+  const [shape, setShape] = React.useState<any>("default");
+  const [spacing, setSpacing] = React.useState<any>("default");
+
+  const extraControls = (
+    <div className="flex flex-col gap-4 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "square", "rounded", "sharp"] as const).map((s) => (
+            <button 
+              key={s} 
+              onClick={() => setShape(s)} 
+              className={cn(
+                "px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", 
+                shape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+              )}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "2x", "4x", "6x", "8x"] as const).map((s) => (
+            <button 
+              key={s} 
+              onClick={() => setSpacing(s)} 
+              className={cn(
+                "px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", 
+                spacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+              )}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <PreviewContainer 
       title="Premium Upload Button" 
@@ -90,10 +131,14 @@ export const PremiumUploadButtonPreview: React.FC = () => {
       isVirtualScreen={true}
       variants={["clean", "modern", "minimal", "enterprise", "windows", "futuristic", "apple", "ai"]}
       activeVariant={variant}
-      onVariantChange={setVariant} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
+      onVariantChange={setVariant} 
+      colors={DEFAULT_COLORS} 
+      activeColor={previewColor} 
+      onColorChange={setPreviewColor}
+      extraControls={extraControls}
     >
       <div className="w-full flex items-center justify-center p-4 min-h-100">
-        <PremiumUploadButton variant={variant} color={previewColor} />
+        <PremiumUploadButton variant={variant} color={previewColor} shape={shape} spacing={spacing} />
       </div>
     </PreviewContainer>
   );
@@ -200,19 +245,57 @@ export const NoirHero3DPreview: React.FC = () => {
 };
 
 export const PrimaryButtonPreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+  const [variant, setVariant] = React.useState<any>("primary");
+  const [shape, setShape] = React.useState<any>("default");
+  const [spacing, setSpacing] = React.useState<any>("default");
+  const [showStartIcon, setShowStartIcon] = React.useState(true);
+  const [showEndIcon, setShowEndIcon] = React.useState(true);
+  
   return (
-    <PreviewContainer title="Primary Button" description="Semantic primary buttons with micro-interactions." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
-      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-75">
-        <div className="flex flex-wrap items-center justify-center gap-4 w-full">
-          <PrimaryButton color="blue">Primary</PrimaryButton>
-          <PrimaryButton color="emerald">Success</PrimaryButton>
-          <PrimaryButton color="amber">Warning</PrimaryButton>
-          <PrimaryButton color="rose">Danger</PrimaryButton>
-          <PrimaryButton color="sky">Info</PrimaryButton>
-          <PrimaryButton color="slate">Secondary</PrimaryButton>
+    <PreviewContainer 
+      title="Primary Button" 
+      description="Semantic primary buttons with micro-interactions and full customizability." 
+      variants={["primary", "secondary", "success", "danger", "warning", "info", "ghost", "outline", "link"]} 
+      activeVariant={variant} 
+      onVariantChange={setVariant}
+      extraControls={
+        <div className="flex flex-col gap-4 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                <button key={s} onClick={() => setShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", shape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(sp => (
+                <button key={sp} onClick={() => setSpacing(sp)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", spacing === sp ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{sp}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Icons</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              <button onClick={() => setShowStartIcon(!showStartIcon)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", showStartIcon ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>Start Icon</button>
+              <button onClick={() => setShowEndIcon(!showEndIcon)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", showEndIcon ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>End Icon</button>
+            </div>
+          </div>
         </div>
+      }
+    >
+      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-75">
+        <PrimaryButton 
+          variant={variant} 
+          shape={shape} 
+          spacing={spacing} 
+          startIcon={showStartIcon ? <Send size={16} /> : undefined} 
+          endIcon={showEndIcon ? <Check size={16} /> : undefined}
+        >
+          {variant.charAt(0).toUpperCase() + variant.slice(1)} Button
+        </PrimaryButton>
       </div>
     </PreviewContainer>
   );
