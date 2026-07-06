@@ -17,31 +17,35 @@ import { cn } from "@/lib/utils"
 export type RadioGroupColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
 export type RadioGroupShape = "default" | "square" | "rounded" | "sharp";
 export type RadioGroupSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+export type RadioGroupVariant = "modern" | "minimal" | "glow";
 
 interface RadioGroupContextValue {
   color: RadioGroupColor;
   shape: RadioGroupShape;
   spacing: RadioGroupSpacing;
+  variant: RadioGroupVariant;
 }
 
 const RadioGroupContext = React.createContext<RadioGroupContextValue>({
   color: "default",
   shape: "default",
   spacing: "default",
+  variant: "modern",
 });
 
 export interface RadioGroupProps extends React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root> {
   color?: RadioGroupColor;
   shape?: RadioGroupShape;
   spacing?: RadioGroupSpacing;
+  variant?: RadioGroupVariant;
 }
 
 const RadioGroup = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Root>,
   RadioGroupProps
->(({ className, color = "default", shape = "default", spacing = "default", ...props }, ref) => {
+>(({ className, color = "default", shape = "default", spacing = "default", variant = "modern", ...props }, ref) => {
   return (
-    <RadioGroupContext.Provider value={{ color, shape, spacing }}>
+    <RadioGroupContext.Provider value={{ color, shape, spacing, variant }}>
       <RadioGroupPrimitive.Root
         className={cn(
           "grid", 
@@ -60,7 +64,7 @@ const RadioGroupItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
 >(({ className, ...props }, ref) => {
-  const { color, shape, spacing } = React.useContext(RadioGroupContext)
+  const { color, shape, spacing, variant } = React.useContext(RadioGroupContext)
   
   const getColorClasses = () => {
     switch (color) {
@@ -77,23 +81,40 @@ const RadioGroupItem = React.forwardRef<
     }
   };
 
+  const getRootVariantClasses = () => {
+    switch (variant) {
+      case "modern": return "border-2 transition-all duration-200 hover:bg-accent/50 data-[state=checked]:bg-current data-[state=checked]:border-current";
+      case "minimal": return "border-2 transition-all duration-200 bg-transparent";
+      case "glow": return "border border-current/50 transition-all duration-300 data-[state=checked]:border-current data-[state=checked]:shadow-[0_0_15px_currentColor] data-[state=checked]:bg-current/10";
+    }
+  }
+
+  const getIndicatorVariantClasses = () => {
+    switch (variant) {
+      case "modern": return "fill-background text-background";
+      case "minimal": return "fill-current text-current";
+      case "glow": return "fill-current text-current drop-shadow-[0_0_5px_currentColor]";
+    }
+  }
+
   return (
     <RadioGroupPrimitive.Item
       ref={ref}
       className={cn(
-        "aspect-square border ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        "aspect-square ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
         shape === "square" ? "rounded-none" : shape === "sharp" ? "rounded-[2px]" : shape === "rounded" ? "rounded-md" : "rounded-full",
         spacing === "2x" ? "h-3 w-3" : spacing === "6x" || spacing === "8x" ? "h-5 w-5" : "h-4 w-4",
         getColorClasses(),
+        getRootVariantClasses(),
         className
       )}
       {...props}
     >
       <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
         <Circle className={cn(
-          "fill-current text-current", 
           shape === "square" ? "rounded-none" : shape === "sharp" ? "rounded-[2px]" : shape === "rounded" ? "rounded-sm" : "rounded-full",
-          spacing === "2x" ? "h-1.5 w-1.5" : spacing === "6x" || spacing === "8x" ? "h-3 w-3" : "h-2.5 w-2.5"
+          spacing === "2x" ? "h-1.5 w-1.5" : spacing === "6x" || spacing === "8x" ? "h-3 w-3" : "h-2.5 w-2.5",
+          getIndicatorVariantClasses()
         )} />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>

@@ -596,34 +596,60 @@ export const MigratedPreviews = {
   },
 
   "radio-group": function RadioGroupPreview() {
-    const [variant, setVariant] = React.useState<"default" | "comfortable" | "compact">("default");
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [shape, setShape] = React.useState<any>("default");
+    const [spacing, setSpacing] = React.useState<any>("default");
+    const [variant, setVariant] = React.useState<any>("modern");
 
     return (
       <PreviewContainer 
         title="Radio Group" 
         description="A set of checkable buttons—known as radio buttons—where no more than one of the buttons can be checked at a time."
-        variants={["default", "comfortable", "compact"]}
+        variants={["modern", "minimal", "glow"]}
         activeVariant={variant}
-        onVariantChange={setVariant as any}
+        onVariantChange={setVariant}
+        colors={DEFAULT_COLORS}
+        activeColor={previewColor}
+        onColorChange={setPreviewColor}
+        extraControls={
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                  <button key={s} onClick={() => setShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", shape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing / Size</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "2x", "4x", "6x", "8x"] as const).map(sp => (
+                  <button key={sp} onClick={() => setSpacing(sp)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", spacing === sp ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{sp === "default" ? "default" : sp}</button>
+                ))}
+              </div>
+            </div>
+          </>
+        }
       >
         <div className="flex items-center justify-center min-h-[300px]">
-          <RadioGroup defaultValue="option-1">
+          <RadioGroup defaultValue="option-1" color={previewColor} shape={shape} spacing={spacing} variant={variant}>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="option-1" id="r1" />
-              <label htmlFor="r1" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              <label htmlFor="r1" className={cn("font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70", spacing === "2x" ? "text-xs" : spacing === "6x" || spacing === "8x" ? "text-base" : "text-sm")}>
                 Option 1
               </label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="option-2" id="r2" />
-              <label htmlFor="r2" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              <label htmlFor="r2" className={cn("font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70", spacing === "2x" ? "text-xs" : spacing === "6x" || spacing === "8x" ? "text-base" : "text-sm")}>
                 Option 2
               </label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="option-3" id="r3" />
-              <label htmlFor="r3" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                Option 3
+              <RadioGroupItem value="option-3" id="r3" disabled />
+              <label htmlFor="r3" className={cn("font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70", spacing === "2x" ? "text-xs" : spacing === "6x" || spacing === "8x" ? "text-base" : "text-sm")}>
+                Option 3 (Disabled)
               </label>
             </div>
           </RadioGroup>
@@ -665,11 +691,59 @@ export const MigratedPreviews = {
   },
 
   "scroll-area": function ScrollAreaPreview() {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("default");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+
     return (
-      <PreviewContainer title="Scroll Area" description="Augments native scroll functionality for custom, cross-browser styling.">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <ScrollArea className="h-[200px] w-[350px] rounded-md border p-4">
+      <PreviewContainer 
+        title="Scroll Area" 
+        description="Augments native scroll functionality with premium visual variants and cross-browser custom styling."
+        colors={DEFAULT_COLORS}
+        activeColor={previewColor}
+        onColorChange={setPreviewColor}
+        variants={["default", "minimal", "glass", "glow"]}
+        activeVariant={previewVariant}
+        onVariantChange={setPreviewVariant}
+        extraControls={
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Thickness (Spacing)</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                  <button key={s} onClick={() => setPreviewSpacing(s)}
+                    className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                  <button key={s} onClick={() => setPreviewShape(s)}
+                    className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+                ))}
+              </div>
+            </div>
+          </>
+        }
+      >
+        <div className="flex items-center justify-center min-h-[400px] w-full">
+          <ScrollArea 
+            type="always"
+            color={previewColor} 
+            variant={previewVariant} 
+            shape={previewShape} 
+            spacing={previewSpacing}
+            className="h-[200px] w-[350px] border p-4"
+          >
             Jokester began sneaking into the castle in the middle of the night and leaving
+            jokes all over the place: under the king&apos;s pillow, in his soup, even in the
+            royal toilet. The king was furious, but he couldn&apos;t seem to stop Jokester. And
+            then, one day, the people of the kingdom discovered that the jokes left by
+            Jokester were so funny that they couldn&apos;t help but laugh. And once they
+            started laughing, they couldn&apos;t stop. Jokester began sneaking into the castle in the middle of the night and leaving
             jokes all over the place: under the king&apos;s pillow, in his soup, even in the
             royal toilet. The king was furious, but he couldn&apos;t seem to stop Jokester. And
             then, one day, the people of the kingdom discovered that the jokes left by

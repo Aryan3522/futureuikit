@@ -307,6 +307,7 @@ export const NavMenu: React.FC<NavMenuProps> = React.memo(({
               }}
             >
               {item.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img src={item.image} alt={item.title} className="w-full h-full object-cover rounded-[inherit]" />
               ) : isText ? (
                 <span>{item.title}</span>

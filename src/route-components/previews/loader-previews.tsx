@@ -63,11 +63,17 @@ export const BasicLoaderPreview: React.FC = () => {
 };
 
 export const BoxyRotatePreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+  const [previewColor, setPreviewColor] = React.useState<any>("default");
+  
   return (
-    <PreviewContainer title="Boxy Rotate Loader" description="A minimal 3D rotating box loader." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
-      <BoxyRotateLoader />
+    <PreviewContainer 
+      title="Boxy Rotate Loader" 
+      description="A minimal 3D rotating box loader." 
+      colors={DEFAULT_COLORS} 
+      activeColor={previewColor} 
+      onColorChange={setPreviewColor}
+    >
+      <BoxyRotateLoader color={previewColor} />
     </PreviewContainer>
   );
 };
