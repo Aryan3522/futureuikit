@@ -562,13 +562,11 @@ export const AutomotiveCarouselPreview: React.FC = () => {
 };
 
 export const ScifiHelmetPreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
     <PreviewContainer
       title="Sci-Fi Helmet"
       description="A premium 3D Sci-Fi Helmet with interactive orbit controls."
-      canvasClassName="bg-[#050505] p-0 overflow-hidden" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
+      canvasClassName="bg-[#050505] p-0 overflow-hidden"
     >
       <ScifiHelmet className="w-full h-full" />
     </PreviewContainer>

@@ -10,13 +10,9 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 export type BoxyLoaderColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
-export type BoxyLoaderShape = "default" | "square" | "rounded" | "sharp";
-export type BoxyLoaderSpacing = "default" | "2x" | "4x" | "6x" | "8x";
 
 export interface BoxyRotateLoaderProps extends React.HTMLAttributes<HTMLDivElement> {
   color?: BoxyLoaderColor;
-  shape?: BoxyLoaderShape;
-  spacing?: BoxyLoaderSpacing;
 }
 
 const colorThemeMap: Record<BoxyLoaderColor, { main: string; secondary: string }> = {
@@ -35,26 +31,13 @@ const colorThemeMap: Record<BoxyLoaderColor, { main: string; secondary: string }
 export const BoxyRotateLoader: React.FC<BoxyRotateLoaderProps> = React.memo(({ 
   className,
   color = "default",
-  shape = "default",
-  spacing = "default",
   ...props 
 }) => {
   const activeColor = colorThemeMap[color];
-  
-  let rx = "8";
-  if (shape === "square") rx = "0";
-  if (shape === "sharp") rx = "2";
-  if (shape === "rounded") rx = "4";
-  if (shape === "default") rx = "8";
-
-  let scale = "scale-[1]";
-  if (spacing === "2x") scale = "scale-[0.5]";
-  if (spacing === "4x") scale = "scale-[0.75]";
-  if (spacing === "6x") scale = "scale-[1.25]";
-  if (spacing === "8x") scale = "scale-[1.5]";
+  const rx = "8"; // Default rounded corners
 
   return (
-    <div className={cn("flex flex-col items-center justify-center w-full h-full min-h-[inherit]", scale, className)} {...props}>
+    <div className={cn("flex flex-col items-center justify-center w-full h-full min-h-[inherit]", className)} {...props}>
       <style>{`
         .pl1-container {
           display: flex;
