@@ -758,8 +758,6 @@ export const CursorGlowButtonPreview: React.FC = () => {
 };
 
 export const ScrollTextRevealPreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const scrollContainer = useRef<HTMLDivElement>(null);
 
   return (
@@ -767,7 +765,7 @@ export const ScrollTextRevealPreview: React.FC = () => {
       title="Scroll Text Reveal"
       description="Text that reveals itself as you scroll down the screen."
       scrollRef={scrollContainer}
-      canvasClassName="block p-0 sm:p-0 md:p-0" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
+      canvasClassName="block p-0 sm:p-0 md:p-0"
     >
       <div className="w-full h-full">
         

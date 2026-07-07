@@ -43,12 +43,12 @@ const searchVariants = cva(
         rounded: "rounded-full",
         sharp: "rounded-[2px]",
       },
-      spacing: {
-        default: "h-10 text-sm",
-        "2x": "h-8 text-xs",
-        "4x": "h-10 text-sm",
-        "6x": "h-12 text-base",
-        "8x": "h-14 text-lg",
+      size: {
+        sm: "h-8 text-xs",
+        md: "h-10 text-sm",
+        lg: "h-12 text-base",
+        xl: "h-14 text-lg",
+        "2xl": "h-16 text-xl",
       },
       fullWidth: {
         true: "w-full",
@@ -63,7 +63,7 @@ const searchVariants = cva(
       variant: "standard",
       color: "default",
       shape: "default",
-      spacing: "default",
+      size: "md",
       fullWidth: true,
       disabled: false,
     },
@@ -74,16 +74,16 @@ const inputVariants = cva(
   "w-full bg-transparent border-none outline-none placeholder:text-muted-foreground text-foreground",
   {
     variants: {
-      spacing: {
-        default: "pr-14",
-        "2x": "pr-12",
-        "4x": "pr-14",
-        "6x": "pr-16",
-        "8x": "pr-20",
+      size: {
+        sm: "pr-12",
+        md: "pr-14",
+        lg: "pr-16",
+        xl: "pr-16",
+        "2xl": "pr-20",
       }
     },
     defaultVariants: {
-      spacing: "default",
+      size: "md",
     }
   }
 );
@@ -92,16 +92,16 @@ const iconWrapperVariants = cva(
   "flex items-center justify-center shrink-0 text-muted-foreground transition-colors",
   {
     variants: {
-      spacing: {
-        default: "w-10",
-        "2x": "w-8",
-        "4x": "w-10",
-        "6x": "w-12",
-        "8x": "w-14",
+      size: {
+        sm: "w-8",
+        md: "w-10",
+        lg: "w-12",
+        xl: "w-14",
+        "2xl": "w-16",
       }
     },
     defaultVariants: {
-      spacing: "default",
+      size: "md",
     }
   }
 );
@@ -125,7 +125,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
       variant,
       color,
       shape,
-      spacing,
+      size,
       fullWidth = true,
       disabled,
       loading,
@@ -203,7 +203,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
     };
 
     // Determine icon size based on component spacing
-    const iconSize = spacing === "6x" || spacing === "8x" ? 20 : spacing === "2x" ? 14 : 16;
+    const iconSize = size === "2xl" || size === "xl" ? 20 : size === "sm" ? 14 : 16;
     const defaultIcon = <SearchIcon size={iconSize} />;
 
     const isOverlayVariant = variant === "icon" && (inputVariant === "floating" || inputVariant === "command");
@@ -241,12 +241,12 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
             className={cn(
               "flex items-center justify-center bg-transparent hover:bg-muted transition-colors",
               shape === "square" ? "rounded-none" : shape === "rounded" ? "rounded-full" : shape === "sharp" ? "rounded-[2px]" : "rounded-xl",
-              spacing === "2x" ? "w-8 h-8" : spacing === "6x" || spacing === "8x" ? "w-12 h-12" : "w-10 h-10",
+              size === "sm" ? "w-8 h-8" : size === "xl" || size === "2xl" ? "w-12 h-12" : "w-10 h-10",
               disabled && "opacity-50 cursor-not-allowed pointer-events-none",
               className
             )}
           >
-            <div className={cn(iconWrapperVariants({ spacing }))}>
+            <div className={cn(iconWrapperVariants({ size }))}>
                {icon || defaultIcon}
             </div>
           </button>
@@ -270,11 +270,11 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
                   className={cn("relative w-full px-4 z-10", inputVariant === "command" ? "max-w-3xl" : "max-w-2xl")}
                 >
                   <div className={cn(
-                    searchVariants({ variant: inputVariant, spacing: "6x", color, shape, fullWidth: true }),
+                    searchVariants({ variant: inputVariant, size: "xl", color, shape, fullWidth: true }),
                     inputVariant === "floating" && "shadow-2xl",
                     inputVariant === "command" && "border rounded-xl shadow-2xl overflow-hidden focus-within:ring-0", // Command palette style has its own focus
                   )}>
-                    <div className={cn(iconWrapperVariants({ spacing: "6x" }), "text-muted-foreground")}>
+                    <div className={cn(iconWrapperVariants({ size: "xl" }), "text-muted-foreground")}>
                        {loading ? <Loader2 className="animate-spin" size={20} /> : (icon || <SearchIcon size={20} />)}
                     </div>
                     
@@ -288,7 +288,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
                          props.onKeyDown?.(e);
                        }}
                        className={cn(
-                         inputVariants({ spacing: "6x" }), 
+                         inputVariants({ size: "xl" }), 
                          inputVariant === "command" && "font-mono h-16",
                          "pr-12"
                        )}
@@ -321,18 +321,18 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
         layout={animated}
         initial={false}
         animate={{
-          width: fullWidth && effectiveVariant !== "icon" ? "100%" : isExpanded ? (spacing === "6x" || spacing === "8x" ? 400 : spacing === "2x" ? 240 : 320) : (spacing === "6x" || spacing === "8x" ? 48 : spacing === "2x" ? 32 : 40),
+          width: fullWidth && effectiveVariant !== "icon" ? "100%" : isExpanded ? (size === "xl" || size === "2xl" ? 400 : size === "sm" ? 240 : 320) : (size === "xl" || size === "2xl" ? 48 : size === "sm" ? 32 : 40),
         }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
         className={cn(
-          searchVariants({ variant: effectiveVariant, spacing, color, shape, fullWidth: fullWidth && effectiveVariant !== "icon", disabled }),
+          searchVariants({ variant: effectiveVariant, size, color, shape, fullWidth: fullWidth && effectiveVariant !== "icon", disabled }),
           isFocused && "ring-1", // trigger the color ring
           !isExpanded && effectiveVariant === "icon" && "cursor-pointer justify-center overflow-hidden border-transparent",
           className
         )}
         onClick={handleContainerClick}
       >
-        <div className={cn(iconWrapperVariants({ spacing }), getFocusIconColor())}>
+        <div className={cn(iconWrapperVariants({ size }), getFocusIconColor())}>
           <AnimatePresence mode="wait">
             {loading ? (
               <motion.div
@@ -382,7 +382,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
               placeholder={placeholder}
               autoFocus={autoFocus}
               className={cn(
-                inputVariants({ spacing }),
+                inputVariants({ size }),
                 effectiveVariant === "command" && "font-mono"
               )}
               {...(props as any)}
