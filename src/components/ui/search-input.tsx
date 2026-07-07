@@ -50,6 +50,17 @@ const searchInputVariants = cva(
         "4x": "pl-10 pr-4 py-2 text-sm",
         "6x": "pl-12 pr-6 py-3 text-base",
         "8x": "pl-14 pr-8 py-4 text-lg",
+      },
+      size: {
+        sm: "h-8",
+        md: "h-10",
+        lg: "h-12",
+        xl: "h-14",
+        "2xl": "h-16",
+      },
+      layout: {
+        default: "",
+        centered: "text-center pl-4", // reduces left padding when centered
       }
     },
     defaultVariants: {
@@ -57,6 +68,8 @@ const searchInputVariants = cva(
       color: "default",
       shape: "default",
       spacing: "default",
+      size: "md",
+      layout: "default",
     },
   }
 );
@@ -144,6 +157,8 @@ export const SearchInput: React.FC<SearchInputProps> = React.memo(({
           color = "default",
           shape = "default",
           spacing = "default",
+          size = "md",
+          layout = "default",
         }) => {
           const [query, setQuery] = useState("");
           const [isOpen, setIsOpen] = useState(false);
@@ -222,7 +237,7 @@ export const SearchInput: React.FC<SearchInputProps> = React.memo(({
           return (
             <div className={cn("relative w-full", !activeMobile && "min-w-40 lg:min-w-60", className)}>
               <div className="relative group">
-                <SearchIcon className={cn("absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground transition-colors z-10 pointer-events-none", focusIconMap[activeColor])} />
+                <SearchIcon className={cn("absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground transition-colors z-10 pointer-events-none", focusIconMap[activeColor], layout === "centered" && "hidden")} />
                 <input
                   ref={inputRef}
                   type="text"
@@ -234,14 +249,15 @@ export const SearchInput: React.FC<SearchInputProps> = React.memo(({
                   onFocus={() => setIsOpen(true)}
                   placeholder={placeholder || (activeMobile ? "Search..." : "Search... (Ctrl+K)")}
                   className={cn(
-                    searchInputVariants({ variant, color: activeColor, shape, spacing }),
+                    searchInputVariants({ variant, color: activeColor, shape, spacing, size, layout }),
                     "pl-10 text-foreground placeholder:text-muted-foreground",
                     variant === "glass" && "py-2.5 px-4 pl-10", // Slightly more breathing room for glass variant
                     activeMobile && "py-2.5 bg-background/50",
+                    layout === "centered" && "pl-4 text-center",
                   )}
                 />
                 {!activeMobile && (
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden lg:flex items-center gap-1 px-1.5 py-0.5 rounded-sm border border-border bg-background text-[10px] text-muted-foreground font-mono pointer-events-none">
+                  <div className={cn("absolute right-3 top-1/2 -translate-y-1/2 hidden lg:flex items-center gap-1 px-1.5 py-0.5 rounded-sm border border-border bg-background text-[10px] text-muted-foreground font-mono pointer-events-none", layout === "centered" && "right-4")}>
                     <span className="text-[8px]">⌘</span>K
                   </div>
                 )}

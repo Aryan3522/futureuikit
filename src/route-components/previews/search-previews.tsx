@@ -31,9 +31,9 @@ export const SearchPreview: React.FC = () => {
   }, [searchQuery]);
 
   const controls = (
-    <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
-      <span className="text-[10px] md:text-xs uppercase tracking-widest font-bold text-muted-foreground hidden sm:block">Size & State</span>
-      <div className="flex flex-wrap items-center gap-4">
+    <div className="flex flex-col gap-4 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
         <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
           {(["sm", "md", "lg"] as const).map(s => (
             <button
@@ -41,13 +41,13 @@ export const SearchPreview: React.FC = () => {
               onClick={() => setSize(s)}
               className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", size === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}
             >
-              {s.toUpperCase()}
+              {s}
             </button>
           ))}
         </div>
-
-        <div className="w-px h-6 bg-border hidden sm:block"></div>
-
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Options</span>
         <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
           <button onClick={() => setLoading(!loading)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", loading ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>Loading</button>
           <button onClick={() => setDisabled(!disabled)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", disabled ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>Disabled</button>
@@ -72,7 +72,8 @@ export const SearchPreview: React.FC = () => {
            <SearchComponent
              variant={variant}
              inputVariant={inputVariant}
-
+             size={size}
+             color={previewColor}
              loading={loading}
              disabled={disabled}
              clearable={clearable}
@@ -150,19 +151,69 @@ export const SearchPreview: React.FC = () => {
 };
 
 export const SearchInputPreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+  const [previewColor, setPreviewColor] = React.useState<any>("default");
   const [variant, setVariant] = React.useState<"default" | "minimal" | "glass" | "pill">("default");
+  const [previewSize, setPreviewSize] = React.useState<any>("md");
+  const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+  const [previewLayout, setPreviewLayout] = React.useState<any>("default");
+
+  const extraControls = (
+    <div className="flex flex-col gap-4 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["sm", "md", "lg", "xl", "2xl"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewSize(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSize === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Layout</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "centered"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewLayout(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewLayout === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <PreviewContainer
       title="Search Input"
       description="A highly styled, interactive search input component with micro-animations."
       variants={["default", "minimal", "glass", "pill"]}
       activeVariant={variant}
-      onVariantChange={setVariant as any} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
+      onVariantChange={setVariant as any}
+      colors={DEFAULT_COLORS}
+      activeColor={previewColor}
+      onColorChange={setPreviewColor}
+      extraControls={extraControls}
     >
       <div className="w-full max-w-sm">
-        <SearchInput placeholder="Try searching 'button'..." variant={variant} data={componentsList} />
+        <SearchInput 
+          placeholder="Try searching 'button'..." 
+          variant={variant} 
+          data={componentsList} 
+          color={previewColor}
+          size={previewSize}
+          spacing={previewSpacing}
+          layout={previewLayout}
+        />
       </div>
     </PreviewContainer>
   );
