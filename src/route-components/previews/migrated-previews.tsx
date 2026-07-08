@@ -128,7 +128,7 @@ export const MigratedPreviews = {
           </>
         }
       >
-        <div className="flex items-center justify-center min-h-[300px]">
+        <div className="flex items-center justify-center min-h-75">
           <Badge variant={previewVariant} color={previewColor} shape={previewShape} spacing={previewSpacing}>
             Badge
           </Badge>
@@ -175,7 +175,7 @@ export const MigratedPreviews = {
           </>
         }
       >
-        <div className="flex items-center justify-center min-h-[300px]">
+        <div className="flex items-center justify-center min-h-75">
           <AlertDialog variant={previewVariant} color={previewColor} shape={previewShape} spacing={previewSpacing}>
             <AlertDialogTrigger asChild>
               <Button variant="outline">Show Dialog</Button>
@@ -272,8 +272,8 @@ export const MigratedPreviews = {
           </>
         }
       >
-        <div className="flex items-center justify-center min-h-[300px]">
-          <Collapsible layout={previewLayout} color={previewColor} shape={previewShape} spacing={previewSpacing} className="w-[380px]">
+        <div className="flex items-center justify-center min-h-75">
+          <Collapsible layout={previewLayout} color={previewColor} shape={previewShape} spacing={previewSpacing} className="w-95">
             <CollapsibleTrigger>
               @peduarte starred {items.length} repositories
             </CollapsibleTrigger>
@@ -287,9 +287,9 @@ export const MigratedPreviews = {
   "context-menu": function ContextMenuPreview() {
     return (
       <PreviewContainer title="Context Menu" description="Displays a menu to the user — such as a set of actions or functions — triggered by a button.">
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center justify-center min-h-100">
           <ContextMenu>
-            <ContextMenuTrigger className="flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed text-sm">
+            <ContextMenuTrigger className="flex h-37.5 w-75 items-center justify-center rounded-md border border-dashed text-sm">
               Right click here
             </ContextMenuTrigger>
             <ContextMenuContent className="w-64">
@@ -352,7 +352,7 @@ export const MigratedPreviews = {
           </>
         }
       >
-        <div className="flex items-center justify-center min-h-[300px]">
+        <div className="flex items-center justify-center min-h-75">
           <DropdownMenu variant={previewVariant} color={previewColor} shape={previewShape} spacing={previewSpacing} size={previewSize}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" color={previewColor}>Open Menu</Button>
@@ -418,7 +418,7 @@ export const MigratedPreviews = {
           </>
         }
       >
-        <div className="flex items-center justify-center min-h-[300px]">
+        <div className="flex items-center justify-center min-h-75">
           <HoverCard variant={previewVariant} color={previewColor} theme={previewTheme} shape={previewShape} spacing={previewSpacing}>
             <HoverCardTrigger asChild>
               <Button variant="link">@nextjs</Button>
@@ -486,7 +486,7 @@ export const MigratedPreviews = {
         onVariantChange={setPreviewVariant} 
         extraControls={extraControls}
       >
-        <div className="flex items-center justify-center min-h-[300px]">
+        <div className="flex items-center justify-center min-h-75">
           <Menubar color={previewColor} variant={previewVariant} theme={previewTheme} shape={previewShape} spacing={previewSpacing}>
             <MenubarMenu>
               <MenubarTrigger>File</MenubarTrigger>
@@ -559,7 +559,7 @@ export const MigratedPreviews = {
           </>
         }
       >
-        <div className="flex items-center justify-center min-h-[200px]">
+        <div className="flex items-center justify-center min-h-50">
           <Pagination color={previewColor} variant={previewVariant} shape={previewShape} spacing={previewSpacing} size={previewSize}>
             <PaginationContent>
               <PaginationItem>
@@ -632,7 +632,7 @@ export const MigratedPreviews = {
           </>
         }
       >
-        <div className="flex items-center justify-center min-h-[300px]">
+        <div className="flex items-center justify-center min-h-75">
           <RadioGroup defaultValue="option-1" color={previewColor} shape={shape} spacing={spacing} variant={variant}>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="option-1" id="r1" />
@@ -661,10 +661,10 @@ export const MigratedPreviews = {
   "resizable": function ResizablePreview() {
     return (
       <PreviewContainer title="Resizable" description="Accessible resizable panel groups and layouts with keyboard support.">
-        <div className="flex items-center justify-center min-h-[400px] w-full px-10">
+        <div className="flex items-center justify-center min-h-100 w-full px-10">
           <ResizablePanelGroup direction="horizontal" className="max-w-md rounded-lg border">
             <ResizablePanel defaultSize={50}>
-              <div className="flex h-[200px] items-center justify-center p-6">
+              <div className="flex h-50 items-center justify-center p-6">
                 <span className="font-semibold">One</span>
               </div>
             </ResizablePanel>
@@ -729,14 +729,14 @@ export const MigratedPreviews = {
           </>
         }
       >
-        <div className="flex items-center justify-center min-h-[400px] w-full">
+        <div className="flex items-center justify-center min-h-100 w-full">
           <ScrollArea 
             type="always"
             color={previewColor} 
             variant={previewVariant} 
             shape={previewShape} 
             spacing={previewSpacing}
-            className="h-[200px] w-[350px] border p-4"
+            className="h-50 w-87.5 border p-4"
           >
             Jokester began sneaking into the castle in the middle of the night and leaving
             jokes all over the place: under the king&apos;s pillow, in his soup, even in the
@@ -758,12 +758,12 @@ export const MigratedPreviews = {
   "skeleton": function SkeletonPreview() {
     return (
       <PreviewContainer title="Skeleton" description="Use to show a placeholder while content is loading.">
-        <div className="flex items-center justify-center min-h-[300px]">
+        <div className="flex items-center justify-center min-h-75">
           <div className="flex items-center space-x-4">
             <Skeleton className="h-12 w-12 rounded-full" />
             <div className="space-y-2">
-              <Skeleton className="h-4 w-[250px]" />
-              <Skeleton className="h-4 w-[200px]" />
+              <Skeleton className="h-4 w-62.5" />
+              <Skeleton className="h-4 w-50" />
             </div>
           </div>
         </div>
@@ -772,10 +772,58 @@ export const MigratedPreviews = {
   },
 
   "slider": function SliderPreview() {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSize, setPreviewSize] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+
+    const extraControls = (
+      <div className="flex flex-col gap-4 w-full mt-4 border-t border-border/50 pt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {(["default", "square", "rounded", "sharp"] as const).map(s => (
+              <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Thumb Size</span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {(["default", "sm", "md", "lg", "xl"] as const).map(s => (
+              <button key={s} onClick={() => setPreviewSize(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSize === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Track Spacing</span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+              <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg uppercase transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+
     return (
-      <PreviewContainer title="Slider" description="An input where the user selects a value from within a given range.">
-        <div className="flex items-center justify-center min-h-[200px] px-10 w-full">
-          <Slider defaultValue={[50]} max={100} step={1} className="w-[60%]" />
+      <PreviewContainer 
+        title="Slider" 
+        description="An input where the user selects a value from within a given range."
+        variants={["solid", "outline", "ghost", "glass", "elevated", "soft"]}
+        activeVariant={previewVariant}
+        onVariantChange={setPreviewVariant}
+        isVirtualScreen={true} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
+        extraControls={extraControls}
+      >
+        <div className="flex items-center justify-center min-h-75 px-10 w-full">
+          <div className="flex flex-col items-center justify-center gap-10 w-full max-w-4xl border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-12 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm shadow-xl">
+            <Slider defaultValue={[50]} max={100} step={1} className="w-[80%]" variant={previewVariant as any} color={previewColor} shape={previewShape} size={previewSize} spacing={previewSpacing} />
+            <Slider defaultValue={[25, 75]} max={100} step={1} className="w-[80%]" variant={previewVariant as any} color={previewColor} shape={previewShape} size={previewSize} spacing={previewSpacing} />
+          </div>
         </div>
       </PreviewContainer>
     );
@@ -784,7 +832,7 @@ export const MigratedPreviews = {
   "toggle-group": function ToggleGroupPreview() {
     return (
       <PreviewContainer title="Toggle Group" description="A set of two-state buttons that can be toggled on or off.">
-        <div className="flex items-center justify-center min-h-[200px]">
+        <div className="flex items-center justify-center min-h-50">
           <ToggleGroup type="multiple">
             <ToggleGroupItem value="bold" aria-label="Toggle bold">Bold</ToggleGroupItem>
             <ToggleGroupItem value="italic" aria-label="Toggle italic">Italic</ToggleGroupItem>
@@ -798,7 +846,7 @@ export const MigratedPreviews = {
   "tooltip": function TooltipPreview() {
     return (
       <PreviewContainer title="Tooltip" description="A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.">
-        <div className="flex items-center justify-center min-h-[300px]">
+        <div className="flex items-center justify-center min-h-75">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -891,7 +939,7 @@ export const MigratedPreviews = {
           </>
         }
       >
-        <div className="flex items-center justify-center min-h-[500px]">
+        <div className="flex items-center justify-center min-h-125">
           {/* Key is used to force re-render when changing sizes for a fresh spin effect (optional) */}
           <IconCloud 
             key={`${previewContent}-${previewSpacing}`}
@@ -908,7 +956,7 @@ export const MigratedPreviews = {
   "typing-animation": function TypingAnimationPreview() {
     return (
       <PreviewContainer title="Typing Animation" description="A text component that animates as if being typed.">
-        <div className="flex items-center justify-center min-h-[200px]">
+        <div className="flex items-center justify-center min-h-50">
           <TypingAnimation className="text-4xl font-bold text-primary">Hello, welcome to Future UI!</TypingAnimation>
         </div>
       </PreviewContainer>
@@ -930,7 +978,7 @@ export const MigratedPreviews = {
         activeVariant={previewVariant}
         onVariantChange={setPreviewVariant}
       >
-        <div className="flex items-center justify-center min-h-[300px]">
+        <div className="flex items-center justify-center min-h-75">
           <div className="w-full max-w-md bg-background border p-8 rounded-xl text-foreground text-center font-medium text-lg leading-relaxed shadow-sm">
             <p>
               This is a beautiful <Highlighter action={previewVariant} color={previewColor}>highlighted</Highlighter> text effect.
@@ -944,7 +992,7 @@ export const MigratedPreviews = {
   "text-3d-flip": function Text3dFlipPreview() {
     return (
       <PreviewContainer title="Text 3D Flip" description="A text animation component that flips 3D.">
-        <div className="flex items-center justify-center min-h-[300px]">
+        <div className="flex items-center justify-center min-h-75">
           <Text3dFlip>Future UI</Text3dFlip>
         </div>
       </PreviewContainer>
@@ -952,16 +1000,78 @@ export const MigratedPreviews = {
   },
 
   "sonner": function SonnerPreview() {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("elevated");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSize, setPreviewSize] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+
+    const extraControls = (
+      <div className="flex flex-col gap-4 w-full mt-4 border-t border-border/50 pt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {(["default", "square", "rounded", "sharp"] as const).map(s => (
+              <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Text & Icon Size</span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {(["default", "sm", "md", "lg", "xl"] as const).map(s => (
+              <button key={s} onClick={() => setPreviewSize(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSize === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing / Padding</span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+              <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg uppercase transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+
     return (
-      <PreviewContainer title="Sonner" description="An opinionated toast notification component for React.">
-        <div className="flex items-center justify-center min-h-[300px]">
-          <Button
-            variant="outline"
-            onClick={() => toast("Event has been created")}
-          >
-            Show Toast
-          </Button>
-          <Toaster />
+      <PreviewContainer 
+        title="Sonner" 
+        description="An opinionated toast notification component for React."
+        variants={["solid", "outline", "ghost", "glass", "elevated", "soft"]}
+        activeVariant={previewVariant}
+        onVariantChange={setPreviewVariant}
+        isVirtualScreen={true} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
+        extraControls={extraControls}
+      >
+        <div className="flex flex-col items-center justify-center min-h-75 gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Button
+              variant="outline"
+              onClick={() => toast("Event has been created", {
+                description: "Sunday, December 03, 2023 at 9:00 AM",
+                action: { label: "Undo", onClick: () => console.log("Undo") },
+              })}
+            >
+              Default Toast
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => toast.success("Successfully completed!")}
+            >
+              Success Toast
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => toast.error("Something went wrong")}
+            >
+              Error Toast
+            </Button>
+          </div>
+          <Toaster variant={previewVariant} color={previewColor} shape={previewShape} size={previewSize} spacing={previewSpacing} />
         </div>
       </PreviewContainer>
     );

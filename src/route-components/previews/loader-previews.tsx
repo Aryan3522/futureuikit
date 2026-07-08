@@ -49,7 +49,7 @@ export const BasicLoaderPreview: React.FC = () => {
         </>
       }
     >
-      <div className="flex flex-col gap-4 items-center justify-center min-h-[300px]">
+      <div className="flex flex-col gap-4 items-center justify-center min-h-75">
         <BasicLoader
           variant={variant}
           color={previewColor}

@@ -334,7 +334,7 @@ export const GlowyButtonPreview: React.FC = () => {
         </>
       }
     >
-      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[300px]">
+      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-75">
         <GlowyButton color={previewColor} shape={shape} spacing={spacing}>Glowy Button</GlowyButton>
       </div>
     </PreviewContainer>
@@ -343,45 +343,63 @@ export const GlowyButtonPreview: React.FC = () => {
 
 export const SkeuomorphicButtonPreview: React.FC = () => {
   const [previewColor, setPreviewColor] = React.useState<any>("default");
-  const [activeVariant, setActiveVariant] = React.useState<string>("primary");
+  const [activeVariant, setActiveVariant] = React.useState<string>("solid");
+  const [previewShape, setPreviewShape] = React.useState<any>("default");
+  const [previewSize, setPreviewSize] = React.useState<any>("default");
+  const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+
+  const extraControls = (
+    <div className="flex flex-col gap-4 w-full mt-4 border-t border-border/50 pt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "square", "rounded", "sharp"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "sm", "md", "lg", "xl"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewSize(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSize === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg uppercase transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <PreviewContainer
       title="Skeuomorphic Button"
       description="A premium skeuomorphic button with realistic depth and tactile interactions."
-      variants={["primary", "glass", "gradient", "elevated", "soft", "outline", "ghost"]}
+      variants={["solid", "outline", "ghost", "link", "glass", "elevated", "soft"]}
       activeVariant={activeVariant}
       onVariantChange={setActiveVariant}
       isVirtualScreen={true} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
+      extraControls={extraControls}
     >
-      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[400px]">
-        <div className="flex flex-col items-center gap-10 w-full max-w-4xl border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-12 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm">
-          <div className="flex flex-wrap items-end justify-center gap-6 w-full">
-            <SkeuomorphicButton variant={activeVariant as any} color="indigo">Extra Small</SkeuomorphicButton>
-            <SkeuomorphicButton variant={activeVariant as any} color="indigo">Small Size</SkeuomorphicButton>
-            <SkeuomorphicButton variant={activeVariant as any} color="indigo">Medium Default</SkeuomorphicButton>
+      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-100">
+        <div className="flex flex-col items-center justify-center gap-10 w-full max-w-4xl border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-12 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm shadow-xl">
+          <div className="flex flex-wrap items-center justify-center gap-8 w-full">
+            <SkeuomorphicButton variant={activeVariant as any} color={previewColor} shape={previewShape} size={previewSize} spacing={previewSpacing}>Skeuomorphic</SkeuomorphicButton>
+            <SkeuomorphicButton variant={activeVariant as any} color={previewColor} shape={previewShape} size={previewSize} spacing={previewSpacing} icon={<Star />}>Left Icon</SkeuomorphicButton>
+            <SkeuomorphicButton variant={activeVariant as any} color={previewColor} shape={previewShape} size={previewSize} spacing={previewSpacing} icon={<Star />} iconPosition="right">Tail Icon</SkeuomorphicButton>
+            <SkeuomorphicButton variant={activeVariant as any} color={previewColor} shape={previewShape} size={previewSize} spacing={previewSpacing} icon={<Star />} />
           </div>
-          
-          <div className="flex flex-wrap items-end justify-center gap-8 w-full mt-2">
-            <SkeuomorphicButton variant={activeVariant as any} color="indigo">Large Size</SkeuomorphicButton>
-            <SkeuomorphicButton variant={activeVariant as any} color="indigo">Extra Large</SkeuomorphicButton>
-          </div>
-
-          <div className="w-full max-w-2xl h-px bg-zinc-200 dark:bg-zinc-800 my-2" />
-
-          <div className="flex flex-wrap items-center justify-center gap-6 w-full">
-             <SkeuomorphicButton variant={activeVariant as any} shape="rounded" color="indigo">Rounded (Default)</SkeuomorphicButton>
-             <SkeuomorphicButton variant={activeVariant as any} shape="rounded" color="indigo">Pill Shape</SkeuomorphicButton>
-             <SkeuomorphicButton variant={activeVariant as any} shape="rounded" color="indigo">Soft Rounded</SkeuomorphicButton>
-          </div>
-          
-          <div className="flex flex-wrap items-center justify-center gap-8 w-full mt-2">
-             <SkeuomorphicButton variant={activeVariant as any} shape="square" color="indigo">Square</SkeuomorphicButton>
-             <SkeuomorphicButton variant={activeVariant as any} shape="rounded" color="indigo" icon={<Star />} aria-label="Star XS" />
-             <SkeuomorphicButton variant={activeVariant as any} shape="rounded" color="indigo" icon={<Star />} aria-label="Star SM" />
-             <SkeuomorphicButton variant={activeVariant as any} shape="rounded" color="indigo" icon={<Star />} aria-label="Star MD" />
-             <SkeuomorphicButton variant={activeVariant as any} shape="rounded" color="indigo" icon={<Star />} aria-label="Star LG" />
-             <SkeuomorphicButton variant={activeVariant as any} shape="rounded" color="indigo" icon={<Star />} aria-label="Star XL" />
+          <div className="flex flex-wrap items-center justify-center gap-8 w-full">
+            <SkeuomorphicButton variant={activeVariant as any} color={previewColor} shape={previewShape} size={previewSize} spacing={previewSpacing} loading>Processing</SkeuomorphicButton>
+            <SkeuomorphicButton variant={activeVariant as any} color={previewColor} shape={previewShape} size={previewSize} spacing={previewSpacing} disabled>Disabled</SkeuomorphicButton>
           </div>
         </div>
       </div>
@@ -427,7 +445,7 @@ export const ClayMorphButtonPreview: React.FC = () => {
       isVirtualScreen={true} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
       extraControls={extraControls}
     >
-      <div className="w-full h-full flex items-center justify-center min-h-[400px]">
+      <div className="w-full h-full flex items-center justify-center min-h-100">
         <div className="flex flex-col items-center justify-center gap-10 w-full h-full border-0 border-y border-zinc-200 dark:border-zinc-800 rounded-none p-6 md:p-12 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm shadow-xl">
           <div className="flex flex-wrap items-center justify-center gap-8 w-full">
             <ClayMorphButton variant={previewVariant as any} color={previewColor} shape={previewShape} spacing={previewSpacing}>Clay Morphism</ClayMorphButton>
@@ -492,7 +510,7 @@ export const MinimalButtonPreview: React.FC = () => {
       isVirtualScreen={true} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
       extraControls={extraControls}
     >
-      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[400px]">
+      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-100">
         <div className="flex flex-col items-center gap-10 w-full max-w-4xl border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-12 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm shadow-xl">
           <div className="flex flex-wrap items-center justify-center gap-8 w-full">
             <MinimalButton variant={previewVariant as any} color={previewColor} shape={previewShape} spacing={previewSpacing} theme={previewTheme}>Minimal Button</MinimalButton>

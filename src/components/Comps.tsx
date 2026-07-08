@@ -95,7 +95,7 @@ const selectedCategory = searchParams.get("category");
  { stat: "0", label: "Runtime Dependencies", desc: "All code compiles into your bundle" },
  { stat: "100%", label: "Source Ownership", desc: "Every file is yours to modify" },
  ].map((s) => (
- <div key={s.label} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-5 rounded-xl text-center">
+ <div key={s.label} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-5 rounded-xl text-center">
  <div className="font-display text-3xl text-primary font-bold">{s.stat}</div>
  <div className="text-sm text-foreground font-medium mt-1">{s.label}</div>
  <div className="text-xs text-muted-foreground mt-1">{s.desc}</div>
@@ -116,7 +116,7 @@ const selectedCategory = searchParams.get("category");
  { icon: "🎨", title: "Semantic Design Tokens", desc: "Colors are named by role (background, foreground, primary, muted) not by value. Change one variable in globals.css and every component reflects the change." },
  { icon: "🌓", title: "Dark & Light Mode", desc: "Both themes are first-class citizens defined in the same CSS file. The .dark class toggles all variables simultaneously. No duplicated styles, no theme-specific overrides." },
  ].map((f) => (
- <div key={f.title} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-6 rounded-xl">
+ <div key={f.title} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-6 rounded-xl">
  <div className="text-xl mb-3">{f.icon}</div>
  <h3 className="font-display text-base text-foreground font-bold mb-2">{f.title}</h3>
  <p className="text-muted-foreground text-sm leading-relaxed">{f.desc}</p>
@@ -139,7 +139,7 @@ const selectedCategory = searchParams.get("category");
  { name: "clsx + tailwind-merge", version: "-", role: "Class name utilities" },
  { name: "Lucide React", version: "-", role: "Icon library" },
  ].map((t) => (
- <div key={t.name} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-4 rounded-xl">
+ <div key={t.name} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-4 rounded-xl">
  <div className="font-mono text-sm text-foreground font-bold">{t.name}</div>
  <div className="text-xs text-primary font-mono">{t.version}</div>
  <div className="text-xs text-muted-foreground mt-1">{t.role}</div>
@@ -159,7 +159,7 @@ const selectedCategory = searchParams.get("category");
  { title: "@/* Path Alias", desc: "The CLI expects tsconfig.json to have a @/* alias pointing to your src/ directory for component placement." },
  { title: "Geist Sans + JetBrains Mono Fonts", desc: "Recommended fonts. Add via next/font in layout.tsx. Falls back to Inter / system-ui if not configured." },
  ].map((r) => (
- <div key={r.title} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-4 rounded-xl flex items-start gap-4">
+ <div key={r.title} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-4 rounded-xl flex items-start gap-4">
  <div className="w-2 h-2 rounded-full bg-primary/60 mt-2 shrink-0"/>
  <div>
  <div className="text-sm text-foreground font-bold">{r.title}</div>
@@ -259,7 +259,7 @@ const selectedCategory = searchParams.get("category");
  { title: "Learn Theming", desc: "Understand how CSS variables power light and dark mode across all components.", tab: "theming", label: "Theming →" },
  { title: "View Philosophy", desc: "Understand the design decisions behind the library architecture.", tab: "philosophy", label: "Philosophy →" },
  ].map((n) => (
- <Link key={n.title} href={n.link || `/components?tab=${n.tab}`} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-5 rounded-xl block hover:border-primary/30 transition-all duration-300 group">
+ <Link key={n.title} href={n.link || `/components?tab=${n.tab}`} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-5 rounded-xl block hover:border-primary/30 transition-all duration-300 group">
  <h3 className="font-display text-sm text-foreground font-bold mb-1">{n.title}</h3>
  <p className="text-xs text-muted-foreground mb-3">{n.desc}</p>
  <span className="text-xs text-primary font-mono group-hover:underline">{n.label}</span>
@@ -286,7 +286,7 @@ const selectedCategory = searchParams.get("category");
  {/* Quick Start */}
  <section className="space-y-6">
  <h2 className="font-display text-2xl text-foreground">Quick Start</h2>
- <div className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-8 rounded-xl">
+ <div className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-8 rounded-xl">
  <p className="text-muted-foreground text-sm mb-6">Run these two commands to add any component to your Next.js project.</p>
  <div className="space-y-4">
  <div className="bg-card border border-foreground/10 rounded-xl overflow-hidden">
@@ -423,7 +423,7 @@ export default function Page() {
  {/* CLI Reference */}
  <section className="space-y-6">
  <h2 className="font-display text-2xl text-foreground">CLI Reference</h2>
- <div className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 rounded-xl overflow-hidden">
+ <div className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 rounded-xl overflow-hidden">
  <div className="space-y-0 divide-y divide-foreground/5">
  {[
  { cmd: "npx futureuikit init", desc: "Initialize the project — sets up Tailwind, globals.css, path alias, and base utilities." },
@@ -453,7 +453,7 @@ export default function Page() {
  { icon: "📄", title: "Documentation Sites", desc: "Typographic systems, code highlighters, tabbed interfaces, and responsive sidebars." },
  { icon: "🛒", title: "E-Commerce", desc: "Product cards with 3D previews, carousels, animated cart drawers, and checkout forms." },
  ].map((b) => (
- <div key={b.title} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-5 rounded-xl">
+ <div key={b.title} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-5 rounded-xl">
  <div className="text-xl mb-3">{b.icon}</div>
  <h3 className="font-display text-sm text-foreground font-bold mb-1">{b.title}</h3>
  <p className="text-xs text-muted-foreground leading-relaxed">{b.desc}</p>
@@ -466,7 +466,7 @@ export default function Page() {
  <section className="space-y-6">
  <h2 className="font-display text-2xl text-foreground">Prerequisites</h2>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
- <div className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-5 rounded-xl">
+ <div className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-5 rounded-xl">
  <h4 className="font-mono text-xs text-foreground font-bold mb-2">Next.js 14+</h4>
  <p className="text-xs text-muted-foreground">App Router with the <code className="text-primary text-[10px] font-mono bg-foreground/5 px-1 rounded">@/*</code> path alias configured in <code className="text-primary text-[10px] font-mono bg-foreground/5 px-1 rounded">tsconfig.json</code>.</p>
  </div>
@@ -516,7 +516,7 @@ export default function Page() {
  { icon: "🎯", title: "Framer Motion Native", desc: "Motion is not an afterthought — it is baked into the component architecture from day one. Every animation uses Framer Motion's spring physics and gesture system. Layout animations, exit animations, drag, and scroll-linked motion are all first-class primitives." },
  { icon: "🎨", title: "Semantic Theming", desc: "Colors are defined as CSS custom properties mapped through Tailwind's @theme directive. Light and dark modes share the same token names with different HSL values. Change one variable and every component reflects the change — no overrides, no specificity battles." },
  ].map((p) => (
- <div key={p.title} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-8 rounded-xl group hover:border-primary/30 transition-all duration-300">
+ <div key={p.title} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-8 rounded-xl group hover:border-primary/30 transition-all duration-300">
  <div className="text-2xl mb-4">{p.icon}</div>
  <h3 className="font-display text-xl text-foreground font-bold mb-3">{p.title}</h3>
  <p className="text-muted-foreground text-sm leading-relaxed">{p.desc}</p>
@@ -536,7 +536,7 @@ export default function Page() {
  { num: "04", title: "CLI over Package Manager", desc: "npm packages version-lock your UI. The CLI gives you the source on demand. You stay on your schedule, not the library's release cycle." },
  { num: "05", title: "Minimal Runtime, Maximal DX", desc: "Tailwind JIT purges unused styles at build time. Framer Motion lazy-loads what it needs. TypeScript types are generated from component source, not hand-maintained." },
  ].map((pr) => (
- <div key={pr.num} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-6 rounded-xl flex gap-5">
+ <div key={pr.num} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-6 rounded-xl flex gap-5">
  <span className="font-mono text-2xl font-bold text-primary shrink-0 leading-none mt-0.5">{pr.num}</span>
  <div>
  <h3 className="font-display text-lg text-foreground font-bold mb-1">{pr.title}</h3>
@@ -550,7 +550,7 @@ export default function Page() {
  {/* Architecture Diagram */}
  <section className="space-y-6">
  <h2 className="font-display text-2xl text-foreground">Architecture Overview</h2>
- <div className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-8 rounded-xl">
+ <div className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-8 rounded-xl">
  <div className="flex flex-col md:flex-row items-stretch gap-4 md:gap-0">
  {[
  { layer: "Components", items: "Button, Card, Modal, Form, Animation", desc: "Copy-paste React + Tailwind source files" },
@@ -610,7 +610,7 @@ export default function Page() {
  { name: "input", var: "--color-input", cls: "border-input", desc: "Form input border" },
  { name: "ring", var: "--color-ring", cls: "ring-ring", desc: "Focus ring color — matches primary" },
  ].map((t) => (
- <div key={t.name} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-5 rounded-xl flex items-start gap-4">
+ <div key={t.name} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-5 rounded-xl flex items-start gap-4">
  <div className={"w-10 h-10 rounded-lg shrink-0 border border-border/50 " + t.cls} />
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-2 mb-1">
@@ -635,7 +635,7 @@ export default function Page() {
  <h2 className="font-display text-2xl text-foreground">Light &amp; Dark Values</h2>
  <p className="text-muted-foreground text-sm -mt-4">The <code className="text-primary text-xs font-mono px-1.5 py-0.5 rounded bg-foreground/5">:root</code> block holds light mode values; the <code className="text-primary text-xs font-mono px-1.5 py-0.5 rounded bg-foreground/5">.dark</code> class overrides them. Toggle the theme to see the change.</p>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
- <div className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-6 rounded-xl">
+ <div className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-6 rounded-xl">
  <h3 className="font-mono text-sm text-foreground font-bold mb-4 flex items-center gap-2">
  <span className="w-3 h-3 rounded-full bg-amber-400"/> Light <code className="text-[10px] font-normal text-muted-foreground">:root</code>
  </h3>
@@ -650,7 +650,7 @@ export default function Page() {
  <div><span className="text-foreground">--ring</span>: 239 84% 67%</div>
  </div>
  </div>
- <div className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-6 rounded-xl">
+ <div className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-6 rounded-xl">
  <h3 className="font-mono text-sm text-foreground font-bold mb-4 flex items-center gap-2">
  <span className="w-3 h-3 rounded-full bg-zinc-800 border border-zinc-600"/> Dark <code className="text-[10px] font-normal text-muted-foreground">.dark</code>
  </h3>
@@ -672,7 +672,7 @@ export default function Page() {
  <section className="space-y-6">
  <h2 className="font-display text-2xl text-foreground">Radius &amp; Animation Tokens</h2>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
- <div className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-6 rounded-xl">
+ <div className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-6 rounded-xl">
  <h3 className="font-mono text-sm text-foreground font-bold mb-4">Border Radius</h3>
  <div className="space-y-3">
  {[
@@ -691,7 +691,7 @@ export default function Page() {
  ))}
  </div>
  </div>
- <div className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-6 rounded-xl">
+ <div className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-6 rounded-xl">
  <h3 className="font-mono text-sm text-foreground font-bold mb-4">Keyframe Animations</h3>
  <div className="space-y-3 font-mono text-[11px] text-muted-foreground">
  {[
@@ -723,7 +723,7 @@ export default function Page() {
  { name: "luminous-glow", cls: "luminous-glow", desc: "Soft violet box-shadow glow (15% opacity)." },
  { name: "noise-overlay", cls: "noise-overlay", desc: "CSS-only noise texture via repeating-linear-gradient." },
  ].map((u) => (
- <div key={u.name} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-5 rounded-xl">
+ <div key={u.name} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-5 rounded-xl">
  <h3 className="font-mono text-sm text-foreground font-bold mb-1">{u.name}</h3>
  <p className="text-muted-foreground text-xs mb-3">{u.desc}</p>
  <div className="p-3 bg-foreground/5 rounded border border-foreground/10 font-mono text-[11px] text-muted-foreground flex justify-between items-center">
@@ -783,7 +783,7 @@ export default function Page() {
  { title: "Body", font: "font-body-md", tag: "Aa", preview: "Inter / System UI", desc: "Clean sans-serif for paragraphs, descriptions, and general body copy.", cls: 'className="font-body-md"', id: "typo-font-2" },
  { title: "Monospace", font: "font-mono", tag: "{ }", preview: "JetBrains Mono", desc: "Monospace for code snippets, version numbers, tags, and technical labels.", cls: 'className="font-mono uppercase tracking-widest"', id: "typo-font-3" },
  ].map((f) => (
- <div key={f.id} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-8 rounded-xl">
+ <div key={f.id} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-8 rounded-xl">
  <div className={"text-5xl mb-4 " + f.font + " text-foreground"}>{f.tag}</div>
  <h3 className={"text-xl text-foreground mb-2 " + f.font}>{f.title}</h3>
  <p className="text-xs text-muted-foreground font-mono mb-1">{f.preview}</p>
@@ -812,7 +812,7 @@ export default function Page() {
  { level: "h5", text: "Heading 5", cls: "text-lg font-semibold", size: "lg", weight: "Semi Bold", use: "Minor headings" },
  { level: "h6", text: "Heading 6", cls: "text-base font-semibold", size: "base", weight: "Semi Bold", use: "Small labels" },
  ].map((h, i) => (
- <div key={h.level} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-6 rounded-xl">
+ <div key={h.level} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-6 rounded-xl">
  <div className="flex items-start justify-between gap-4 mb-3">
  <span className={"font-display " + h.cls + " text-foreground"}>{h.text}</span>
  <Badge variant="secondary" className="shrink-0 text-[10px]">{h.level}</Badge>
@@ -846,7 +846,7 @@ export default function Page() {
  { label: "Muted", text: "Muted text recedes into the background for less prominent information.", cls: "text-sm text-muted-foreground", desc: "Captions, secondary info" },
  { label: "Blockquote", text: "A block quotation pulls quoted content into focus with visual distinction.", cls: "border-l-2 pl-6 italic", desc: "Quotes, callouts" },
  ].map((t, i) => (
- <div key={t.label} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-6 rounded-xl">
+ <div key={t.label} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-6 rounded-xl">
  <div className="mb-3">
  <Badge variant="secondary" className="text-[10px] mb-3">{t.label}</Badge>
  {t.label === "Blockquote" ? (
@@ -875,7 +875,7 @@ export default function Page() {
  { title: "Label", preview: <label className="text-sm font-medium leading-none text-foreground">Input Label</label>, cls: "text-sm font-medium leading-none", desc: "Form labels and accessible input annotations." },
  { title: "Code", preview: <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold text-foreground">npm install futureuikit</code>, cls: "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold", desc: "Inline code snippets, terminal commands, and technical terms." },
  ].map((e, i) => (
- <div key={e.title} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-8 rounded-xl">
+ <div key={e.title} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-8 rounded-xl">
  <h3 className="font-display text-xl text-foreground mb-4">{e.title}</h3>
  <div className="mb-6">{e.preview}</div>
  <p className="text-muted-foreground text-sm mb-6">{e.desc}</p>
@@ -923,7 +923,7 @@ export default function Page() {
  { name: "input", var: "--input", cls: "border-input", hex: "hsl(240 5.9% 90% / 0 0% 20%)", desc: "Form input border" },
  { name: "ring", var: "--ring", cls: "ring-ring", hex: "hsl(239 84% 67% / 258 90% 66%)", desc: "Focus ring — matches primary" },
  ].map((c) => (
- <div key={c.name} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-5 rounded-xl flex items-start gap-4">
+ <div key={c.name} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-5 rounded-xl flex items-start gap-4">
  <div className={"w-12 h-12 rounded-xl shrink-0 border border-border/50 " + c.cls} />
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-2 mb-1">
@@ -970,7 +970,7 @@ export default function Page() {
  { var: "--border", light: "240 5.9% 90%", dark: "0 0% 20%", role: "Border" },
  { var: "--ring", light: "239 84% 67%", dark: "258 90% 66%", role: "Focus ring" },
  ].map((row, i) => (
- <tr key={row.var} className={"border-b border-foreground/5 " + (i % 2 === 0 ? "bg-foreground/[0.01]" : "")}>
+ <tr key={row.var} className={"border-b border-foreground/5 " + (i % 2 === 0 ? "bg-foreground/1" : "")}>
  <td className="py-2.5 pr-4 text-foreground font-medium">{row.var}</td>
  <td className="py-2.5 pr-4 text-amber-600/80">{row.light}</td>
  <td className="py-2.5 pr-4 text-zinc-400/80">{row.dark}</td>
@@ -993,7 +993,7 @@ export default function Page() {
  { pattern: "border-{token}", eg: "border-border", desc: "Border color" },
  { pattern: "ring-{token}", eg: "ring-ring", desc: "Focus ring" },
  ].map((p) => (
- <div key={p.pattern} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-5 rounded-xl">
+ <div key={p.pattern} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-5 rounded-xl">
  <code className="text-sm text-primary font-mono font-bold">{p.pattern}</code>
  <div className="mt-2 font-mono text-xs text-foreground">{p.eg}</div>
  <p className="text-xs text-muted-foreground mt-1">{p.desc}</p>
@@ -1013,7 +1013,7 @@ export default function Page() {
  { eg: "border-border/20", desc: "20% opaque border" },
  { eg: "bg-primary/10", desc: "10% opaque primary as a tint" },
  ].map((o) => (
- <div key={o.eg} className="bg-foreground/[0.03] backdrop-blur-[40px] border border-foreground/10 p-5 rounded-xl flex items-center gap-4">
+ <div key={o.eg} className="bg-foreground/3 backdrop-blur-2xl border border-foreground/10 p-5 rounded-xl flex items-center gap-4">
  <div className={"w-10 h-10 rounded-lg border border-border/30 shrink-0 " + o.eg} />
  <div>
  <code className="text-xs text-primary font-mono">{o.eg}</code>

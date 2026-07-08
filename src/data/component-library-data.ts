@@ -1795,7 +1795,7 @@ export default function Example() {
     "Provides a cinematic flash completion sequence."
  ],
  codes: {
-    next: 'import { SlideUpReveal } from "@/components/ui/slide-up-reveal";\n\nexport default function Example() {\n  return <div className="h-[600px] w-full"><SlideUpReveal /></div>;\n}'
+    next: 'import { SlideUpReveal } from "@/components/ui/slide-up-reveal";\n\nexport default function Example() {\n  return <div className="h-150 w-full"><SlideUpReveal /></div>;\n}'
  },
  usage: [
     "Install: Run 'npx futureuikit add slide-up-reveal'.",
@@ -2136,7 +2136,7 @@ export default function Example() {
       "Lightweight with no external dependencies."
     ],
     codes: {
-      next: 'import { Skeleton } from "@/components/ui/skeleton";\n\nexport default function Example() {\n  return (\n    <div className="flex items-center space-x-4">\n      <Skeleton className="h-12 w-12 rounded-full" />\n      <div className="space-y-2">\n        <Skeleton className="h-4 w-[250px]" />\n        <Skeleton className="h-4 w-[200px]" />\n      </div>\n    </div>\n  );\n}'
+      next: 'import { Skeleton } from "@/components/ui/skeleton";\n\nexport default function Example() {\n  return (\n    <div className="flex items-center space-x-4">\n      <Skeleton className="h-12 w-12 rounded-full" />\n      <div className="space-y-2">\n        <Skeleton className="h-4 w-62.5" />\n        <Skeleton className="h-4 w-50" />\n      </div>\n    </div>\n  );\n}'
     },
     usage: [
       "Install: Run 'npx futureuikit add skeleton'.",
