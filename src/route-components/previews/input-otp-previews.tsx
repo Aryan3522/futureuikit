@@ -109,7 +109,7 @@ export const InputOTPPreview: React.FC = () => {
       onVariantChange={setPreviewVariant}
       extraControls={extraControls}
     >
-      <div className="flex flex-col items-center justify-center min-h-[300px] w-full p-4 sm:p-8 overflow-x-auto max-w-full">
+      <div className="flex flex-col items-center justify-center min-h-75 w-full p-4 sm:p-8 overflow-x-auto max-w-full">
         <InputOTP 
           maxLength={Number(digitCount)}
           variant={previewVariant}

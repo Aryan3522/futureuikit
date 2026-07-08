@@ -184,7 +184,7 @@ export const CalendarPreview: React.FC = () => {
         </>
       }
     >
-      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[500px]">
+      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-125">
         <Calendar
           value={date}
           onChange={setDate}
@@ -240,7 +240,7 @@ export const CalculatorPreview: React.FC = () => {
         </>
       }
     >
-      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[500px]">
+      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-125">
         <Calculator color={previewColor} variant={previewVariant} theme={previewTheme} shape={previewShape} spacing={previewSpacing} />
       </div>
     </PreviewContainer>
@@ -525,7 +525,7 @@ export const DynamicFormPreview: React.FC = () => {
           <div className="p-5 rounded-2xl border bg-card shadow-sm sticky top-0">
             <h4 className="font-bold text-sm uppercase tracking-widest text-muted-foreground mb-4">Submission Data</h4>
             {submittedData ? (
-              <pre className="text-[11px] font-mono p-4 bg-muted/50 rounded-lg overflow-auto max-h-[400px] border border-border/50">
+              <pre className="text-[11px] font-mono p-4 bg-muted/50 rounded-lg overflow-auto max-h-100 border border-border/50">
                 <code 
                   dangerouslySetInnerHTML={{ 
                     __html: JSON.stringify(submittedData, null, 2).replace(/"([^"]+)":/g, '<span class="text-indigo-500">"$1"</span>:')
@@ -819,7 +819,7 @@ export const FormBuilderPreview: React.FC = () => {
           <div className="space-y-4">
             <div className="p-5 rounded-2xl border bg-muted/30">
               <h4 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Live Result</h4>
-              <pre className="text-[10px] font-mono overflow-auto max-h-[400px]">
+              <pre className="text-[10px] font-mono overflow-auto max-h-100">
                 {JSON.stringify(data, null, 2)}
               </pre>
             </div>
@@ -866,7 +866,7 @@ export const OTPVerificationPreview: React.FC = () => {
         </>
       }
     >
-      <div className={cn("w-full h-full min-h-[400px] flex flex-col items-center justify-center relative p-8", previewVariant === "glass" && "bg-[radial-gradient(circle_at_center,_var(--tw-colors-muted-foreground)_1px,_transparent_1px)] bg-[size:16px_16px] dark:bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.15)_1px,_transparent_1px)]")}>
+      <div className={cn("w-full h-full min-h-100 flex flex-col items-center justify-center relative p-8", previewVariant === "glass" && "bg-[radial-gradient(circle_at_center,var(--tw-colors-muted-foreground)_1px,transparent_1px)]")}>
         {/* Colorful blobs to demonstrate glass effect */}
         {previewVariant === "glass" && (
           <>
@@ -929,7 +929,7 @@ export const FilterBuilderPreview: React.FC = () => {
         />
         <div className="p-5 rounded-2xl border bg-muted/30">
           <h4 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Query Output</h4>
-          <pre className="text-[10px] font-mono overflow-auto max-h-[300px]">
+          <pre className="text-[10px] font-mono overflow-auto max-h-75">
             <code 
               dangerouslySetInnerHTML={{ 
                 __html: JSON.stringify(data, null, 2).replace(/"([^"]+)":/g, '<span class="text-indigo-300">"$1"</span>:')

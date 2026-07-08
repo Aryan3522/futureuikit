@@ -734,8 +734,8 @@ export const CursorGlowButtonPreview: React.FC = () => {
       isVirtualScreen={true} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
       extraControls={extraControls}
     >
-      <div className="w-full h-full flex flex-col items-center justify-center p-6 md:p-12 min-h-[400px]">
-        <div className="flex flex-col items-center justify-center w-full h-full min-h-[300px] p-6 md:p-12">
+      <div className="w-full h-full flex flex-col items-center justify-center p-6 md:p-12 min-h-100">
+        <div className="flex flex-col items-center justify-center w-full h-full min-h-75 p-6 md:p-12">
           <CursorGlowButton 
             variant={previewVariant as any} 
             color={previewColor} 
@@ -800,8 +800,6 @@ export const ScrollTextRevealPreview: React.FC = () => {
 const SHAPE_VARIANTS: SlideUpRevealShape[] = ["rectangle", "rounded", "squircle", "arc", "wave", "curtain", "silk", "holographic"];
 
 export const SlideUpRevealPreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [shape, setShape] = useState<SlideUpRevealShape>("squircle");
 
   const shapeToTheme: Record<SlideUpRevealShape, SlideUpRevealVariant> = {
@@ -826,10 +824,10 @@ export const SlideUpRevealPreview: React.FC = () => {
       variants={SHAPE_VARIANTS}
       activeVariant={shape}
       onVariantChange={(v) => setShape(v as SlideUpRevealShape)}
-      contentClassName="p-0 border-none" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
+      contentClassName="p-0 border-none"
     >
-      <div className="w-full h-[800px] max-h-[85vh] relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-        <SlideUpReveal shape={shape} variant={shapeToTheme[shape]} key={shape} color={previewColor} />
+      <div className="w-full h-200 max-h-[85vh] relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+        <SlideUpReveal shape={shape} variant={shapeToTheme[shape]} key={shape} />
       </div>
     </PreviewContainer>
   );

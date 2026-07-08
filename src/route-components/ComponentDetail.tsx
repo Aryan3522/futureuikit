@@ -169,7 +169,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
                             {/* Right Column Wrapper */}
                             <div className="flex flex-col gap-6 min-w-0 h-full">
                                 {/* Live Component Preview & Code Tab */}
-                                <div className="min-h-[500px] flex-1 flex flex-col min-w-0">
+                                <div className="min-h-125 flex-1 flex flex-col min-w-0">
 
                                     {/* Tabs Header */}
                                     <div className="flex items-center gap-8 border-b border-border/40 mb-6 px-2">

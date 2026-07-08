@@ -329,7 +329,7 @@ export const PreviewRegistry: PreviewRegistryMap = {
               style={previewVariant === "interactive" ? { transform: `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg)`, transition: 'transform 0.1s ease-out' } : undefined}
               className={cn("flex flex-col overflow-hidden transition-all duration-500 group", variantCardMap[previewVariant], shapeMap[previewShape], colorBorderVariants.includes(previewVariant) && borderMap[previewColor])}
             >
-              <div className="relative w-full min-h-[200px] sm:min-h-[220px] flex-1 overflow-hidden bg-muted/10 flex items-center justify-center">
+              <div className="relative w-full min-h-50 sm:min-h-55 flex-1 overflow-hidden bg-muted/10 flex items-center justify-center">
                 <div className={cn("absolute inset-0 z-0 transition-all duration-500", variantBgMap[previewVariant], colorPreviewVariants.includes(previewVariant) && bgMap[previewColor])} />
                 <div className="relative z-10">
                   <button className={cn("px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg shadow-black/10", colorMap[previewColor])}>
@@ -551,7 +551,7 @@ export const PreviewRegistry: PreviewRegistryMap = {
           </div>
         }
       >
-        <div className="flex flex-col items-center justify-center w-full h-[2000px] p-8 text-center relative">
+        <div className="flex flex-col items-center justify-center w-full h-500 p-8 text-center relative">
           <DynamicScrollProgress position="absolute" container={scrollRef} color={previewColor} size={previewSize} />
           <p className="text-muted-foreground font-medium sticky top-1/2">
             Scroll down the preview container to see the scroll progress bar at the top!
@@ -774,8 +774,8 @@ export const PreviewRegistry: PreviewRegistryMap = {
           </div>
         }
       >
-        <div className="w-full h-full min-h-[500px] relative flex flex-col items-center justify-center">
-          <ProjectDeck projects={demoProjects} color={previewColor} shape={shape} spacing={spacing} className="h-full w-full flex-grow" />
+        <div className="w-full h-full min-h-125 relative flex flex-col items-center justify-center">
+          <ProjectDeck projects={demoProjects} color={previewColor} shape={shape} spacing={spacing} className="h-full w-full grow" />
         </div>
       </PreviewContainer>
     );

@@ -174,7 +174,7 @@ const ExploreComponents: React.FC = () => {
  >
  <Card className="h-full border border-border/40 shadow-sm hover:shadow-2xl transition-all duration-500 backdrop-blur-xl bg-card/40 dark:bg-card/20 overflow-hidden rounded-[2.5rem]">
  {/* Visual Placeholder (Replacing Image) */}
- <div className="relative w-full aspect-[16/10] overflow-hidden group bg-muted/10">
+ <div className="relative w-full aspect-16/10 overflow-hidden group bg-muted/10">
  <DotBackground 
  dotColor="var(--primary)"
  maskOpacity={0.1}

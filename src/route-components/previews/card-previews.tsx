@@ -310,7 +310,7 @@ export const GlassPanelPreview: React.FC = () => {
         </>
       } colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
-      <div className="w-full h-full flex flex-col items-center justify-center p-4 md:p-12 min-h-[400px] relative overflow-hidden bg-[radial-gradient(circle_at_center,_var(--tw-colors-muted-foreground)_1px,_transparent_1px)] bg-[size:16px_16px] dark:bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.15)_1px,_transparent_1px)]">
+      <div className="w-full h-full flex flex-col items-center justify-center p-4 md:p-12 min-h-100 relative overflow-hidden bg-[radial-gradient(circle_at_center,var(--tw-colors-muted-foreground)_1px,transparent_1px)] bg-size-[16px_16px] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.15)_1px,transparent_1px)]">
         {/* Colorful Blobs to show off the glass blur effect */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/30 rounded-full blur-3xl mix-blend-screen pointer-events-none" />
         <div className="absolute top-1/3 left-1/3 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-blue-500/30 rounded-full blur-3xl mix-blend-screen pointer-events-none" />
@@ -321,7 +321,7 @@ export const GlassPanelPreview: React.FC = () => {
             <div className="w-16 h-16 rounded-full bg-primary/20 backdrop-blur-md mb-6 flex items-center justify-center border border-white/20">
               <Sparkles className="w-8 h-8 text-primary" />
             </div>
-            <h2 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/60">Glassmorphism</h2>
+            <h2 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-linear-to-b from-foreground to-foreground/60">Glassmorphism</h2>
             <p className="text-foreground/80 leading-relaxed font-medium">This panel uses background blur with translucent overlays to create a premium frosted glass effect.</p>
           </GlassPanel>
         </div>
