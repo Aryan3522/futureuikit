@@ -548,6 +548,9 @@ export const DynamicFormPreview: React.FC = () => {
 export const SelectPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
     const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSize, setPreviewSize] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
   const [value, setValue] = useState<string | string[]>("");
   const [multiValue, setMultiValue] = useState<string | string[]>(["apple"]);
 
@@ -555,11 +558,42 @@ export const SelectPreview: React.FC = () => {
     <PreviewContainer
       title="Advanced Select"
       description="Feature-rich select components with virtualization, multi-select, and search." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
+      extraControls={
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewShape(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "sm", "md", "lg", "xl"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSize(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSize === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+        </>
+      }
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl m-auto">
         <div className="space-y-4">
           <h4 className="text-sm font-bold uppercase tracking-widest text-muted-foreground px-1">Single Selection</h4>
-          <Select value={value as string} onValueChange={setValue} color={previewColor} variant={previewVariant}>
+          <Select value={value as string} onValueChange={setValue} color={previewColor} variant={previewVariant} shape={previewShape} size={previewSize} spacing={previewSpacing}>
             <SelectTrigger placeholder="Pick a fruit..." />
             <SelectContent>
               <SelectSearch placeholder="Search fruits..." />
@@ -577,7 +611,7 @@ export const SelectPreview: React.FC = () => {
 
         <div className="space-y-4">
           <h4 className="text-sm font-bold uppercase tracking-widest text-muted-foreground px-1">Multi-Select + Search</h4>
-          <Select multiSelect value={multiValue} onValueChange={setMultiValue} color={previewColor} variant={previewVariant}>
+          <Select multiSelect value={multiValue} onValueChange={setMultiValue} color={previewColor} variant={previewVariant} shape={previewShape} size={previewSize} spacing={previewSpacing}>
             <SelectTrigger placeholder="Choose multiple..." />
             <SelectContent>
               <SelectSearch placeholder="Filter options..." />

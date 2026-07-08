@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils";
 // --- Types ---
 export type SelectColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
 export type SelectShape = "default" | "square" | "rounded" | "sharp";
+export type SelectSize = "default" | "sm" | "md" | "lg" | "xl";
 export type SelectSpacing = "default" | "2x" | "4x" | "6x" | "8x";
 
 // --- Contexts ---
@@ -40,9 +41,10 @@ type SelectContextValue = {
   multiSelect: boolean;
   searchable: boolean;
   disabled: boolean;
-  variant: "default" | "soft" | "floating" | "glass" | "minimal";
+  variant: "solid" | "outline" | "ghost" | "link";
   color: SelectColor;
   shape: SelectShape;
+  size: SelectSize;
   spacing: SelectSpacing;
   container?: HTMLElement | null;
   onClear?: () => void;
@@ -73,9 +75,10 @@ export interface SelectProps {
   multiSelect?: boolean;
   searchable?: boolean;
   disabled?: boolean;
-  variant?: "default" | "soft" | "floating" | "glass" | "minimal";
+  variant?: "solid" | "outline" | "ghost" | "link";
   color?: SelectColor;
   shape?: SelectShape;
+  size?: SelectSize;
   spacing?: SelectSpacing;
   container?: HTMLElement | null;
   creatable?: boolean;
@@ -93,9 +96,10 @@ export const Select = React.memo(function Select({
   multiSelect = false,
   searchable = true,
   disabled = false,
-  variant = "default",
+  variant = "solid",
   color = "default",
   shape = "default",
+  size = "default",
   spacing = "default",
   container,
   creatable = false,
@@ -137,6 +141,7 @@ export const Select = React.memo(function Select({
         variant,
         color,
         shape,
+        size,
         spacing,
         container,
         onClear: handleClear,
@@ -157,11 +162,10 @@ const selectTriggerVariants = cva(
   {
     variants: {
       variant: {
-        default: "border border-border bg-background hover:bg-accent focus-visible:ring-1 shadow-sm",
-        soft: "border-transparent bg-muted hover:bg-accent focus-visible:ring-1",
-        floating: "border border-border/50 bg-background hover:shadow-md focus-visible:ring-1 shadow-sm",
-        glass: "border border-border/20 bg-background/30 backdrop-blur-md hover:bg-white/40 dark:hover:bg-zinc-950/40 focus-visible:ring-1 shadow-sm",
-        minimal: "border-b border-border bg-transparent hover:border-foreground/40 focus-visible:border-foreground px-0 shadow-none",
+        solid: "border-transparent bg-muted hover:bg-accent focus-visible:ring-1 shadow-sm",
+        outline: "border border-border bg-background hover:bg-accent focus-visible:ring-1 shadow-sm",
+        ghost: "border-transparent bg-transparent hover:bg-accent focus-visible:ring-1",
+        link: "border-transparent bg-transparent underline-offset-4 hover:underline focus-visible:ring-1 shadow-none rounded-none px-0",
       },
       color: {
         default: "focus-visible:ring-ring focus-visible:border-foreground",
@@ -181,18 +185,26 @@ const selectTriggerVariants = cva(
         rounded: "rounded-full",
         sharp: "rounded-[2px]",
       },
+      size: {
+        default: "h-10 text-sm",
+        sm: "h-8 text-xs",
+        md: "h-10 text-sm",
+        lg: "h-12 text-base",
+        xl: "h-14 text-lg",
+      },
       spacing: {
-        default: "h-10 px-4 text-sm",
-        "2x": "h-8 px-3 text-xs",
-        "4x": "h-10 px-4 text-sm",
-        "6x": "h-12 px-5 text-base",
-        "8x": "h-14 px-6 text-lg",
+        default: "px-4",
+        "2x": "px-2",
+        "4x": "px-4",
+        "6x": "px-6",
+        "8x": "px-8",
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "solid",
       color: "default",
       shape: "default",
+      size: "default",
       spacing: "default",
     },
   }
@@ -205,7 +217,7 @@ export interface SelectTriggerProps extends React.ButtonHTMLAttributes<HTMLButto
 
 export const SelectTrigger = React.memo(React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
           ({ className, placeholder = "Select an option...", renderValue, children, ...props }, ref) => {
-            const { open, value, disabled, variant, color, shape, spacing, multiSelect, onValueChange } = useSelectContext();
+            const { open, value, disabled, variant, color, shape, size, spacing, multiSelect, onValueChange } = useSelectContext();
 
             const handleRemoveItem = (e: React.MouseEvent, itemToRemove: string) => {
               e.stopPropagation();
@@ -271,7 +283,7 @@ export const SelectTrigger = React.memo(React.forwardRef<HTMLButtonElement, Sele
                 <button
                   ref={ref}
                   disabled={disabled}
-                  className={cn(selectTriggerVariants({ variant, color, shape, spacing: variant === "minimal" ? "default" : spacing }), className)}
+                  className={cn(selectTriggerVariants({ variant, color, shape, size, spacing: variant === "link" ? "default" : spacing }), className)}
                   aria-expanded={open}
                   {...props}
                 >
@@ -294,11 +306,10 @@ const selectContentVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-background border-border",
-        soft: "bg-background border-transparent shadow-lg",
-        floating: "bg-background border-border/50 shadow-xl",
-        glass: "bg-background/70 backdrop-blur-xl border-border/20 shadow-xl",
-        minimal: "bg-background border-border shadow-sm",
+        solid: "bg-background border-transparent shadow-lg",
+        outline: "bg-background border-border",
+        ghost: "bg-background border-border/50 shadow-xl",
+        link: "bg-background border-border shadow-sm",
       },
       shape: {
         default: "rounded-xl",
@@ -308,7 +319,7 @@ const selectContentVariants = cva(
       }
     },
     defaultVariants: {
-      variant: "default",
+      variant: "solid",
       shape: "default",
     },
   }
@@ -466,7 +477,7 @@ export const SelectItem = React.memo(React.forwardRef<
               className={cn(
                 "relative flex cursor-pointer select-none items-center px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
                 shape === "square" ? "rounded-none" : shape === "rounded" ? "rounded-xl" : shape === "sharp" ? "rounded-[2px]" : "rounded-md",
-                variant === "minimal" && "rounded-none",
+                variant === "link" && "rounded-none",
                 getColorClasses(),
                 className
               )}
