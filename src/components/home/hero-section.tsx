@@ -35,7 +35,7 @@ export function HeroSection() {
 
  {/* H1 — The LCP element. Server-rendered, CSS animated, painted immediately */}
  <h1 className="hero-headline font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light tracking-tight leading-[1.02]">
- BUILDING{""}
+ BUILDING{" "}
  <span className="text-primary">
  THE FUTURE.
  </span>

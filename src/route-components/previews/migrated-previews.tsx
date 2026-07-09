@@ -830,14 +830,93 @@ export const MigratedPreviews = {
   },
 
   "toggle-group": function ToggleGroupPreview() {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSize, setPreviewSize] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+
+    const extraControls = (
+      <div className="flex flex-col gap-4 w-full mt-4 border-t border-border/50 pt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {(["default", "square", "rounded", "sharp", "pill"] as const).map(s => (
+              <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {(["default", "sm", "md", "lg", "xl"] as const).map(s => (
+              <button key={s} onClick={() => setPreviewSize(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSize === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing / Padding</span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+              <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg uppercase transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+
     return (
-      <PreviewContainer title="Toggle Group" description="A set of two-state buttons that can be toggled on or off.">
-        <div className="flex items-center justify-center min-h-50">
-          <ToggleGroup type="multiple">
-            <ToggleGroupItem value="bold" aria-label="Toggle bold">Bold</ToggleGroupItem>
-            <ToggleGroupItem value="italic" aria-label="Toggle italic">Italic</ToggleGroupItem>
-            <ToggleGroupItem value="underline" aria-label="Toggle underline">Underline</ToggleGroupItem>
-          </ToggleGroup>
+      <PreviewContainer 
+        title="Toggle Group" 
+        description="A premium set of two-state buttons that can be toggled on or off." 
+        colors={DEFAULT_COLORS} 
+        activeColor={previewColor} 
+        onColorChange={setPreviewColor} 
+        variants={["solid", "outline", "ghost", "glass", "elevated", "soft"]} 
+        activeVariant={previewVariant} 
+        onVariantChange={setPreviewVariant}
+        extraControls={extraControls}
+      >
+        <div className="flex flex-col items-center justify-center w-full min-h-[300px] p-12 space-y-12">
+          
+          <div className="flex flex-col items-center gap-4">
+            <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Multiple Selection</span>
+            <ToggleGroup 
+              type="multiple" 
+              variant={previewVariant} 
+              color={previewColor} 
+              shape={previewShape} 
+              size={previewSize} 
+              spacing={previewSpacing}
+              defaultValue={["bold", "italic"]}
+            >
+              <ToggleGroupItem value="bold" aria-label="Toggle bold">Bold</ToggleGroupItem>
+              <ToggleGroupItem value="italic" aria-label="Toggle italic">Italic</ToggleGroupItem>
+              <ToggleGroupItem value="underline" aria-label="Toggle underline">Underline</ToggleGroupItem>
+            </ToggleGroup>
+          </div>
+          
+          <div className="w-full max-w-sm h-px bg-border/40" />
+
+          <div className="flex flex-col items-center gap-4">
+            <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Single Selection</span>
+            <ToggleGroup 
+              type="single" 
+              variant={previewVariant} 
+              color={previewColor} 
+              shape={previewShape} 
+              size={previewSize} 
+              spacing={previewSpacing}
+              defaultValue="center"
+            >
+              <ToggleGroupItem value="left" aria-label="Align left">Left</ToggleGroupItem>
+              <ToggleGroupItem value="center" aria-label="Align center">Center</ToggleGroupItem>
+              <ToggleGroupItem value="right" aria-label="Align right">Right</ToggleGroupItem>
+            </ToggleGroup>
+          </div>
+
         </div>
       </PreviewContainer>
     );

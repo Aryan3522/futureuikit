@@ -86,13 +86,7 @@ export const PreviewRegistry: PreviewRegistryMap = {
   "input-otp": InputOTPPreview,
   ...MigratedPreviews,
   // Feedback
-  toast: function ToastWrapper() {
-    return (
-      <PreviewContainer title="Toast Notifications" description="Customizable toast notification system.">
-        <ToastPreview />
-      </PreviewContainer>
-    );
-  },
+  toast: ToastPreview,
   modal: ModalPreview,
   drawer: DrawerPreview,
   toggle: TogglePreview,

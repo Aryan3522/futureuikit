@@ -19,19 +19,20 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { motion } from "framer-motion"
 
-import { motion, AnimatePresence } from "framer-motion"
-
-export type ToastColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type ToastVariant = "solid" | "outline" | "ghost" | "glass" | "elevated" | "soft" | "destructive";
+export type ToastColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange" | "destructive";
 export type ToastShape = "default" | "square" | "rounded" | "sharp";
 export type ToastSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+export type ToastSize = "default" | "sm" | "md" | "lg" | "xl";
 
 const ToastProvider = ToastPrimitives.Provider
 
 const ToastViewport = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Viewport>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport> & {
-    position?: "top-right" | "top-left" | "bottom-right" | "bottom-left";
+    position?: "top-right" | "top-left" | "bottom-right" | "bottom-left" | "top" | "bottom";
   }
 >(({ className, position = "bottom-right", ...props }, ref) => {
   const positionClasses = {
@@ -39,6 +40,8 @@ const ToastViewport = React.forwardRef<
     "top-left": "top-0 left-0 flex-col",
     "bottom-right": "bottom-0 right-0 flex-col-reverse",
     "bottom-left": "bottom-0 left-0 flex-col-reverse",
+    "top": "top-0 left-1/2 -translate-x-1/2 flex-col",
+    "bottom": "bottom-0 left-1/2 -translate-x-1/2 flex-col-reverse",
   };
 
   return (
@@ -55,17 +58,124 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName
 
 const toastVariants = cva(
-  "group pointer-events-auto relative flex w-full items-center justify-between space-x-2 overflow-hidden border p-4 pr-6 shadow-lg transition-colors",
+  "group pointer-events-auto relative flex w-full items-center justify-between space-x-2 overflow-hidden border p-4 pr-6 shadow-lg transition-colors backdrop-blur-none",
   {
     variants: {
       variant: {
-        default: "", // colors handled dynamically
-        destructive:
-          "destructive group border-red-500 bg-red-500 text-white dark:border-red-900 dark:bg-red-900",
+        solid: "border-transparent",
+        outline: "bg-background border-2",
+        ghost: "bg-background border-transparent shadow-none",
+        glass: "backdrop-blur-xl bg-white/10 dark:bg-black/20 border shadow-[0_8px_30px_rgb(0,0,0,0.12)]",
+        elevated: "bg-background border-border shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.7)]",
+        soft: "border-transparent shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)]",
+        destructive: "destructive border-red-500 bg-red-500 text-white dark:border-red-900 dark:bg-red-900",
       },
+      color: {
+        default: "",
+        blue: "",
+        emerald: "",
+        rose: "",
+        amber: "",
+        violet: "",
+        indigo: "",
+        sky: "",
+        slate: "",
+        orange: "",
+        destructive: "",
+      },
+      shape: {
+        default: "rounded-xl",
+        square: "rounded-none",
+        rounded: "rounded-2xl",
+        sharp: "rounded-md",
+      },
+      spacing: {
+        default: "p-4 pr-6",
+        "2x": "p-2 pr-6",
+        "4x": "p-4 pr-6",
+        "6x": "p-6 pr-8",
+        "8x": "p-8 pr-10",
+      },
+      size: {
+        default: "text-sm",
+        sm: "text-xs",
+        md: "text-sm",
+        lg: "text-base",
+        xl: "text-lg",
+      }
     },
+    compoundVariants: [
+      // SOLID
+      { variant: "solid", color: "default", className: "bg-foreground text-background" },
+      { variant: "solid", color: "blue", className: "bg-blue-600 text-white dark:bg-blue-500" },
+      { variant: "solid", color: "emerald", className: "bg-emerald-600 text-white dark:bg-emerald-500" },
+      { variant: "solid", color: "rose", className: "bg-rose-600 text-white dark:bg-rose-500" },
+      { variant: "solid", color: "amber", className: "bg-amber-500 text-amber-950 dark:bg-amber-400" },
+      { variant: "solid", color: "violet", className: "bg-violet-600 text-white dark:bg-violet-500" },
+      { variant: "solid", color: "indigo", className: "bg-indigo-600 text-white dark:bg-indigo-500" },
+      { variant: "solid", color: "sky", className: "bg-sky-500 text-sky-950 dark:bg-sky-400" },
+      { variant: "solid", color: "slate", className: "bg-slate-600 text-white dark:bg-slate-500" },
+      { variant: "solid", color: "orange", className: "bg-orange-500 text-orange-950 dark:bg-orange-400" },
+      { variant: "solid", color: "destructive", className: "destructive bg-red-600 text-white dark:bg-red-500 border-red-600 dark:border-red-500" },
+
+      // OUTLINE & GHOST
+      { variant: ["outline", "ghost"], color: "default", className: "text-foreground border-border" },
+      { variant: ["outline", "ghost"], color: "blue", className: "text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500" },
+      { variant: ["outline", "ghost"], color: "emerald", className: "text-emerald-600 border-emerald-600 dark:text-emerald-500 dark:border-emerald-500" },
+      { variant: ["outline", "ghost"], color: "rose", className: "text-rose-600 border-rose-600 dark:text-rose-500 dark:border-rose-500" },
+      { variant: ["outline", "ghost"], color: "amber", className: "text-amber-600 border-amber-600 dark:text-amber-500 dark:border-amber-500" },
+      { variant: ["outline", "ghost"], color: "violet", className: "text-violet-600 border-violet-600 dark:text-violet-500 dark:border-violet-500" },
+      { variant: ["outline", "ghost"], color: "indigo", className: "text-indigo-600 border-indigo-600 dark:text-indigo-500 dark:border-indigo-500" },
+      { variant: ["outline", "ghost"], color: "sky", className: "text-sky-600 border-sky-600 dark:text-sky-500 dark:border-sky-500" },
+      { variant: ["outline", "ghost"], color: "slate", className: "text-slate-600 border-slate-600 dark:text-slate-500 dark:border-slate-500" },
+      { variant: ["outline", "ghost"], color: "orange", className: "text-orange-600 border-orange-600 dark:text-orange-500 dark:border-orange-500" },
+      { variant: ["outline", "ghost"], color: "destructive", className: "destructive text-red-600 border-red-600 dark:text-red-500 dark:border-red-500" },
+
+      // GLASS
+      { variant: "glass", color: "default", className: "border-white/20 dark:border-white/10 text-foreground" },
+      { variant: "glass", color: "blue", className: "bg-blue-500/10 border-blue-500/20 text-blue-700 dark:text-blue-300" },
+      { variant: "glass", color: "emerald", className: "bg-emerald-500/10 border-emerald-500/20 text-emerald-700 dark:text-emerald-300" },
+      { variant: "glass", color: "rose", className: "bg-rose-500/10 border-rose-500/20 text-rose-700 dark:text-rose-300" },
+      { variant: "glass", color: "amber", className: "bg-amber-500/10 border-amber-500/20 text-amber-700 dark:text-amber-300" },
+      { variant: "glass", color: "violet", className: "bg-violet-500/10 border-violet-500/20 text-violet-700 dark:text-violet-300" },
+      { variant: "glass", color: "indigo", className: "bg-indigo-500/10 border-indigo-500/20 text-indigo-700 dark:text-indigo-300" },
+      { variant: "glass", color: "sky", className: "bg-sky-500/10 border-sky-500/20 text-sky-700 dark:text-sky-300" },
+      { variant: "glass", color: "slate", className: "bg-slate-500/10 border-slate-500/20 text-slate-700 dark:text-slate-300" },
+      { variant: "glass", color: "orange", className: "bg-orange-500/10 border-orange-500/20 text-orange-700 dark:text-orange-300" },
+      { variant: "glass", color: "destructive", className: "destructive bg-red-500/10 border-red-500/20 text-red-700 dark:text-red-300" },
+
+      // SOFT
+      { variant: "soft", color: "default", className: "bg-muted text-foreground" },
+      { variant: "soft", color: "blue", className: "bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300" },
+      { variant: "soft", color: "emerald", className: "bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300" },
+      { variant: "soft", color: "rose", className: "bg-rose-50 dark:bg-rose-950 text-rose-700 dark:text-rose-300" },
+      { variant: "soft", color: "amber", className: "bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300" },
+      { variant: "soft", color: "violet", className: "bg-violet-50 dark:bg-violet-950 text-violet-700 dark:text-violet-300" },
+      { variant: "soft", color: "indigo", className: "bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300" },
+      { variant: "soft", color: "sky", className: "bg-sky-50 dark:bg-sky-950 text-sky-700 dark:text-sky-300" },
+      { variant: "soft", color: "slate", className: "bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300" },
+      { variant: "soft", color: "orange", className: "bg-orange-50 dark:bg-orange-950 text-orange-700 dark:text-orange-300" },
+      { variant: "soft", color: "destructive", className: "destructive bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-300 border-red-200 dark:border-red-900" },
+      
+      // ELEVATED
+      { variant: "elevated", color: "default", className: "text-foreground" },
+      { variant: "elevated", color: "blue", className: "text-blue-600 dark:text-blue-400" },
+      { variant: "elevated", color: "emerald", className: "text-emerald-600 dark:text-emerald-400" },
+      { variant: "elevated", color: "rose", className: "text-rose-600 dark:text-rose-400" },
+      { variant: "elevated", color: "amber", className: "text-amber-600 dark:text-amber-400" },
+      { variant: "elevated", color: "violet", className: "text-violet-600 dark:text-violet-400" },
+      { variant: "elevated", color: "indigo", className: "text-indigo-600 dark:text-indigo-400" },
+      { variant: "elevated", color: "sky", className: "text-sky-600 dark:text-sky-400" },
+      { variant: "elevated", color: "slate", className: "text-slate-600 dark:text-slate-400" },
+      { variant: "elevated", color: "orange", className: "text-orange-600 dark:text-orange-400" },
+      { variant: "elevated", color: "destructive", className: "destructive text-red-600 dark:text-red-400 shadow-[0_10px_40px_-10px_rgba(239,68,68,0.3)] dark:shadow-[0_10px_40px_-10px_rgba(239,68,68,0.5)]" },
+    ],
     defaultVariants: {
-      variant: "default",
+      variant: "elevated",
+      color: "default",
+      shape: "default",
+      spacing: "default",
+      size: "default",
     },
   }
 )
@@ -73,23 +183,25 @@ const toastVariants = cva(
 export interface ToastProps
   extends React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root>,
     VariantProps<typeof toastVariants> {
-  position?: "top-right" | "top-left" | "bottom-right" | "bottom-left";
+  position?: "top-right" | "top-left" | "bottom-right" | "bottom-left" | "top" | "bottom";
   color?: ToastColor;
   shape?: ToastShape;
   spacing?: ToastSpacing;
+  size?: ToastSize;
 }
 
 const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,
   ToastProps
->(({ className, variant, position = "bottom-right", color = "default", shape = "default", spacing = "default", ...props }, ref) => {
+>(({ className, variant, position = "bottom-right", color = "default", shape = "default", spacing = "default", size = "default", ...props }, ref) => {
   const isTop = position.startsWith("top");
   const isLeft = position.endsWith("left");
+  const isCenter = position === "top" || position === "bottom";
 
   const animationVariants = {
     initial: { 
       opacity: 0, 
-      x: isLeft ? -100 : 100,
+      x: isCenter ? 0 : isLeft ? -100 : 100,
       y: isTop ? -50 : 50,
       scale: 0.9 
     },
@@ -112,31 +224,12 @@ const Toast = React.forwardRef<
     }
   };
 
-  const getColorClasses = () => {
-    if (variant === "destructive") return ""; // let variant override
-    switch (color) {
-      case "blue": return "bg-blue-100 text-blue-900 border-blue-200 dark:bg-blue-950 dark:text-blue-100 dark:border-blue-900";
-      case "emerald": return "bg-emerald-100 text-emerald-900 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-100 dark:border-emerald-900";
-      case "rose": return "bg-rose-100 text-rose-900 border-rose-200 dark:bg-rose-950 dark:text-rose-100 dark:border-rose-900";
-      case "amber": return "bg-amber-100 text-amber-900 border-amber-200 dark:bg-amber-950 dark:text-amber-100 dark:border-amber-900";
-      case "violet": return "bg-violet-100 text-violet-900 border-violet-200 dark:bg-violet-950 dark:text-violet-100 dark:border-violet-900";
-      case "indigo": return "bg-indigo-100 text-indigo-900 border-indigo-200 dark:bg-indigo-950 dark:text-indigo-100 dark:border-indigo-900";
-      case "sky": return "bg-sky-100 text-sky-900 border-sky-200 dark:bg-sky-950 dark:text-sky-100 dark:border-sky-900";
-      case "slate": return "bg-slate-100 text-slate-900 border-slate-200 dark:bg-slate-950 dark:text-slate-100 dark:border-slate-900";
-      case "orange": return "bg-orange-100 text-orange-900 border-orange-200 dark:bg-orange-950 dark:text-orange-100 dark:border-orange-900";
-      default: return "bg-background text-foreground border-border";
-    }
-  };
-
   return (
     <ToastPrimitives.Root
       ref={ref}
       asChild
       className={cn(
-        toastVariants({ variant }), 
-        shape === "square" ? "rounded-none" : shape === "sharp" ? "rounded-[2px]" : shape === "rounded" ? "rounded-2xl" : "rounded-md",
-        spacing === "2x" ? "p-2 pr-6" : spacing === "6x" || spacing === "8x" ? "p-6 pr-8" : "p-4 pr-6",
-        getColorClasses(),
+        toastVariants({ variant, color, shape, spacing, size }),
         className
       )}
       {...props}
@@ -202,7 +295,7 @@ const ToastDescription = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Description>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
 >(({ className, ...props }, ref) => (
-  <ToastPrimitives.Description ref={ref} className={cn("text-sm opacity-90", className)} {...props} />
+  <ToastPrimitives.Description ref={ref} className={cn("text-[0.9em] opacity-90", className)} {...props} />
 ))
 ToastDescription.displayName = ToastPrimitives.Description.displayName
 
