@@ -7,13 +7,11 @@ import {
   Label,
   Code,
 } from "../preview-engine/preview-utils";
-import { PreviewContainer, DEFAULT_COLORS } from "../preview-engine/PreviewContainer";
+import { PreviewContainer } from "../preview-engine/PreviewContainer";
 
 export const TextSystemPreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Text System" description="A robust and fully responsive typography system." align="start" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
+    <PreviewContainer title="Text System" description="A robust and fully responsive typography system." align="start">
       <div className="max-w-2xl w-full flex flex-col gap-8 select-text text-left p-6 md:p-12">
         <div className="space-y-2">
           <Label className="text-xs uppercase tracking-widest text-blue-500">
