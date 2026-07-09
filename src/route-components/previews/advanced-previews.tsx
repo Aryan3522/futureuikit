@@ -101,9 +101,8 @@ export const KanbanPreview: React.FC = () => {
 
 export const WorkflowPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Workflow Builder" description="A node-based visual workflow builder." isVirtualScreen={true} contentClassName="p-0 border-none" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
+    <PreviewContainer title="Workflow Builder" description="A node-based visual workflow builder." isVirtualScreen={true} contentClassName="p-0 border-none" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}>
       <div className="absolute inset-0 w-full h-full">
         <WorkflowBuilder 
           variant="enterprise"
