@@ -16,7 +16,7 @@ export const Toaster = React.memo(function Toaster() {
   const { toasts } = useToast()
 
   // Group toasts by position
-  const positions = ["bottom-right", "bottom-left", "top-right", "top-left"] as const;
+  const positions = ["bottom-right", "bottom-left", "top-right", "top-left", "top", "bottom"] as const;
 
   return (
     <ToastProvider>

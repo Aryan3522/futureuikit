@@ -31,59 +31,104 @@ import { PreviewContainer, DEFAULT_COLORS } from "../preview-engine/PreviewConta
 
 export const ToastPreview: React.FC = () => {
   const { toast } = useToast();
-  const [position, setPosition] = React.useState<
-    "top-right" | "top-left" | "bottom-right" | "bottom-left"
-  >("bottom-right");
+  
+  const [previewColor, setPreviewColor] = React.useState<any>("default");
+  const [previewVariant, setPreviewVariant] = React.useState<any>("elevated");
+  const [previewShape, setPreviewShape] = React.useState<any>("default");
+  const [previewSize, setPreviewSize] = React.useState<any>("default");
+  const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+  const [position, setPosition] = React.useState<"top-right" | "top-left" | "bottom-right" | "bottom-left" | "top" | "bottom">("bottom-right");
 
-  return (
-    <div className="flex flex-col gap-8 items-center justify-center w-full h-full p-4">
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full max-w-md justify-items-stretch">
-        {(
-          ["top-left", "top-right", "bottom-left", "bottom-right"] as const
-        ).map((pos) => (
-          <Button
-            key={pos}
-            variant={position === pos ? "solid" : "outline"}
-           
-            onClick={() => setPosition(pos)}
-            className="capitalize w-full"
-          >
-            {pos.replace("-", " ")}
-          </Button>
-        ))}
+  const extraControls = (
+    <div className="flex flex-col gap-4 w-full mt-4 border-t border-border/50 pt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Position</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["top-left", "top", "top-right", "bottom-left", "bottom", "bottom-right"] as const).map(s => (
+            <button key={s} onClick={() => setPosition(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", position === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s.replace("-", " ")}</button>
+          ))}
+        </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 w-full justify-center items-center">
-        <Button
-          variant="outline"
-          className="w-full sm:w-auto"
-          onClick={() => {
-            toast({
-              title: "Success",
-              description: "Toast integrated successfully!",
-              position,
-            });
-          }}
-        >
-          Show Success Toast
-        </Button>
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "square", "rounded", "sharp"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
 
-        <Button
-          variant="solid"
-          className="w-full sm:w-auto"
-          onClick={() => {
-            toast({
-              variant: "destructive",
-              title: "Error",
-              description: "Something went wrong!",
-              position,
-            });
-          }}
-        >
-          Show Destructive Toast
-        </Button>
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Text & Icon Size</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "sm", "md", "lg", "xl"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewSize(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSize === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing / Padding</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg uppercase transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
       </div>
     </div>
+  );
+
+  return (
+    <PreviewContainer
+      title="Toast"
+      description="A native toast notification component for Future UI."
+      variants={["solid", "outline", "ghost", "glass", "elevated", "soft"]}
+      activeVariant={previewVariant}
+      onVariantChange={setPreviewVariant}
+      isVirtualScreen={true} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
+      extraControls={extraControls}
+    >
+      <div className="flex flex-col gap-4 items-center justify-center min-h-75 p-4">
+        <div className="flex flex-wrap gap-4 w-full justify-center items-center">
+          <Button
+            variant="outline"
+            onClick={() => {
+              toast({
+                title: "Toast Notification",
+                description: "This is a native toast rendered correctly.",
+                position,
+                variant: previewVariant,
+                color: previewColor,
+                shape: previewShape,
+                size: previewSize,
+                spacing: previewSpacing
+              });
+            }}
+          >
+            Show Default Toast
+          </Button>
+
+          <Button
+            variant="solid"
+            onClick={() => {
+              toast({
+                variant: previewVariant,
+                color: "destructive",
+                title: "Destructive Action",
+                description: "Something went terribly wrong!",
+                position,
+                shape: previewShape,
+                size: previewSize,
+                spacing: previewSpacing
+              });
+            }}
+          >
+            Show Destructive
+          </Button>
+        </div>
+      </div>
+    </PreviewContainer>
   );
 };
 
@@ -236,43 +281,111 @@ export const DrawerPreview: React.FC = () => {
 };
 
 export const TogglePreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+  const [previewColor, setPreviewColor] = React.useState<any>("default");
+  const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+  const [previewShape, setPreviewShape] = React.useState<any>("default");
+  const [previewSize, setPreviewSize] = React.useState<any>("default");
+  const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+
+  const extraControls = (
+    <div className="flex flex-col gap-4 w-full mt-4 border-t border-border/50 pt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "square", "rounded", "sharp"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "sm", "md", "lg", "xl"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewSize(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSize === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing / Padding</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg uppercase transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <PreviewContainer title="Toggle" description="A flexible toggle component with multiple states and variants." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
-      <div className="flex flex-col items-center justify-center w-full h-full p-12 space-y-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 justify-items-center">
+    <PreviewContainer 
+      title="Toggle" 
+      description="A flexible, premium toggle component with smooth physics-based animations." 
+      colors={DEFAULT_COLORS} 
+      activeColor={previewColor} 
+      onColorChange={setPreviewColor} 
+      variants={["solid", "outline", "ghost", "glass", "elevated", "soft"]} 
+      activeVariant={previewVariant} 
+      onVariantChange={setPreviewVariant}
+      extraControls={extraControls}
+    >
+      <div className="flex flex-col items-center justify-center w-full min-h-[300px] p-12 space-y-12">
+        <div className="flex flex-col sm:flex-row items-center gap-12">
           <div className="flex flex-col items-center gap-4">
-            <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Default</span>
-            <Toggle variant="default" />
+            <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Unchecked</span>
+            <Toggle 
+              variant={previewVariant} 
+              color={previewColor} 
+              shape={previewShape} 
+              size={previewSize} 
+              spacing={previewSpacing} 
+              checked={false} 
+            />
           </div>
+          
           <div className="flex flex-col items-center gap-4">
-            <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Modern</span>
-            <Toggle variant="default" defaultChecked />
+            <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Checked</span>
+            <Toggle 
+              variant={previewVariant} 
+              color={previewColor} 
+              shape={previewShape} 
+              size={previewSize} 
+              spacing={previewSpacing} 
+              defaultChecked 
+            />
           </div>
+
           <div className="flex flex-col items-center gap-4">
-            <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Glass</span>
-            <Toggle variant="glass" />
-          </div>
-          <div className="flex flex-col items-center gap-4">
-            <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Neon</span>
-            <Toggle variant="neon" defaultChecked />
+            <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Disabled</span>
+            <Toggle 
+              variant={previewVariant} 
+              color={previewColor} 
+              shape={previewShape} 
+              size={previewSize} 
+              spacing={previewSpacing} 
+              disabled 
+              defaultChecked 
+            />
           </div>
         </div>
 
-        <div className="w-full h-px bg-border/40" />
+        <div className="w-full max-w-sm h-px bg-border/40" />
 
         <div className="flex flex-col items-center gap-4">
-          <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Sizes</span>
-          <div className="flex items-center gap-8">
-            <Toggle variant="default" />
-            <Toggle variant="default" defaultChecked />
-            <Toggle variant="default" />
-          </div>
+            <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">With Labels</span>
+            <Toggle 
+              variant={previewVariant} 
+              color={previewColor} 
+              shape={previewShape} 
+              size={previewSize} 
+              spacing={previewSpacing} 
+              label="Airplane Mode"
+              description="Disable all wireless connections."
+            />
         </div>
       </div>
     </PreviewContainer>
-
   );
 };
 
