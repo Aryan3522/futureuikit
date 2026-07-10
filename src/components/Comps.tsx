@@ -1203,19 +1203,19 @@ export default function Page() {
  )}
 
  {viewMode ==="links"&& (
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-4">
+ <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-x-6 gap-y-3">
  {displayedComponents.map((item, idx) => (
  <Link 
  key={idx}
  href={`/components/${item.type.toLowerCase()}/${item.slug}/${item.id}`}
  className="group block"
  >
- <div className="flex items-center justify-between py-2 border-b border-foreground/5 group-hover:border-[#571bc1]/50 transition-all">
- <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-all flex items-center gap-2">
+ <div className="flex items-center justify-between py-2 border-b border-foreground/5 group-hover:border-[#571bc1]/50 transition-all gap-4">
+ <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-all flex items-center gap-2 whitespace-nowrap">
  {item.title}
  <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-primary"/>
  </span>
- <span className="text-[10px] uppercase font-bold text-muted-foreground group-hover:text-foreground/80 transition-colors">
+ <span className="text-[10px] uppercase font-bold text-muted-foreground group-hover:text-foreground/80 transition-colors whitespace-nowrap">
  {item.type}
  </span>
  </div>
