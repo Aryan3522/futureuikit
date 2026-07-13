@@ -282,21 +282,38 @@ function ProgressDot({
   total: number;
   scrollYProgress: any
 }) {
-  const center = total > 1 ? index / (total - 1) : 0;
-  const prev = total > 1 ? (index - 1) / (total - 1) : 0;
-  const next = total > 1 ? (index + 1) / (total - 1) : 0;
+  const inputRange: number[] = [];
+  const widthOutput: number[] = [];
+  const opacityOutput: number[] = [];
 
-  const width = useTransform(
-    scrollYProgress,
-    [prev, center, next],
-    [12, 40, 12]
-  );
-  
-  const opacity = useTransform(
-    scrollYProgress,
-    [prev, center, next],
-    [0.3, 1, 0.3]
-  );
+  if (total <= 1) {
+    inputRange.push(0, 1);
+    widthOutput.push(40, 40);
+    opacityOutput.push(1, 1);
+  } else {
+    const center = index / (total - 1);
+    const prev = (index - 1) / (total - 1);
+    const next = (index + 1) / (total - 1);
+
+    if (prev >= 0) {
+      inputRange.push(prev);
+      widthOutput.push(12);
+      opacityOutput.push(0.3);
+    }
+
+    inputRange.push(center);
+    widthOutput.push(40);
+    opacityOutput.push(1);
+
+    if (next <= 1) {
+      inputRange.push(next);
+      widthOutput.push(12);
+      opacityOutput.push(0.3);
+    }
+  }
+
+  const width = useTransform(scrollYProgress, inputRange, widthOutput);
+  const opacity = useTransform(scrollYProgress, inputRange, opacityOutput);
 
   return (
     <motion.div
