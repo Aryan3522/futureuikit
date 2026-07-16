@@ -43,6 +43,7 @@ function printHelp() {
   console.log(`Future UI CLI v${cliPackageJson.version}
 
 Usage:
+  npx futureuikit init
   npx futureuikit add <component-slug> [--force] [--registry <url>]
 
 Examples:
@@ -59,20 +60,6 @@ if (command === "--version" || command === "-v") {
   console.log(cliPackageJson.version);
   process.exit(0);
 }
-
-if (command === "--help" || command === "-h") {
-  printHelp();
-  process.exit(0);
-}
-
-if (command !== "add" || !slug || (registryFlagIndex >= 0 && !args[registryFlagIndex + 1])) {
-  printHelp();
-  process.exit(1);
-}
-
-/**
- * Detects the user's project stack and directory structure.
- */
 async function detectProjectStack(cwd) {
   let isSrc = false;
   let isNext = false;
@@ -377,4 +364,194 @@ async function addComponent(componentSlug) {
   }
 }
 
-addComponent(slug);
+async function initProject() {
+  try {
+    const cwd = process.cwd();
+    console.log(`\nFuture UI: Initializing project in ${cwd}...`);
+    
+    const { isSrc } = await detectProjectStack(cwd);
+    const baseDir = isSrc ? path.join(cwd, "src") : cwd;
+
+    const initCss = `
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-marquee-x: marquee-x var(--duration) linear infinite;
+  --animate-marquee-y: marquee-y var(--duration) linear infinite;
+
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
+  }
+  @keyframes marquee-x {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-100% - var(--gap))); }
+  }
+  @keyframes marquee-y {
+    from { transform: translateY(0); }
+    to { transform: translateY(calc(-100% - var(--gap))); }
+  }
+  @keyframes hero-fade-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes hero-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes hero-badge-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
+
+:root {
+  --background: 240 10% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 240 10% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 240 10% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 239 84% 67%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 239 84% 67%;
+  --radius: 0.5rem;
+  --duration: 20s;
+  --gap: 1rem;
+}
+
+.dark {
+  --background: 0 0% 0%;
+  --foreground: 20 6% 90%;
+  --card: 0 0% 0%;
+  --card-foreground: 20 6% 90%;
+  --popover: 0 0% 0%;
+  --popover-foreground: 20 6% 90%;
+  --primary: 0 0% 78%;
+  --primary-foreground: 0 0% 19%;
+  --secondary: 258 100% 87%;
+  --secondary-foreground: 258 100% 20%;
+  --muted: 0 0% 8%;
+  --muted-foreground: 20 5% 65%;
+  --accent: 0 0% 8%;
+  --accent-foreground: 20 6% 90%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 20%;
+  --input: 0 0% 20%;
+  --ring: 258 90% 66%;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Global Premium Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--foreground) / 0.15);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--foreground) / 0.3);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--foreground) / 0.15) transparent;
+  }
+  @media (max-width: 1024px) {
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    * {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+  }
+
+  /* NOIR_OS Utility Classes */
+  .glass-mantle {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .glass-heavy {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+`;
+
+    await injectCSS(baseDir, initCss);
+    
+    // Also ensure utils exist
+    await ensureUtils(baseDir, true);
+
+    console.log("\nSUCCESS: Future UI initialized successfully.");
+    console.log("You can now add components: npx futureuikit add <component-slug>");
+  } catch (error) {
+    console.error(`\nERROR: ${error.message}`);
+    process.exit(1);
+  }
+}
+
+if (command === "init") {
+  initProject();
+} else if (command === "add") {
+  addComponent(slug);
+}
