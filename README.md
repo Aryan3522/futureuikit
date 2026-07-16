@@ -24,6 +24,13 @@
 
 ## 🚀 Quick Start
 
+**Step 1: Initialize the Project**
+Initialize your project with the Future UI core theme (colors, animations, and dark mode configuration):
+```bash
+npx futureuikit init
+```
+
+**Step 2: Add Components**
 Install any component directly into your project with one command:
 
 ```bash
