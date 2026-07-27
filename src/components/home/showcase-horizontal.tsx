@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { Badge } from "@/components/ui/badge";
@@ -46,6 +46,31 @@ const slides = [
     annotations: []
   }
 ];
+
+// Hoisted so the element type stays stable across renders — defining this
+// inside a render function would remount AIChat (and reset its input state)
+// on every parent render.
+const ChatDemo = () => {
+  const [input, setInput] = useState("");
+  return (
+    <AIChat
+      layout="chatgpt"
+      inputVariant="standard"
+      messages={[
+        { id: "1", role: "assistant", content: "Hello! How can I help you today?" },
+        { id: "2", role: "user", content: "Explain quantum computing in one sentence." },
+        { id: "3", role: "assistant", content: "Quantum computing uses subatomic particles to perform complex calculations far faster than current computers." }
+      ]}
+      input={input}
+      setInput={setInput}
+      onSubmit={(e) => e.preventDefault()}
+    >
+      <ChatMessages />
+      <ChatPromptSuggestions suggestions={["Hi", "Hola", "Write a poem"]} />
+      <ChatInput />
+    </AIChat>
+  );
+};
 
 const showcaseItems = [
   {
@@ -109,35 +134,11 @@ const showcaseItems = [
     category: "APPLICATION / APPLICATION-UI",
     description: "A fully reusable, highly customizable AI Chat Interface inspired by ChatGPT, Claude, and Perplexity. Features streaming responses, markdown rendering, syntax highlighting, and multiple premium layouts.",
     id: "ai-chat",
-    render: () => {
-      const ChatDemo = () => {
-        const [input, setInput] = useState("");
-        return (
-          <AIChat
-            layout="chatgpt"
-            inputVariant="standard"
-            messages={[
-              { id: "1", role: "assistant", content: "Hello! How can I help you today?" },
-              { id: "2", role: "user", content: "Explain quantum computing in one sentence." },
-              { id: "3", role: "assistant", content: "Quantum computing uses subatomic particles to perform complex calculations far faster than current computers." }
-            ]}
-            input={input}
-            setInput={setInput}
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <ChatMessages />
-            <ChatPromptSuggestions suggestions={["Hi", "Hola", "Write a poem"]} />
-            <ChatInput />
-          </AIChat>
-        );
-      };
-
-      return (
-        <div className="w-full h-full rounded-2xl overflow-hidden border border-border/10 relative bg-background">
-          <ChatDemo />
-        </div>
-      );
-    }
+    render: () => (
+      <div className="w-full h-full rounded-2xl overflow-hidden border border-border/10 relative bg-background">
+        <ChatDemo />
+      </div>
+    )
   },
   {
     number: "05",
@@ -170,37 +171,18 @@ export function ShowcaseHorizontal() {
     target: targetRef,
     offset: ["start start", "end end"]
   });
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!trackRef.current) {
-        console.log("TRACK NOT FOUND");
-        return;
-      }
-
-      console.log(
-        "track scrollWidth",
-        trackRef.current.scrollWidth
-      );
-
-      console.log(
-        "track offsetWidth",
-        trackRef.current.offsetWidth
-      );
-
-      console.log(
-        "viewport",
-        window.innerWidth
-      );
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
   const trackRef = useRef<HTMLDivElement>(null);
 
   const x = useTransform(scrollYProgress, [0, 1], ["0%", `-${(showcaseItems.length - 1) * 100}%`]);
 
   return (
-    <section ref={targetRef} className="relative h-[500vh] bg-background z-20">
+    // Section height must stay in sync with the horizontal travel above:
+    // (N-1) * 100vh of scroll maps to (N-1) * 100% of translation.
+    <section
+      ref={targetRef}
+      style={{ height: `${showcaseItems.length * 100}vh` }}
+      className="relative bg-background z-20"
+    >
       <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden bg-background">
 
         <div className="absolute inset-0 bg-secondary/5 blur-[150px] rounded-full w-[600px] h-[600px] -left-1/4 top-1/2 -translate-y-1/2 pointer-events-none opacity-30" />

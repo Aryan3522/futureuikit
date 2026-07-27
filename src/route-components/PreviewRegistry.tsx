@@ -10,6 +10,36 @@ import { cn } from "@/lib/utils";
 import VelocityMarquee from "@/components/ui/velocity-marquee";
 import { PreviewContainer, DEFAULT_COLORS } from "./preview-engine/PreviewContainer";
 import { MigratedPreviews } from "./previews/migrated-previews";
+import {
+  InputPreview,
+  TextareaPreview,
+  CheckboxPreview,
+  SwitchPreview,
+  LabelPreview,
+  TabsPreview,
+  AvatarPreview,
+  ProgressPreview,
+  TablePreview,
+  BreadcrumbPreview,
+  AlertPreview,
+  SeparatorPreview,
+} from "./previews/essential-previews";
+import {
+  NavbarPreview,
+  PricingPreview,
+  BentoGridPreview,
+  StatsPreview,
+  TestimonialsPreview,
+  FAQPreview,
+  CTABannerPreview,
+  SidebarPreview,
+  StepperPreview,
+  EmptyStatePreview,
+  PopoverPreview,
+  DatePickerPreview,
+  KbdPreview,
+  ThemeTogglePreview,
+} from "./previews/section-previews";
 import type { PreviewRegistryMap } from "./preview-engine/preview-types";
 import {
   ToastPreview,
@@ -85,6 +115,34 @@ const DynamicScrollProgress = dynamic(() => import('@/components/ui/ScrollProgre
 export const PreviewRegistry: PreviewRegistryMap = {
   "input-otp": InputOTPPreview,
   ...MigratedPreviews,
+  // Essentials
+  input: InputPreview,
+  textarea: TextareaPreview,
+  checkbox: CheckboxPreview,
+  switch: SwitchPreview,
+  label: LabelPreview,
+  tabs: TabsPreview,
+  avatar: AvatarPreview,
+  progress: ProgressPreview,
+  table: TablePreview,
+  breadcrumb: BreadcrumbPreview,
+  alert: AlertPreview,
+  separator: SeparatorPreview,
+  // Sections & app shell
+  navbar: NavbarPreview,
+  pricing: PricingPreview,
+  "bento-grid": BentoGridPreview,
+  stats: StatsPreview,
+  testimonials: TestimonialsPreview,
+  faq: FAQPreview,
+  "cta-banner": CTABannerPreview,
+  sidebar: SidebarPreview,
+  stepper: StepperPreview,
+  "empty-state": EmptyStatePreview,
+  popover: PopoverPreview,
+  "date-picker": DatePickerPreview,
+  kbd: KbdPreview,
+  "theme-toggle": ThemeTogglePreview,
   // Feedback
   toast: ToastPreview,
   modal: ModalPreview,

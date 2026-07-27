@@ -29,7 +29,6 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion, useMotionValue, useSpring, useVelocity, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { useTheme } from "@/contexts/ThemeContext";
 
 export type PointCursorColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
 export type PointCursorShape = "default" | "square" | "rounded" | "sharp";
@@ -104,7 +103,6 @@ export const PointCursor: React.FC<PointCursorProps> = React.memo(({
           spacing = "default",
           variant = "default"
         }) => {
-          const { theme } = useTheme();
           const [mounted, setMounted] = useState(false);
           const [isVisible, setIsVisible] = useState(false);
           const [isHovering, setIsHovering] = useState(false);

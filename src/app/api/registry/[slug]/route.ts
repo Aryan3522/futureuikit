@@ -1,37 +1,43 @@
-import { NextResponse } from"next/server";
-import { registry } from"@/data/component-library-data";
+import { NextResponse } from "next/server";
+import { registry } from "@/data/registryData";
 
-export const dynamic ="force-static";
+export const dynamic = "force-static";
 
 export function generateStaticParams() {
- return Object.keys(registry).map((slug) => ({
- slug,
- }));
+  return Object.keys(registry).map((slug) => ({
+    slug,
+  }));
 }
 
 export async function GET(
- _req: Request,
- { params }: { params: Promise<{ slug: string }> }
+  _req: Request,
+  { params }: { params: Promise<{ slug: string }> }
 ) {
- const { slug } = await params;
- const component = registry[slug];
+  try {
+    const { slug } = await params;
 
- if (!component) {
- return NextResponse.json(
- { error:"Component not found"},
- { status: 404 }
- );
- }
+    // Own-property lookup only — a bare `registry[slug]` resolves prototype
+    // members ("constructor", "__proto__", ...) and crashes the handler.
+    const component = Object.prototype.hasOwnProperty.call(registry, slug)
+      ? registry[slug]
+      : undefined;
 
-  // Deep clone to avoid mutating the original registry object
-  const cleanComponent = JSON.parse(JSON.stringify(component));
+    if (!component || !Array.isArray(component.files)) {
+      return NextResponse.json({ error: "Component not found" }, { status: 404 });
+    }
 
-  // Content is already stripped of DocBlocks by the sync script (sync.mjs).
-  // Only trim whitespace — do NOT strip code comments (they are useful for end users).
-  cleanComponent.files = cleanComponent.files.map((file: any) => ({
-  ...file,
-  content: file.content.trim()
-  }));
+    // Deep clone to avoid mutating the original registry object
+    const cleanComponent = JSON.parse(JSON.stringify(component));
 
-  return NextResponse.json(cleanComponent);
+    // Content is already stripped of DocBlocks by the sync script (sync.mjs).
+    // Only trim whitespace — do NOT strip code comments (they are useful for end users).
+    cleanComponent.files = cleanComponent.files.map((file: { content: string }) => ({
+      ...file,
+      content: file.content.trim(),
+    }));
+
+    return NextResponse.json(cleanComponent);
+  } catch {
+    return NextResponse.json({ error: "Internal registry error" }, { status: 500 });
+  }
 }

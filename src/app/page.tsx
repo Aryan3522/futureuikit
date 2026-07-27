@@ -2,34 +2,130 @@ import React from "react";
 import Link from "next/link";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { GlowyButton } from "@/components/ui/glowy-button";
-import { Sparkles, Cpu, Shield, Activity, Terminal, Globe } from "lucide-react";
+import { Sparkles, Cpu, Shield, Activity } from "lucide-react";
 import { AnimatedTerminal } from "@/components/home/animated-terminal";
 import { InteractiveFuture } from "@/components/home/interactive-future";
 import { HeroSection } from "@/components/home/hero-section";
 import { ComponentsMarquee } from "@/components/home/components-marquee";
-import { ShowcaseHorizontal } from "@/components/home/showcase-horizontal";
+import { LazyShowcase } from "@/components/home/lazy-showcase";
+import { JourneyChapter, JourneyProgress } from "@/components/home/journey-chapter";
+import { Journey3DLazy } from "@/components/home/journey-3d-lazy";
+import { TiltPanel } from "@/components/home/tilt-panel";
+import { Stats } from "@/components/ui/stats";
+import { FAQ } from "@/components/ui/faq";
+import { registryMeta } from "@/data/registryMeta";
 import { Agentation } from "agentation";
+
+// Resolved at build time on the server — never shipped to the client.
+const COMPONENT_COUNT = Object.keys(registryMeta).length;
+
+const FAQ_ITEMS = [
+  {
+    question: "What exactly is Future UI?",
+    answer:
+      "A component universe for Next.js and React 19. Instead of installing a package, the CLI copies each component's full source into your project — you own every line and can change anything.",
+  },
+  {
+    question: "Can I really build a whole website with it?",
+    answer:
+      "Yes. Beyond primitives (inputs, tables, tabs, dialogs) it ships complete sections — navbars, pricing, bento grids, stats, testimonials, FAQs, CTAs — plus dashboards pieces like sidebars, steppers and date pickers, and 300+ animated icons.",
+  },
+  {
+    question: "How do I install a component?",
+    answer:
+      "Run `npx futureuikit init` once to set up the theme, then `npx futureuikit add <name>` for any component. Dependencies are detected and installed automatically.",
+  },
+  {
+    question: "Will it slow my site down?",
+    answer:
+      "No — you only ever ship the components you actually add. There is no runtime library; the source lives in your repo and is tree-shaken and bundled by your own build.",
+  },
+  {
+    question: "Is it free?",
+    answer: "MIT licensed. Free for personal and commercial use, no attribution required.",
+  },
+];
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground font-body-md overflow-clip selection:bg-secondary/30 relative">
       {process.env.NODE_ENV === "development" && <Agentation />}
+      <Journey3DLazy />
+      <JourneyProgress />
       <main className="relative z-10">
-        <HeroSection />
+        {/* 00 — ARRIVAL */}
+        <HeroSection componentCount={COMPONENT_COUNT} />
 
-        <ShowcaseHorizontal />
-        <ComponentsMarquee />
-
-        {/* TECHNICAL STRATUM (Bento Grid) */}
-        <section className="py-32 px-6 max-w-7xl mx-auto">
-          <div className="mb-12 text-center md:text-left">
-            <span className="font-mono-label text-xs text-muted-foreground uppercase tracking-widest">Features</span>
-            <h2 className="font-display text-4xl md:text-5xl font-light mt-2">FUTURE UI ECOSYSTEM</h2>
+        {/* 01 — THE RITUAL: one command */}
+        <section data-journey="ritual" className="py-32 px-6 relative bg-foreground/2 border-y border-border">
+          <div className="max-w-5xl mx-auto">
+            <JourneyChapter
+              number="01"
+              eyebrow="The Ritual"
+              title={<>ONE COMMAND. <span className="text-primary">FULL OWNERSHIP.</span></>}
+              description="No package to install, no black box to fight. The CLI writes real source files into your project — every component becomes your code."
+            />
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-4">
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-border"></div>
+                  <div className="w-3 h-3 rounded-full bg-muted"></div>
+                  <div className="w-3 h-3 rounded-full bg-muted-foreground/30"></div>
+                </div>
+                <span className="font-mono-label text-xs text-muted-foreground ml-2">terminal</span>
+              </div>
+              <span className="font-mono-label text-xs text-muted-foreground">bash</span>
+            </div>
+            <GlassPanel variant="heavy" className="p-1 h-75">
+              <AnimatedTerminal />
+            </GlassPanel>
           </div>
+        </section>
+
+        {/* 02 — THE ARSENAL: live component showcase (heavy 3D — lazy loaded) */}
+        <section data-journey="arsenal" className="relative">
+          <div className="max-w-7xl mx-auto px-6 pt-32">
+            <JourneyChapter
+              number="02"
+              eyebrow="The Arsenal"
+              title={<>NOT SCREENSHOTS. <span className="text-primary">LIVE MACHINES.</span></>}
+              description="Everything below is running in your browser right now — 3D showcases, workflow builders, AI chat. Scroll through the gallery."
+            />
+          </div>
+          <LazyShowcase />
+        </section>
+
+        {/* 03 — THE NUMBERS */}
+        <section data-journey="numbers" className="py-32 px-6 max-w-6xl mx-auto">
+          <JourneyChapter
+            number="03"
+            eyebrow="The Numbers"
+            title={<>BUILT TO <span className="text-primary">SCALE.</span></>}
+            align="center"
+          />
+          <Stats
+            color="violet"
+            variant="divided"
+            items={[
+              { label: "Components", value: COMPONENT_COUNT, suffix: "+" },
+              { label: "Animated icons", value: 300, suffix: "+" },
+              { label: "Color themes", value: 10 },
+              { label: "Runtime deps shipped", value: 0 },
+            ]}
+          />
+        </section>
+
+        {/* 04 — THE CRAFT (Bento Grid) */}
+        <section data-journey="craft" className="py-32 px-6 max-w-7xl mx-auto border-t border-border/50">
+          <JourneyChapter
+            number="04"
+            eyebrow="The Craft"
+            title={<>THE FUTURE UI <span className="text-primary">ECOSYSTEM.</span></>}
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             {/* Large Card: Refractive Interface */}
-            <GlassPanel variant="heavy" className="md:col-span-8 p-10 flex flex-col justify-between group overflow-hidden relative min-h-100">
+            <TiltPanel className="md:col-span-8 rounded-2xl"><GlassPanel variant="heavy" className="h-full p-10 flex flex-col justify-between group overflow-hidden relative min-h-100">
               <div className="space-y-4 relative z-10">
                 <Sparkles className="w-8 h-8 text-secondary" />
                 <h3 className="font-display text-2xl">Premium Aesthetics</h3>
@@ -44,28 +140,28 @@ export default function Home() {
                 <span className="font-mono-label text-[10px] border border-white/10 px-2 py-1 rounded text-muted-foreground">TAILWIND_V4</span>
                 <span className="font-mono-label text-[10px] border border-white/10 px-2 py-1 rounded text-muted-foreground">FRAMER_MOTION</span>
               </div>
-            </GlassPanel>
+            </GlassPanel></TiltPanel>
 
             {/* Small Card 1: Neural Core */}
-            <GlassPanel variant="heavy" className="md:col-span-4 p-10 space-y-6 hover:border-secondary/50 transition-colors duration-500 min-h-100 flex flex-col justify-center">
+            <TiltPanel className="md:col-span-4 rounded-2xl"><GlassPanel variant="heavy" className="h-full p-10 space-y-6 hover:border-secondary/50 transition-colors duration-500 min-h-100 flex flex-col justify-center">
               <Cpu className="w-8 h-8 text-primary" />
               <h3 className="font-display text-2xl">React 19 Ready</h3>
               <p className="font-display text-muted-foreground">
                 Built for the future. Fully compatible with Next.js App Router, Server Components, and React 19 concurrent features.
               </p>
-            </GlassPanel>
+            </GlassPanel></TiltPanel>
 
             {/* Small Card 2: Encrypted Flow */}
-            <GlassPanel variant="heavy" className="md:col-span-4 p-10 space-y-6 hover:border-secondary/50 transition-colors duration-500 min-h-100 flex flex-col justify-center">
+            <TiltPanel className="md:col-span-4 rounded-2xl"><GlassPanel variant="heavy" className="h-full p-10 space-y-6 hover:border-secondary/50 transition-colors duration-500 min-h-100 flex flex-col justify-center">
               <Shield className="w-8 h-8 text-primary" />
               <h3 className="font-display text-2xl">Accessible Foundation</h3>
               <p className="font-display text-muted-foreground">
                 Built on top of Radix UI primitives. Ensures your application is fully accessible, keyboard navigable, and perfectly structured.
               </p>
-            </GlassPanel>
+            </GlassPanel></TiltPanel>
 
             {/* Medium Card: Global Telemetry */}
-            <GlassPanel variant="heavy" className="md:col-span-8 p-10 flex flex-col md:flex-row items-center gap-10 min-h-100">
+            <TiltPanel className="md:col-span-8 rounded-2xl"><GlassPanel variant="heavy" className="h-full p-10 flex flex-col md:flex-row items-center gap-10 min-h-100">
               <div className="flex-1 space-y-4">
                 <Activity className="w-8 h-8 text-secondary" />
                 <h3 className="font-display text-2xl">CLI Distribution</h3>
@@ -87,35 +183,40 @@ export default function Home() {
                   <div className="bg-secondary w-full h-[30%] rounded-t-sm animate-pulse" style={{ animationDelay: '400ms' }}></div>
                 </div>
               </div>
-            </GlassPanel>
+            </GlassPanel></TiltPanel>
           </div>
         </section>
 
-        {/* CODE PREVIEW */}
-        <section className="py-32 px-6 bg-foreground/2 border-y border-border relative">
-          <div className="max-w-5xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-4">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-border"></div>
-                  <div className="w-3 h-3 rounded-full bg-muted"></div>
-                  <div className="w-3 h-3 rounded-full bg-muted-foreground/30"></div>
-                </div>
-                <span className="font-mono-label text-xs text-muted-foreground ml-2">terminal</span>
-              </div>
-              <span className="font-mono-label text-xs text-muted-foreground">bash</span>
-            </div>
-            <GlassPanel variant="heavy" className="p-1 h-75">
-              <AnimatedTerminal />
-            </GlassPanel>
+        {/* 05 — THE PEOPLE */}
+        <section data-journey="people" className="relative border-t border-border/50">
+          <div className="max-w-6xl mx-auto px-6 pt-32 -mb-8">
+            <JourneyChapter
+              number="05"
+              eyebrow="The People"
+              title={<>BUILDERS <span className="text-primary">TALK.</span></>}
+              align="center"
+            />
           </div>
+          <ComponentsMarquee />
         </section>
 
-        {/* CTA SECTION */}
-        <section className="py-40 px-6 text-center relative overflow-hidden">
+        {/* 06 — THE ANSWERS */}
+        <section data-journey="answers" className="py-32 px-6 max-w-3xl mx-auto">
+          <JourneyChapter
+            number="06"
+            eyebrow="The Answers"
+            title={<>EVERYTHING YOU&apos;D <span className="text-primary">ASK.</span></>}
+            align="center"
+          />
+          <FAQ items={FAQ_ITEMS} color="violet" variant="card" />
+        </section>
+
+        {/* 07 — THE BEGINNING */}
+        <section data-journey="beginning" className="py-40 px-6 text-center relative overflow-hidden">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-secondary/10 blur-[150px] rounded-full pointer-events-none mix-blend-screen"></div>
 
           <div className="relative z-10 max-w-2xl mx-auto space-y-10">
+            <span className="font-mono-label text-xs uppercase tracking-[0.3em] text-violet-400">07 — The Beginning</span>
             <h2 className="font-display text-4xl md:text-5xl font-light text-foreground">
               READY TO BUILD THE{" "}
               <InteractiveFuture />
@@ -134,8 +235,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
-
     </div>
   );
 }
