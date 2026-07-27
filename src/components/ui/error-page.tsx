@@ -4,6 +4,7 @@
  * @registry-description A Future UI Error Page component.
  * @registry-category ui
  * @registry-dependency class-variance-authority
+ * @registry-file src/components/ui/button.tsx
  */
 "use client";
 import React, { useId } from "react";

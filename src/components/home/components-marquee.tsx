@@ -7,7 +7,7 @@ import { Star, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Modal, ModalTrigger, ModalContent, ModalHeader, ModalTitle, ModalDescription, ModalBody, ModalFooter, ModalClose } from "@/components/ui/modal";
 import { supabase } from "@/lib/supabase";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const initialTestimonialsData = [
   {
@@ -173,29 +173,29 @@ export function ComponentsMarquee() {
 
     setIsSubmitting(true);
     
-    // Create the new testimonial object
+    // Create the new testimonial object. Submissions require moderation:
+    // approved stays false until reviewed, so the public marquee can never be
+    // written to directly from the browser.
     const newTestimonial = {
-      author: formData.name,
-      role: formData.role,
-      quote: formData.quote,
-      rating: formData.rating,
+      author: formData.name.slice(0, 80),
+      role: formData.role.slice(0, 80),
+      quote: formData.quote.slice(0, 500),
+      rating: Math.min(5, Math.max(1, formData.rating)),
       avatar: formData.name.charAt(0).toUpperCase(),
-      approved: true // Changed to true so it shows up instantly for testing
+      approved: false
     };
 
-    const { data, error } = await supabase.from('testimonials').insert([newTestimonial]).select();
+    const { error } = await supabase.from('testimonials').insert([newTestimonial]);
 
     setIsSubmitting(false);
 
     if (error) {
       toast({ title: "Error", description: "Failed to submit testimonial." });
     } else {
-      toast({ title: "Success", description: "Your testimonial has been added!" });
-      
-      // Update the UI instantly without needing a page refresh
-      const addedTestimonial = data && data.length > 0 ? data[0] : { ...newTestimonial, id: Date.now() };
-      setTestimonials(prev => [addedTestimonial, ...prev]);
-      
+      toast({
+        title: "Thank you!",
+        description: "Your testimonial has been submitted and will appear once approved.",
+      });
       setFormData({ name: "", role: "", quote: "", rating: 5 });
     }
   };

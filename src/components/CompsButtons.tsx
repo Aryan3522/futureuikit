@@ -34,8 +34,8 @@ const CompsButtons: React.FC = () => {
  <ComponentPageSidebar open={open} setOpen={setOpen} />
 
  <main
- className={`relative flex-1 w-full p-2 md:p-8 transition-all duration-300 ml-16 \${
- open ?"md:ml-64":"md:ml-16"
+ className={`relative flex-1 w-full p-2 md:p-8 transition-all duration-300 ml-16 ${
+ open ? "md:ml-64" : "md:ml-16"
  }`}
  >
  <h1 className="text-3xl font-bold">Buttons</h1>

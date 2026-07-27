@@ -17,7 +17,7 @@
 - 🌗 **Theme-adaptive** — Full dark/light mode support using CSS variables
 - ⚡ **CLI-powered** — Install individual components directly into your codebase (like shadcn/ui)
 - 🔒 **Zero lock-in** — You own the code. No runtime dependency on Future UI after install
-- 🧩 **90+ components** — Buttons, loaders, cards, particles, calendars, error pages, and more
+- 🧩 **116+ components** — Buttons, loaders, cards, particles, calendars, error pages, and more
 - 🏗️ **App Router ready** — Built for Next.js 16 App Router
 
 ---
@@ -67,21 +67,26 @@ The CLI will:
 |------|-----------|----------|
 | `accordion` | Accordion | Layout |
 | `ai-chat` | AI Chat Interface | Application |
+| `alert` | Alert | UI |
 | `alert-dialog` | Alert Dialog | Feedback |
 | `aspect-ratio` | Aspect Ratio | Layout |
 | `automotive-carousel` | Automotive Carousel | Display |
+| `avatar` | Avatar | UI |
 | `badge` | Badge | Display |
 | `basic-card` | Basic Card | Display |
 | `basic-loader` | Basic Loader | Loader |
+| `bento-grid` | Bento Grid | Layout |
 | `bmw-m4` | BMW M4 | UI |
 | `boxy-bounce` | Bouncy Loader | Loader |
 | `boxy-rotate` | Rotating Loader | Loader |
 | `boxy-shift` | Boxy Loader | Loader |
+| `breadcrumb` | Breadcrumb | UI |
 | `browser-window` | Browser Window | Application |
 | `button` | Button | Form |
 | `calculator` | Calculator | Utility |
 | `calendar` | Calendar | Utility |
 | `card` | Card | Layout |
+| `checkbox` | Checkbox | UI |
 | `cinematic-error` | Cinematic Error | Feedback |
 | `clay-morph-button` | Clay Morphism Button | Form |
 | `collapsible` | Collapsible | Layout |
@@ -89,14 +94,18 @@ The CLI will:
 | `component-page-sidebar` | Component Page Sidebar | Navigation |
 | `components-grid` | Components Grid | Display |
 | `context-menu` | Context Menu | Navigation |
+| `cta-banner` | CTA Banner | Layout |
 | `cursor-glow-button` | Cursor Glow Button | Form |
+| `date-picker` | Date Picker | Form |
 | `dock` | Dock | Navigation |
 | `dot-background` | Dot Background | Background |
 | `drawer` | Drawer | Feedback |
 | `dropdown-menu` | Dropdown Menu | Navigation |
 | `dynamic-form` | Dynamic Form System | Form |
+| `empty-state` | Empty State | Feedback |
 | `error-page` | Error Page | Feedback |
 | `expanding-card` | Expanding Flex Card | Display |
+| `faq` | FAQ | Layout |
 | `file-upload` | FileUpload | Form |
 | `filter-builder` | Filter Builder | Form |
 | `footer` | Footer | Layout |
@@ -111,12 +120,16 @@ The CLI will:
 | `hover-glare-card` | Hover Glare Card | Display |
 | `icon-cloud` | Icon Cloud | Display |
 | `infinite-slider` | Infinite Carousel Slider | Display |
+| `input` | Input | UI |
 | `input-otp` | Input Otp | Form |
 | `kanban` | Kanban Board | Board |
+| `kbd` | Kbd | Utility |
+| `label` | Label | UI |
 | `menu` | Circle Navigation Menu | Navigation |
 | `menubar` | Menubar | Navigation |
 | `minimal-button` | Minimal Button | Form |
 | `modal` | Modal | Feedback |
+| `navbar` | Navbar | Navigation |
 | `nexus-card` | Nexus Card | Display |
 | `noir-hero-3d` | Noir Hero 3D | Display |
 | `otp-input` | Premium OTP Input | Form |
@@ -125,8 +138,11 @@ The CLI will:
 | `particles` | Particles | Background |
 | `perspective-grid` | Perspective Grid | Background |
 | `point-cursor` | Point Cursor | UI |
+| `popover` | Popover | UI |
 | `premium-upload-button` | Premium Upload Button | Form |
+| `pricing` | Pricing | Layout |
 | `primary` | Primary Button | Form |
+| `progress` | Progress | UI |
 | `project-deck` | Project Deck | Display |
 | `puzzle-video` | Puzzle Video | Display |
 | `radio-group` | Radio Group | Form |
@@ -139,15 +155,25 @@ The CLI will:
 | `search` | Search | Form |
 | `search-input` | Search Input | Form |
 | `select` | Select | Form |
+| `separator` | Separator | UI |
+| `sidebar` | Sidebar | Navigation |
 | `sidebar-button` | Sidebar Button | Navigation |
 | `skeleton` | Skeleton | Loader |
 | `skeuomorphic-button` | Skeuomorphic Button | Form |
 | `slide-up-reveal` | Slide Up Reveal | Typography |
 | `slider` | Slider | Form |
 | `sonner` | Sonner | Feedback |
+| `stats` | Stats | Layout |
+| `stepper` | Stepper | Navigation |
+| `switch` | Switch | UI |
+| `table` | Table | UI |
+| `tabs` | Tabs | UI |
 | `terminal` | Terminal | Application |
+| `testimonials` | Testimonials | Layout |
 | `text-3d-flip` | Text 3d Flip | Typography |
 | `text-system` | Typography System | Typography |
+| `textarea` | Textarea | UI |
+| `theme-toggle` | Theme Toggle | Utility |
 | `toast` | Toast Notification | Feedback |
 | `toggle` | Toggle | Form |
 | `toggle-group` | Toggle Group | Form |

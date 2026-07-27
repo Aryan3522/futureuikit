@@ -1,4 +1,4 @@
-import { registry } from"./registryData";
+import { registryMeta } from "./registryMeta";
 import { ComponentItem } from"@/types";
 
 export const rawComponentsList: ComponentItem[] = [
@@ -2343,7 +2343,7 @@ export default function Example() {
 const dedupedManual = Array.from(new Map(rawComponentsList.map(item => [item.slug, item])).values());
 
 // Auto-generate missing components from registry
-const missingFromList = Object.keys(registry).filter(slug => !dedupedManual.some(c => c.slug === slug));
+const missingFromList = Object.keys(registryMeta).filter(slug => !dedupedManual.some(c => c.slug === slug));
 
 const categoryToType: Record<string, string> = {
   ui: "UI",
@@ -2374,7 +2374,7 @@ function slugToTitle(slug: string): string {
 }
 
 const generatedComponents: ComponentItem[] = missingFromList.map((slug, index) => {
- const reg = registry[slug];
+ const reg = registryMeta[slug];
  const title = reg?.name || slugToTitle(slug);
  const typeLabel = reg?.typeLabel || (reg?.category ? categoryToType[reg.category] : null) || "Uncategorized";
  const desc = reg?.description || `A dynamically discovered component.`;
@@ -2398,4 +2398,5 @@ const generatedComponents: ComponentItem[] = missingFromList.map((slug, index) =
 
 export const componentsList: ComponentItem[] = [...dedupedManual, ...generatedComponents];
 
-export { registry };
+// The full registry (with source strings) is intentionally NOT re-exported
+// here — import it from "@/data/registryData" in server-only code.

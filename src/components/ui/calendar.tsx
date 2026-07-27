@@ -5,6 +5,7 @@
  * @registry-category ui
  * @registry-dependency framer-motion
  * @registry-dependency lucide-react
+ * @registry-file src/components/ui/calendar-context.tsx
  */
 "use client";
 

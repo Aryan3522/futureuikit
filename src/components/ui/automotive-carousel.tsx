@@ -7,6 +7,8 @@
  * @registry-category ui
  * @registry-type components:ui
  * @registry-dependency framer-motion three @react-three/fiber @react-three/drei
+ * @registry-file src/components/ui/button.tsx
+ * @registry-file src/components/ui/basic-loader.tsx
  */
 
 import React, { useState, useEffect, useRef, Suspense, useMemo, useCallback } from "react";
@@ -21,9 +23,13 @@ import { buttonVariants } from "@/components/ui/button";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PRELOAD MODELS
+// Draco-compressed (22.7 MB → 1.9 MB); decoder is served locally from
+// /draco/ so there is no CDN dependency.
 // ─────────────────────────────────────────────────────────────────────────────
+const MODEL_URL = "/models/m4.optimized.glb";
+const DRACO_PATH = "/draco/";
 try {
-  useGLTF.preload("/models/m4.glb");
+  useGLTF.preload(MODEL_URL, DRACO_PATH);
 } catch (_) { }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -58,7 +64,7 @@ const AutoFitModel = React.memo(function AutoFitModel({
   annotations?: Annotation[];
   isMobile: boolean;
 }) {
-  const { scene } = useGLTF(url);
+  const { scene } = useGLTF(url, DRACO_PATH);
 
   const { mesh, scaleFactor } = useMemo(() => {
     const cloned = scene.clone(true);
@@ -274,13 +280,15 @@ function Scene({
       <directionalLight position={[-15, 10, -15]} intensity={1.0} color="#aaccff" />
       <directionalLight position={[0, 30, -10]} intensity={1.5} color="#ffffff" />
 
-      <Environment
-        files="/hdr/kloppenheim_06_1k.hdr"
-        background
-        ground={{ height: 1.5, radius: 20, scale: 20 }}
-      />
-
+      {/* Environment MUST live inside the Suspense boundary — while the HDR
+          streams in, a suspending sibling outside the boundary would blank the
+          whole canvas (loader included), leaving the first slide empty. */}
       <Suspense fallback={<CanvasLoader />}>
+        <Environment
+          files="/hdr/kloppenheim_06_1k.hdr"
+          background
+          ground={{ height: 1.5, radius: 20, scale: 20 }}
+        />
         <AutoFitModel
           url={url}
           annotations={annotations}
@@ -479,7 +487,7 @@ export const AutomotiveCarousel = ({ slides, className, color = "default", shape
           style={{ width: "100%", height: "100%", background: "transparent" }}
         >
           <Scene
-            url={"/models/m4.glb"}
+            url={MODEL_URL}
             target={currentTarget}
             annotations={slides[currentIndex].annotations}
             layout={layout}

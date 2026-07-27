@@ -3,7 +3,7 @@
 import React, { useMemo, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { componentsList } from "@/data/component-library-data";
-import { registry } from "@/data/registryData";
+import { registryMeta } from "@/data/registryMeta";
 import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
 
@@ -127,7 +127,7 @@ export const Graphify: React.FC<GraphifyProps> = React.memo(({ color = "default"
               links.push({ source: `cat-${comp.type}`, target: comp.slug });
 
               // Add dependencies from registry
-              const regComp = registry[comp.slug];
+              const regComp = registryMeta[comp.slug];
               if (regComp && regComp.dependencies) {
                 regComp.dependencies.forEach((dep) => {
                   dependencies.add(dep);

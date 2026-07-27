@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { notFound } from "next/navigation";
-import { componentsList, registry } from "@/data/component-library-data";
+import { componentsList } from "@/data/component-library-data";
 import { Check, Copy, Sparkles, Box, Terminal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ComponentRenderer } from "@/registry/ComponentRenderer";
@@ -70,14 +70,32 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
         };
     }, []);
 
+    // The component's source is fetched from the pre-rendered static registry
+    // JSON instead of being bundled — this keeps ~1.5 MB of source strings out
+    // of the client bundle.
+    const [reusableCode, setReusableCode] = useState("");
+    useEffect(() => {
+        let cancelled = false;
+        fetch(`/api/registry/${encodeURIComponent(slug)}`)
+            .then((res) => (res.ok ? res.json() : null))
+            .then((data) => {
+                if (!cancelled && data?.files?.[0]?.content) {
+                    setReusableCode(data.files[0].content);
+                }
+            })
+            .catch(() => {
+                // Code tab simply stays empty if the registry is unreachable.
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [slug]);
+
     const component = componentsList.find(
         (item) => item.id === Number(id) && item.type.toLowerCase() === type && item.slug === slug
     );
 
     if (!component) notFound();
-
-    const registryComponent = (registry as any)[slug];
-    const reusableCode = registryComponent?.files[0]?.content || "";
     const cliCommand = slug === "icons" ? "npm install futureuikit" : `npx futureuikit add ${slug}`;
     const importCommand = slug === "icons" ? `import { GithubIcon } from "futureuikit/icons"` : `import { ${component.title.replace(/[^a-zA-Z]/g, '')} } from "@/components/ui/${slug}"`;
 

@@ -6,6 +6,7 @@
  * @registry-description A standard Resizable component.
  * @registry-category ui
  * @registry-type components:ui
+ * @registry-dependency react-resizable-panels@^2.1.9
  */
 
 import * as React from "react"

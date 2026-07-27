@@ -6,6 +6,7 @@
  * @registry-description A standard Alert Dialog component.
  * @registry-category ui
  * @registry-type components:ui
+ * @registry-file src/components/ui/button.tsx
  */
 
 import * as React from "react"
