@@ -29,10 +29,7 @@ export function HeroSection({ componentCount = 116 }: { componentCount?: number 
         }}
       />
 
-      {/* The persistent Journey3D canvas (mounted at page level) provides the
-          3D centerpiece behind this section. */}
-
-      {/* Vignette so the text always stays readable over the 3D */}
+      {/* Soft vignette so the hero text stays readable over the background glow */}
       <div
         className="absolute inset-0 z-[1] pointer-events-none"
         aria-hidden="true"
