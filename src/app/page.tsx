@@ -9,7 +9,6 @@ import { HeroSection } from "@/components/home/hero-section";
 import { ComponentsMarquee } from "@/components/home/components-marquee";
 import { LazyShowcase } from "@/components/home/lazy-showcase";
 import { JourneyChapter, JourneyProgress } from "@/components/home/journey-chapter";
-import { Journey3DLazy } from "@/components/home/journey-3d-lazy";
 import { TiltPanel } from "@/components/home/tilt-panel";
 import { Stats } from "@/components/ui/stats";
 import { FAQ } from "@/components/ui/faq";
@@ -50,7 +49,6 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground font-body-md overflow-clip selection:bg-secondary/30 relative">
       {process.env.NODE_ENV === "development" && <Agentation />}
-      <Journey3DLazy />
       <JourneyProgress />
       <main className="relative z-10">
         {/* 00 — ARRIVAL */}
