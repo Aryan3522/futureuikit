@@ -5,6 +5,15 @@ const COMPONENTS_DIR = path.resolve("src/components/ui");
 const REGISTRY_FILE = path.resolve("src/data/registryData.ts");
 const REGISTRY_META_FILE = path.resolve("src/data/registryMeta.ts");
 const SRC_DIR = path.resolve("src");
+// Premium components are not published in the public registry.
+const PREMIUM_SLUGS = new Set([
+  "automotive-carousel", "bmw-m4", "scifi-helmet", "noir-hero-3d",
+  "particles", "icon-cloud", "puzzle-video",
+  "ai-chat", "browser-window", "terminal", "kanban", "workflow-builder",
+  "rich-text-editor", "dynamic-form", "filter-builder", "calculator",
+  "form-builder", "cinematic-error", "project-deck", "command-palette",
+  "otp-verification",
+]);
 
 /**
  * Recursively walks a directory and returns all .tsx and .ts files.
@@ -290,7 +299,10 @@ function main() {
     }
 
     slugs.add(metadata.slug);
-
+      if (PREMIUM_SLUGS.has(metadata.slug)) {
+      console.log(`   - Skipped (premium): ${metadata.slug}`);
+      continue;
+    }
     // Create entry
     registry[metadata.slug] = createRegistryEntry(file, metadata);
     console.log(`   + Registered: ${metadata.slug}`);

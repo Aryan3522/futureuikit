@@ -50,28 +50,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       }
     ]
   },
-  "ai-chat": {
-    "name": "AI Chat Interface",
-    "type": "components:ui",
-    "description": "A Future UI AI Chat Interface component.",
-    "category": "ui",
-    "dependencies": [
-      "class-variance-authority",
-      "clsx",
-      "framer-motion",
-      "lucide-react",
-      "react-markdown",
-      "react-syntax-highlighter",
-      "remark-gfm",
-      "tailwind-merge"
-    ],
-    "files": [
-      {
-        "name": "ai-chat.tsx",
-        "targetPath": "components/ui/ai-chat.tsx"
-      }
-    ]
-  },
   "alert": {
     "name": "Alert",
     "type": "components:ui",
@@ -123,36 +101,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       {
         "name": "aspect-ratio.tsx",
         "targetPath": "components/ui/aspect-ratio.tsx"
-      }
-    ]
-  },
-  "automotive-carousel": {
-    "name": "Automotive Carousel",
-    "type": "components:ui",
-    "description": "A Future UI Automotive Carousel component.",
-    "category": "ui",
-    "dependencies": [
-      "@radix-ui/react-slot",
-      "@react-three/drei",
-      "@react-three/fiber",
-      "class-variance-authority",
-      "framer-motion",
-      "lucide-react",
-      "three",
-      "three-stdlib"
-    ],
-    "files": [
-      {
-        "name": "automotive-carousel.tsx",
-        "targetPath": "components/ui/automotive-carousel.tsx"
-      },
-      {
-        "name": "button.tsx",
-        "targetPath": "components/ui/button.tsx"
-      },
-      {
-        "name": "basic-loader.tsx",
-        "targetPath": "components/ui/basic-loader.tsx"
       }
     ]
   },
@@ -234,24 +182,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       }
     ]
   },
-  "bmw-m4": {
-    "name": "BMW M4",
-    "type": "components:ui",
-    "description": "A premium 3D BMW M4 component with interactive orbit controls and cinematic lighting.",
-    "category": "ui",
-    "dependencies": [
-      "@react-three/drei",
-      "@react-three/fiber",
-      "framer-motion",
-      "three"
-    ],
-    "files": [
-      {
-        "name": "bmw-m4.tsx",
-        "targetPath": "components/ui/bmw-m4.tsx"
-      }
-    ]
-  },
   "boxy-bounce": {
     "name": "Bouncy Loader",
     "type": "components:ui",
@@ -314,21 +244,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       }
     ]
   },
-  "browser-window": {
-    "name": "Browser Window",
-    "type": "components:ui",
-    "description": "A Future UI Browser Window component.",
-    "category": "ui",
-    "dependencies": [
-      "framer-motion"
-    ],
-    "files": [
-      {
-        "name": "browser-window.tsx",
-        "targetPath": "components/ui/browser-window.tsx"
-      }
-    ]
-  },
   "button": {
     "name": "Button",
     "type": "components:ui",
@@ -342,22 +257,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       {
         "name": "button.tsx",
         "targetPath": "components/ui/button.tsx"
-      }
-    ]
-  },
-  "calculator": {
-    "name": "Calculator",
-    "type": "components:ui",
-    "description": "A Future UI Calculator component.",
-    "category": "ui",
-    "dependencies": [
-      "framer-motion",
-      "lucide-react"
-    ],
-    "files": [
-      {
-        "name": "calculator.tsx",
-        "targetPath": "components/ui/calculator.tsx"
       }
     ]
   },
@@ -411,22 +310,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       }
     ]
   },
-  "cinematic-error": {
-    "name": "Cinematic Error",
-    "type": "components:ui",
-    "description": "A Future UI Cinematic Error component.",
-    "category": "ui",
-    "dependencies": [
-      "framer-motion",
-      "lucide-react"
-    ],
-    "files": [
-      {
-        "name": "cinematic-error.tsx",
-        "targetPath": "components/ui/cinematic-error.tsx"
-      }
-    ]
-  },
   "clay-morph-button": {
     "name": "Clay Morphism Button",
     "type": "components:ui",
@@ -458,26 +341,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       {
         "name": "collapsible.tsx",
         "targetPath": "components/ui/collapsible.tsx"
-      }
-    ]
-  },
-  "command-palette": {
-    "name": "Command Palette",
-    "type": "components:ui",
-    "description": "A premium command palette with subtle color themes and clean spacing.",
-    "category": "ui",
-    "dependencies": [
-      "@radix-ui/react-dialog",
-      "@radix-ui/react-visually-hidden",
-      "class-variance-authority",
-      "cmdk",
-      "framer-motion",
-      "lucide-react"
-    ],
-    "files": [
-      {
-        "name": "command-palette.tsx",
-        "targetPath": "components/ui/command-palette.tsx"
       }
     ]
   },
@@ -649,25 +512,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       }
     ]
   },
-  "dynamic-form": {
-    "name": "Dynamic Form System",
-    "type": "components:ui",
-    "description": "A Future UI Dynamic Form System component.",
-    "category": "ui",
-    "dependencies": [
-      "@hookform/resolvers",
-      "framer-motion",
-      "lucide-react",
-      "react-hook-form",
-      "zod"
-    ],
-    "files": [
-      {
-        "name": "dynamic-form.tsx",
-        "targetPath": "components/ui/dynamic-form.tsx"
-      }
-    ]
-  },
   "empty-state": {
     "name": "Empty State",
     "type": "components:ui",
@@ -755,25 +599,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       }
     ]
   },
-  "filter-builder": {
-    "name": "Filter Builder",
-    "type": "components:ui",
-    "description": "A Future UI Filter Builder component.",
-    "category": "ui",
-    "dependencies": [
-      "class-variance-authority",
-      "clsx",
-      "framer-motion",
-      "lucide-react",
-      "tailwind-merge"
-    ],
-    "files": [
-      {
-        "name": "filter-builder.tsx",
-        "targetPath": "components/ui/filter-builder.tsx"
-      }
-    ]
-  },
   "footer": {
     "name": "Footer",
     "type": "components:ui",
@@ -784,25 +609,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       {
         "name": "footer.tsx",
         "targetPath": "components/ui/footer.tsx"
-      }
-    ]
-  },
-  "form-builder": {
-    "name": "FormBuilder",
-    "type": "components:ui",
-    "description": "A Future UI FormBuilder component.",
-    "category": "ui",
-    "dependencies": [
-      "@hookform/resolvers",
-      "framer-motion",
-      "lucide-react",
-      "react-hook-form",
-      "zod"
-    ],
-    "files": [
-      {
-        "name": "form-builder.tsx",
-        "targetPath": "components/ui/form-builder.tsx"
       }
     ]
   },
@@ -919,19 +725,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       }
     ]
   },
-  "icon-cloud": {
-    "name": "Icon Cloud",
-    "type": "components:ui",
-    "description": "A standard Icon Cloud component.",
-    "category": "ui",
-    "dependencies": [],
-    "files": [
-      {
-        "name": "icon-cloud.tsx",
-        "targetPath": "components/ui/icon-cloud.tsx"
-      }
-    ]
-  },
   "infinite-slider": {
     "name": "Infinite Carousel Slider",
     "type": "components:ui",
@@ -978,25 +771,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       {
         "name": "input-otp.tsx",
         "targetPath": "components/ui/input-otp.tsx"
-      }
-    ]
-  },
-  "kanban": {
-    "name": "Kanban Board",
-    "type": "components:ui",
-    "description": "A Future UI Kanban Board component.",
-    "category": "ui",
-    "dependencies": [
-      "class-variance-authority",
-      "clsx",
-      "framer-motion",
-      "lucide-react",
-      "tailwind-merge"
-    ],
-    "files": [
-      {
-        "name": "kanban.tsx",
-        "targetPath": "components/ui/kanban.tsx"
       }
     ]
   },
@@ -1131,23 +905,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       }
     ]
   },
-  "noir-hero-3d": {
-    "name": "Noir Hero 3D",
-    "type": "components:ui",
-    "description": "A Future UI Noir Hero 3D component.",
-    "category": "ui",
-    "dependencies": [
-      "@react-three/drei",
-      "@react-three/fiber",
-      "three"
-    ],
-    "files": [
-      {
-        "name": "noir-hero-3d.tsx",
-        "targetPath": "components/ui/noir-hero-3d.tsx"
-      }
-    ]
-  },
   "otp-input": {
     "name": "Premium OTP Input",
     "type": "components:ui",
@@ -1161,22 +918,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       {
         "name": "otp-input.tsx",
         "targetPath": "components/ui/otp-input.tsx"
-      }
-    ]
-  },
-  "otp-verification": {
-    "name": "OTP Verification",
-    "type": "components:ui",
-    "description": "An animated OTP input component with verification states, success and error feedback, keyboard navigation, and paste support.",
-    "category": "ui",
-    "dependencies": [
-      "framer-motion",
-      "lucide-react"
-    ],
-    "files": [
-      {
-        "name": "otp-verification.tsx",
-        "targetPath": "components/ui/otp-verification.tsx"
       }
     ]
   },
@@ -1198,19 +939,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       {
         "name": "button.tsx",
         "targetPath": "components/ui/button.tsx"
-      }
-    ]
-  },
-  "particles": {
-    "name": "Particles",
-    "type": "components:ui",
-    "description": "A Future UI Particles component.",
-    "category": "ui",
-    "dependencies": [],
-    "files": [
-      {
-        "name": "particles.tsx",
-        "targetPath": "components/ui/particles.tsx"
       }
     ]
   },
@@ -1326,37 +1054,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       }
     ]
   },
-  "project-deck": {
-    "name": "Project Deck",
-    "type": "components:ui",
-    "description": "A 3D stacked deck of project cards with hover fan-out and flip animation.",
-    "category": "ui",
-    "dependencies": [
-      "framer-motion",
-      "lucide-react"
-    ],
-    "files": [
-      {
-        "name": "project-deck.tsx",
-        "targetPath": "components/ui/project-deck.tsx"
-      }
-    ]
-  },
-  "puzzle-video": {
-    "name": "Puzzle Video",
-    "type": "components:ui",
-    "description": "A cinematic storytelling component where physical puzzle pieces seamlessly assemble into a premium glass video container.",
-    "category": "ui",
-    "dependencies": [
-      "framer-motion"
-    ],
-    "files": [
-      {
-        "name": "puzzle-video.tsx",
-        "targetPath": "components/ui/puzzle-video.tsx"
-      }
-    ]
-  },
   "radio-group": {
     "name": "Radio Group",
     "type": "components:ui",
@@ -1386,63 +1083,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       {
         "name": "resizable.tsx",
         "targetPath": "components/ui/resizable.tsx"
-      }
-    ]
-  },
-  "rich-text-editor": {
-    "name": "Rich Text Editor",
-    "type": "components:ui",
-    "description": "A Future UI Rich Text Editor component.",
-    "category": "ui",
-    "dependencies": [
-      "@tailwindcss/typography",
-      "@tiptap/core",
-      "@tiptap/extension-color",
-      "@tiptap/extension-highlight",
-      "@tiptap/extension-image",
-      "@tiptap/extension-link",
-      "@tiptap/extension-placeholder",
-      "@tiptap/extension-table",
-      "@tiptap/extension-table-cell",
-      "@tiptap/extension-table-header",
-      "@tiptap/extension-table-row",
-      "@tiptap/extension-task-item",
-      "@tiptap/extension-task-list",
-      "@tiptap/extension-text-align",
-      "@tiptap/extension-text-style",
-      "@tiptap/extension-underline",
-      "@tiptap/pm",
-      "@tiptap/react",
-      "@tiptap/starter-kit",
-      "@tiptap/suggestion",
-      "class-variance-authority",
-      "clsx",
-      "lucide-react",
-      "tailwind-merge",
-      "tippy.js"
-    ],
-    "files": [
-      {
-        "name": "rich-text-editor.tsx",
-        "targetPath": "components/ui/rich-text-editor.tsx"
-      }
-    ]
-  },
-  "scifi-helmet": {
-    "name": "Sci-Fi Helmet",
-    "type": "components:ui",
-    "description": "A premium 3D Sci-Fi Helmet component with interactive orbit controls and cinematic lighting.",
-    "category": "ui",
-    "dependencies": [
-      "@react-three/drei",
-      "@react-three/fiber",
-      "framer-motion",
-      "three"
-    ],
-    "files": [
-      {
-        "name": "scifi-helmet.tsx",
-        "targetPath": "components/ui/scifi-helmet.tsx"
       }
     ]
   },
@@ -1761,23 +1401,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       }
     ]
   },
-  "terminal": {
-    "name": "Terminal",
-    "type": "components:ui",
-    "description": "A premium, highly customizable terminal window component with authentic styling for various OS variants (macOS, Windows, Ubuntu, etc) and built-in animations.",
-    "category": "ui",
-    "dependencies": [
-      "class-variance-authority",
-      "framer-motion",
-      "lucide-react"
-    ],
-    "files": [
-      {
-        "name": "terminal.tsx",
-        "targetPath": "components/ui/terminal.tsx"
-      }
-    ]
-  },
   "testimonials": {
     "name": "Testimonials",
     "type": "components:ui",
@@ -1965,25 +1588,6 @@ export const registryMeta: Record<string, RegistryMetaItem> = {
       {
         "name": "marquee-track.tsx",
         "targetPath": "components/ui/marquee-track.tsx"
-      }
-    ]
-  },
-  "workflow-builder": {
-    "name": "Workflow Builder",
-    "type": "components:ui",
-    "description": "A Future UI Workflow Builder component.",
-    "category": "ui",
-    "dependencies": [
-      "class-variance-authority",
-      "clsx",
-      "framer-motion",
-      "lucide-react",
-      "tailwind-merge"
-    ],
-    "files": [
-      {
-        "name": "workflow-builder.tsx",
-        "targetPath": "components/ui/workflow-builder.tsx"
       }
     ]
   }
